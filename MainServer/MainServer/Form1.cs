@@ -178,67 +178,54 @@ namespace MainServer
                 dat.Load(tour);
             }
             ListGames.Visible = false;
-            if (dat.Rows.Count>0)
+            if (dat.Rows.Count > 0)
             {
-                if (Convert.ToInt16(dat.Rows[0][3]) < 12)
+                if (Convert.ToInt16(dat.Rows[0][3]) > 11)
                 {
-                    DialogResult result = MessageBox.Show("Эта игра была прервана! Возобновить ее?", "", MessageBoxButtons.YesNo);
-                    if (result == DialogResult.Yes)
+                    Vozobnovlenie = false;
+                    MessageBox.Show("Эта игра уже сыграна!");
+                    return;
+                }
+                DialogResult result = MessageBox.Show("Эта игра была прервана! Возобновить ее?", "", MessageBoxButtons.YesNo);
+                if (result != DialogResult.Yes)
+                    return;
+                Vozobnovlenie = true;
+                lot.Text = "Рассадка";
+                if (dat.Rows.Count != Convert.ToInt32(dat.Rows[dat.Rows.Count - 1][1])) //несовпадение кол-ва троек и кол-ва записей log
+                {
+                    MessageBox.Show("Данных для восстановления игры не хватает");
+                    return;
+                }
+
+                troika = dat.Rows.Count;
+                for (int i = 0; i < dat.Rows.Count; i++)    //перебираем все  тройки    //Нюхом чую, что здесь косяк вылезет, и сязан будет скорее всего с сортировкой или случайным удалением зоны
+                {
+                    if (Convert.ToInt32(dat.Rows[i][1]) == i + 1)//проверка сопадает ли игровая зона
                     {
-                        Vozobnovlenie = true;
-                        lot.Text = "Рассадка";
-                        if (dat.Rows.Count != Convert.ToInt32(dat.Rows[dat.Rows.Count - 1][1])) //несовпадение кол-ва троек и кол-ва записей log
+                        SendLog log = new SendLog();    //структура для получения log данных
+                        string json = dat.Rows[i][4].ToString();
+                        log = JsonConvert.DeserializeObject<SendLog>(json);
+                        GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
+                        gz.usersid = log.usersid;               //список пользователей тройки
+                        gz.setThemes(log.idTheme, log.Themes);  //список id тем и названий
+                        gz.data = log.dataLog;                  //класс data
+                        gz.gm = log.gmLog;                      //класс game
+                        gz.gm.iCon++;                           //Начинаем игру со следующего айкона
+                        for (int k = 0; k < 3; k++)      //для каждой команды тройки находим новый ключ сессии в таблице зарегистрировавшихся команд
                         {
-                            MessageBox.Show("Данных для восстановления игры не хватает");
-                            return;
+                            dt.Rows.Add(new Object[] { log.dataLog.GameZone, log.dataLog.team[k].uid, log.dataLog.team[k].name, "", log.dataLog.team[k].rating, log.dataLog.team[k].iQash, log.dataLog.team[k].table, false });
                         }
-
-                        troika = dat.Rows.Count;
-                        for (int i = 0; i < dat.Rows.Count; i++)    //перебираем все  тройки
-                        {
-                            if (Convert.ToInt32(dat.Rows[i][1]) == i + 1)//проверка сопадает ли игровая зона
-                            {
-                                SendLog log = new SendLog();    //структура для получения log данных
-                                string json = dat.Rows[i][4].ToString();
-                                log = JsonConvert.DeserializeObject<SendLog>(json);
-                                GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
-                                gz.usersid = log.usersid;               //список пользователей тройки
-                                gz.setThemes(log.idTheme, log.Themes);  //список id тем и названий
-                                gz.data = log.dataLog;                  //класс data
-                                gz.gm = log.gmLog;                      //класс game
-                                gz.gm.iCon++;                           //Начинаем игру со следующего айкона
-                                for (int k = 0; k < 3; k++)      //для каждой команды тройки находим новый ключ сессии в таблице зарегистрировавшихся команд
-                                {
-                                    dt.Rows.Add(new Object[] { log.dataLog.GameZone, log.dataLog.team[k].uid, log.dataLog.team[k].name, "", log.dataLog.team[k].rating, log.dataLog.team[k].iQash, log.dataLog.team[k].table, false });
-                                }
-                                ListKomand.DataSource = dt;
-                                //MassGameZone.Add(gz);
-                            }
-                            else
-                            {
-                                GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
-                                MassGameZone.Add(gz);
-                            }
-
-                        }
-                        lot.BackColor = Color.GreenYellow;
-                        lot.Text = "Рассадка закончена";
-                        //Anons.Enabled = true;
-                        //lot.PerformClick();
+                        ListKomand.DataSource = dt;
+                        ListKomand.Columns[3].Visible = false;
+                        //MassGameZone.Add(gz);
                     }
                     else
                     {
-                        //ListGames.Visible = false;
-                        return;
+                        GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
+                        MassGameZone.Add(gz);
                     }
                 }
-                else
-                {    
-                    Vozobnovlenie = false;
-                    MessageBox.Show("Эта игра уже сыграна!");
-                    //ListGames.Visible = false;
-                    return;
-                }
+                lot.Text = "Рассадка закончена";
             }
             GameButton.Text = "Игра выбрана";
             GameButton.BackColor = Color.GreenYellow;
@@ -268,7 +255,6 @@ namespace MainServer
                 {
                     lkCell.ReadOnly = lkCell.Name == "I-кэш" ? false : true;
                     //ListKomand.Columns[6].ReadOnly = true;
-
                 }
 
                 #region создание экземпляра КОМАНДА и ТЕМА
@@ -504,7 +490,7 @@ namespace MainServer
                         }
 
                     }
-                    lot.BackColor = Color.GreenYellow;
+                    //lot.BackColor = Color.GreenYellow;
                     lot.Text = "Рассадка закончена";
                     Anons.Enabled = true;
                     return;
@@ -958,7 +944,6 @@ namespace MainServer
 
             }
         }
-
         private void stGame(object sender, EventArgs e)
         {
             Button btnPressed = (Button)sender;
@@ -973,8 +958,6 @@ namespace MainServer
                 btnPressed.Text = "Пауза";
             }
         }
-
-  
         private void gameStopBut_Click(object sender, EventArgs e)  //приостановка игры
         {
 
@@ -1088,7 +1071,6 @@ namespace MainServer
             }
 
         }
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             reloadDB();
@@ -1252,7 +1234,6 @@ namespace MainServer
             
 
         }
-
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
             string questions = "";
@@ -1297,7 +1278,6 @@ namespace MainServer
         }
 
         //////////////////////////copy/////////////////////////////
-
 /*        private void ListKomand_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if ((ListKomand.CurrentCell.ColumnIndex == 7) && (start.Text == "Поехали"))
@@ -1351,12 +1331,7 @@ namespace MainServer
 
             stream.Close();
         }
-
-
-
-
         //////////////////////////copy/////////////////////////////
-
         private async void Zapros()//получениеи обработка  запросов от команд
         {
             //IPEndPoint endpoint;
