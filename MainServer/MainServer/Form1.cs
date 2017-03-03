@@ -925,13 +925,13 @@ namespace MainServer
                  }*/
                  
 
-                if (File.Exists(@"C:\Users\User\Source\Repos\700iq\MainServer\MainServer\bin\Debug\tableOfteames.txt"))
+                if (File.Exists(@"tableOfteames.txt"))
                 {
-                    File.Delete(@"C:\Users\User\Source\Repos\700iq\MainServer\MainServer\bin\Debug\tableOfteames.txt");
+                    File.Delete(@"tableOfteames.txt");
                 }
 
                 StreamWriter file;
-                FileInfo fi = new FileInfo(@"C:\Users\User\Source\Repos\700iq\MainServer\MainServer\bin\Debug\tableOfteames.txt");
+                FileInfo fi = new FileInfo(@"tableOfteames.txt");
                 file = fi.AppendText();
                 label3.Visible = true;
                 List<GameStatistic> gmSt = new List<GameStatistic>();
@@ -1298,7 +1298,7 @@ namespace MainServer
 
         //////////////////////////copy/////////////////////////////
 
-        private void ListKomand_CellContentClick(object sender, DataGridViewCellEventArgs e)
+/*        private void ListKomand_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if ((ListKomand.CurrentCell.ColumnIndex == 7) && (start.Text == "Поехали"))
             {
@@ -1332,7 +1332,7 @@ namespace MainServer
                     }
                 }
             }
-        }
+        }*/
 
         private void Form1_Load(object sender, EventArgs e)
         {
