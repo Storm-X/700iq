@@ -144,7 +144,7 @@ namespace _700IQ
             axWindowsMediaPlayer1.Visible = false;
             #region //описание кнопки входа
             Point pn = NewPoint(1060, 691);
-            //pn.X += delta;
+            pn.X += delta < 0 ? delta : 0;
             bmp = Properties.Resources.rotor;
             PictureBox pcBox = new PictureBox()
             {
@@ -287,7 +287,7 @@ namespace _700IQ
                 Image = bmp,
                 BackColor = Color.Transparent,
                 Location = new Point(delta, 0),
-                //BorderStyle = BorderStyle.FixedSingle
+                BorderStyle = BorderStyle.FixedSingle
             };
 
             TextBox logintb = new TextBox()
@@ -296,7 +296,7 @@ namespace _700IQ
                 Name = "login",
                 AutoSize = false,
                 Size = NewSize(300, 60),
-                Location = NewPoint(1005, 780),
+                Location = NewRelPoint(1175, 780),
                 BackColor = Color.LightGray,
                 AutoCompleteMode = AutoCompleteMode.SuggestAppend,
                 AutoCompleteSource = AutoCompleteSource.CustomSource,
@@ -312,7 +312,7 @@ namespace _700IQ
                 Parent = lb,
                 AutoSize = false,
                 Size = NewSize(300, 60),
-                Location = NewPoint(1005, 928),            
+                Location = NewRelPoint(1175, 928),            
                 BackColor=Color.LightGray,
                 BorderStyle=BorderStyle.None,
                 Font = new Font("Cambria", NewFontSize(20)),             
@@ -327,7 +327,7 @@ namespace _700IQ
             PictureBox pcBox = new PictureBox()
             {
                 Parent = lb,
-                Location = NewPoint(980, 1100),
+                Location = NewRelPoint(1150, 1100),
                 BackColor = Color.Transparent,
                 Size = NewSize(200, 200),
                 Image = bmp,
@@ -1210,8 +1210,14 @@ namespace _700IQ
         #region // регион вспомогательных процедур и функций     
         public Point NewPoint(int x, int y)     //производит пересчет к новым координатам
         {
-            return new Point((x * resolution.Width / 2500) + delta, y * resolution.Height / 1600);
+            //return new Point((x * resolution.Width / 2500) + delta, y * resolution.Height / 1600);
+            return new Point((int)(x * resolution.Width / 2500) + (delta > 0 ? delta : 0), (int)(resolution.Height * y / 1600));
             //return new Point((int)(x * this.Width / 2500), (int)(this.Height * y / 1600));
+        }
+        public Point NewRelPoint(int x, int y)     //производит пересчет к новым координатам
+        {
+            //resolution = GetWorkingClientSize(myWorkForm);
+            return new Point((int)(x * resolution.Width / 2500), (int)(resolution.Height * y / 1600));
         }
         public Size NewSize(int x, int y)  //производит пересчет к новым размерам
         {
@@ -1342,6 +1348,8 @@ namespace _700IQ
         {
             DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти из игры?", "Предупреждение!!!", MessageBoxButtons.YesNo);
             if (result == DialogResult.No) e.Cancel = true;
+            else
+                ruletka?.close();
         }
 
         private void GeneralForm_Load(object sender, EventArgs e)

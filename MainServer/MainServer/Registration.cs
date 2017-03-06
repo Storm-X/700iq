@@ -86,7 +86,7 @@ namespace MainServer
                                     DataRow[] datRowN = ddt.Select("Команда='" + ssi[0] + "'");
                                     string kluch = dat.Rows[0][2].ToString() + ddt.Rows.Count + DateTime.Now.ToString("hh:mm:ss:fff");
                                     #region если игра началась и команда играла, то заменяем ключ и берем значение data
-                                    if (team.getStart())
+                                    if (team.getStart() || datRowN.Count() > 0)
                                     {
                                         if (datRowN.Count() > 0)
                                         {

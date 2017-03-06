@@ -251,12 +251,12 @@ namespace MainServer
         }
         public bool inGameZone(string id)
         {
-            bool proverka = false;
             for (int i = 0; i < 3; i++)
             {
-                if (data.team[i].kod == id) proverka = true;
+                if (data.team[i].kod == id)
+                    return true;
             }
-            return proverka;
+            return false;
         }
         public bool getOtvet(int table, string otv, byte step, IPEndPoint point)         //получение ответа команды
         {

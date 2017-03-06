@@ -217,7 +217,7 @@ namespace MainServer
                         }
                         ListKomand.DataSource = dt;
                         ListKomand.Columns[3].Visible = false;
-                        //MassGameZone.Add(gz);
+                        MassGameZone.Add(gz);
                     }
                     else
                     {
@@ -1416,13 +1416,13 @@ namespace MainServer
                                             MassGameZone[resD.uid - 1].Update(resD.step, resD.table, resD.otvet, resD.stavka, endpoint);
                                         }
                                     }
-                                        if (File.Exists(@"C:\Users\User\Source\Repos\700iq\MainServer\MainServer\bin\Debug\tableOfteames.txt"))
+                                        if (File.Exists(@"tableOfteames.txt"))
                                         {
-                                            File.Delete(@"C:\Users\User\Source\Repos\700iq\MainServer\MainServer\bin\Debug\tableOfteames.txt");
+                                            File.Delete(@"tableOfteames.txt");
                                         }
 
                                         StreamWriter file;
-                                        FileInfo fi = new FileInfo(@"C:\Users\User\Source\Repos\700iq\MainServer\MainServer\bin\Debug\tableOfteames.txt");
+                                        FileInfo fi = new FileInfo(@"tableOfteames.txt");
                                         file = fi.AppendText();
 
                                         List<GameStatistic> gmSt = new List<GameStatistic>();
