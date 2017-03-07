@@ -822,7 +822,7 @@ namespace _700IQ
                 {
                     Name = "Iqon",
                     Location = NewPoint(1160, 30),
-                    Text = "",
+                    Text = steck.iCon + " айкон",
                     AutoSize = true,
                     Font = new Font("Arial ", NewFontSize(22)),
                     ForeColor = Color.Gold,
@@ -833,6 +833,7 @@ namespace _700IQ
                 Polosa pol = new Polosa();
                 pol.onPolosaEnd += Step1_4;
                 pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
+                this.Invalidate();
             }
         }
         void Step1_4()  //сообщение серверу --- готов!!!
@@ -888,11 +889,12 @@ namespace _700IQ
             else
             {
                 tbl.TemaShow(steck, true);
-                this.Controls["Iqon"].Text = steck.iCon + " айкон";
+                //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
                 ruletka = new Rul();
                 ruletka.StartRul(steck.Cell, kv, this, 2); //2 ячейка ??? надо ли??
                 ruletka.onStop += Step2_3;
+                this.Invalidate();
             }
         }
         void Step2_3()  //Выпавшая тема вопроса  и прием ставок
@@ -966,7 +968,7 @@ namespace _700IQ
                 Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
                 Graphics g = Graphics.FromImage(bmp);
                 this.BackgroundImage = bmp;
-                this.Controls["Iqon"].Text = steck.iCon + " айкон";
+                //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 otvetStatic = new Otvet(cn, predUs, tableOfKom, this);
                 otvetStatic.svitok(steck, predUs);
                 ruletka = new Rul();
@@ -1131,8 +1133,8 @@ namespace _700IQ
             }
             else
             {
-                otvetStatic.semafor(0);
-                otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.correct);// вывод ответа третьей команды
+                otvetStatic?.semafor(0);
+                otvetStatic?.answer(3, steck.team[steck.o3 - 1].answer, steck.correct);// вывод ответа третьей команды
 
                 if (!steck.correct)//если ответ не верный
                 {
@@ -1169,17 +1171,26 @@ namespace _700IQ
             else
             {
                 bIconFinalised = false;
-                this.Controls["Iqon"].Text = "";
-                if (otvetStatic != null)
-                    otvetStatic.close();
-                otvetStatic = null;
-                if (ruletka != null)
-                    ruletka.close();
-                ruletka = null;
+                this.Controls["Iqon"].Dispose(); // Text = "";
+                //if (otvetStatic != null)
+                    otvetStatic?.close();
+                //otvetStatic = null;
+                //if (ruletka != null)
+                    ruletka?.close();
+                //ruletka = null;
+                this.Invalidate();
                 if (steck.iCon > 12)
                     Step10();
                 else
-                    Step1_3();
+                {
+                    /*SendData sd = new SendData();
+                    sd.kluch = kluch;
+                    sd.table = (byte)tableOfKom;
+                    sd.uid = predUs.GameZone;
+                    sd.step = 7;
+                    cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));*/
+                    //    Step1_3();
+                }
             }
         }
         void Step10()

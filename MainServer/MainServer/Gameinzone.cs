@@ -139,7 +139,7 @@ namespace MainServer
                     break;
                 case 6:
                     if (Takt == 4) return;
-                   // gm.step = 7;
+                    gm.step = 1;
                     bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
                     gm.step = 1;
@@ -162,7 +162,7 @@ namespace MainServer
                         }
                         else
                         {
-                            if(Takt != 0)
+                            if (Takt != 0)
                             {
                                 bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                                 udp.Send(bytes, bytes.Length, point);
@@ -367,7 +367,7 @@ namespace MainServer
                         gm.Cell = rn.rnd();
                         if (gm.Cell == 0)
                         {
-                            gm.step = 2;
+                            gm.step = 1;
                             //gm.iCon++;                  
                             //Takt = 0;
                             endOfIqon = true;

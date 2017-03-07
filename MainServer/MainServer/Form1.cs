@@ -109,6 +109,7 @@ namespace MainServer
                     DBLink.BackColor = Color.GreenYellow;
                     DBLink.Text = "Связь установлена";
                     GameButton.Enabled = true;
+                    GameButton.PerformClick();
                 }
                 else
                 {
@@ -215,8 +216,8 @@ namespace MainServer
                         {
                             dt.Rows.Add(new Object[] { log.dataLog.GameZone, log.dataLog.team[k].uid, log.dataLog.team[k].name, "", log.dataLog.team[k].rating, log.dataLog.team[k].iQash, log.dataLog.team[k].table, false });
                         }
-                        ListKomand.DataSource = dt;
-                        ListKomand.Columns[3].Visible = false;
+//                        ListKomand.DataSource = dt;
+//                        ListKomand.Columns[3].Visible = false;
                         MassGameZone.Add(gz);
                     }
                     else
@@ -230,6 +231,7 @@ namespace MainServer
             GameButton.Text = "Игра выбрана";
             GameButton.BackColor = Color.GreenYellow;
             ButtonReg.Enabled = true;
+            ButtonReg.PerformClick();
             infoGame.Visible = true;
         }
         private void Registration_Click(object sender, EventArgs e)         //4 кнопка - начать регистрацию команд
@@ -244,8 +246,10 @@ namespace MainServer
                 rgData.canReg = true;
                 Zapros();
                 ListKomand.DataSource = dt;
+                ListKomand.Columns[1].Visible = false;
                 ListKomand.Columns[3].Visible = false;
-                //ListKomand.Columns[4].Visible = false;
+                ListKomand.Columns[2].FillWeight = 800;
+
                 ButtonReg.BackColor = Color.GreenYellow;
                 ButtonReg.Text = "Идет Регистрация";
                 reg = new Registration();                //подключение к классу registration                             
@@ -253,9 +257,10 @@ namespace MainServer
 
                 foreach(DataGridViewColumn lkCell in ListKomand.Columns)
                 {
-                    lkCell.ReadOnly = lkCell.Name == "I-кэш" ? false : true;
-                    //ListKomand.Columns[6].ReadOnly = true;
+                    lkCell.HeaderText = dt.Columns[lkCell.Name].Caption;
+                    lkCell.ReadOnly = lkCell.Name == "I-cash" ? false : true;
                 }
+                //ListKomand.Columns["I-cash"].ReadOnly = false;
 
                 #region создание экземпляра КОМАНДА и ТЕМА
                 for (int i = 0; i < 3; i++)
@@ -559,7 +564,7 @@ namespace MainServer
                 #region возобновление игры по LOG
                 if (Vozobnovlenie) //если игра была прервана и требуется возобновление игры
                 {
-                    string sql = "SELECT id, zone, gameid, iqon_num, command FROM logs " +
+                    /*string sql = "SELECT id, zone, gameid, iqon_num, command FROM logs " +
                         "WHERE gameid=" + data.idGame + " AND iqon_num=(SELECT iqon_num FROM logs t1 WHERE t1.zone=logs.zone AND t1.gameid=logs.gameid " +
                         "ORDER BY iqon_num DESC LIMIT 1) ORDER BY zone";
 
@@ -604,11 +609,6 @@ namespace MainServer
                                         break;
                                     }
                                 }
-                            /*
-                            for (int counter_users = 0; counter_users < 3; counter_users++)
-                            {
-                                gz.users.Add(5);
-                            }*/
                           //  gz.gs = new GameStatistic(log.dataLog.GameZone.ToString(), log.gmLog.iCon.ToString(), 1400, 50 + (i * 35));
 
                             MassGameZone.Add(gz);
@@ -621,7 +621,7 @@ namespace MainServer
                             MassGameZone.Add(gz);
                         }
 
-                    }
+                    }*/
                     lot.BackColor = Color.GreenYellow;
                     lot.Text = "Рассадка закончена";
                     Anons.Enabled = true;
@@ -660,7 +660,7 @@ namespace MainServer
                     dt.Rows.Add(dtrow);
                 }
 
-                dt.DefaultView.Sort = "zona ASC";
+                dt.DefaultView.Sort = "Zone ASC";
                 ListKomand.DataSource = dt;
                
                 int numKom = dt.Rows.Count; //количество команд
