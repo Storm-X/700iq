@@ -178,7 +178,7 @@ namespace MainServer
                     {
                         if (Takt != 0) return;
                         ok[table] = true;
-                        tm.Interval = 25000;
+                        tm.Interval = 40000;
                         tm.Start();
                         if (ok[0] && ok[1] && ok[2])
                         {
