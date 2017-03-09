@@ -126,6 +126,11 @@ namespace MainServer
             endpoint[table] = point;
             switch (step)
             {
+                case 1:
+                    gm.step = 1;
+                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                    udp.Send(bytes, bytes.Length, point);
+                    break;
                 case 4:
                     if (Takt == 2) return;
                     bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
@@ -139,10 +144,10 @@ namespace MainServer
                     break;
                 case 6:
                     if (Takt == 4) return;
-                    gm.step = 1;
+                   // gm.step = 7;
                     bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
-                    gm.step = 1;
+                    //gm.step = 1;
                     break;
             }
         }
@@ -162,7 +167,7 @@ namespace MainServer
                         }
                         else
                         {
-                            if (Takt != 0)
+                            if(Takt != 0)
                             {
                                 bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                                 udp.Send(bytes, bytes.Length, point);
@@ -367,7 +372,7 @@ namespace MainServer
                         gm.Cell = rn.rnd();
                         if (gm.Cell == 0)
                         {
-                            gm.step = 1;
+                            gm.step = 2;
                             //gm.iCon++;                  
                             //Takt = 0;
                             endOfIqon = true;
@@ -574,6 +579,8 @@ namespace MainServer
                 {
                     stavka[i] = 0;
                     ok[i] = false;
+                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
                 }
             }
         }

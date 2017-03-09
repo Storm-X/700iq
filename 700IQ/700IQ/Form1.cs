@@ -1183,12 +1183,12 @@ namespace _700IQ
                     Step10();
                 else
                 {
-                    /*SendData sd = new SendData();
+                    SendData sd = new SendData();
                     sd.kluch = kluch;
                     sd.table = (byte)tableOfKom;
                     sd.uid = predUs.GameZone;
-                    sd.step = 7;
-                    cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));*/
+                    sd.step = 1;
+                    cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
                     //    Step1_3();
                 }
             }
