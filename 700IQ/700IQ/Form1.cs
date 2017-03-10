@@ -1019,7 +1019,7 @@ namespace _700IQ
                     g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 1050));
                     Polosa pol = new Polosa();
                     pol.onPolosaEnd += Step9;
-                    pol.polosa(500, NewPoint(1600, 1350), this, "Step4 - Zero");
+                    pol.polosa(100, NewPoint(1600, 1350), this, "Step4 - Zero");
                 }
             }
         }
@@ -1146,7 +1146,7 @@ namespace _700IQ
                     g.DrawString("Ваши ставки переходят казино!", new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(1400, 1050));
                     Polosa pol = new Polosa();
                     pol.onPolosaEnd += Step9;
-                    pol.polosa(500, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
+                    pol.polosa(50, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
 
                 }
                 else

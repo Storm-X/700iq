@@ -567,11 +567,11 @@ namespace _700IQ
                     BackColor = Color.Transparent
                 };
 
-                if (steckIn.iCon % 2 != 0)
+                /*if (steckIn.iCon % 2 != 0)
                 {
                     fileName = steckIn.iCon + ".jpg";
                     picWidth = 600;
-                }
+                }*/
                 picBox1 = new PictureBox()
                 {
                     Parent = bgrdPic,
