@@ -170,46 +170,52 @@ namespace _700IQ
 
         private void dataReceive(string response)
         {
-
-            switch (response.Substring(0, 5))
+            try
             {
-                case "regOk":
-                    ini3(response.Substring(5));
-                    break;
-                case "Teams":
-                    teamLst = JsonConvert.DeserializeObject<AutoCompleteStringCollection>(response.Substring(5));
-                    Ini1();
-                    break;
-                case "False":
-                    MessageBox.Show("Неверный логин или пароль!");
-                    break;
-                case "IPtwo":
-                    MessageBox.Show("Повторный IP-адресс");
-                    break;
-                case "Error":
-                    if (errorLabel == null)
-                    {
-                        errorLabel = new Label()
+                switch (response.Substring(0, 5))
+                {
+                    case "regOk":
+                        ini3(response.Substring(5));
+                        break;
+                    case "Teams":
+                        teamLst = JsonConvert.DeserializeObject<AutoCompleteStringCollection>(response.Substring(5));
+                        Ini1();
+                        break;
+                    case "False":
+                        MessageBox.Show("Неверный логин или пароль!");
+                        break;
+                    case "IPtwo":
+                        MessageBox.Show("Повторный IP-адресс");
+                        break;
+                    case "Error":
+                        if (errorLabel == null)
                         {
-                            Parent = this,
-                            Name = "oneuse",
-                            Text = "Сервер недоступен или процедура регистрации не начата",
-                            AutoSize = true,
-                            Font = new Font("Arial ", NewFontSize(10)),
-                            ForeColor = Color.Gold,
-                            BackColor = Color.Transparent,
-                            Location = NewPoint(2000, 1560),
-                        };
+                            errorLabel = new Label()
+                            {
+                                Parent = this,
+                                Name = "oneuse",
+                                Text = "Сервер недоступен или процедура регистрации не начата",
+                                AutoSize = true,
+                                Font = new Font("Arial ", NewFontSize(10)),
+                                ForeColor = Color.Gold,
+                                BackColor = Color.Transparent,
+                                Location = NewPoint(2000, 1560),
+                            };
 
-                        MyTimer = new System.Timers.Timer();
-                        MyTimer.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
-                        MyTimer.AutoReset = false;
-                    }
+                            MyTimer = new System.Timers.Timer();
+                            MyTimer.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
+                            MyTimer.AutoReset = false;
+                        }
 
-                    MyTimer.Interval = 5000;
-                    MyTimer. Start();
-                    break;
+                        MyTimer.Interval = 5000;
+                        MyTimer.Start();
+                        break;
+                }
             }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            } 
         }
         public void timer1_Tick(object sender, System.Timers.ElapsedEventArgs e)
         {
