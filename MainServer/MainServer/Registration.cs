@@ -43,8 +43,9 @@ namespace MainServer
                     switch (direction)
                     {
                         case "hi":
-                            ServerResponseBytes = Encoding.UTF8.GetBytes("700iq");
-                            await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
+                            str = "700iq";
+                            //ServerResponseBytes = Encoding.UTF8.GetBytes("700iq");
+                            //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
                             break;
                         case "tm":
                             string teamname = "SELECT name FROM teams ORDER BY name";
@@ -57,8 +58,8 @@ namespace MainServer
                             }
                             var stringArr = dat.AsEnumerable().Select(r => r.Field<string>("Name")).ToArray();
                             str = "Teams" + JsonConvert.SerializeObject(stringArr);
-                            ServerResponseBytes = Encoding.UTF8.GetBytes(str);
-                            await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
+                            //ServerResponseBytes = Encoding.UTF8.GetBytes(str);
+                            //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
                             cm.Dispose();
                             rd.Dispose();
                             break;

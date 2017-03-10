@@ -73,54 +73,59 @@ namespace _700IQ
         private IPAddress ServerSearch()
         {
             IPAddress[] IPs = new IPAddress[5];
-            IPs[0] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server1", "10.10.10.10"));
-            IPs[1] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server2", "10.10.10.10"));
-            IPs[2] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server3", "10.10.10.10"));
-            IPs[3] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server4", "10.10.10.10"));
-            IPs[4] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server5", "10.10.10.10"));
+            /*IPs[0] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server1", "127.0.0.1"));
+            IPs[1] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server2", "127.0.0.1"));
+            IPs[2] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server3", "127.0.0.1"));
+            IPs[3] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server4", "127.0.0.1"));
+            IPs[4] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server5", "127.0.0.1"));*/
+            IP = null;
             string response = "";
-        string datagram = "hi";
-        int correct_server = 0;
-      
-            for (int i = 0; i<IPs.Count(); i++)
-            {
-                using (var tcpClient = new TcpClient())
+            string datagram = "hi";
+            int correct_server = 0;
+
+                try
                 {
-                    try
+                    for (int i = 0; i < IPs.Count(); i++)
                     {
-
-                        if (tcpClient.ConnectAsync(IPs[i], 2050).Wait(200))
+                        using (var tcpClient = new TcpClient())
                         {
-                            using (var networkStream = tcpClient.GetStream())
+                            IPs[i] = IPAddress.Parse(fIni.IniReadValue("Settings", string.Format("Server{0}", i + 1), "127.0.0.1"));
+                            if (tcpClient.ConnectAsync(IPs[i], 2050).Wait(200))
                             {
-                                byte[] result;
-                                result = Encoding.UTF8.GetBytes(datagram);
-                                networkStream.Write(result, 0, result.Length);
-
-                                var buffer = new byte[4096];
-                                var byteCount = networkStream.Read(buffer, 0, buffer.Length);
-                                response = Encoding.UTF8.GetString(buffer, 0, byteCount);
-
-                                if (response == "700iq")
+                                using (var networkStream = tcpClient.GetStream())
                                 {
-                                    correct_server++;
-                                    if (IP == null) IP = ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address;
-                                    break;
+                                    byte[] result;
+                                    result = Encoding.UTF8.GetBytes(datagram);
+                                    networkStream.Write(result, 0, result.Length);
+
+                                    var buffer = new byte[4096];
+                                    var byteCount = networkStream.Read(buffer, 0, buffer.Length);
+                                    response = Encoding.UTF8.GetString(buffer, 0, byteCount);
+
+                                    if (response == "700iq")
+                                    {
+                                        correct_server++;
+                                        if (IP == null) IP = ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address;
+                                        networkStream.Close();
+                                        tcpClient.Close();
+                                        break;
+                                    }
+                                    networkStream.Close();
                                 }
                             }
+                            tcpClient.Close();
                         }
                     }
-                    catch (Exception ex)
-                    { }
-                    finally
-                    {
-                        tcpClient.Close();
-                    }
                 }
-            }
-            if (correct_server == 0) dataReceive("Error");
-         //   if (IP != null) MessageBox.Show(IP.ToString());
-            return IP;
+                catch (Exception ex)
+                { }
+    /*            finally
+                {
+                    tcpClient.Close();
+                }*/
+                if (IP == null) dataReceive("Error");
+             //   if (IP != null) MessageBox.Show(IP.ToString());
+                return IP;
         }
         void IniScreen()//Инициализация начальной картинки и определение размеров экрана 
         {
@@ -222,7 +227,7 @@ namespace _700IQ
             }
             else
             {
-                errorLabel.Dispose();
+                errorLabel?.Dispose();
                 errorLabel = null;
             }
         }
@@ -420,10 +425,15 @@ namespace _700IQ
             #endregion
             #region//описание поля с информацией о членах команды
             spis = "";
-            for (int i = 0; i < 5; i++)
+            int i = 0;
+            foreach (var member in predUs.team[0].member)
+            {
+                spis += member == null ? "" : String.Format("{0}. {1} {2}{3}", ++i, member.F, member.N, Environment.NewLine);
+            }
+            /*for (int i = 0; i < 5; i++)
             {
                 spis += (i+1)+". "+predUs.team[0].member[i].F + " " + predUs.team[0].member[i].N + "\n";
-            }
+            }*/
             Label lb1 = new Label()//список команд
             {
                 Location = NewPoint(1100, 700),
