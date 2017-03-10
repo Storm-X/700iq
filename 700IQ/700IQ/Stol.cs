@@ -23,6 +23,7 @@ namespace _700IQ
         Data predUs;
         Bitmap bmpStol;
         Bitmap[] fish = new Bitmap[3];
+        
         //private Form fsv;
         #endregion
 
@@ -373,94 +374,148 @@ namespace _700IQ
             }));
         }
        
-    }   
-    public class Padge :resize //заставка с зарегистрировавшимися командами
+    }
+    public class Padge : resize //заставка с зарегистрировавшимися командами
     {
+
+        public CustomScrollbar cs;
+        public ListViewWithoutScrollBar listView1;
+        int count = 0;
+        int step;
+        int visible_count = 0;
         public void spisokOut(GeneralForm fm, DataTable dt, Data predUs)//вывод спсок зарегистрированных команд
         {
             //    if (iniEnd) return;
             //int ctrCount = fm.Controls.Count;
             //for (int i = 0; i <= ctrCount; i++) fm.Controls.RemoveByKey("oneuse");//очистка экрана от временных элементов
             workForm = fm;
-            string spis = "";
-            //= "Зарегистрировавшиеся команды:\n\n";          
-            int ii = 1;
-            string tab = "";
-            DataRow[] dtRow = dt.Select();
-            for (int i = 0; i < dtRow.Length; i++)
-            {
-                spis += ii.ToString() + ". " + dtRow[i][2];
-                if ((ii.ToString() + ". " + dtRow[i][2]).Length < 9) tab = "\t\t\t\t\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 13) tab = "\t\t\t\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 17) tab = "\t\t\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 21) tab = "\t\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 25) tab = "\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 29) tab = "\t";
-                spis += tab + dtRow[i][4] + "\n";
-                ii += 1;
-            };
 
+            //= "Зарегистрировавшиеся команды:\n\n";          
+            DataRow[] dtRow = dt.Select();
             #region//описание полей вывода информации список команд
             workForm.BeginInvoke(new MethodInvoker(() =>
+            {
+                //resolution = Screen.FromControl(fm).WorkingArea.Size;
+                foreach (Control t in workForm.Controls.Find("oneuse", true))
+                    workForm.Controls.Remove(t);
+                Label zagolovok = new Label
                 {
-                    //resolution = Screen.FromControl(fm).WorkingArea.Size;
-                    foreach (Control t in workForm.Controls.Find("oneuse", true))
-                        workForm.Controls.Remove(t);
-                    Label zagolovok = new Label
-                    {
-                        Parent = workForm,
-                        Name = "oneuse",
-                        BackColor = Color.Transparent,
-                        ForeColor = Color.White,
-                        Font = new Font("times new roman", NewFontSize(20), FontStyle.Italic),
-                        Text = "Зарегистрировавшиеся команды:",
-                        Location = NewPoint(800, 350),
-                        Size = NewSize(700, 100),
-                    };
-                    RichTextBox lb = new RichTextBox()//список команд
-                    {
-                        Location = NewPoint(800, 520),
-                        Size = NewSize(1200, 900),
-                        Parent = workForm,
-                        Text = spis,
-                        Font = new Font("times new roman", NewFontSize(25), FontStyle.Italic),//Courier New
-                        BackColor = Color.Green,
-                        ForeColor = Color.WhiteSmoke,
-                        Name = "oneuse",
-                        Multiline = true,
-                    };
+                    Parent = workForm,
+                    Name = "oneuse",
+                    BackColor = Color.Transparent,
+                    ForeColor = Color.White,
+                    Font = new Font("times new roman", NewFontSize(20), FontStyle.Italic),
+                    Text = "Зарегистрировавшиеся команды:",
+                    Location = NewPoint(800, 350),
+                    Size = NewSize(700, 50),
+                };
+                Point pn = NewPoint(800, 400);
+                listView1 = new ListViewWithoutScrollBar()
+                {
+                    Name = "oneuse",
+                    Location = pn,
+                    Size = NewSize(1700, 800),
+                    Parent = workForm,
+                    Font = new Font("times new roman", NewFontSize(25), FontStyle.Italic),
+                    ForeColor = Color.Gold,
+                    BorderStyle = BorderStyle.None,
+                    BackgroundImageTiled = true,
+                    View = View.Details,
+                    LabelEdit = true,
+                    AllowColumnReorder = true,
+                    
+                    HeaderStyle = ColumnHeaderStyle.None
+                    
+                    
+                };
+      
 
-                    #endregion
-                    #region начало игры
-                    Label lbr = new Label()//--------------------игра начнется
-                    {
-                        Parent = workForm,
-                        Visible = true,
-                        Location = NewPoint(80, 800),
-                        TextAlign = ContentAlignment.TopCenter,
-                        Size = NewSize(500, 100),
-                        Name = "oneuse",
-                        Text = "Игра начнется в",
-                        BackColor = Color.Transparent,
-                        Font = new Font("Cambria ", NewFontSize(20)),
-                        ForeColor = Color.White
+                listView1.BackgroundImage = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(listView1.Location.X, listView1.Location.Y, listView1.Width, listView1.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                listView1.Items.Add(new ListViewItem(new string[] { "№", "Название", "Рейтинг" }));
 
-                    };
-                    Label lbrn = new Label()//время
+                for (int j = 0; j < 5; j++)
+                {
+                    for (int i = 0; i < dtRow.Length; i++)
                     {
-                        Parent = workForm,
-                        Visible = true,
-                        Location = NewPoint(80, 890),
-                        Name = "oneuse",
-                        TextAlign = ContentAlignment.TopCenter,
-                        Size = NewSize(500, 300),
-                        Text = predUs.startTime.ToString("t"),
-                        BackColor = Color.Transparent,
-                        Font = new Font("Cambria ", NewFontSize(25)),
-                        ForeColor = Color.White
+                        listView1.Items.Add(new ListViewItem(new string[] { (i + 1).ToString(), dtRow[i][2].ToString(), dtRow[i][4].ToString() }));
                     };
-                }));
+                }
+ 
+
+                listView1.Columns.Add("", -2, HorizontalAlignment.Left);
+                listView1.Columns.Add("", -2, HorizontalAlignment.Left);
+                listView1.Columns.Add("", -2, HorizontalAlignment.Left);
+                listView1.Columns[0].Width = new Size((int)(listView1.Width * 0.05), 500).Width;
+                listView1.Columns[1].Width = new Size((int)(listView1.Width * 0.75), 500).Width;
+                listView1.Columns[2].Width = new Size((int)(listView1.Width * 0.15), 500).Width;
+                visible_count = listView1.Height / (listView1.Font.Height + 4);
+                 step =100 / (listView1.Items.Count- visible_count);
+                 cs = new CustomScrollbar()
+                {
+                    Parent = listView1,
+                    ChannelColor = Color.Transparent,
+                    LargeChange = 0,
+                    Location = new Point((int)(listView1.Width*0.95),0),
+                    Maximum = 100,
+                    Minimum = 1,
+                    MinimumSize = NewSize(15, 92),
+                    Name = "cs",
+                    Size = new Size(20, listView1.Height),
+                    SmallChange = 0,
+                    BackColor = Color.Transparent,
+                    BorderStyle = BorderStyle.None,
+                    TabIndex = 1,
+                    Value = 0
+
+                };
+                cs.Scroll += Cs_Scroll;
+                if (visible_count >= listView1.Items.Count)
+                {
+                    cs.Visible = false;
+                }
+                else
+                {
+                    cs.Visible = true;
+                }
+
+                #endregion
+                #region начало игры
+                Label lbr = new Label()//--------------------игра начнется
+                {
+                    Parent = workForm,
+                    Visible = true,
+                    Location = NewPoint(80, 800),
+                    TextAlign = ContentAlignment.TopCenter,
+                    Size = NewSize(500, 100),
+                    Name = "oneuse",
+                    Text = "Игра начнется в",
+                    BackColor = Color.Transparent,
+                    Font = new Font("Cambria ", NewFontSize(20)),
+                    ForeColor = Color.White
+
+                };
+                Label lbrn = new Label()//время
+                {
+                    Parent = workForm,
+                    Visible = true,
+                    Location = NewPoint(80, 890),
+                    Name = "oneuse",
+                    TextAlign = ContentAlignment.TopCenter,
+                    Size = NewSize(500, 300),
+                    Text = predUs.startTime.ToString("t"),
+                    BackColor = Color.Transparent,
+                    Font = new Font("Cambria ", NewFontSize(25)),
+                    ForeColor = Color.White
+                };
+            }));
             #endregion
+        }
+
+        private void Cs_Scroll(object sender, EventArgs e)
+        {
+
+            listView1.TopItem = listView1.Items[cs.Value/step];
+            
         }
     }
     public class Otvet : resize//ответ на вопрос и показ очереди ответа

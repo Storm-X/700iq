@@ -1,0 +1,81 @@
+body 
+{
+	margin: 0;
+	padding: 0;
+	background:url(background.jpg) no-repeat;
+	font-family: "Lucida Grande", Verdana, sans-serif;
+	font-size: 100%;
+}
+h3{
+		margin:5px;
+
+}
+
+ul#sliding-navigation
+{
+	list-style: none;
+	font-size: .75em;
+	margin: 10px;
+
+	padding: 0;
+}
+
+ul#sliding-navigation li.sliding-element h3,
+ul#sliding-navigation li.sliding-element a
+{
+	display: block;
+	width: 150px;
+	padding: 5px 18px;
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+ul#sliding-navigation li.sliding-element h2
+{
+	color: #fff;
+	background:#333 url(heading_bg.jpg) repeat-y;
+	font-weight: normal;
+}
+.team
+{		
+display: inline-block;
+
+
+white-space: pre;
+}
+.name
+{
+text-align: left;
+background-color: rgba(200, 200, 200,0.2);
+	width: 80%;
+	padding-left: 5px;
+}
+.iq
+{
+text-align: right;
+background-color: rgba(200, 200, 200,0.2);
+padding-right: 5px;
+width: 10%;
+}
+.number
+{	
+
+	color: gray;
+	text-align: center;
+	background-color: rgba(200, 200, 200,0.2);
+	width: 10%;
+}	
+
+ul#sliding-navigation li.sliding-element 
+{
+color: gold;
+width: 100%;
+margin-bottom: 5px;
+line-height: 50px;
+
+	
+}
+
+ul#sliding-navigation li.sliding-element a:hover { color: #ffff66; }
+.current { color: #ffff66;}
+.all {color: #999;} 

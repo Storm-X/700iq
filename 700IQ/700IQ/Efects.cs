@@ -175,7 +175,7 @@ namespace _700IQ
                     if (komanda > 5)
                     {
                         lbSt.Visible = false;
-                        lb.Text = "Выигрыш составил - " + komanda + " айкэш";
+                        lb.Text = "Выигрыш  составил "+ lb.Text  + " - " + komanda + " айкэш";
                         lb.Size = NewSize(600, 70);
                         lb.Font = new Font("arial", 15);
                     }
@@ -257,7 +257,7 @@ namespace _700IQ
 
             st = new stakan();
             st.onStop += stavka2;
-            int anons = stav1 + stav2 + stav3 + stav4;;
+            int anons = stav1 + stav2 + stav3 + stav4;
             if (itsStavka) anons = 1;
             st.stak(stav1/25,pn, workForm, anons);
         }

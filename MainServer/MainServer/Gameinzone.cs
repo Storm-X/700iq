@@ -229,6 +229,7 @@ namespace MainServer
             sLog.usersid = usersid;
             //sLog.gmLog.iCon--; //Записываем в базу данные не на начало следующего айкона, а на конец текущего.
 
+
             string sql = " insert into logs (gameid, zone, iqon_num, command) value (" + data.idGame + ", " + data.GameZone + ", " +
                 sLog.gmLog.iCon + ",'" + JsonConvert.SerializeObject(sLog) + "')";
             sql = sql.Replace("\\", "\\\\");

@@ -287,7 +287,7 @@ namespace _700IQ
                 Image = bmp,
                 BackColor = Color.Transparent,
                 Location = new Point(delta, 0),
-                //BorderStyle = BorderStyle.FixedSingle
+                BorderStyle = BorderStyle.Fixed3D
             };
 
             TextBox logintb = new TextBox()
@@ -333,6 +333,8 @@ namespace _700IQ
                 Image = bmp,
                 SizeMode = PictureBoxSizeMode.Zoom,
             };
+
+           
             pcBox.Click += Ini2;
             #endregion                     
             logintb.KeyDown += logintb_KeyDown;
@@ -466,7 +468,7 @@ namespace _700IQ
                 ForeColor = Color.White
             };
             #endregion
-         
+            
 
             Polosa pol = new Polosa();
             pol.onPolosaEnd += ini4;
@@ -485,7 +487,7 @@ namespace _700IQ
 
 
 
-        public void spisokOut(Form fm, DataTable dt, Data predUs)//вывод спсок зарегистрированных команд
+       /* public void spisokOut(Form fm, DataTable dt, Data predUs)//вывод спсок зарегистрированных команд
         {
             //    if (iniEnd) return;
             RemoveTempControls();
@@ -568,7 +570,7 @@ namespace _700IQ
                 //}
                 //));
             #endregion
-        }
+        }*/
 
 
 
@@ -830,6 +832,9 @@ namespace _700IQ
                     BackColor = Color.Transparent,
                 };
 
+
+
+                this.Controls["Iqon"].Text = "";
                 Polosa pol = new Polosa();
                 pol.onPolosaEnd += Step1_4;
                 pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
@@ -888,6 +893,7 @@ namespace _700IQ
             else
             {
                 tbl.TemaShow(steck, true);
+                this.Controls["Iqon"].Text = "";
                 this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
                 ruletka = new Rul();
@@ -966,6 +972,7 @@ namespace _700IQ
                 Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
                 Graphics g = Graphics.FromImage(bmp);
                 this.BackgroundImage = bmp;
+                this.Controls["Iqon"].Text = "";
                 this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 otvetStatic = new Otvet(cn, predUs, tableOfKom, this);
                 otvetStatic.svitok(steck, predUs);
@@ -1068,6 +1075,7 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = steck.team[steck.o1 - 1].stavka;
+
                     stShow.inputStavki(stav, stav, stav, stav, this);
                 }
             }
@@ -1169,7 +1177,7 @@ namespace _700IQ
             else
             {
                 bIconFinalised = false;
-                this.Controls["Iqon"].Text = "";
+                this.Controls["Iqon"].Dispose();
                 if (otvetStatic != null)
                     otvetStatic.close();
                 otvetStatic = null;
@@ -1210,22 +1218,23 @@ namespace _700IQ
         #region // регион вспомогательных процедур и функций     
         public Point NewPoint(int x, int y)     //производит пересчет к новым координатам
         {
-            return new Point((x * resolution.Width / 2500) + delta, y * resolution.Height / 1600);
+            //MessageBox.Show(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width.ToString() + System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height.ToString());
+            return new Point((x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2500) + delta, y * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1600);
             //return new Point((int)(x * this.Width / 2500), (int)(this.Height * y / 1600));
         }
         public Size NewSize(int x, int y)  //производит пересчет к новым размерам
         {
-            return new Size(x * resolution.Width / 2500, y * resolution.Height / 1600);
+            return new Size(x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2500, y * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1600);
             //return new Size(x * this.Width / 2500, y * this.Height / 1600);
         }
         public Size NewSizeKv(int x)
         {
-            return new Size(x * resolution.Height / 1600, x * resolution.Height / 1600);
+            return new Size(x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1600, x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1600);
             //return new Size(x * this.Height / 1600, x * this.Height / 1600);
         }
         public float NewFontSize(float x)     //производит пересчет к новым координатам
         {
-            return x * resolution.Height / 1017;
+            return x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1017;
             //return new Point((int)(x  this.Width / 2500), (int)(this.Height  y / 1600));
         }
         public void cleanTable(Point pn, Size sz)
