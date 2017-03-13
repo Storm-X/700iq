@@ -898,59 +898,20 @@ namespace MainServer
                 gameStopBut.Enabled = true;
                 gameStopBut.Text = "Игра идет";
                 ListKomand.ReadOnly = false;
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                /* MySqlCommand cm = new MySqlCommand("SELECT id, zone, gameid, iqon_num, command FROM logs WHERE iqon_num = (SELECT iqon_num FROM logs t1 WHERE t1.zone = logs.zone AND t1.gameid = logs.gameid ORDER BY iqon_num DESC LIMIT 1) and gameid = "+ ListGames.CurrentRow.Cells[0].Value + " Order by zone ASC", mycon);
-                 MySqlDataReader rd = cm.ExecuteReader();
-                 DataTable dat = new DataTable();
-                 using (rd)
-                 {
-                     if (rd.HasRows) dat.Load(rd);
-                 }
-
-                 var log = dat.AsEnumerable().Select(r => r.Field<string>("command")).ToArray();
-                 List<SendLog> commandList = new List<SendLog>();//лист содержащий все команды
-                 for (int i = 0; i < log.Length; i++)
-                 {
-                     SendLog l = JsonConvert.DeserializeObject<SendLog>(log[i]);
-                     commandList.Add(l);
-
-                 }*/
-
-
-                if (File.Exists(@"tableOfteames.txt"))
-                {
-                    File.Delete(@"tableOfteames.txt");
-                }
-
-                StreamWriter file;
-                FileInfo fi = new FileInfo(@"tableOfteames.txt");
-                file = fi.AppendText();
                 label3.Visible = true;
-                List<GameStatistic> gmSt = new List<GameStatistic>();
-                List<string> toTable = new List<string>();
-                int count = 0;
                 for (int i = 0; i < MassGameZone.Count; i++)
                 {
                     MassGameZone[i].gs = new GameStatistic(MassGameZone[i].data.GameZone, (MassGameZone[i].gm.iCon).ToString(), 1400, 50 + (i * 35));
                     MassGameZone[i].gs.stopButton.Click += stGame;
-                    for (int j = 0; j < 3; j++)
-                    {
-                        toTable.Add(MassGameZone[i].data.team[j].name.ToString() + ";" + MassGameZone[i].gm.team[j].iQash.ToString());
-                        file.WriteLine(toTable[count].ToString());
-                        count++;
-                    }
-
-
                 }
-                file.Close();
                 ListKomand.ReadOnly = true;
+                f.Show();
+                ToJS();
             }
-            else
-            {
 
-            }
         }
+
         private void stGame(object sender, EventArgs e)
         {
             Button btnPressed = (Button)sender;
@@ -966,6 +927,8 @@ namespace MainServer
                 btnPressed.Text = "Пауза";
             }
         }
+
+
         private void gameStopBut_Click(object sender, EventArgs e)  //приостановка игры
         {
 
@@ -1079,6 +1042,7 @@ namespace MainServer
             }
 
         }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             reloadDB();
@@ -1242,6 +1206,7 @@ namespace MainServer
 
 
         }
+
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
             string questions = "";
@@ -1285,60 +1250,60 @@ namespace MainServer
 
         }
 
-        //////////////////////////copy/////////////////////////////
-        /*        private void ListKomand_CellContentClick(object sender, DataGridViewCellEventArgs e)
-                {
-                    if ((ListKomand.CurrentCell.ColumnIndex == 7) && (start.Text == "Поехали"))
-                    {
-                        if (!(bool)ListKomand.CurrentCell.EditedFormattedValue)
-                        {
-                            foreach (DataGridViewRow r in ListKomand.Rows)
-                            {
-                                if ((int)r.Cells[0].Value == (int)ListKomand[0, ListKomand.CurrentRow.Index].Value)
-                                {
-                                    r.DefaultCellStyle.BackColor = oldColor;
-                                    r.Cells[7].Value = false;
-                                }
-                            }
-                            MassGameZone[Convert.ToInt32(ListKomand[0, ListKomand.CurrentRow.Index].FormattedValue) - 1].ContinueGame();
-                        }
 
-                        else
-                        {
-                            if ((bool)ListKomand.CurrentCell.EditedFormattedValue)
-                            {
-                                oldColor = ListKomand.CurrentRow.DefaultCellStyle.BackColor;
-                                foreach (DataGridViewRow r in ListKomand.Rows)
-                                {
-                                    if ((int)r.Cells[0].Value == (int)ListKomand[0, ListKomand.CurrentRow.Index].Value)
-                                    {
-                                        r.DefaultCellStyle.BackColor = Color.Gray;
-                                        r.Cells[7].Value = true;
-                                    }
-                                }
-                                MassGameZone[Convert.ToInt32(ListKomand[0, ListKomand.CurrentRow.Index].FormattedValue) - 1].stopGame();
-                            }
-                        }
-                    }
-                }*/
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        private enum Message : int
+        {
+            WM_SETREDRAW = 0x000B, // int 11
+            SW_SHOWMAXIMIZED = 0x0003,
+            SW_SHOW = 0x0005,
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            f.FormBorderStyle = FormBorderStyle.None;
+            f.FormClosing += F_FormClosing;
 
+            ShowWindow(f.Handle, (int)Message.SW_SHOWMAXIMIZED);
+            wb = new WebBrowser
+            {
+                Size = new Size(f.Width, f.Height),
+                AllowWebBrowserDrop = false,
+                IsWebBrowserContextMenuEnabled = false,
+                WebBrowserShortcutsEnabled = false,
+                ObjectForScripting = this,
+
+            };
+            wb.Navigate(@"C:\Users\User\Source\Repos\700iq_last\maxup\index.html");
+            f.Controls.Add(wb);
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void F_FormClosing(object sender, FormClosingEventArgs e)
         {
-            WebClient client = new WebClient();
-            Stream stream = client.OpenRead("http://www.professorweb.ru");
-            StreamReader sr = new StreamReader(stream);
-            string newLine;
-            while ((newLine = sr.ReadLine()) != null)
-                richTextBox5.Text += newLine;
-
-
-            stream.Close();
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти из игры?", "Предупреждение!!!", MessageBoxButtons.YesNo);
+            if (result == DialogResult.No) e.Cancel = true;
         }
+
+        private void ToJS()
+        {
+            List<teams> team = new List<teams>();
+            for (int i = 0; i < MassGameZone.Count; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    teams tm = new teams();
+                    tm.name = MassGameZone[i].data.team[j].name.ToString();
+                    tm.iQash = MassGameZone[i].gm.team[j].iQash;
+                    team.Add(tm);
+                }
+            }
+            string json = JsonConvert.SerializeObject(team);
+            wb.Document.InvokeScript("CreateListJson", new String[] { json });
+        }
+
         //////////////////////////copy/////////////////////////////
         private async void Zapros()//получениеи обработка  запросов от команд
         {
@@ -1425,30 +1390,8 @@ namespace MainServer
                                                 MassGameZone[resD.uid - 1].Update(resD.step, resD.table, resD.otvet, resD.stavka, endpoint);
                                             }
                                         }
-                                        if (File.Exists(@"tableOfteames.txt"))
-                                        {
-                                            File.Delete(@"tableOfteames.txt");
-                                        }
+                                        ToJS();
 
-                                        StreamWriter file;
-                                        FileInfo fi = new FileInfo(@"tableOfteames.txt");
-                                        file = fi.AppendText();
-
-                                        List<GameStatistic> gmSt = new List<GameStatistic>();
-                                        List<string> toTable = new List<string>();
-                                        int count = 0;
-                                        for (int i = 0; i < MassGameZone.Count; i++)
-                                        {
-                                            for (int j = 0; j < 3; j++)
-                                            {
-                                                toTable.Add(MassGameZone[i].data.team[j].name.ToString() + ";" + MassGameZone[i].gm.team[j].iQash.ToString());
-                                                file.WriteLine(toTable[count].ToString());
-                                                count++;
-                                            }
-
-
-                                        }
-                                        file.Close();
                                     }
                                     catch (Exception e)
                                     {
