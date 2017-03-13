@@ -138,17 +138,17 @@ namespace MainServer
         {
             dataSet = new DataSet();
             kom = new DataTable("Teams");
-            kom.Columns.Add("Зона",typeof(int));//игровая зона - 0    
+            kom.Columns.Add("Zone",typeof(int)).Caption = "Игровая зона";//игровая зона - 0    
                                                 //DataColumn dcID = 
             kom.Columns.Add("Id",typeof(int));//id команды - 1
             //dcID.Unique=true;
             //dt.PrimaryKey = new DataColumn[] { dt.Columns["Id"] };
-            kom.Columns.Add("Команда",typeof(string));//название команды - 2
-            kom.Columns.Add("Ключ",typeof(string));//ключ сессии - 3
-            kom.Columns.Add("Рейтинг", typeof(short));    //рейтинг     -4              
-            kom.Columns.Add("I-кэш",typeof(int));//айкэш   -5  
-            kom.Columns.Add("Стол", typeof(int));//номер стола    - 6     
-            kom.Columns.Add("Пауза", typeof(bool));//приостановка игры        
+            kom.Columns.Add("Name",typeof(string)).Caption = "Команда";//название команды - 2
+            kom.Columns.Add("Key",typeof(string)).Caption = "Ключ";//ключ сессии - 3
+            kom.Columns.Add("Rating", typeof(short)).Caption = "Рейтинг";    //рейтинг     -4              
+            kom.Columns.Add("I-cash",typeof(int));//айкэш   -5  
+            kom.Columns.Add("Table", typeof(int)).Caption = "Стол";//номер стола    - 6     
+            kom.Columns.Add("Pause", typeof(bool)).Caption = "Пауза";//приостановка игры        
             dataSet.Tables.Add(kom);
 
             mem = new DataTable("Member");

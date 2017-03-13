@@ -73,54 +73,59 @@ namespace _700IQ
         private IPAddress ServerSearch()
         {
             IPAddress[] IPs = new IPAddress[5];
-            IPs[0] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server1", "10.10.10.10"));
-            IPs[1] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server2", "10.10.10.10"));
-            IPs[2] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server3", "10.10.10.10"));
-            IPs[3] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server4", "10.10.10.10"));
-            IPs[4] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server5", "10.10.10.10"));
+            /*IPs[0] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server1", "127.0.0.1"));
+            IPs[1] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server2", "127.0.0.1"));
+            IPs[2] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server3", "127.0.0.1"));
+            IPs[3] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server4", "127.0.0.1"));
+            IPs[4] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server5", "127.0.0.1"));*/
+            IP = null;
             string response = "";
-        string datagram = "hi";
-        int correct_server = 0;
-      
-            for (int i = 0; i<IPs.Count(); i++)
-            {
-                using (var tcpClient = new TcpClient())
+            string datagram = "hi";
+            int correct_server = 0;
+
+                try
                 {
-                    try
+                    for (int i = 0; i < IPs.Count(); i++)
                     {
-
-                        if (tcpClient.ConnectAsync(IPs[i], 2050).Wait(200))
+                        using (var tcpClient = new TcpClient())
                         {
-                            using (var networkStream = tcpClient.GetStream())
+                            IPs[i] = IPAddress.Parse(fIni.IniReadValue("Settings", string.Format("Server{0}", i + 1), "127.0.0.1"));
+                            if (tcpClient.ConnectAsync(IPs[i], 2050).Wait(200))
                             {
-                                byte[] result;
-                                result = Encoding.UTF8.GetBytes(datagram);
-                                networkStream.Write(result, 0, result.Length);
-
-                                var buffer = new byte[4096];
-                                var byteCount = networkStream.Read(buffer, 0, buffer.Length);
-                                response = Encoding.UTF8.GetString(buffer, 0, byteCount);
-
-                                if (response == "700iq")
+                                using (var networkStream = tcpClient.GetStream())
                                 {
-                                    correct_server++;
-                                    if (IP == null) IP = ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address;
-                                    break;
+                                    byte[] result;
+                                    result = Encoding.UTF8.GetBytes(datagram);
+                                    networkStream.Write(result, 0, result.Length);
+
+                                    var buffer = new byte[4096];
+                                    var byteCount = networkStream.Read(buffer, 0, buffer.Length);
+                                    response = Encoding.UTF8.GetString(buffer, 0, byteCount);
+
+                                    if (response == "700iq")
+                                    {
+                                        correct_server++;
+                                        if (IP == null) IP = ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address;
+                                        networkStream.Close();
+                                        tcpClient.Close();
+                                        break;
+                                    }
+                                    networkStream.Close();
                                 }
                             }
+                            tcpClient.Close();
                         }
                     }
-                    catch (Exception ex)
-                    { }
-                    finally
-                    {
-                        tcpClient.Close();
-                    }
                 }
-            }
-            if (correct_server == 0) dataReceive("Error");
-         //   if (IP != null) MessageBox.Show(IP.ToString());
-            return IP;
+                catch (Exception ex)
+                { }
+    /*            finally
+                {
+                    tcpClient.Close();
+                }*/
+                if (IP == null) dataReceive("Error");
+             //   if (IP != null) MessageBox.Show(IP.ToString());
+                return IP;
         }
         void IniScreen()//Инициализация начальной картинки и определение размеров экрана 
         {
@@ -144,7 +149,7 @@ namespace _700IQ
             axWindowsMediaPlayer1.Visible = false;
             #region //описание кнопки входа
             Point pn = NewPoint(1060, 691);
-            //pn.X += delta;
+            pn.X += delta < 0 ? delta : 0;
             bmp = Properties.Resources.rotor;
             PictureBox pcBox = new PictureBox()
             {
@@ -165,46 +170,52 @@ namespace _700IQ
 
         private void dataReceive(string response)
         {
-
-            switch (response.Substring(0, 5))
+            try
             {
-                case "regOk":
-                    ini3(response.Substring(5));
-                    break;
-                case "Teams":
-                    teamLst = JsonConvert.DeserializeObject<AutoCompleteStringCollection>(response.Substring(5));
-                    Ini1();
-                    break;
-                case "False":
-                    MessageBox.Show("Неверный логин или пароль!");
-                    break;
-                case "IPtwo":
-                    MessageBox.Show("Повторный IP-адресс");
-                    break;
-                case "Error":
-                    if (errorLabel == null)
-                    {
-                        errorLabel = new Label()
+                switch (response.Substring(0, 5))
+                {
+                    case "regOk":
+                        ini3(response.Substring(5));
+                        break;
+                    case "Teams":
+                        teamLst = JsonConvert.DeserializeObject<AutoCompleteStringCollection>(response.Substring(5));
+                        Ini1();
+                        break;
+                    case "False":
+                        MessageBox.Show("Неверный логин или пароль!");
+                        break;
+                    case "IPtwo":
+                        MessageBox.Show("Повторный IP-адресс");
+                        break;
+                    case "Error":
+                        if (errorLabel == null)
                         {
-                            Parent = this,
-                            Name = "oneuse",
-                            Text = "Сервер недоступен или процедура регистрации не начата",
-                            AutoSize = true,
-                            Font = new Font("Arial ", NewFontSize(10)),
-                            ForeColor = Color.Gold,
-                            BackColor = Color.Transparent,
-                            Location = NewPoint(2000, 1560),
-                        };
+                            errorLabel = new Label()
+                            {
+                                Parent = this,
+                                Name = "oneuse",
+                                Text = "Сервер недоступен или процедура регистрации не начата",
+                                AutoSize = true,
+                                Font = new Font("Arial ", NewFontSize(10)),
+                                ForeColor = Color.Gold,
+                                BackColor = Color.Transparent,
+                                Location = NewPoint(2000, 1560),
+                            };
 
-                        MyTimer = new System.Timers.Timer();
-                        MyTimer.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
-                        MyTimer.AutoReset = false;
-                    }
+                            MyTimer = new System.Timers.Timer();
+                            MyTimer.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
+                            MyTimer.AutoReset = false;
+                        }
 
-                    MyTimer.Interval = 5000;
-                    MyTimer. Start();
-                    break;
+                        MyTimer.Interval = 5000;
+                        MyTimer.Start();
+                        break;
+                }
             }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            } 
         }
         public void timer1_Tick(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -222,7 +233,7 @@ namespace _700IQ
             }
             else
             {
-                errorLabel.Dispose();
+                errorLabel?.Dispose();
                 errorLabel = null;
             }
         }
@@ -287,7 +298,7 @@ namespace _700IQ
                 Image = bmp,
                 BackColor = Color.Transparent,
                 Location = new Point(delta, 0),
-                BorderStyle = BorderStyle.Fixed3D
+                //BorderStyle = BorderStyle.FixedSingle
             };
 
             TextBox logintb = new TextBox()
@@ -296,7 +307,7 @@ namespace _700IQ
                 Name = "login",
                 AutoSize = false,
                 Size = NewSize(300, 60),
-                Location = NewPoint(1005, 780),
+                Location = NewRelPoint(1175, 780),
                 BackColor = Color.LightGray,
                 AutoCompleteMode = AutoCompleteMode.SuggestAppend,
                 AutoCompleteSource = AutoCompleteSource.CustomSource,
@@ -312,7 +323,7 @@ namespace _700IQ
                 Parent = lb,
                 AutoSize = false,
                 Size = NewSize(300, 60),
-                Location = NewPoint(1005, 928),            
+                Location = NewRelPoint(1175, 928),            
                 BackColor=Color.LightGray,
                 BorderStyle=BorderStyle.None,
                 Font = new Font("Cambria", NewFontSize(20)),             
@@ -327,7 +338,7 @@ namespace _700IQ
             PictureBox pcBox = new PictureBox()
             {
                 Parent = lb,
-                Location = NewPoint(980, 1100),
+                Location = NewRelPoint(1150, 1100),
                 BackColor = Color.Transparent,
                 Size = NewSize(200, 200),
                 Image = bmp,
@@ -422,10 +433,15 @@ namespace _700IQ
             #endregion
             #region//описание поля с информацией о членах команды
             spis = "";
-            for (int i = 0; i < 5; i++)
+            int i = 0;
+            foreach (var member in predUs.team[0].member)
+            {
+                spis += member == null ? "" : String.Format("{0}. {1} {2}{3}", ++i, member.F, member.N, Environment.NewLine);
+            }
+            /*for (int i = 0; i < 5; i++)
             {
                 spis += (i+1)+". "+predUs.team[0].member[i].F + " " + predUs.team[0].member[i].N + "\n";
-            }
+            }*/
             Label lb1 = new Label()//список команд
             {
                 Location = NewPoint(1100, 700),
@@ -824,7 +840,7 @@ namespace _700IQ
                 {
                     Name = "Iqon",
                     Location = NewPoint(1160, 30),
-                    Text = "",
+                    Text = steck.iCon + " айкон",
                     AutoSize = true,
                     Font = new Font("Arial ", NewFontSize(22)),
                     ForeColor = Color.Gold,
@@ -832,12 +848,10 @@ namespace _700IQ
                     BackColor = Color.Transparent,
                 };
 
-
-
-                this.Controls["Iqon"].Text = "";
                 Polosa pol = new Polosa();
                 pol.onPolosaEnd += Step1_4;
                 pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
+                this.Invalidate();
             }
         }
         void Step1_4()  //сообщение серверу --- готов!!!
@@ -893,12 +907,12 @@ namespace _700IQ
             else
             {
                 tbl.TemaShow(steck, true);
-                this.Controls["Iqon"].Text = "";
-                this.Controls["Iqon"].Text = steck.iCon + " айкон";
+                //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
                 ruletka = new Rul();
                 ruletka.StartRul(steck.Cell, kv, this, 2); //2 ячейка ??? надо ли??
                 ruletka.onStop += Step2_3;
+                this.Invalidate();
             }
         }
         void Step2_3()  //Выпавшая тема вопроса  и прием ставок
@@ -972,8 +986,7 @@ namespace _700IQ
                 Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
                 Graphics g = Graphics.FromImage(bmp);
                 this.BackgroundImage = bmp;
-                this.Controls["Iqon"].Text = "";
-                this.Controls["Iqon"].Text = steck.iCon + " айкон";
+                //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 otvetStatic = new Otvet(cn, predUs, tableOfKom, this);
                 otvetStatic.svitok(steck, predUs);
                 ruletka = new Rul();
@@ -1024,7 +1037,7 @@ namespace _700IQ
                     g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 1050));
                     Polosa pol = new Polosa();
                     pol.onPolosaEnd += Step9;
-                    pol.polosa(500, NewPoint(1600, 1350), this, "Step4 - Zero");
+                    pol.polosa(100, NewPoint(1600, 1350), this, "Step4 - Zero");
                 }
             }
         }
@@ -1075,7 +1088,6 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = steck.team[steck.o1 - 1].stavka;
-
                     stShow.inputStavki(stav, stav, stav, stav, this);
                 }
             }
@@ -1139,8 +1151,8 @@ namespace _700IQ
             }
             else
             {
-                otvetStatic.semafor(0);
-                otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.correct);// вывод ответа третьей команды
+                otvetStatic?.semafor(0);
+                otvetStatic?.answer(3, steck.team[steck.o3 - 1].answer, steck.correct);// вывод ответа третьей команды
 
                 if (!steck.correct)//если ответ не верный
                 {
@@ -1152,7 +1164,7 @@ namespace _700IQ
                     g.DrawString("Ваши ставки переходят казино!", new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(1400, 1050));
                     Polosa pol = new Polosa();
                     pol.onPolosaEnd += Step9;
-                    pol.polosa(500, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
+                    pol.polosa(50, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
 
                 }
                 else
@@ -1177,17 +1189,26 @@ namespace _700IQ
             else
             {
                 bIconFinalised = false;
-                this.Controls["Iqon"].Dispose();
-                if (otvetStatic != null)
-                    otvetStatic.close();
-                otvetStatic = null;
-                if (ruletka != null)
-                    ruletka.close();
-                ruletka = null;
+                this.Controls["Iqon"].Dispose(); // Text = "";
+                //if (otvetStatic != null)
+                    otvetStatic?.close();
+                //otvetStatic = null;
+                //if (ruletka != null)
+                    ruletka?.close();
+                //ruletka = null;
+                this.Invalidate();
                 if (steck.iCon > 12)
                     Step10();
                 else
-                    Step1_3();
+                {
+                    SendData sd = new SendData();
+                    sd.kluch = kluch;
+                    sd.table = (byte)tableOfKom;
+                    sd.uid = predUs.GameZone;
+                    sd.step = 1;
+                    cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
+                    //    Step1_3();
+                }
             }
         }
         void Step10()
@@ -1218,23 +1239,28 @@ namespace _700IQ
         #region // регион вспомогательных процедур и функций     
         public Point NewPoint(int x, int y)     //производит пересчет к новым координатам
         {
-            //MessageBox.Show(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width.ToString() + System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height.ToString());
-            return new Point((x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2500) + delta, y * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1600);
+            //return new Point((x * resolution.Width / 2500) + delta, y * resolution.Height / 1600);
+            return new Point((int)(x * resolution.Width / 2500) + (delta > 0 ? delta : 0), (int)(resolution.Height * y / 1600));
             //return new Point((int)(x * this.Width / 2500), (int)(this.Height * y / 1600));
+        }
+        public Point NewRelPoint(int x, int y)     //производит пересчет к новым координатам
+        {
+            //resolution = GetWorkingClientSize(myWorkForm);
+            return new Point((int)(x * resolution.Width / 2500), (int)(resolution.Height * y / 1600));
         }
         public Size NewSize(int x, int y)  //производит пересчет к новым размерам
         {
-            return new Size(x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2500, y * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1600);
+            return new Size(x * resolution.Width / 2500, y * resolution.Height / 1600);
             //return new Size(x * this.Width / 2500, y * this.Height / 1600);
         }
         public Size NewSizeKv(int x)
         {
-            return new Size(x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1600, x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1600);
+            return new Size(x * resolution.Height / 1600, x * resolution.Height / 1600);
             //return new Size(x * this.Height / 1600, x * this.Height / 1600);
         }
         public float NewFontSize(float x)     //производит пересчет к новым координатам
         {
-            return x * System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 1017;
+            return x * resolution.Height / 1017;
             //return new Point((int)(x  this.Width / 2500), (int)(this.Height  y / 1600));
         }
         public void cleanTable(Point pn, Size sz)
@@ -1351,6 +1377,8 @@ namespace _700IQ
         {
             DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти из игры?", "Предупреждение!!!", MessageBoxButtons.YesNo);
             if (result == DialogResult.No) e.Cancel = true;
+            else
+                ruletka?.close();
         }
 
         private void GeneralForm_Load(object sender, EventArgs e)

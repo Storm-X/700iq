@@ -43,8 +43,9 @@ namespace MainServer
                     switch (direction)
                     {
                         case "hi":
-                            ServerResponseBytes = Encoding.UTF8.GetBytes("700iq");
-                            await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
+                            str = "700iq";
+                            //ServerResponseBytes = Encoding.UTF8.GetBytes("700iq");
+                            //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
                             break;
                         case "tm":
                             string teamname = "SELECT name FROM teams ORDER BY name";
@@ -57,12 +58,12 @@ namespace MainServer
                             }
                             var stringArr = dat.AsEnumerable().Select(r => r.Field<string>("Name")).ToArray();
                             str = "Teams" + JsonConvert.SerializeObject(stringArr);
-                            ServerResponseBytes = Encoding.UTF8.GetBytes(str);
-                            await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
+                            //ServerResponseBytes = Encoding.UTF8.GetBytes(str);
+                            //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
                             cm.Dispose();
                             rd.Dispose();
                             break;
-                          case "rg":
+                        case "rg":
                             //если сообщение от клиента на регистрацию и она возможна, то ..
                             if (team.getReg())
                             {
@@ -83,10 +84,10 @@ namespace MainServer
                                 #endregion
                                 if (dat.Rows.Count > 0) //если есть данные , то проверяем в таблице зарегистрированных команд
                                 {
-                                    DataRow[] datRowN = ddt.Select("Команда='" + ssi[0] + "'");
+                                    DataRow[] datRowN = ddt.Select("Name='" + ssi[0] + "'");
                                     string kluch = dat.Rows[0][2].ToString() + ddt.Rows.Count + DateTime.Now.ToString("hh:mm:ss:fff");
                                     #region если игра началась и команда играла, то заменяем ключ и берем значение data
-                                    if (team.getStart())
+                                    if (team.getStart() || datRowN.Count() > 0)
                                     {
                                         if (datRowN.Count() > 0)
                                         {
@@ -157,14 +158,14 @@ namespace MainServer
                                 cm.Dispose();
                                 rd.Dispose();
                             }
-                                break;
+                            break;
                         default:
-                                if (!team.getReg())
-                                {
-                                    str = "No";
-                                    //ServerResponseBytes = Encoding.UTF8.GetBytes(str);
-                                    //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
-                                }
+                            if (!team.getReg())
+                            {
+                                str = "No";
+                                //ServerResponseBytes = Encoding.UTF8.GetBytes(str);
+                                //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
+                            }
                             break;
                     }
                     ServerResponseBytes = Encoding.UTF8.GetBytes(str);

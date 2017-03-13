@@ -45,20 +45,25 @@ namespace _700IQ
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.Black, NewPoint(405, 1155));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.White, NewPoint(400, 1150));
 
-            mesto += 1;
+            mesto++;
             if (mesto > 2) mesto = 0;
             //лево
             g.DrawImage(fish[mesto], NewPoint(200, 150));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.Black, NewPoint(410, 105));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.White, NewPoint(410, 100));
 
-            mesto += 1;
+            mesto++;
             if (mesto > 2) mesto = 0;
             //право
             g.DrawImage(fish[mesto], NewPoint(1900, 150));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.Black, NewPoint(2105, 105));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.White, NewPoint(2100, 100));
 
+
+        }
+
+        ~Table()
+        {
 
         }
         public Bitmap SetIQ(Game steck, int tableofkom) //рассадка тройки за столом
@@ -71,13 +76,13 @@ namespace _700IQ
             g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 1330 + 5));
             g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 1330));
 
-            mesto += 1;
+            mesto++;
             if (mesto > 2) mesto = 0;
             //лево
             g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 280 + 5));
             g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 280));
 
-            mesto += 1;
+            mesto++;
             if (mesto > 2) mesto = 0;
             //право
             g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(2100 + 5, 280 + 5));
@@ -246,18 +251,24 @@ namespace _700IQ
             int[] o = ResponsePriority(steck.Cell, steck.team.Select(x => x.iQash << 2).ToArray());
             var cntEqualTeamsGrp = steck.team.GroupBy(x => x.iQash);                            //Группировка по результату
             int cntEqualTeams = steck.team.Select(x => x.iQash).Distinct().Count();             //Подсчет количества различных результатов у команд
+            workForm.BackgroundImage = bmp;
+            g.DrawString(predUs.GameZone + " игровая зона", new Font("Times New Roman", NewFontSize(50)), Brushes.Black, NewPoint(855, 55));
+            g.DrawString(predUs.GameZone + " игровая зона", new Font("Times New Roman", NewFontSize(50)), Brushes.Yellow, NewPoint(850, 50));
+            g.DrawString("игра  завершена!", new Font("Times New Roman", NewFontSize(30)), Brushes.Black, NewPoint(985, 165));
+            g.DrawString("игра  завершена!", new Font("Times New Roman", NewFontSize(30)), Brushes.Yellow, NewPoint(980, 160));
+
             if (cntEqualTeams != 3)
             {
-                workForm.BackgroundImage = bmp;
-
                 var teamWins = steck.team.Where(c => c.iQash == steck.team.Max(n => n.iQash));      //Команды с максимальным результатом
                 if (teamWins.Count() > 1)                                                            //И количество этих команд
                 {
-                    lbText = teamWins.Count() + " команды закончили игру с максимальным результатом. \nПобедителя определит рулетка!";
+                    lbText = teamWins.Count() + " команды закончили игру с максимальным результатом. " + Environment.NewLine 
+                                              + "Победителя определит рулетка!";
                 }
                 else
                 {
-                    lbText = "Две команды закончили игру с одинаковыми результатами! \n2 и 3 место определит рулетка!";
+                    lbText = "Две команды закончили игру с одинаковыми результатами! " + Environment.NewLine 
+                           + "2 и 3 место определит рулетка!";
                 }
                 Label zagolovok = new Label
                 {
@@ -287,14 +298,9 @@ namespace _700IQ
                 //        }
                 //    }
 
-                g.DrawString(predUs.GameZone + " игровая зона", new Font("Times New Roman", NewFontSize(50)), Brushes.Black, NewPoint(855, 55));
-                g.DrawString(predUs.GameZone + " игровая зона", new Font("Times New Roman", NewFontSize(50)), Brushes.Yellow, NewPoint(850, 50));
-                g.DrawString("игра  завершена с результатом:", new Font("Times New Roman", NewFontSize(30)), Brushes.Black, NewPoint(755, 165));
-                g.DrawString("игра  завершена с результатом:", new Font("Times New Roman", NewFontSize(30)), Brushes.Yellow, NewPoint(750, 160));
-
                 Rul Ruletka = new Rul();
                 Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1700, 210), NewSizeKv(900)), workForm, 3);
-                while (Ruletka.Enabled)
+                while (Ruletka.Enabled && !this.workForm.IsDisposed)
                     Application.DoEvents();
                 zagolovok.Dispose();
                 workForm.Invalidate();
@@ -616,11 +622,11 @@ namespace _700IQ
                     BackColor = Color.Transparent
                 };
 
-                if (steckIn.iCon % 2 != 0)
+                /*if (steckIn.iCon % 2 != 0)
                 {
                     fileName = steckIn.iCon + ".jpg";
                     picWidth = 600;
-                }
+                }*/
                 picBox1 = new PictureBox()
                 {
                     Parent = bgrdPic,
@@ -1321,7 +1327,7 @@ namespace _700IQ
         public Point NewPoint(int x, int y)     //производит пересчет к новым координатам
         {
             //resolution = GetWorkingClientSize(myWorkForm);
-            return new Point((int)(x * resolution.Width / 2500) + delta, (int)(resolution.Height * y / 1600));
+            return new Point((int)(x * resolution.Width / 2500) + (delta > 0 ? delta : 0), (int)(resolution.Height * y / 1600));
         }
         public Point NewRelPoint(int x, int y)     //производит пересчет к новым координатам
         {
