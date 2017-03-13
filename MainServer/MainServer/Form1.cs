@@ -108,8 +108,6 @@ namespace MainServer
                     MessageBox.Show("Нет подключения к Базе данных" + j.Message);
                 }
 
-
-
                 if ((conn.State == ConnectionState.Open) && (mycon.State == ConnectionState.Open))
                 {
                     DBLink.BackColor = Color.GreenYellow;
@@ -122,10 +120,8 @@ namespace MainServer
                     if (conn.State == ConnectionState.Open) conn.Close();
                     if (mycon.State == ConnectionState.Open) mycon.Close();
                 }
-
             }
             else MessageBox.Show("СВязь с БД установлена");
-
         }
         private void Game_Click(object sender, EventArgs e)                 //2 кнопка - выбор игры
         {
@@ -1206,7 +1202,6 @@ namespace MainServer
 
 
         }
-
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
             string questions = "";
@@ -1250,8 +1245,6 @@ namespace MainServer
 
         }
 
-
-
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
@@ -1275,9 +1268,8 @@ namespace MainServer
                 IsWebBrowserContextMenuEnabled = false,
                 WebBrowserShortcutsEnabled = false,
                 ObjectForScripting = this,
-
             };
-            wb.Navigate(@"C:\Users\User\Source\Repos\700iq_last\maxup\index.html");
+            wb.Navigate(Application.StartupPath + @"\maxup\index.html");
             f.Controls.Add(wb);
         }
 
@@ -1391,7 +1383,6 @@ namespace MainServer
                                             }
                                         }
                                         ToJS();
-
                                     }
                                     catch (Exception e)
                                     {
