@@ -49,7 +49,7 @@ namespace MainServer
         bool stopGame = false;              //флаг о преостановке игры
         private MediaServer mServer;
         private System.Timers.Timer tmr;
-        Form f= new Form();
+        Form f = new Form();
         WebBrowser wb;
         IPEndPoint endpoint;
         UdpClient Udp = new UdpClient(2050);
@@ -912,20 +912,20 @@ namespace MainServer
                 gameStopBut.Enabled = true;
                 gameStopBut.Text = "Игра идет";
                 ListKomand.ReadOnly = false;
-          
+
                 label3.Visible = true;
                 for (int i = 0; i < MassGameZone.Count; i++)
                 {
                     MassGameZone[i].gs = new GameStatistic(MassGameZone[i].data.GameZone, (MassGameZone[i].gm.iCon).ToString(), 1400, 50 + (i * 35));
                     MassGameZone[i].gs.stopButton.Click += stGame;
-                   // Ratings rating = new Ratings(MassGameZone[i],mycon);
-                   // rating.ChangeRatings();
+                    // Ratings rating = new Ratings(MassGameZone[i],mycon);
+                    // rating.ChangeRatings();
                 }
-                ListKomand.ReadOnly = true;          
+                ListKomand.ReadOnly = true;
                 f.Show();
                 ToJS();
             }
-            
+
         }
 
         private void stGame(object sender, EventArgs e)
@@ -1282,7 +1282,7 @@ namespace MainServer
         {
             f.FormBorderStyle = FormBorderStyle.None;
             f.FormClosing += F_FormClosing;
-            
+
             ShowWindow(f.Handle, (int)Message.SW_SHOWMAXIMIZED);
             wb = new WebBrowser
             {
@@ -1291,7 +1291,7 @@ namespace MainServer
                 IsWebBrowserContextMenuEnabled = false,
                 WebBrowserShortcutsEnabled = false,
                 ObjectForScripting = this,
-            
+
             };
             wb.Navigate(@"C:\Users\User\Source\Repos\700iq_last\maxup\index.html");
             f.Controls.Add(wb);
