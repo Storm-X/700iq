@@ -11,9 +11,13 @@ using MySql.Data.MySqlClient;
 using System.Data.SQLite;
 using System.Linq;
 using System.IO;
+using System.Security.Permissions;
+using System.Runtime.InteropServices;
 
 namespace MainServer
 {
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+    [System.Runtime.InteropServices.ComVisibleAttribute(true)]
     public partial class Form1 : Form
     {
         #region переменные
@@ -45,6 +49,8 @@ namespace MainServer
         bool stopGame = false;              //флаг о преостановке игры
         private MediaServer mServer;
         private System.Timers.Timer tmr;
+        Form f = new Form();
+        WebBrowser wb;
         IPEndPoint endpoint;
         UdpClient Udp = new UdpClient(2050);
 
