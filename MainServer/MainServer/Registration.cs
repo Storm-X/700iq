@@ -63,7 +63,7 @@ namespace MainServer
                             cm.Dispose();
                             rd.Dispose();
                             break;
-                          case "rg":
+                        case "rg":
                             //если сообщение от клиента на регистрацию и она возможна, то ..
                             if (team.getReg())
                             {
@@ -158,14 +158,14 @@ namespace MainServer
                                 cm.Dispose();
                                 rd.Dispose();
                             }
-                                break;
+                            break;
                         default:
-                                if (!team.getReg())
-                                {
-                                    str = "No";
-                                    //ServerResponseBytes = Encoding.UTF8.GetBytes(str);
-                                    //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
-                                }
+                            if (!team.getReg())
+                            {
+                                str = "No";
+                                //ServerResponseBytes = Encoding.UTF8.GetBytes(str);
+                                //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
+                            }
                             break;
                     }
                     ServerResponseBytes = Encoding.UTF8.GetBytes(str);

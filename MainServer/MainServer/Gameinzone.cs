@@ -144,7 +144,7 @@ namespace MainServer
                     break;
                 case 6:
                     if (Takt == 4) return;
-                   // gm.step = 7;
+                    // gm.step = 7;
                     bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
                     //gm.step = 1;
@@ -167,7 +167,7 @@ namespace MainServer
                         }
                         else
                         {
-                            if(Takt != 0)
+                            if (Takt != 0)
                             {
                                 bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                                 udp.Send(bytes, bytes.Length, point);
@@ -250,9 +250,9 @@ namespace MainServer
                 cml.ExecuteNonQuery();
             }
 
-            this.gs.iCon.Text = (sLog.gmLog.iCon+1).ToString();
+            this.gs.iCon.Text = (sLog.gmLog.iCon + 1).ToString();
 
-            
+
         }
         public bool inGameZone(string id)
         {
@@ -270,7 +270,7 @@ namespace MainServer
                 case 4:
                     if (Takt == 2) break;
                     bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                    udp.Send(bytes, bytes.Length, point);                   
+                    udp.Send(bytes, bytes.Length, point);
                     break;
                 case 5:
                     if (Takt == 3) break;
@@ -295,7 +295,7 @@ namespace MainServer
                 nextTakt();
                 return false;//сообщаем, что не нужно отправлять ответ модератору
             }
-        
+
             gm.team[table].answer = otv; //запоминаем ответ
             return true;//сообщаем, что надо проверить ответ
         }
@@ -415,7 +415,7 @@ namespace MainServer
 
                         SQLiteCommand cml = new SQLiteCommand(zaprosSpiskaVoprosov, conn);
                         DataTable dtVopros = new DataTable();
-                        
+
 
                         using (SQLiteDataReader sqr = cml.ExecuteReader())
                         {
@@ -423,25 +423,25 @@ namespace MainServer
                         }
                         questID = (dtVopros.Rows.Count * rn.rnd()) / 37;//определяем случайно id вопроса из списка в таблице dtVopros
                         questID = Convert.ToInt32(dtVopros.Rows[questID][0]);//questID - id случайного вопроса
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    /*    string listOfQuestions = "select quests.text from quests";
-                        SQLiteCommand cm = new SQLiteCommand(listOfQuestions, conn);
-                        SQLiteDataReader rd = cm.ExecuteReader();
-                        DataTable dat = new DataTable();
-                        using (rd)  //если есть данные, то записываем в таблицу dat
-                        {
-                            if (rd.HasRows) dat.Load(rd);
-                        }
-                        var stringArr = dat.AsEnumerable().Select(r => r.Field<string>("text")).ToArray();
+                                                                             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                             /*    string listOfQuestions = "select quests.text from quests";
+                                                                                 SQLiteCommand cm = new SQLiteCommand(listOfQuestions, conn);
+                                                                                 SQLiteDataReader rd = cm.ExecuteReader();
+                                                                                 DataTable dat = new DataTable();
+                                                                                 using (rd)  //если есть данные, то записываем в таблицу dat
+                                                                                 {
+                                                                                     if (rd.HasRows) dat.Load(rd);
+                                                                                 }
+                                                                                 var stringArr = dat.AsEnumerable().Select(r => r.Field<string>("text")).ToArray();
 
-                        string key = "Qade123asdasdasdqwewqeqw423412354232343253***????///";
-                        string cryptMessage;
-                        for (int i = 0; i < stringArr.Length; i++)
-                        {
-                             cryptMessage = Crypt.Encrypt(stringArr[i], key);
-                             stringArr[i] = cryptMessage;
-                        }*/
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
+                                                                                 string key = "Qade123asdasdasdqwewqeqw423412354232343253***????///";
+                                                                                 string cryptMessage;
+                                                                                 for (int i = 0; i < stringArr.Length; i++)
+                                                                                 {
+                                                                                      cryptMessage = Crypt.Encrypt(stringArr[i], key);
+                                                                                      stringArr[i] = cryptMessage;
+                                                                                 }*/
+                                                                             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
 
                         string zaprocVoprosa = "select quests.text, answer, media " +
                                                 "from quests where id =" + questID;
@@ -454,7 +454,7 @@ namespace MainServer
                         if (reader.HasRows)
                         {
                             reader.Read();
-                            gm.quest = Crypt.Decrypt(reader.GetString(0),key);
+                            gm.quest = Crypt.Decrypt(reader.GetString(0), key);
                             if (!reader.IsDBNull(1)) answerQ = Crypt.Decrypt(reader.GetString(1), key);
                             gm.idQuest = questID;//надо ли его посылать??
                         }
@@ -564,7 +564,7 @@ namespace MainServer
 
             if (endOfIqon)
             {
-                endOfIqon = false;               
+                endOfIqon = false;
                 gm.step = 1;
                 Takt = 0;
                 if (gm.iCon >= 12)
