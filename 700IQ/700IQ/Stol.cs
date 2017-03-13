@@ -438,12 +438,12 @@ namespace _700IQ
 
                 listView1.BackgroundImage = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(listView1.Location.X, listView1.Location.Y, listView1.Width, listView1.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 listView1.Items.Add(new ListViewItem(new string[] { "№", "Название", "Рейтинг" }));
-
+                int count = 1;
                 for (int j = 0; j < 5; j++)
                 {
                     for (int i = 0; i < dtRow.Length; i++)
                     {
-                        listView1.Items.Add(new ListViewItem(new string[] { (i + 1).ToString(), dtRow[i][2].ToString(), dtRow[i][4].ToString() }));
+                        listView1.Items.Add(new ListViewItem(new string[] { (count++).ToString(), dtRow[i][2].ToString(), dtRow[i][4].ToString() }));
                     };
                 }
  
@@ -454,15 +454,15 @@ namespace _700IQ
                 listView1.Columns[0].Width = new Size((int)(listView1.Width * 0.05), 500).Width;
                 listView1.Columns[1].Width = new Size((int)(listView1.Width * 0.75), 500).Width;
                 listView1.Columns[2].Width = new Size((int)(listView1.Width * 0.15), 500).Width;
-                visible_count = listView1.Height / (listView1.Font.Height + 4);
-                 step =100 / (listView1.Items.Count- visible_count);
+                //   visible_count = listView1.Height / (listView1.Font.Height+4);
+                step = 1;//100 / (listView1.Items.Count - visible_count);
                  cs = new CustomScrollbar()
                 {
                     Parent = listView1,
                     ChannelColor = Color.Transparent,
                     LargeChange = 0,
                     Location = new Point((int)(listView1.Width*0.95),0),
-                    Maximum = 100,
+                    Maximum = listView1.Items.Count-1,
                     Minimum = 1,
                     MinimumSize = NewSize(15, 92),
                     Name = "cs",
@@ -520,7 +520,7 @@ namespace _700IQ
         private void Cs_Scroll(object sender, EventArgs e)
         {
 
-            listView1.TopItem = listView1.Items[cs.Value/step];
+            listView1.TopItem = listView1.Items[cs.Value];
             
         }
     }
