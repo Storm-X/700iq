@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace MainServer
 {
-    class UDP
+    class UDP : UdpClient
     {
         List<GameinZone> MassGameZone;
 

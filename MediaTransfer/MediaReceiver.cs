@@ -52,8 +52,8 @@ public class MediaReceiver
         { }
         catch (Exception ex)
         {
-            TimeOutChecker.Stop();
-            transferComplete = true;
+            //TimeOutChecker.Stop();
+            //transferComplete = true;
             Debug.WriteLine("FileTransferClient: Oops... " + ex.Message);
         }
     }

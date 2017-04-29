@@ -51,6 +51,7 @@ namespace MainServer
         bool tmOtvetAktiv = false;
         public bool stopGm = false;
         public GameStatistic gs;
+        private DateTime deadLine;
         //public List<int> users = new List<int>();
 
         #endregion
@@ -71,7 +72,9 @@ namespace MainServer
         {
             #region задание начальных значений 
             endOfIqon = false;
-            for (int i = 1; i < 3; i++) { stavka[i] = 0; ok[i] = false; }
+            Array.Clear(stavka, 0, stavka.Length);
+            Array.Clear(ok, 0, ok.Length);
+            //for (int i = 1; i < 3; i++) { stavka[i] = 0; ok[i] = false; }
 
             if (!vozobnov) gm.iCon = 1;
             //else gm.iCon++;
@@ -83,9 +86,8 @@ namespace MainServer
             gm.o1 = 1;
             gm.o2 = 2;
             gm.o3 = 3;
-
             #endregion
-
+            deadLine = DateTime.Now.AddMinutes(3);
             tm.Tick += Tm_Tick;
             tmOtvet.Tick += TmOtvet_Tick;
 
@@ -160,19 +162,19 @@ namespace MainServer
                 case 1:
                     if (ok[table])
                     {
-                        if (ok[0] && ok[1] && ok[2])
+                        if (ok[0] & ok[1] & ok[2] || Takt != 0)
                         {
                             bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             udp.Send(bytes, bytes.Length, point);
                         }
-                        else
-                        {
-                            if (Takt != 0)
-                            {
-                                bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                                udp.Send(bytes, bytes.Length, point);
-                            }
-                        }
+                        //else
+                        //{
+                        //    if (Takt != 0)
+                        //    {
+                        //        bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                        //        udp.Send(bytes, bytes.Length, point);
+                        //    }
+                        //}
                     }
                     else
                     {
@@ -180,7 +182,7 @@ namespace MainServer
                         ok[table] = true;
                         tm.Interval = 40000;
                         tm.Start();
-                        if (ok[0] && ok[1] && ok[2])
+                        if (ok[0] & ok[1] & ok[2])
                         {
                             tm.Stop();
                             nextTakt();
@@ -192,11 +194,11 @@ namespace MainServer
                 case 2:
                     if (stavka[table] != 0)
                     {
-                        if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
-                        {
+                        //if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
+                        //{
                             bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             udp.Send(bytes, bytes.Length, point);
-                        }
+                        //}
                     }
                     else
                     {
@@ -356,12 +358,6 @@ namespace MainServer
                         gm.theme = (byte)((gm.Cell + 5) / 6);
 
                         Takt++;
-                        //for (int i = 0; i < 3; i++)
-                        //{
-                        //    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                        //    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-                        //}
-
                         txb.Text += "ogg" + gm.step;
                         //tm.Start();
                         break;
@@ -377,12 +373,6 @@ namespace MainServer
                             //gm.iCon++;                  
                             //Takt = 0;
                             endOfIqon = true;
-                            //for (int i = 0; i < 3; i++)
-                            //{
-                            //    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                            //    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-                            //}
-
                             txb.Text += "ogg-zerro" + gm.step;
                             //tmSync.Start();
                             for (int i = 0; i < 3; i++) ok[i] = false;
@@ -460,13 +450,7 @@ namespace MainServer
                             gm.idQuest = questID;//надо ли его посылать??
                         }
                         #endregion
-
                         Takt++;
-                        //for (int i = 0; i < 3; i++)
-                        //{
-                        //    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                        //    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-                        //}
                         //log();
                         txb.Text += "ogg" + gm.step;
                         tmOtvet.Interval = 65000; //запускае таймер с ожиданием ответа 1 команды
@@ -493,11 +477,6 @@ namespace MainServer
                             gm.activeTable = gm.o2;
                         }
                         Takt++;
-                        //for (int i = 0; i < 3; i++)
-                        //{
-                        //    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                        //    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-                        //}
                         //log();
                         txb.Text += "ogg" + gm.step;
 
@@ -524,30 +503,18 @@ namespace MainServer
                             tmOtvet.Start();
                         }
                         Takt++;
-                        //for (int i = 0; i < 3; i++)
-                        //{
-                        //    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                        //    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-                        //}
                         //log();
                         txb.Text += "ogg" + gm.step;
                         break;
                     #endregion
                     #region 4 такт - обработка ответ третьей команды (если дойдет дело)
                     case 4://ответ третьей команды
-
                         gm.step = 7;
                         gm.correct = correct;
                         if (correct)
                         {
                             gm.team[gm.o3 - 1].iQash += gm.team[gm.o3 - 1].stavka;
                         }
-                        //gm.iCon++;
-                        //for (int i = 0; i < 3; i++)
-                        //{
-                        //    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                        //    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-                        //}
                         endOfIqon = true;
                         //log();
                         txb.Text += "ogg" + gm.step;
@@ -557,11 +524,7 @@ namespace MainServer
             }
 
             //Отправим сообщение всем столам данной игровой тройки
-            for (int i = 0; i < 3; i++)
-            {
-                bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-            }
+            Send2All("ogg");
 
             if (endOfIqon)
             {
@@ -576,13 +539,24 @@ namespace MainServer
                 }
                 log();
                 gm.iCon++;
-                for (int i = 0; i < 3; i++)
-                {
-                    stavka[i] = 0;
-                    ok[i] = false;
-                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-                }
+                Array.Clear(stavka, 0, stavka.Length);
+                Array.Clear(ok, 0, ok.Length);
+                Send2All("ogg");
+                //for (int i = 0; i < 3; i++)
+                //{
+                //    //stavka[i] = 0;
+                //    //ok[i] = false;
+                //    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                //    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
+                //}
+            }
+        }
+        private void Send2All(string command)
+        {
+            bytes = Encoding.UTF8.GetBytes(command + JsonConvert.SerializeObject(gm));
+            for (int i = 0; i < 3; i++)
+            {
+                if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
             }
         }
     }
