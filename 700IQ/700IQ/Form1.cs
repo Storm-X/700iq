@@ -1191,7 +1191,7 @@ namespace _700IQ
             else
             {
                 bIconFinalised = false;
-                this.Controls["Iqon"].Dispose(); // Text = "";
+                this.Controls["Iqon"]?.Dispose(); // Text = "";
                 //if (otvetStatic != null)
                     otvetStatic?.close();
                 //otvetStatic = null;
