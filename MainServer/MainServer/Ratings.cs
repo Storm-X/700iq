@@ -46,8 +46,13 @@ namespace MainServer
         }
         public void ChangeRatings()
         {
+
+         
+        }
+        public int[] getRatings()
+        {
             gameLog = new List<SendLog>();
-            string sql="select command from logs where zone="+gz.data.GameZone+" and gameid=" +gz.data.idGame;
+            string sql = "select command from logs where zone=" + gz.data.GameZone + " and gameid=" + gz.data.idGame;
             MySqlCommand cm = new MySqlCommand(sql, mycon);
             MySqlDataReader rd = cm.ExecuteReader();
             DataTable tournaments = new DataTable();
@@ -56,15 +61,12 @@ namespace MainServer
                 if (rd.HasRows) tournaments.Load(rd);
             }
             gameLogStr = new List<string>(tournaments.AsEnumerable().Select(r => r.Field<string>("command")).ToArray());
-            foreach(String str in gameLogStr)
+            foreach (String str in gameLogStr)
             {
                 gameLog.Add(JsonConvert.DeserializeObject<SendLog>(str));
             }
-         
-        }
-        public int[] getRatings()
-        {
-           for(int i = 0; i < gameLog.Count; i++)
+
+            for (int i = 0; i < gameLog.Count; i++)
             {
 
                     if (gameLog[i].gmLog.team[2].answer != "")
