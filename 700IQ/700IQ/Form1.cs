@@ -703,7 +703,7 @@ namespace _700IQ
 
         void DoIt(string komanda)
         {           
-            switch (komanda.Substring(0, 3))
+            switch (komanda?.Substring(0, 3))
             {            
                 #region case +sp - список зарегистрировавшихся команд
                 case "+sp":
@@ -734,8 +734,10 @@ namespace _700IQ
                 case "ogg":              
                     steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
                     Debug.WriteLine(komanda);
-                    if(!bIconFinalised)
-                        CheckSteck();              
+                    if (!bIconFinalised)
+                        CheckSteck();
+                    else
+                        cn.ClearLastCommand();              
                     break;
                 #region case owt - ожидание
                 case "oww":

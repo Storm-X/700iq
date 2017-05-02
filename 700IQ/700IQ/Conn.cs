@@ -53,7 +53,7 @@ namespace _700IQ
             //GetKom();                                                   //запускае прослушку порта
             onGetKom += getkomback;                                     //делегат получения ответа от сервера
 
-            tm = new System.Timers.Timer(5000);
+            tm = new System.Timers.Timer(15000);
             tm.Elapsed += callback;
             tm.AutoReset = false;
             //tm.Interval = 3000;                                         //
@@ -198,6 +198,10 @@ namespace _700IQ
         {
             //CrazyTimer = false;
             //mtm.Stop();
+        }
+        public void ClearLastCommand()
+        {
+            getkomback(null);
         }
     }
    
