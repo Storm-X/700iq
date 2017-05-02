@@ -526,7 +526,7 @@ namespace _700IQ
     }
     public class Otvet : resize//ответ на вопрос и показ очереди ответа
     {
-        #region//переменные           
+        #region//переменные  
         PictureBox pc1;
         PictureBox pc2;
         PictureBox pc3;
@@ -588,7 +588,8 @@ namespace _700IQ
         }
         private async Task<Image> ResultOfCycle(string fileName)
         {
-            MediaReceiver mReceiver = new MediaReceiver(IPAddress.Parse("127.0.0.1"), 8080);
+            
+            MediaReceiver mReceiver = new MediaReceiver(workForm.IP, 8080);
             byte[] filecontent = mReceiver.GetMedia(fileName);
             if (filecontent.Length == 0)
                 return null;

@@ -43,7 +43,7 @@ namespace _700IQ
         private System.Timers.Timer MyTimer;
         private System.Windows.Forms.Timer gifTimer= new System.Windows.Forms.Timer();
         private static IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
-        IPAddress IP = null;
+        public IPAddress IP = null;
         public static string infoOfserver;
         struct SendData //структурированные данные отправляемые серверу
         {
