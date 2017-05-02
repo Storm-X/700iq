@@ -33,6 +33,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.lot = new System.Windows.Forms.Button();
             this.DBLink = new System.Windows.Forms.Button();
             this.ButtonReg = new System.Windows.Forms.Button();
@@ -814,6 +815,7 @@
             this.Controls.Add(this.ButtonReg);
             this.Controls.Add(this.DBLink);
             this.Controls.Add(this.lot);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Интеллект-казино 700 IQ";
