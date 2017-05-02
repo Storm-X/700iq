@@ -1421,7 +1421,7 @@ namespace MainServer
                                                 row[4] = info[4];
                                                 row[5] = info[5];
                                                 row[6] = resDoo.otvet;
-                                                if (String.Compare(row[5].ToString(), row[6].ToString(), true) == 1)
+                                                if (String.Compare(row[5].ToString(), row[6].ToString(), true) == 0)
                                                 {
                                                     MassGameZone[resDoo.uid - 1].checkOtvet(true);
                                                 }
