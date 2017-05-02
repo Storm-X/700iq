@@ -1224,10 +1224,10 @@ namespace _700IQ
             }
             else
             {
+                bIconFinalised = true;
                 tbl.EndOfGame(steck);//описать финальную заставку 
             }
         }
-       
         #endregion
 
         private void axWindowsMediaPlayer1_PlayStateChange(object sender, AxWMPLib._WMPOCXEvents_PlayStateChangeEvent e)
