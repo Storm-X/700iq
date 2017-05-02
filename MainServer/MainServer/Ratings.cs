@@ -23,7 +23,7 @@ namespace MainServer
         double[] Rn = new double[3];
         double[] Rk = new double[3];
         double[] K = new double[3];
-        double[] deltaK = new double[3];
+        int[] deltaK = new int[3];
         public Ratings(GameinZone gz, MySqlConnection mycon,int [] mesta)
         {
             this.gz = gz;
@@ -62,7 +62,7 @@ namespace MainServer
             }
          
         }
-        public double[] getRatings()
+        public int[] getRatings()
         {
            for(int i = 0; i < gameLog.Count; i++)
             {
@@ -124,7 +124,7 @@ namespace MainServer
             for (int i = 0; i < 3; i++)
             {
                 Rk[i] = 50 * K[i] / sumK;
-                deltaK[i] = Math.Round(Rk[i] - Rn[i]);
+                deltaK[i] = (int)Rk[i] - (int)Rn[i];
             }
 
             return deltaK;

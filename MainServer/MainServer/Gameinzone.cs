@@ -536,6 +536,15 @@ namespace MainServer
                     gm.Cell = rn.rnd();
                     gm.quest = "";
                     gm.theme = 0;
+                    //////////////////////////////////////Рейтинги   /////////////////////////////////////////////////////////
+                    var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
+                    Ratings rating = new Ratings(this, mycon, mesta);
+                    var rat = rating.getRatings();
+                    for (int i = 0; i < 3; i++)
+                    {
+                        this.data.team[i].rating += rat[i];
+                    }
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
                 }
                 log();
                 gm.iCon++;
@@ -559,5 +568,23 @@ namespace MainServer
                 if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
             }
         }
+        public int[] ResponsePriority(int indexCell, int[] Rates)
+        {
+            int[] Roulet = { 0, 1, 3, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 3, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 1, 2, 3, 1, 3 };
+            string Sector = " | " + Roulet[indexCell] + " | " + Roulet[indexCell + 1] + " | " + Roulet[indexCell + 2] + " |";
+            try
+            {
+                Rates[Roulet[indexCell++] - 1] += 2;
+                Rates[Roulet[indexCell] - 1]++;
+                var dictRates = Enumerable.Range(0, Rates.Length).ToDictionary(x => ++x, x => Rates[x]).OrderByDescending(pair => pair.Value);
+                return dictRates.Select(pair => pair.Key).ToArray();
+            }
+            catch
+            {
+                Console.WriteLine("Где-то косячок-с...");
+            }
+            return null;
+        }
     }
+
 }
