@@ -434,12 +434,13 @@ namespace _700IQ
             var reportProgress = new Action(() =>
             {
                 pcBox.Image = Properties.Resources.Неактивная;
-                tmBar.Stop();
-                tmBar.Dispose();
-                ff.Dispose();
-                pcBox.Dispose();
-                workForm.Invalidate();
-                onPolosaEnd();
+                prBar.Value = 100;
+                //tmBar.Stop();
+                //tmBar.Dispose();
+                //ff.Dispose();
+                //pcBox.Dispose();
+                //workForm.Invalidate();
+                //onPolosaEnd();
             });
             workForm.BeginInvoke(reportProgress);
         }

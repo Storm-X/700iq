@@ -205,7 +205,7 @@ namespace MainServer
                         stavka[table] = stav;
                         tm.Interval = 25000;
                         tm.Start();
-                        if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
+                        if ((stavka[0] & stavka[1] & stavka[2]) != 0)
                         {
                             tm.Stop();
                             nextTakt();
