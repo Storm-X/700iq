@@ -22,7 +22,7 @@ namespace MainServer
         {
          
             // Создаем UdpClient
-            UdpClient sender = new UdpClient(2050);
+            UdpClient sender = new UdpClient(2049);
            // if (IP) return;
 
             //IPAddress remoteIPAddress = IPAddress.Parse(IP);

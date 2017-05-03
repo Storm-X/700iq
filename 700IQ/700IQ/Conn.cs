@@ -44,7 +44,7 @@ namespace _700IQ
             //endPoint = new IPEndPoint(remoteIPAddress, 2050);           //адрес сервера   
 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            IPEndPoint ipEndPoint = new IPEndPoint(remoteIPAddress, 2050);
+            IPEndPoint ipEndPoint = new IPEndPoint(remoteIPAddress, 2049);
             senderRemote = (EndPoint)ipEndPoint;
 
             //byte[] bytes = Encoding.UTF8.GetBytes("");                  //

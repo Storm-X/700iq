@@ -52,7 +52,7 @@ namespace MainServer
         Form f = new Form();
         WebBrowser wb;
         IPEndPoint endpoint;
-        UdpClient Udp = new UdpClient(2050);
+        UdpClient Udp = new UdpClient(2049);
 
         Color oldColor;
         #endregion
@@ -1300,7 +1300,6 @@ namespace MainServer
         private async void Zapros()//получениеи обработка  запросов от команд
         {
             //IPEndPoint endpoint;
-            //UdpClient Udp = new UdpClient(2050);
             while (true)
             {
                 //var buffer = new ArraySegment<byte>(new byte[4096]);
@@ -1449,7 +1448,7 @@ namespace MainServer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
             }
         }
