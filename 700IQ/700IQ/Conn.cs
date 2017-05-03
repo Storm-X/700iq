@@ -41,10 +41,10 @@ namespace _700IQ
         {
             //IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
            // IPAddress remoteIPAddress = IPAddress.Parse(fIni.IniReadValue("Settings", "Server", "10.10.10.10"));
-            //endPoint = new IPEndPoint(remoteIPAddress, 2050);           //адрес сервера   
+            //endPoint = new IPEndPoint(remoteIPAddress, 20);           //адрес сервера   
 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            IPEndPoint ipEndPoint = new IPEndPoint(remoteIPAddress, 2050);
+            IPEndPoint ipEndPoint = new IPEndPoint(remoteIPAddress, 2049);
             senderRemote = (EndPoint)ipEndPoint;
 
             //byte[] bytes = Encoding.UTF8.GetBytes("");                  //
@@ -53,7 +53,7 @@ namespace _700IQ
             //GetKom();                                                   //запускае прослушку порта
             onGetKom += getkomback;                                     //делегат получения ответа от сервера
 
-            tm = new System.Timers.Timer(4000);
+            tm = new System.Timers.Timer(3000);
             tm.Elapsed += callback;
             tm.AutoReset = false;
             //tm.Interval = 3000;                                         //
