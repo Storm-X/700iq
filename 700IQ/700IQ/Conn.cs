@@ -41,7 +41,7 @@ namespace _700IQ
         {
             //IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
            // IPAddress remoteIPAddress = IPAddress.Parse(fIni.IniReadValue("Settings", "Server", "10.10.10.10"));
-            //endPoint = new IPEndPoint(remoteIPAddress, 20);           //адрес сервера   
+            //endPoint = new IPEndPoint(remoteIPAddress, 2050);           //адрес сервера   
 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             IPEndPoint ipEndPoint = new IPEndPoint(remoteIPAddress, 2049);

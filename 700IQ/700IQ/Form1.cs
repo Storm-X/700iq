@@ -31,10 +31,11 @@ namespace _700IQ
         Data predUs = new Data();
         Table tbl;
         IPAddress server=null;
-       
-        string kluch; //ключ игровой сессии
-        int uidKomand;//идентификатор команды
-        int tableOfKom;//стол команды
+
+        Data.teams myTeam;
+        //string kluch; //ключ игровой сессии
+        //int uidKomand;//идентификатор команды
+        //int tableOfKom;//стол команды
         private bool bIconFinalised = false;
         public Label errorLabel;
         public DataTable dt = new DataTable();
@@ -385,6 +386,8 @@ namespace _700IQ
             {
                 if (!String.IsNullOrEmpty(parol.Text) && !String.IsNullOrEmpty(login.Text))
                 {
+                    myTeam = new Data.teams();
+                    myTeam.name = login.Text;
                     Connection cnn = new Connection(server);
                     string[] info = { login.Text, getSHAHash(parol.Text) };
                     cnn.onDataReceive += dataReceive;
@@ -403,8 +406,9 @@ namespace _700IQ
             //for (int i = 0; i <= ctrCount; i++) this.Controls.RemoveByKey("oneuse");//очистка экрана от временных элементов          
             RemoveTempControls();
             predUs = JsonConvert.DeserializeObject<Data>(response);
-            kluch = predUs.team[0].kod;
-            uidKomand = predUs.team[0].uid;
+            myTeam = predUs.team.FirstOrDefault(c => c.name == myTeam.name);
+            //kluch = myTeam.kod;
+            //uidKomand = myTeam.uid;
             Bitmap bmpNew = new Bitmap(Properties.Resources.GreenTable, resolution.Width + delta * 2, resolution.Height);
             Graphics g = Graphics.FromImage(bmpNew);
             g.DrawString("Добро пожаловать", new Font("Times New Roman", NewFontSize(40), FontStyle.Italic), Brushes.White, NewPoint(950, 50));
@@ -416,7 +420,7 @@ namespace _700IQ
             this.BackgroundImage = bmpNew;
 
             #region//описание поля с информацией о команде
-            string spis="Ваша команда  \"" + predUs.team[0].name+"\"  зарегистрирована!\n  " + predUs.NumberGame + " в городе "
+            string spis="Ваша команда  \"" + myTeam.name+"\"  зарегистрирована!\n  " + predUs.NumberGame + " в городе "
                 + predUs.city + "  " + predUs.Tur;
           
             Label lb = new Label()
@@ -434,7 +438,7 @@ namespace _700IQ
             #region//описание поля с информацией о членах команды
             spis = "";
             int i = 0;
-            foreach (var member in predUs.team[0].member)
+            foreach (var member in myTeam.member)
             {
                 spis += member == null ? "" : String.Format("{0}. {1} {2}{3}", ++i, member.F, member.N, Environment.NewLine);
             }
@@ -495,8 +499,8 @@ namespace _700IQ
         {
             cn = new Conn(server);
             cn.onNewKom += DoIt;
-            //cn.SendUDP("zsp"+predUs.team[0].kod); 
-            cn.start("zsp" + predUs.team[0].kod, 3000);
+            //cn.SendUDP("zsp"+myTeam.kod); 
+            cn.start("zsp" + myTeam.kod, 3000);
             //pdg.spisokOut(this, dt, predUs);    //обновление списка зарегистрировавшихся команд
             //spisokOut(this, dt, predUs);    //обновление списка зарегистрировавшихся команд
         }
@@ -682,10 +686,10 @@ namespace _700IQ
                     ForeColor = Color.White
                 };
                 #endregion
-                for (int i = 0; i < 3; i++)
-                {
-                    if (predUs.team[i].uid == uidKomand) tableOfKom = predUs.team[i].table - 1;
-                }
+                //for (int i = 0; i < 3; i++)
+                //{
+                //    if (predUs.team[i].uid == uidKomand) tableOfKom = predUs.team[i].table - 1;
+                //}
             }
             //}));
         }
@@ -716,8 +720,8 @@ namespace _700IQ
                     predUs = JsonConvert.DeserializeObject<Data>(komanda.Substring(3));
                     ini5();
                     SendData sendD = new SendData();
-                    sendD.table =(byte)tableOfKom;
-                    sendD.kluch = predUs.team[tableOfKom].kod;
+                    sendD.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
+                    sendD.kluch = myTeam.kod;   //predUs.team[tableOfKom].kod;
                     sendD.uid = predUs.GameZone;
                     cn.start("zst" + JsonConvert.SerializeObject(sendD),3000);//запрос на начало игры
                     break;
@@ -793,7 +797,7 @@ namespace _700IQ
             else
             {
                 RemoveTempControls();
-                tbl = new Table(predUs, tableOfKom, this);
+                tbl = new Table(predUs, myTeam.table-1, this);
                 if (steck.iCon > 12)
                 {
                     Step10();
@@ -826,7 +830,7 @@ namespace _700IQ
             }
             else
             {
-                BackgroundImage = tbl.SetIQ(steck, tableOfKom);
+                BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 Label lbStart = new Label()
                 {
                     Name = "oneuse",
@@ -869,10 +873,10 @@ namespace _700IQ
             {
                 SendData gotov = new SendData();
                 gotov.uid = predUs.GameZone;
-                gotov.table = (byte)tableOfKom;
+                gotov.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                 gotov.step = 1;
                 gotov.otvet = "gotov";
-                gotov.kluch = kluch;
+                gotov.kluch = myTeam.kod; //kluch;
                 cn.SendUDP("zgg" + JsonConvert.SerializeObject(gotov));
             }
         }
@@ -933,7 +937,7 @@ namespace _700IQ
                 RemoveTempControls();
                 tbl.TemaShow(steck, false);
                 GetStavka st = new GetStavka();
-                int MaxStavka = Math.Min(steck.team[tableOfKom].iQash-(12 - steck.iCon) * 25, 300);
+                int MaxStavka = Math.Min(steck.team[myTeam.table - 1].iQash-(12 - steck.iCon) * 25, 300);
                 //if (MaxStavka > 300) MaxStavka = 300;
                 st.stavka(25, MaxStavka, this);
                 st.onStavka += doStavka;
@@ -943,11 +947,11 @@ namespace _700IQ
         {
             SendData sd = new SendData();
             sd.uid = predUs.GameZone;
-            sd.table = (byte)tableOfKom;
+            sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
             sd.step = 2;
             sd.stavka = st;
             sd.otvet = "stavka";
-            sd.kluch = kluch;
+            sd.kluch = myTeam.kod; //kluch;
             cn.SendUDP("zgg" + JsonConvert.SerializeObject(sd));
         }
         #endregion
@@ -967,7 +971,7 @@ namespace _700IQ
                     ruletka.close();
                 ruletka = null;
                 int i = steck.Cell;
-                BackgroundImage = tbl.SetIQ(steck, tableOfKom);
+                BackgroundImage = tbl.SetIQ(steck, myTeam.table - 1);
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
                 stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
@@ -989,7 +993,7 @@ namespace _700IQ
                 Graphics g = Graphics.FromImage(bmp);
                 this.BackgroundImage = bmp;
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
-                otvetStatic = new Otvet(cn, predUs, tableOfKom, this);
+                otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
                 otvetStatic.svitok(steck, predUs);
                 ruletka = new Rul();
                 ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 100), NewSizeKv(1000)), this);
@@ -1013,7 +1017,7 @@ namespace _700IQ
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
 
-                    if (steck.activeTable == tableOfKom + 1)//если ответ моей команды, то запускаем таймер
+                    if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         //Debug.WriteLine();
                         otvetStatic.polosaStart(this, 4);
@@ -1022,8 +1026,8 @@ namespace _700IQ
                     else //если не мой ответ, то ждем следующей команды сервера
                     {
                         SendData sd = new SendData();
-                        sd.kluch = kluch;
-                        sd.table = (byte)tableOfKom;
+                        sd.kluch = myTeam.kod;   //kluch;
+                        sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                         sd.uid = predUs.GameZone;
                         sd.step = 4;
                         cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
@@ -1068,7 +1072,7 @@ namespace _700IQ
                     otvetStatic.semafor(2);
                     otvetStatic.focus();
 
-                    if (steck.activeTable == tableOfKom + 1)//если ответ моей команды, то запускаем таймер
+                    if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         otvetStatic.polosaStart(this, 5);
                         //otvetStatic.onSendOtvet += NextStep;
@@ -1077,8 +1081,8 @@ namespace _700IQ
                     {
                         //если не мой ответ, то ждем следующей команды сервера
                         SendData sd = new SendData();
-                        sd.kluch = kluch;
-                        sd.table = (byte)tableOfKom;
+                        sd.kluch = myTeam.kod;   //kluch;
+                        sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                         sd.uid = predUs.GameZone;
                         sd.step = 5;
                         cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
@@ -1115,7 +1119,7 @@ namespace _700IQ
                     otvetStatic.semafor(3);
                     otvetStatic.focus();
 
-                    if (steck.activeTable == tableOfKom + 1)//если ответ моей команды, то запускаем таймер
+                    if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         otvetStatic.polosaStart(this, 6);
                         // otvetStatic.onSendOtvet += NextStep;
@@ -1125,8 +1129,8 @@ namespace _700IQ
                         //если не мой ответ, то ждем следующей команды сервера
 
                         SendData sd = new SendData();
-                        sd.kluch = kluch;
-                        sd.table = (byte)tableOfKom;
+                        sd.kluch = myTeam.kod;   //kluch;
+                        sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                         sd.uid = predUs.GameZone;
                         sd.step = 6;
                         cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
@@ -1204,8 +1208,8 @@ namespace _700IQ
                 else
                 {
                     SendData sd = new SendData();
-                    sd.kluch = kluch;
-                    sd.table = (byte)tableOfKom;
+                    sd.kluch = myTeam.kod;   //kluch;
+                    sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                     sd.uid = predUs.GameZone;
                     sd.step = 1;
                     cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));

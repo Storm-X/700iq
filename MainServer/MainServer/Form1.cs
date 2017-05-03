@@ -52,7 +52,7 @@ namespace MainServer
         Form f = new Form();
         WebBrowser wb;
         IPEndPoint endpoint;
-        UdpClient Udp = new UdpClient(2050);
+        UdpClient Udp = new UdpClient(2049);
 
         Color oldColor;
         #endregion
@@ -1300,7 +1300,6 @@ namespace MainServer
         private async void Zapros()//получениеи обработка  запросов от команд
         {
             //IPEndPoint endpoint;
-            //UdpClient Udp = new UdpClient(2050);
             while (true)
             {
                 //var buffer = new ArraySegment<byte>(new byte[4096]);
@@ -1421,7 +1420,7 @@ namespace MainServer
                                                 row[4] = info[4];
                                                 row[5] = info[5];
                                                 row[6] = resDoo.otvet;
-                                                if (String.Compare(row[5].ToString(), row[6].ToString(), true) == 1)
+                                                if (String.Compare(row[5].ToString(), row[6].ToString(), true) == 0)
                                                 {
                                                     MassGameZone[resDoo.uid - 1].checkOtvet(true);
                                                 }
@@ -1449,7 +1448,7 @@ namespace MainServer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                 }
             }
         }
