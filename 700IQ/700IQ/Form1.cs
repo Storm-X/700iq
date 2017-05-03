@@ -768,6 +768,9 @@ namespace _700IQ
                 case 3:
                     Step3();
                     break;
+                case 4:
+                    Step4();
+                    break;
                 case 5:
                     Step5();
                     break;
@@ -967,8 +970,7 @@ namespace _700IQ
             }
             else
             {
-                if(ruletka != null)
-                    ruletka.close();
+                ruletka?.close();
                 ruletka = null;
                 int i = steck.Cell;
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table - 1);
@@ -988,17 +990,33 @@ namespace _700IQ
             }
             else
             {
+                //this.Controls["Iqon"].Text = steck.iCon + " айкон";
+                CreateAnswerTable();
+                ruletka = new Rul();
+                ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 100), NewSizeKv(1000)), this, 0);
+                ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
+            }          
+        }
+        private void CreateAnswerTable(bool withQuery = false)
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    CreateAnswerTable();
+                });
+            }
+            else
+            {
                 RemoveTempControls();
                 Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
                 Graphics g = Graphics.FromImage(bmp);
                 this.BackgroundImage = bmp;
-                //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
                 otvetStatic.svitok(steck, predUs);
-                ruletka = new Rul();
-                ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 100), NewSizeKv(1000)), this);
-                ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
-            }          
+                if(withQuery)
+                    otvetStatic.ochered(steck);
+            }
         }
         void Step4()    //показ очереди и передача хода первой команде
         {
@@ -1013,7 +1031,10 @@ namespace _700IQ
             {
                 if (steck.Cell != 0)
                 {
-                    otvetStatic.ochered(steck);
+                    if(otvetStatic == null)
+                        CreateAnswerTable(true);
+                    else
+                        otvetStatic.ochered(steck);
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
 
@@ -1059,9 +1080,10 @@ namespace _700IQ
             }
             else
             {
-                if(ruletka != null)
-                    ruletka.close();
+                ruletka?.close();
                 ruletka = null;
+                if (otvetStatic == null)
+                    CreateAnswerTable(true);
                 otvetStatic.semafor(0);
                 otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.correct);// вывод ответа первой команды
 
@@ -1109,6 +1131,10 @@ namespace _700IQ
             }
             else
             {
+                ruletka?.close();
+                ruletka = null;
+                if (otvetStatic == null)
+                    CreateAnswerTable(true);
                 otvetStatic.semafor(0);
                 otvetStatic.answer(2, steck.team[steck.o2 - 1].answer, steck.correct);// вывод ответа второй команды
 
@@ -1157,8 +1183,12 @@ namespace _700IQ
             }
             else
             {
-                otvetStatic?.semafor(0);
-                otvetStatic?.answer(3, steck.team[steck.o3 - 1].answer, steck.correct);// вывод ответа третьей команды
+                ruletka?.close();
+                ruletka = null;
+                if (otvetStatic == null)
+                    CreateAnswerTable(true);
+                otvetStatic.semafor(0);
+                otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.correct);// вывод ответа третьей команды
 
                 if (!steck.correct)//если ответ не верный
                 {
@@ -1196,12 +1226,8 @@ namespace _700IQ
             {
                 bIconFinalised = false;
                 this.Controls["Iqon"]?.Dispose(); // Text = "";
-                //if (otvetStatic != null)
-                    otvetStatic?.close();
-                //otvetStatic = null;
-                //if (ruletka != null)
-                    ruletka?.close();
-                //ruletka = null;
+                otvetStatic?.close();
+                ruletka?.close();
                 this.Invalidate();
                 if (steck.iCon > 12)
                     Step10();
