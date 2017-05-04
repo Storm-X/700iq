@@ -19,7 +19,6 @@ namespace _700IQ
         public byte theme;              //тема вопроса
         public string quest;            //Текст вопроса      
         public string media;            //Медиаданные
-        public bool correct;            //правильность ответа        
         public Teames[] team = new Teames[3];
         public class Teames
         {
@@ -28,6 +27,7 @@ namespace _700IQ
             public int iQash;        //количество айкэш
             public int stavka;       //ставка команды
             public string answer;    //ответ на вопрос
+            public bool correct;     //правильность ответа        
         }
     }
     public class Data//структура установочных данных

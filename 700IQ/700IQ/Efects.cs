@@ -512,7 +512,7 @@ namespace _700IQ
         int tickNumber = 0, nStop = 100;
 
         #endregion
-        public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count = 5)
+        public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
             this.fsv = fsv;
             tm = new System.Windows.Forms.Timer();
@@ -536,8 +536,13 @@ namespace _700IQ
 
             //2*pi/37 - количество радиан в 1 ячейке
             // vi = (float)Math.Sqrt(0.00004f * (37 + (14 + cel) * 0.15708f));
-
-            vi = (float)Math.Sqrt(vi * ((2 * rotation_count + 1.5f) * Math.PI + cel * 2 * Math.PI / 37f));
+            if (rotation_count == 0) {
+                tickNumber = 100;
+                radius = 110;
+                i = (float)((cel-12) * 2 * Math.PI / 37f);
+                vi = 0.0044f;
+            }
+            else vi = (float)Math.Sqrt(vi * ((2 * rotation_count + 1.5f) * Math.PI + cel * 2 * Math.PI / 37f));
             // начало отсчета с 14 поля или 2,   зеро равно при n=14
             tm.Start();
             #region//описание свойств формы
@@ -570,6 +575,7 @@ namespace _700IQ
         }
         private void ruletka()
         {
+
             point.X = (int)(centrx + radius * Math.Cos(i));
             point.Y = (int)(centry + radius * Math.Sin(i));
             point2.X = point.X - 30;
@@ -586,11 +592,12 @@ namespace _700IQ
             z1.X = (int)(z1.X * koef);
             z1.Y = (int)(z1.Y * koef);
             ff.Invalidate(z1);
+         
         }
         private void tm_Tick(object sender, EventArgs e)
         {
             {
-                tickNumber += 1;
+                tickNumber++;
                 if (!flagStop)
                 {
                     ruletka();
