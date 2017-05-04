@@ -23,7 +23,6 @@ namespace MainServer
         public int idQuest;             //id вопроса
         public byte theme;              //тема вопроса
         public string quest;            //Текст вопроса  
-        public bool correct;            //правильность ответа            
         public Teames[] team = new Teames[3];
         public class Teames
         {
@@ -33,6 +32,7 @@ namespace MainServer
             public int iQash;        //количество айкэш
             public int stavka;       //ставка команды
             public string answer;    //ответ на вопрос                                        
+            public bool correct;     //правильность ответа            
         }
     }
     public class teams

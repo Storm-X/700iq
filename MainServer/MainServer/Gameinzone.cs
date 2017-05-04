@@ -108,6 +108,7 @@ namespace MainServer
         {
             tmOtvet.Stop();
             gm.team[gm.activeTable - 1].answer = "Нет ответа.";
+            gm.team[gm.activeTable - 1].correct = false;
             correct = false;
             nextTakt();
         }
@@ -295,6 +296,7 @@ namespace MainServer
             {
                 correct = false;
                 gm.team[table].answer = "Нет ответа."; // то записываем ответ - нет ответа
+                gm.team[table].correct = false; // то записываем ответ - нет ответа
                 nextTakt();
                 return false;//сообщаем, что не нужно отправлять ответ модератору
             }
@@ -385,6 +387,7 @@ namespace MainServer
                             gm.team[i].stavka = stavka[i];
                             gm.team[i].iQash -= gm.team[i].stavka;
                             gm.team[i].answer = "";
+                            gm.team[i].correct = false;
                         }
 
                         int[] st = { gm.team[0].stavka, gm.team[1].stavka, gm.team[2].stavka };
@@ -461,7 +464,7 @@ namespace MainServer
                     #region 2 такт - обработка ответа первой команды
                     case 2://ответ первой команды
                         gm.step = 5;
-                        gm.correct = correct;
+                        gm.team[0].correct = correct;
                         if (correct)
                         {
                             //Takt = -1;
@@ -486,7 +489,7 @@ namespace MainServer
                     case 3://ответ второй команды 
 
                         gm.step = 6;
-                        gm.correct = correct;
+                        gm.team[1].correct = correct;
 
                         if (correct)
                         {
@@ -510,7 +513,7 @@ namespace MainServer
                     #region 4 такт - обработка ответ третьей команды (если дойдет дело)
                     case 4://ответ третьей команды
                         gm.step = 7;
-                        gm.correct = correct;
+                        gm.team[2].correct = correct;
                         if (correct)
                         {
                             gm.team[gm.o3 - 1].iQash += gm.team[gm.o3 - 1].stavka;

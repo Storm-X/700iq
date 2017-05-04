@@ -719,6 +719,7 @@ namespace _700IQ
                 case "osp": //окончание получения списка и получение данных по тройкам
                     //cn.stop();
                     predUs = JsonConvert.DeserializeObject<Data>(komanda.Substring(3));
+                    myTeam = predUs.team.FirstOrDefault(c => c.name == myTeam.name);
                     ini5();
                     SendData sendD = new SendData();
                     sendD.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
@@ -920,7 +921,7 @@ namespace _700IQ
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
                 ruletka = new Rul();
-                ruletka.StartRul(steck.Cell, kv, this, 2); //2 ячейка ??? надо ли??
+                ruletka.StartRul(steck.Cell, kv, this, 0); // 2); //2 ячейка ??? надо ли??
                 ruletka.onStop += Step2_3;
                 this.Invalidate();
             }
@@ -998,7 +999,7 @@ namespace _700IQ
                 ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
             }          
         }
-        private void CreateAnswerTable(bool withQuery = false)
+        private void CreateAnswerTable(bool withQuery=false)
         {
             if (this.InvokeRequired)
             {
@@ -1086,9 +1087,9 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
-                otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.correct);// вывод ответа первой команды
+                otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.team[steck.activeTable-1].correct);// вывод ответа первой команды
 
-                if (!steck.correct)//если ответ не верный
+                if (!steck.team[steck.activeTable-1].correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
@@ -1137,9 +1138,10 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
-                otvetStatic.answer(2, steck.team[steck.o2 - 1].answer, steck.correct);// вывод ответа второй команды
+                otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.team[steck.o1 - 1].correct);// вывод ответа первой команды
+                otvetStatic.answer(2, steck.team[steck.o2 - 1].answer, steck.team[steck.o2 - 1].correct);// вывод ответа второй команды
 
-                if (!steck.correct)//если ответ не верный
+                if (!steck.team[steck.activeTable-1].correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
@@ -1189,9 +1191,11 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
-                otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.correct);// вывод ответа третьей команды
+                otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.team[steck.o1 - 1].correct);// вывод ответа первой команды
+                otvetStatic.answer(2, steck.team[steck.o2 - 1].answer, steck.team[steck.o2 - 1].correct);// вывод ответа второй команды
+                otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.team[steck.o3 - 1].correct);// вывод ответа третьей команды
 
-                if (!steck.correct)//если ответ не верный
+                if (!steck.team[steck.activeTable - 1].correct)//если ответ не верный
                 {
                     bIconFinalised = true;
                     Graphics g = this.CreateGraphics();
