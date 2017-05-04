@@ -364,6 +364,7 @@ namespace _700IQ
                     Ini2(sender, e);
             }
         }
+
         void Ini2(object sender, EventArgs e)//проверка на корректность ввода логина и пароля
         {
             /*List<Control> alltextbox = new List<Control>();

@@ -539,15 +539,17 @@ namespace MainServer
                     gm.Cell = rn.rnd();
                     gm.quest = "";
                     gm.theme = 0;
-                    //////////////////////////////////////Рейтинги   /////////////////////////////////////////////////////////
+                    //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
                     var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
                     Ratings rating = new Ratings(this, mycon, mesta);
                     var rat = rating.getRatings();
                     for (int i = 0; i < 3; i++)
                     {
                         this.data.team[i].rating += rat[i];
+                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating+"WHERE name=" + this.data.team[i].name;
+                        MySqlCommand cm = new MySqlCommand(sql, mycon);
                     }
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 }
                 log();
                 gm.iCon++;
