@@ -464,7 +464,7 @@ namespace MainServer
                     #region 2 такт - обработка ответа первой команды
                     case 2://ответ первой команды
                         gm.step = 5;
-                        gm.team[0].correct = correct;
+                        gm.team[gm.o1 - 1].correct = correct;
                         if (correct)
                         {
                             //Takt = -1;
@@ -489,7 +489,7 @@ namespace MainServer
                     case 3://ответ второй команды 
 
                         gm.step = 6;
-                        gm.team[1].correct = correct;
+                        gm.team[gm.o2 - 1].correct = correct;
 
                         if (correct)
                         {
@@ -513,7 +513,7 @@ namespace MainServer
                     #region 4 такт - обработка ответ третьей команды (если дойдет дело)
                     case 4://ответ третьей команды
                         gm.step = 7;
-                        gm.team[2].correct = correct;
+                        gm.team[gm.o3 - 1].correct = correct;
                         if (correct)
                         {
                             gm.team[gm.o3 - 1].iQash += gm.team[gm.o3 - 1].stavka;
