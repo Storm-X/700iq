@@ -41,6 +41,9 @@ namespace _700IQ
         public DataTable dt = new DataTable();
         public Size resolution; //System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         public int delta;
+        ////////////////////////
+        int StartStep = 0;
+        ///////////////////////
         private System.Timers.Timer MyTimer;
         private System.Windows.Forms.Timer gifTimer= new System.Windows.Forms.Timer();
         private static IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
@@ -65,7 +68,6 @@ namespace _700IQ
             //this.KeyPress += p.WorkForm_KeyDown;
         }
 
-    
         #region//процедуры инициализации
         //Функция получения прозрачного изображения //////////////////////////////////////////////////////////////////
         /// <summary>
@@ -759,32 +761,36 @@ namespace _700IQ
         }
         private void CheckSteck() //потактовая обработка шага инстукции
         {
-            switch (steck.step)
+            if (StartStep != steck.step)
             {
-                case 1:
-                    Step1_3();
-                    break;
-                case 2:
-                    Step2();
-                    break;
-                case 3:
-                    Step3();
-                    break;
-                case 4:
-                    Step4();
-                    break;
-                case 5:
-                    Step5();
-                    break;
-                case 6:
-                    Step6();
-                    break;
-                case 7:
-                    Step7();
-                    break;
-                //default:
-                //    NextStep();                                 
-                //    break;
+                switch (steck.step)
+                {
+                    case 1:
+                        Step1_3();
+                        break;
+                    case 2:
+                        Step2();
+                        break;
+                    case 3:
+                        Step3();
+                        break;
+                    case 4:
+                        Step4();
+                        break;
+                    case 5:
+                        Step5();
+                        break;
+                    case 6:
+                        Step6();
+                        break;
+                    case 7:
+                        Step7();
+                        break;
+                        //default:
+                        //    NextStep();                                 
+                        //    break;
+                }
+                StartStep = 0;
             }
         }
 
@@ -808,12 +814,20 @@ namespace _700IQ
                     Step10();
                     return;
                 }
-                tbl.Rassadka(steck);
                 tbl.SetInfoTopStroka();
-
-                Polosa pol = new Polosa();
-                pol.onPolosaEnd += Temy;
-                pol.polosa(500, NewPoint(1600, 1350), this, "Step1");
+                if (steck.step != 0)
+                {
+                    //CheckSteck();
+                    StartStep = steck.step;
+                    Step1_3();
+                }
+                else
+                {
+                    tbl.Rassadka(steck);
+                    Polosa pol = new Polosa();
+                    pol.onPolosaEnd += Temy;
+                    pol.polosa(500, NewPoint(1600, 1350), this, "Step1");
+                }
             }         
         }     
         void Temy()     //  заставка с инфо о темах вопросов на игру
@@ -836,12 +850,15 @@ namespace _700IQ
             else
             {
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
+                string TextLabel;
+                if (StartStep == steck.step) TextLabel = "Восстановление...";
+                else TextLabel = "К " + steck.iCon + " айкону готов!";
                 Label lbStart = new Label()
                 {
                     Name = "oneuse",
                     Location = NewPoint(1650, 1200),
                     Size = NewSize(450, 100),
-                    Text = "К " + steck.iCon + " айкону готов!",
+                    Text = TextLabel,
                     BackColor = Color.Transparent,
                     ForeColor = Color.White,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
@@ -858,10 +875,12 @@ namespace _700IQ
                     Parent = this,
                     BackColor = Color.Transparent,
                 };
-
-                Polosa pol = new Polosa();
-                pol.onPolosaEnd += Step1_4;
-                pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
+                if (StartStep != steck.step)
+                {
+                    Polosa pol = new Polosa();
+                    pol.onPolosaEnd += Step1_4;
+                    pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
+                }
                 this.Invalidate();
             }
         }

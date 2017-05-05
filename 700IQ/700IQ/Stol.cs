@@ -974,14 +974,14 @@ namespace _700IQ
                 gifTimer2.Interval = 25;
                 gifTimer3.Interval = 25;
 
-                if (correct)
-                {
-                    getArrayOfFrames(im2);
-                }
-                else
-                {
-                    getArrayOfFrames(im3);
-                }
+                //if (correct)
+                //{
+                    getArrayOfFrames(correct ? im2 : im3);
+                //}
+                //else
+                //{
+                //    getArrayOfFrames(im3);
+                //}
                     
                 if (o == 1)
                 {
