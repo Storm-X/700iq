@@ -42,7 +42,7 @@ namespace _700IQ
         public Size resolution; //System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         public int delta;
         ////////////////////////
-        int StartStep = 0;
+        int StartStep = -1;
         ///////////////////////
         private System.Timers.Timer MyTimer;
         private System.Windows.Forms.Timer gifTimer= new System.Windows.Forms.Timer();
@@ -854,13 +854,12 @@ namespace _700IQ
             {
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
-                if (StartStep == steck.step) TextLabel = "Восстановление...";
-                else TextLabel = "К " + steck.iCon + " айкону готов!";
+                TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
                 Label lbStart = new Label()
                 {
                     Name = "oneuse",
                     Location = NewPoint(1650, 1200),
-                    Size = NewSize(450, 100),
+                    Size = NewSize(950, 100),
                     Text = TextLabel,
                     BackColor = Color.Transparent,
                     ForeColor = Color.White,
@@ -878,12 +877,10 @@ namespace _700IQ
                     Parent = this,
                     BackColor = Color.Transparent,
                 };
-                if (StartStep != steck.step)
-                {
-                    Polosa pol = new Polosa();
-                    pol.onPolosaEnd += Step1_4;
-                    pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
-                }
+
+                Polosa pol = new Polosa();
+                pol.onPolosaEnd += Step1_4;
+                pol.polosa((StartStep != steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
                 this.Invalidate();
             }
         }
