@@ -90,7 +90,7 @@ namespace MainServer
                 int o2 = gameLog[i].gmLog.o2;
                 int o3 = gameLog[i].gmLog.o3;
 
-                if ((gameLog[i].gmLog.team[o1].correct)|| (gameLog[i].gmLog.team[o2].correct)||(gameLog[i].gmLog.team[o3].correct))
+                if ((gameLog[i].gmLog.team[o1-1].correct)|| (gameLog[i].gmLog.team[o2-1].correct)||(gameLog[i].gmLog.team[o3-1].correct))
                 {
                     if (String.Compare(gameLog[i].gmLog.team[o3-1].answer,"") != 0 && String.Compare(gameLog[i].gmLog.team[o3-1].answer,"Нет ответа")!=0)
                     {
