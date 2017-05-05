@@ -410,6 +410,7 @@ namespace _700IQ
             myTeam = predUs.team.FirstOrDefault(c => c.name == myTeam.name);
             //kluch = myTeam.kod;
             //uidKomand = myTeam.uid;
+            ///if (myTeam.Resumption) MessageBox.Show("sdfsdf");
             Bitmap bmpNew = new Bitmap(Properties.Resources.GreenTable, resolution.Width + delta * 2, resolution.Height);
             Graphics g = Graphics.FromImage(bmpNew);
             g.DrawString("Добро пожаловать", new Font("Times New Roman", NewFontSize(40), FontStyle.Italic), Brushes.White, NewPoint(950, 50));
@@ -741,7 +742,9 @@ namespace _700IQ
                     steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
                     Debug.WriteLine(komanda);
                     if (!bIconFinalised)
-                        CheckSteck();
+                        //if (myTeam.Resumption) myTeam.Resumption = false;
+                        //else
+                            CheckSteck();
                     else
                         cn.ClearLastCommand();              
                     break;

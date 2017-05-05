@@ -26,6 +26,7 @@ namespace MainServer
             string str = "";
             MySqlCommand cm;
             MySqlDataReader rd;
+            teams myTeam;
             DataTable dat;
             byte[] ServerResponseBytes;
             tcpListner = new TcpListener(IPAddress.Any, 2050);
@@ -87,10 +88,12 @@ namespace MainServer
                                     DataRow[] datRowN = ddt.Select("Name='" + ssi[0] + "'");
                                     string kluch = dat.Rows[0][2].ToString() + ddt.Rows.Count + DateTime.Now.ToString("hh:mm:ss:fff");
                                     #region если игра началась и команда играла, то заменяем ключ и берем значение data
+                           
                                     if (team.getStart() || datRowN.Count() > 0)
                                     {
                                         if (datRowN.Count() > 0)
                                         {
+             
                                             bool inGameTeam = false;
                                             for (int i = 0; i < gZone.Count; i++)//перебором игровых зон находим где находилась команда
                                                 for (int j = 0; j < 3; j++)
@@ -98,6 +101,7 @@ namespace MainServer
                                                     if (gZone[i].data.team[j].uid == Convert.ToInt32(dat.Rows[0][3]))
                                                     {
                                                         gZone[i].data.team[j].kod = kluch;  //заменяем ключ
+                                                        if (gZone[i].data.team[j].name == ssi[0]) gZone[i].data.team[j].Resumption = true;
                                                         data = gZone[i].data;               //берем Data из gameZone
                                                         inGameTeam = true;
                                                     }
@@ -108,6 +112,7 @@ namespace MainServer
                                         {
                                             str = "False";
                                         }
+
                                     }
                                     #endregion
                                     #region если игра еще не началась, то  заносим данные в таблицу 

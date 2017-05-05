@@ -43,6 +43,7 @@ namespace MainServer
         public int rating;      //рейтинг команды
         public int iQash;       //айкэш 
         public string kod;      //ключ сессии
+        public bool Resumption;
         public members[] member = new members[5]; //члены команды
         public class members
         {
@@ -62,6 +63,7 @@ namespace MainServer
         public string NameGame;     //название игры
         public int NumberGame;      //номер игры
  //       public int NumberTable;     //номер стола
+
         public string Tur;          //тур
         public Temy[] tema = new Temy[7];   //темы на игру
         public teams[] team = new teams[3]; //команды на игру

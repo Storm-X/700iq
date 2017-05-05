@@ -27,7 +27,8 @@ namespace _700IQ
             public int iQash;        //количество айкэш
             public int stavka;       //ставка команды
             public string answer;    //ответ на вопрос
-            public bool correct;     //правильность ответа        
+            public bool correct;     //правильность ответа       
+          
         }
     }
     public class Data//структура установочных данных
@@ -58,6 +59,7 @@ namespace _700IQ
             public int iQash;
             public string kod;      //ключ сессии
             public members[] member = new members[5]; //члены команды
+            public bool Resumption;
             public class members
             {
                 public int id;//идентификатор участика
