@@ -1087,9 +1087,9 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
-                otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.team[steck.activeTable-1].correct);// вывод ответа первой команды
+                otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.team[steck.o1-1].correct);// вывод ответа первой команды
 
-                if (!steck.team[steck.activeTable-1].correct)//если ответ не верный
+                if (!steck.team[steck.o1-1].correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
@@ -1140,7 +1140,7 @@ namespace _700IQ
                 otvetStatic.semafor(0);
                 otvetStatic.answer(2, steck.team[steck.o2 - 1].answer, steck.team[steck.o2 - 1].correct);// вывод ответа второй команды
 
-                if (!steck.team[steck.activeTable-1].correct)//если ответ не верный
+                if (!steck.team[steck.o2-1].correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
@@ -1192,7 +1192,7 @@ namespace _700IQ
                 otvetStatic.semafor(0);
                 otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.team[steck.o3 - 1].correct);// вывод ответа третьей команды
 
-                if (!steck.team[steck.activeTable - 1].correct)//если ответ не верный
+                if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
                 {
                     bIconFinalised = true;
                     Graphics g = this.CreateGraphics();
