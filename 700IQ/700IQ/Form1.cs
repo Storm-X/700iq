@@ -880,7 +880,7 @@ namespace _700IQ
 
                 Polosa pol = new Polosa();
                 pol.onPolosaEnd += Step1_4;
-                pol.polosa((StartStep != steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
+                pol.polosa((StartStep == steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
                 this.Invalidate();
             }
         }

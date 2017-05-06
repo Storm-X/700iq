@@ -104,38 +104,42 @@ namespace _700IQ
             }
             else
             {
-                Label intel = new Label()
-                {
-                    Location = NewPoint(2150, 30),
-                    Text = "Интеллект-казино",
-                    AutoSize = true,
-                    Font = new Font("Cambria ", NewFontSize(12)),
-                    ForeColor = Color.Gold,
-                    Parent = workForm,
-                    BackColor = Color.Transparent,
-                };
                 Label serv = new Label()
                 {
-                    Location = NewPoint(2200, 1550),
+                    //Location = NewPoint(2200, 1550),
                     Text = GeneralForm.infoOfserver,
                     AutoSize = true,
                     Font = new Font("Cambria ", NewFontSize(12)),
                     ForeColor = Color.Gold,
                     Parent = workForm,
                     BackColor = Color.Transparent,
+                    TextAlign = ContentAlignment.MiddleRight,
                 };
+                serv.Location = new Point(workForm.Width - serv.Width - 3, workForm.Height - 3 - serv.Height);
                 PictureBox IQ700 = new PictureBox()
                 {
-                    Location = NewPoint(2410, 0),
                     Size = NewSizeKv(100),
+                    Location = new Point(workForm.Width - NewSizeKv(100).Width - 3 , 3),//NewPoi,nt(2410, 0),
                     Image = Properties.Resources.rotor700,
                     BackColor = Color.Transparent,
                     Parent = workForm,
                     SizeMode = PictureBoxSizeMode.Zoom,
                 };
+                Label intel = new Label()
+                {
+                    AutoSize = true,
+                    Text = "Интеллект-казино",
+                    //Location = NewPoint(2150, 30),
+                    Font = new Font("Cambria ", NewFontSize(12)),
+                    ForeColor = Color.Gold,
+                    Parent = workForm,
+                    BackColor = Color.Transparent,
+                    TextAlign = ContentAlignment.MiddleRight,
+                };
+                intel.Location = new Point(workForm.Width - NewSizeKv(100).Width - intel.Width, 3 + (NewSizeKv(100).Height - intel.Height)/2);
                 Label inform = new Label()
                 {
-                    Location = NewPoint(5, 30),
+                    Location = new Point(3,3), //NewPoint(5, 30),
                     Text = predUs.city + " - " + predUs.NumberGame + " игра - " + predUs.Tur,
                     AutoSize = true,
                     Font = new Font("Cambria ", NewFontSize(12)),
