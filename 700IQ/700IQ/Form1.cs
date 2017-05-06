@@ -42,7 +42,7 @@ namespace _700IQ
         public Size resolution; //System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         public int delta;
         ////////////////////////
-        int StartStep = 0;
+        int StartStep = -1;
         ///////////////////////
         private System.Timers.Timer MyTimer;
         private System.Windows.Forms.Timer gifTimer= new System.Windows.Forms.Timer();
@@ -884,6 +884,7 @@ namespace _700IQ
                     pol.onPolosaEnd += Step1_4;
                     pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
                 }
+                else Step1_4();
                 this.Invalidate();
             }
         }
