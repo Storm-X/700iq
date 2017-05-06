@@ -417,7 +417,7 @@ namespace _700IQ
             Graphics g = Graphics.FromImage(bmpNew);
             g.DrawString("Добро пожаловать", new Font("Times New Roman", NewFontSize(40), FontStyle.Italic), Brushes.White, NewPoint(950, 50));
             g.DrawString("в интеллект-казино 700 IQ!", new Font("Times New Roman", NewFontSize(30), FontStyle.Regular), Brushes.White, NewPoint(950, 200));
-            infoOfserver = "Ваш игровой сервер " + IP.ToString();
+            infoOfserver = "Игровой сервер " + IP.ToString()+";\n"+ "Игровой стол "+ myTeam.table+";\n"+"Игровая зона "+predUs.GameZone;
             // g.DrawString(infoOfserver, new Font("Times New Roman", NewFontSize(30), FontStyle.Regular), Brushes.White, NewPoint(950, 700));
             g.DrawImage(Properties.Resources.Печать_с_тенью, new Rectangle(NewPoint(100, 100),NewSizeKv(500)));
             g.DrawString(predUs.city+"  -  "+predUs.NumberGame+" -  "+predUs.Tur, new Font("Times New Roman", NewFontSize(15), FontStyle.Italic), Brushes.White, NewPoint(130, 600));
@@ -880,7 +880,7 @@ namespace _700IQ
 
                 Polosa pol = new Polosa();
                 pol.onPolosaEnd += Step1_4;
-                pol.polosa((StartStep != steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
+                pol.polosa((StartStep == steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
                 this.Invalidate();
             }
         }

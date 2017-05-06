@@ -996,47 +996,50 @@ namespace MainServer
         }
         private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            var grid = sender as DataGridView;
-            if (e.ColumnIndex == 7)
+            try
             {
-                if ((grid[7, e.RowIndex].Value == System.DBNull.Value) || (grid[7, e.RowIndex].Value == "Неправильно"))
+                var grid = sender as DataGridView;
+                if (e.ColumnIndex == 7)
                 {
-                    grid[7, e.RowIndex].Value = "Правильно";
-                    grid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Green;
-                    return;
+                    if ((grid[7, e.RowIndex].Value == System.DBNull.Value) || (grid[7, e.RowIndex].Value == "Неправильно"))
+                    {
+                        grid[7, e.RowIndex].Value = "Правильно";
+                        grid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Green;
+                        return;
+                    }
+                    if (grid[7, e.RowIndex].Value == "Правильно")
+                    {
+                        grid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
+                        grid[7, e.RowIndex].Value = "Неправильно";
+                        return;
+                    }
                 }
-                if (grid[7, e.RowIndex].Value == "Правильно")
+                if (e.ColumnIndex == 8)
                 {
-                    grid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-                    grid[7, e.RowIndex].Value = "Неправильно";
-                    return;
+                    bool flag;
+
+                    if (grid[7, e.RowIndex].Value == "Правильно")
+                    {
+                        flag = true;
+                        bool cor = flag;
+                        int zona = Convert.ToInt32(grid[0, e.RowIndex].Value);
+                        MassGameZone[zona].checkOtvet(cor);
+                        dataGridView2.Rows.Remove(((DataGridView)sender).CurrentRow);
+                        return;
+                    }
+
+                    if (grid[7, e.RowIndex].Value == "Неправильно")
+                    {
+                        flag = false;
+                        bool cor = flag;
+                        int zona = Convert.ToInt32(grid[0, e.RowIndex].Value);
+                        MassGameZone[zona].checkOtvet(cor);
+                        dataGridView2.Rows.Remove(((DataGridView)sender).CurrentRow);
+                        return;
+                    }
                 }
             }
-            if (e.ColumnIndex == 8)
-            {
-                bool flag;
-
-                if (grid[7, e.RowIndex].Value == "Правильно")
-                {
-                    flag = true;
-                    bool cor = flag;
-                    int zona = Convert.ToInt32(grid[0, e.RowIndex].Value);
-                    MassGameZone[zona].checkOtvet(cor);
-                    dataGridView2.Rows.Remove(((DataGridView)sender).CurrentRow);
-                    return;
-                }
-
-                if (grid[7, e.RowIndex].Value == "Неправильно")
-                {
-                    flag = false;
-                    bool cor = flag;
-                    int zona = Convert.ToInt32(grid[0, e.RowIndex].Value);
-                    MassGameZone[zona].checkOtvet(cor);
-                    dataGridView2.Rows.Remove(((DataGridView)sender).CurrentRow);
-                    return;
-                }
-            }
-
+            catch { };
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

@@ -462,6 +462,7 @@ namespace MainServer
                         break;
                     #endregion
                     #region 2 такт - обработка ответа первой команды
+                
                     case 2://ответ первой команды
                         gm.step = 5;
                         gm.team[gm.o1 - 1].correct = correct;

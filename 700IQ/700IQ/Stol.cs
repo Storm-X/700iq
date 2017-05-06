@@ -116,7 +116,7 @@ namespace _700IQ
                 };
                 Label serv = new Label()
                 {
-                    Location = NewPoint(2200, 1550),
+                    Location = NewPoint(2300, 1500),
                     Text = GeneralForm.infoOfserver,
                     AutoSize = true,
                     Font = new Font("Cambria ", NewFontSize(12)),
