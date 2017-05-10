@@ -113,9 +113,11 @@ namespace _700IQ
                     ForeColor = Color.Gold,
                     Parent = workForm,
                     BackColor = Color.Transparent,
-                    TextAlign = ContentAlignment.MiddleRight,
+                    //TextAlign = ContentAlignment.MiddleRight,
                 };
-                serv.Location = new Point(workForm.Width - serv.Width - 3, workForm.Height - 3 - serv.Height);
+                //serv.Location = new Point(workForm.Width - serv.Width - 3, workForm.Height - 3 - serv.Height);
+                serv.Location = new Point(3, workForm.Height - 3 - serv.Height);
+
                 PictureBox IQ700 = new PictureBox()
                 {
                     Size = NewSizeKv(100),
@@ -125,6 +127,22 @@ namespace _700IQ
                     Parent = workForm,
                     SizeMode = PictureBoxSizeMode.Zoom,
                 };
+                /*
+                Label intel1 = new Label()
+                {
+                    AutoSize = true,
+                    Text = "Интеллект-казино",
+                    //Location = NewPoint(2150, 30),
+                    Font = new Font("Cambria ", NewFontSize(12)),
+                    ForeColor = Color.Black,
+                    Parent = workForm,
+                    BackColor = Color.Transparent,
+                    TextAlign = ContentAlignment.MiddleRight,
+                    //listView1.BackgroundImage = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(listView1.Location.X, listView1.Location.Y, listView1.Width, listView1.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                };
+                intel1.Location = new Point(workForm.Width - NewSizeKv(100).Width - intel1.Width +5, 8 + (NewSizeKv(100).Height - intel1.Height) / 2);
+               // Bitmap bmp = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(intel1.Location.X-1, intel1.Location.Y-1, intel1.Width, intel1.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+               */
                 Label intel = new Label()
                 {
                     AutoSize = true,
@@ -136,7 +154,9 @@ namespace _700IQ
                     BackColor = Color.Transparent,
                     TextAlign = ContentAlignment.MiddleRight,
                 };
+                //intel.BackgroundImage = bmp;
                 intel.Location = new Point(workForm.Width - NewSizeKv(100).Width - intel.Width, 3 + (NewSizeKv(100).Height - intel.Height)/2);
+
                 Label inform = new Label()
                 {
                     Location = new Point(3,3), //NewPoint(5, 30),
@@ -204,10 +224,10 @@ namespace _700IQ
             {
                 sBrash.Color = Color.FromName(tmcolor[i]);
                 rec.Location = NewPoint(400, 400 + i * 100);
-                rect.Location = NewPoint(403, 403 + i * 100);
+                rect.Location = new Point(NewPoint(400, 400 + i * 100).X + 3, NewPoint(400, 400 + i * 100).Y + 3);//NewPoint(403, 403 + i * 100);
                 g.FillRectangle(Brushes.Black, rect);
                 g.FillRectangle(sBrash, rec);
-                g.DrawString(predUs.tema[i].theme, new Font("Buxton Sketch", NewFontSize(30)), Brushes.Black, NewPoint(503, 393 + i * 100));
+                g.DrawString(predUs.tema[i].theme, new Font("Buxton Sketch", NewFontSize(30)), Brushes.Black, new Point(NewPoint(500, 390 + i * 100).X + 3, NewPoint(500, 390 + i * 100).Y + 3));//NewPoint(503, 393 + i * 100)
                 g.DrawString(predUs.tema[i].theme, new Font("Buxton Sketch", NewFontSize(30)), sBrash, NewPoint(500, 390 + i * 100));
             }
             workForm.BackgroundImage = bmp;
@@ -377,8 +397,8 @@ namespace _700IQ
                 {
                     Parent = workForm,
                     Name = "oneuse",
-                    Location = NewPoint(847, 1057),
-                    Size = NewSize(806, 106),
+                    Location = new Point(NewPoint(850, 1060).X - 3, NewPoint(850, 1060).Y - 3),//NewPoint(847, 1057),
+                    Size = new Size(NewSize(800, 100).Width + 6, NewSize(800, 100).Height + 6),//NewSize(806, 106),
                     BackColor = tema ? Color.Gray : Color.FromName(tmcolor[steck.theme]),
                 };
             }));
