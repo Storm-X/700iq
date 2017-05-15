@@ -417,7 +417,6 @@ namespace _700IQ
             //int ctrCount = fm.Controls.Count;
             //for (int i = 0; i <= ctrCount; i++) fm.Controls.RemoveByKey("oneuse");//очистка экрана от временных элементов
             workForm = fm;
-
             //= "Зарегистрировавшиеся команды:\n\n";          
             DataRow[] dtRow = dt.Select();
             #region//описание полей вывода информации список команд
@@ -426,6 +425,11 @@ namespace _700IQ
                 //resolution = Screen.FromControl(fm).WorkingArea.Size;
                 foreach (Control t in workForm.Controls.Find("oneuse", true))
                     workForm.Controls.Remove(t);
+
+                Point listView1_Location = NewPoint(800, 400);
+                Size listView1_Size = NewSize(1700, 1160);
+                Bitmap listView1_BackgroundImage = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(listView1_Location.X, listView1_Location.Y, listView1_Size.Width, listView1_Size.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
                 Label zagolovok = new Label
                 {
                     Parent = workForm,
@@ -437,13 +441,12 @@ namespace _700IQ
                     Location = NewPoint(800, 350),
                     Size = NewSize(700, 50),
                 };
-                Point pn = NewPoint(800, 400);
                 listView1 = new ListViewWithoutScrollBar()
                 {
                     Name = "oneuse",
-                    Location = pn,
-                    Size = NewSize(1700, 1160),
-                    Parent = workForm,
+                    Location = listView1_Location,
+                    Size = listView1_Size,
+                    BackgroundImage = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(listView1_Location.X, listView1_Location.Y, listView1_Size.Width, listView1_Size.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb),
                     Font = new Font("times new roman", NewFontSize(25), FontStyle.Italic),
                     ForeColor = Color.Gold,
                     BorderStyle = BorderStyle.None,
@@ -451,12 +454,9 @@ namespace _700IQ
                     View = View.Details,
                     LabelEdit = false,
                     AllowColumnReorder = true,
-                    
-                    HeaderStyle = ColumnHeaderStyle.None                    
-                };
-      
-
-                listView1.BackgroundImage = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(listView1.Location.X, listView1.Location.Y, listView1.Width, listView1.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    HeaderStyle = ColumnHeaderStyle.None,
+                    Parent = workForm,
+               };
                 listView1.Items.Add(new ListViewItem(new string[] { "№", "Название", "Рейтинг" }));
                 int count = 1;
                 for (int j = 0; j < 20; j++)
@@ -471,17 +471,17 @@ namespace _700IQ
                 listView1.Columns.Add("", -2, HorizontalAlignment.Left);
                 listView1.Columns.Add("", -2, HorizontalAlignment.Left);
                 listView1.Columns[0].Width = new Size((int)(listView1.Width * 0.05), 500).Width;
-                listView1.Columns[1].Width = new Size((int)(listView1.Width * 0.75), 500).Width;
+                listView1.Columns[1].Width = new Size((int)(listView1.Width * 0.80) - 20, 500).Width;
                 listView1.Columns[2].Width = new Size((int)(listView1.Width * 0.15), 500).Width;
                 visible_count = listView1.Height / (listView1.Font.Height+4);
-                 cs = new CustomScrollbar()
+                cs = new CustomScrollbar()
                 {
                     Parent = listView1,
                     ChannelColor = Color.Transparent,
                     LargeChange = 0,
-                    Location = new Point((int)(listView1.Width*0.95),0),
-                    Maximum = listView1.Items.Count-1 - visible_count,
-                    Minimum = 1,
+                    Location = new Point((int)(listView1.Width) - 20,0),
+                    Maximum = listView1.Items.Count - visible_count - 1,
+                    Minimum = 0,
                     MinimumSize = NewSize(15, 92),
                     Name = "cs",
                     Size = new Size(18, listView1.Height),
@@ -531,6 +531,7 @@ namespace _700IQ
                 };
             }));
             #endregion
+
         }
 
         private void Cs_Scroll(object sender, EventArgs e)

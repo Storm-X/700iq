@@ -42,6 +42,7 @@ namespace _700IQ
         public DataTable dt = new DataTable();
         public Size resolution; //System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         public int delta;
+        public string path;
         ////////////////////////
         int StartStep = -1;
         ///////////////////////
@@ -64,16 +65,17 @@ namespace _700IQ
         [DllImport("User32.dll", SetLastError = true)]
         private static extern IntPtr LoadCursorFromFile(String str);
 
-        public void SetCursor(string FileName)
+        public Cursor SetCursor(string FileName)
         {
             IntPtr hCursor = LoadCursorFromFile(FileName);
             if (!IntPtr.Zero.Equals(hCursor))
             {
-                this.Cursor = new Cursor(hCursor);
+                return new Cursor(hCursor);
             }
             else
             {
                 MessageBox.Show("Ошибка загрузки курсора \n" + Marshal.GetLastWin32Error());
+                return this.Cursor;
             }
         }
 
@@ -82,12 +84,10 @@ namespace _700IQ
             InitializeComponent();
             //this.KeyDown += GeneralForm_KeyDown;
             //this.KeyPress += p.WorkForm_KeyDown;      
-            string path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+            path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
             path = Path.GetDirectoryName(path);//возврат на директорию вверх
             path = path + "\\Resources\\Cursors\\";//директория с курсорами
-            path = path + "Yellow_1.ani";//имя курсора
-            SetCursor(path);//установка курсора из файла
-
+            this.Cursor = SetCursor(path+ "Yellow_vopros.ani");//установка курсора из файла
         }
 
         #region//процедуры инициализации
@@ -328,7 +328,6 @@ namespace _700IQ
 
             TextBox logintb = new TextBox()
             {
-                Parent = lb,
                 Name = "login",
                 AutoSize = false,
                 Size = NewSize(300, 60),
@@ -340,12 +339,13 @@ namespace _700IQ
                 BorderStyle = BorderStyle.None,
                 Font = new Font("Cambria", NewFontSize(20)),
                 TextAlign = HorizontalAlignment.Left,
-                MaxLength = 12, 
-                AcceptsReturn=false,
-            };
+                MaxLength = 12,
+                AcceptsReturn = false,
+                Parent = lb,
+                Cursor = SetCursor(path + "Text Select.ani"),//установка курсора из файла
+        };
             TextBox paroltb = new TextBox
             {
-                Parent = lb,
                 AutoSize = false,
                 Size = NewSize(300, 60),
                 Location = NewRelPoint(1175, 928),            
@@ -355,7 +355,9 @@ namespace _700IQ
                 TextAlign = HorizontalAlignment.Left,
                 PasswordChar = '*',
                 MaxLength = 12,
-                Name = "parol" ,
+                Name = "parol",
+                Parent = lb,
+                Cursor = SetCursor(path + "Text Select.ani"),//установка курсора из файла
             };
             #endregion
             #region//описание кнопки ввода
