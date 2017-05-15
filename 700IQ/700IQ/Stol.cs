@@ -410,8 +410,6 @@ namespace _700IQ
 
         public CustomScrollbar cs;
         public ListViewWithoutScrollBar listView1;
-        int count = 0;
-        int step;
         int visible_count = 0;
         public void spisokOut(GeneralForm fm, DataTable dt, Data predUs)//вывод спсок зарегистрированных команд
         {
@@ -444,26 +442,24 @@ namespace _700IQ
                 {
                     Name = "oneuse",
                     Location = pn,
-                    Size = NewSize(1700, 800),
+                    Size = NewSize(1700, 1160),
                     Parent = workForm,
                     Font = new Font("times new roman", NewFontSize(25), FontStyle.Italic),
                     ForeColor = Color.Gold,
                     BorderStyle = BorderStyle.None,
                     BackgroundImageTiled = true,
                     View = View.Details,
-                    LabelEdit = true,
+                    LabelEdit = false,
                     AllowColumnReorder = true,
                     
-                    HeaderStyle = ColumnHeaderStyle.None
-                    
-                    
+                    HeaderStyle = ColumnHeaderStyle.None                    
                 };
       
 
                 listView1.BackgroundImage = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(listView1.Location.X, listView1.Location.Y, listView1.Width, listView1.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 listView1.Items.Add(new ListViewItem(new string[] { "№", "Название", "Рейтинг" }));
                 int count = 1;
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < 20; j++)
                 {
                     for (int i = 0; i < dtRow.Length; i++)
                     {
@@ -471,32 +467,29 @@ namespace _700IQ
                     };
                 }
  
-
                 listView1.Columns.Add("", -2, HorizontalAlignment.Left);
                 listView1.Columns.Add("", -2, HorizontalAlignment.Left);
                 listView1.Columns.Add("", -2, HorizontalAlignment.Left);
                 listView1.Columns[0].Width = new Size((int)(listView1.Width * 0.05), 500).Width;
                 listView1.Columns[1].Width = new Size((int)(listView1.Width * 0.75), 500).Width;
                 listView1.Columns[2].Width = new Size((int)(listView1.Width * 0.15), 500).Width;
-                //   visible_count = listView1.Height / (listView1.Font.Height+4);
-                step = 1;//100 / (listView1.Items.Count - visible_count);
+                visible_count = listView1.Height / (listView1.Font.Height+4);
                  cs = new CustomScrollbar()
                 {
                     Parent = listView1,
                     ChannelColor = Color.Transparent,
                     LargeChange = 0,
                     Location = new Point((int)(listView1.Width*0.95),0),
-                    Maximum = listView1.Items.Count-1,
+                    Maximum = listView1.Items.Count-1 - visible_count,
                     Minimum = 1,
                     MinimumSize = NewSize(15, 92),
                     Name = "cs",
-                    Size = new Size(20, listView1.Height),
+                    Size = new Size(18, listView1.Height),
                     SmallChange = 0,
                     BackColor = Color.Transparent,
                     BorderStyle = BorderStyle.None,
                     TabIndex = 1,
                     Value = 0
-
                 };
                 cs.Scroll += Cs_Scroll;
                 if (visible_count >= listView1.Items.Count)
@@ -507,7 +500,6 @@ namespace _700IQ
                 {
                     cs.Visible = true;
                 }
-
                 #endregion
                 #region начало игры
                 Label lbr = new Label()//--------------------игра начнется
@@ -543,9 +535,7 @@ namespace _700IQ
 
         private void Cs_Scroll(object sender, EventArgs e)
         {
-
-            listView1.TopItem = listView1.Items[cs.Value];
-            
+                listView1.TopItem = listView1.Items[cs.Value];
         }
     }
     public class Otvet : resize//ответ на вопрос и показ очереди ответа

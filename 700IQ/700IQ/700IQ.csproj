@@ -129,6 +129,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Cursors\Orange.ani" />
+    <None Include="Resources\Cursors\Yellow.ani" />
+    <None Include="Resources\Cursors\Yellow_1.ani" />
     <None Include="Resources\stol.png" />
   </ItemGroup>
   <ItemGroup>

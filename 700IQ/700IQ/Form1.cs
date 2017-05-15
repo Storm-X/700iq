@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace _700IQ
 {
@@ -60,12 +61,33 @@ namespace _700IQ
         }
         #endregion
 
+        [DllImport("User32.dll", SetLastError = true)]
+        private static extern IntPtr LoadCursorFromFile(String str);
+
+        public void SetCursor(string FileName)
+        {
+            IntPtr hCursor = LoadCursorFromFile(FileName);
+            if (!IntPtr.Zero.Equals(hCursor))
+            {
+                this.Cursor = new Cursor(hCursor);
+            }
+            else
+            {
+                MessageBox.Show("Ошибка загрузки курсора \n" + Marshal.GetLastWin32Error());
+            }
+        }
+
         public GeneralForm()
         {
-            
             InitializeComponent();
             //this.KeyDown += GeneralForm_KeyDown;
-            //this.KeyPress += p.WorkForm_KeyDown;
+            //this.KeyPress += p.WorkForm_KeyDown;      
+            string path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+            path = Path.GetDirectoryName(path);//возврат на директорию вверх
+            path = path + "\\Resources\\Cursors\\";//директория с курсорами
+            path = path + "Yellow_1.ani";//имя курсора
+            SetCursor(path);//установка курсора из файла
+
         }
 
         #region//процедуры инициализации
