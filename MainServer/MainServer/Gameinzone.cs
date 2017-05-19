@@ -52,6 +52,7 @@ namespace MainServer
         public bool stopGm = false;
         public GameStatistic gs;
         private DateTime deadLine;
+        private Timer deadLine_timer = new Timer();
         //public List<int> users = new List<int>();
 
         #endregion
@@ -87,7 +88,8 @@ namespace MainServer
             gm.o2 = 2;
             gm.o3 = 3;
             #endregion
-            deadLine = DateTime.Now.AddMinutes(3);
+            deadLine = DateTime.Now.AddMinutes(2);
+            deadLine_timer.Tick += deadLine_timer_Tick;
             tm.Tick += Tm_Tick;
             tmOtvet.Tick += TmOtvet_Tick;
 
@@ -102,6 +104,12 @@ namespace MainServer
         private void Tm_Tick(object sender, EventArgs e)
         {
             tm.Stop();
+            nextTakt();
+        }
+        private void deadLine_timer_Tick(object sender, EventArgs e)
+        {
+            if (deadLine<=DateTime.Now)
+           // tm.Stop();
             nextTakt();
         }
         private void TmOtvet_Tick(object sender, EventArgs e)
@@ -350,6 +358,7 @@ namespace MainServer
             }
             else
             {
+                deadLine = DateTime.Now.AddMinutes(1);
                 switch (Takt)
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд
