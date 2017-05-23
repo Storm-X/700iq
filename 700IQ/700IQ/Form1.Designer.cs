@@ -70,12 +70,14 @@ namespace _700IQ
             this.Shown += new System.EventHandler(this.GeneralForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
             this.ResumeLayout(false);
-
-        }
+    }
 
         #endregion
-
+       
         private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1;
+
+
     }
+
 }
 

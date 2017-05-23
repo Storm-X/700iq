@@ -46,7 +46,9 @@ namespace MainServer
         string[] otvet = new string[3];     //массив ответов команд
         bool[] ok = new bool[3];            //массив логических триггеров
         System.Windows.Forms.Timer tm = new System.Windows.Forms.Timer();   //таймер ожидания хода команды
-        Timer tmOtvet = new Timer();                                        //таймер ожидания ответа команды
+        Timer tmOtvet = new Timer();
+        Object obj = new Object();
+        private Timer deadLinetmr = new Timer();
         bool tmAktiv = false;
         bool tmOtvetAktiv = false;
         public bool stopGm = false;
@@ -90,8 +92,16 @@ namespace MainServer
             deadLine = DateTime.Now.AddMinutes(3);
             tm.Tick += Tm_Tick;
             tmOtvet.Tick += TmOtvet_Tick;
+            deadLinetmr.Tick += DeadLinetmr_Tick;
+            deadLinetmr.Start();
 
         }
+
+        private void DeadLinetmr_Tick(object sender, EventArgs e)
+        {
+            if (deadLine <= DateTime.Now) nextTakt();
+        }
+
         public void setThemes(int[] themeID, string[] theme)                            //получение тем вопросов для строки
         {
             this.themeID = themeID;
@@ -350,6 +360,7 @@ namespace MainServer
             }
             else
             {
+                deadLine = DateTime.Now.AddMinutes(2);
                 switch (Takt)
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд
@@ -368,8 +379,8 @@ namespace MainServer
                     case 1:
 
                         gm.step = 3;
-                        gm.Cell = rn.rnd();
-                        if (gm.Cell == 0)
+                        gm.Cell = 0;// rn.rnd();
+                       /* if (gm.Cell == 0)
                         {
                             gm.step = 2;
                             //gm.iCon++;                  
@@ -379,7 +390,7 @@ namespace MainServer
                             //tmSync.Start();
                             for (int i = 0; i < 3; i++) ok[i] = false;
                             break;
-                        }
+                        }*/
                         for (int i = 0; i < 3; i++)
                         {
                             stavka[i] = (stavka[i] == 0) ? 25 : stavka[i];
@@ -392,9 +403,14 @@ namespace MainServer
 
                         int[] st = { gm.team[0].stavka, gm.team[1].stavka, gm.team[2].stavka };
                         int[] o = rul.ResponsePriority(gm.Cell, st);
-                        gm.o1 = (byte)o[0];
-                        gm.o2 = (byte)o[1];
-                        gm.o3 = (byte)o[2];
+
+                        if (gm.Cell != 0)
+                        {
+                            gm.o1 = (byte)o[0];
+                            gm.o2 = (byte)o[1];
+                            gm.o3 = (byte)o[2];
+                        }
+                        
 
                         gm.activeTable = gm.o1;
 
@@ -464,25 +480,36 @@ namespace MainServer
                     #region 2 такт - обработка ответа первой команды
                 
                     case 2://ответ первой команды
-                        gm.step = 5;
-                        gm.team[gm.o1 - 1].correct = correct;
-                        if (correct)
+                        if (gm.Cell == 0)
                         {
-                            //Takt = -1;
-                            gm.team[gm.o1 - 1].iQash += 4 * gm.team[gm.o1 - 1].stavka;
-                            //gm.iCon++;
+                            tmOtvet.Stop();
                             endOfIqon = true;
-                            for (int i = 0; i < 3; i++) ok[i] = false;
+                           // Array.Clear(ok, 0, ok.Length);
                         }
-                        else//если ответ не верен запускаем таймер для приема ответа 2-ой команды
+                        else
                         {
-                            tmOtvet.Interval = 20000;
-                            tmOtvet.Start();
-                            gm.activeTable = gm.o2;
+                            gm.step = 5;
+                            gm.team[gm.o1 - 1].correct = correct;
+                            if (correct)
+                            {
+                                //Takt = -1;
+                                gm.team[gm.o1 - 1].iQash += 4 * gm.team[gm.o1 - 1].stavka;
+                                //gm.iCon++;
+                                endOfIqon = true;
+                                for (int i = 0; i < 3; i++) ok[i] = false;
+                            }
+                            else//если ответ не верен запускаем таймер для приема ответа 2-ой команды
+                            {
+                                tmOtvet.Interval = 20000;
+                                tmOtvet.Start();
+                                gm.activeTable = gm.o2;
+                            }
+                            Takt++;
+                            //log();
+                            txb.Text += "ogg" + gm.step;
+
                         }
-                        Takt++;
-                        //log();
-                        txb.Text += "ogg" + gm.step;
+                        
 
                         break;
                     #endregion
@@ -528,43 +555,46 @@ namespace MainServer
             }
 
             //Отправим сообщение всем столам данной игровой тройки
-            Send2All("ogg");
 
-            if (endOfIqon)
+            if (gm.Cell != 0)
             {
-                endOfIqon = false;
-                gm.step = 1;
-                Takt = 0;
-                if (gm.iCon >= 12)
-                {
-                    gm.Cell = rn.rnd();
-                    gm.quest = "";
-                    gm.theme = 0;
-                    //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
-                    var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
-                    Ratings rating = new Ratings(this, mycon, mesta);
-                    var rat = rating.getRatings();
-                    for (int i = 0; i < 3; i++)
-                    {
-                        this.data.team[i].rating += rat[i];
-                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating+"WHERE name=" + this.data.team[i].name;
-                        MySqlCommand cm = new MySqlCommand(sql, mycon);
-                    }
-                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                }
-                log();
-                gm.iCon++;
-                Array.Clear(stavka, 0, stavka.Length);
-                Array.Clear(ok, 0, ok.Length);
                 Send2All("ogg");
-                //for (int i = 0; i < 3; i++)
-                //{
-                //    //stavka[i] = 0;
-                //    //ok[i] = false;
-                //    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                //    if (endpoint[i] is IPEndPoint) udp.Send(bytes, bytes.Length, endpoint[i]);
-                //}
+              }
+
+                if (endOfIqon)
+                {
+                    endOfIqon = false;
+                    gm.step = 1;
+                    Takt = 0;
+                    if (gm.iCon >= 12)
+                    {
+                        gm.Cell = rn.rnd();
+                        gm.quest = "";
+                        gm.theme = 0;
+                        //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
+                        var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
+                        Ratings rating = new Ratings(this, mycon, mesta);
+                        var rat = rating.getRatings();
+                        for (int i = 0; i < 3; i++)
+                        {
+                            this.data.team[i].rating += rat[i];
+                            string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + "WHERE name=" + this.data.team[i].name;
+                            MySqlCommand cm = new MySqlCommand(sql, mycon);
+                        }
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    }
+                    log();
+                    gm.iCon++;
+                    Array.Clear(stavka, 0, stavka.Length);
+                    Array.Clear(ok, 0, ok.Length);
+                    Send2All("ogg");
             }
+
+            if (gm.Cell == 0)
+            {
+                Send2All("ogg");
+            }
+
         }
         private void Send2All(string command)
         {

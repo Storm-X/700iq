@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace _700IQ
 {
@@ -41,6 +42,7 @@ namespace _700IQ
         public DataTable dt = new DataTable();
         public Size resolution; //System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         public int delta;
+        public string path;
         ////////////////////////
         int StartStep = -1;
         ///////////////////////
@@ -60,12 +62,32 @@ namespace _700IQ
         }
         #endregion
 
+        [DllImport("User32.dll", SetLastError = true)]
+        private static extern IntPtr LoadCursorFromFile(String str);
+
+        public Cursor SetCursor(string FileName)
+        {
+            IntPtr hCursor = LoadCursorFromFile(FileName);
+            if (!IntPtr.Zero.Equals(hCursor))
+            {
+                return new Cursor(hCursor);
+            }
+            else
+            {
+                MessageBox.Show("Ошибка загрузки курсора \n" + Marshal.GetLastWin32Error());
+                return this.Cursor;
+            }
+        }
+
         public GeneralForm()
         {
-            
             InitializeComponent();
             //this.KeyDown += GeneralForm_KeyDown;
-            //this.KeyPress += p.WorkForm_KeyDown;
+            //this.KeyPress += p.WorkForm_KeyDown;      
+            path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+            path = Path.GetDirectoryName(path);//возврат на директорию вверх
+            path = path + "\\Resources\\Cursors\\";//директория с курсорами
+            this.Cursor = SetCursor(path+ "Yellow_vopros.ani");//установка курсора из файла
         }
 
         #region//процедуры инициализации
@@ -306,7 +328,6 @@ namespace _700IQ
 
             TextBox logintb = new TextBox()
             {
-                Parent = lb,
                 Name = "login",
                 AutoSize = false,
                 Size = NewSize(300, 60),
@@ -318,12 +339,13 @@ namespace _700IQ
                 BorderStyle = BorderStyle.None,
                 Font = new Font("Cambria", NewFontSize(20)),
                 TextAlign = HorizontalAlignment.Left,
-                MaxLength = 12, 
-                AcceptsReturn=false,
-            };
+                MaxLength = 12,
+                AcceptsReturn = false,
+                Parent = lb,
+                Cursor = SetCursor(path + "Text Select.ani"),//установка курсора из файла
+        };
             TextBox paroltb = new TextBox
             {
-                Parent = lb,
                 AutoSize = false,
                 Size = NewSize(300, 60),
                 Location = NewRelPoint(1175, 928),            
@@ -333,7 +355,9 @@ namespace _700IQ
                 TextAlign = HorizontalAlignment.Left,
                 PasswordChar = '*',
                 MaxLength = 12,
-                Name = "parol" ,
+                Name = "parol",
+                Parent = lb,
+                Cursor = SetCursor(path + "Text Select.ani"),//установка курсора из файла
             };
             #endregion
             #region//описание кнопки ввода
@@ -417,7 +441,7 @@ namespace _700IQ
             Graphics g = Graphics.FromImage(bmpNew);
             g.DrawString("Добро пожаловать", new Font("Times New Roman", NewFontSize(40), FontStyle.Italic), Brushes.White, NewPoint(950, 50));
             g.DrawString("в интеллект-казино 700 IQ!", new Font("Times New Roman", NewFontSize(30), FontStyle.Regular), Brushes.White, NewPoint(950, 200));
-            infoOfserver = "Игровой стол "+ myTeam.table+"\n"+"Игровая зона "+predUs.GameZone + "\n" + "Игровой сервер " + IP.ToString()+"\n";
+           
             // g.DrawString(infoOfserver, new Font("Times New Roman", NewFontSize(30), FontStyle.Regular), Brushes.White, NewPoint(950, 700));
             g.DrawImage(Properties.Resources.Печать_с_тенью, new Rectangle(NewPoint(100, 100),NewSizeKv(500)));
             g.DrawString(predUs.city+"  -  "+predUs.NumberGame+" -  "+predUs.Tur, new Font("Times New Roman", NewFontSize(15), FontStyle.Italic), Brushes.White, NewPoint(130, 600));
@@ -496,7 +520,7 @@ namespace _700IQ
 
             Polosa pol = new Polosa();
             pol.onPolosaEnd += ini4;
-            pol.polosa(500, NewPoint(1600, 1350), this, "ini3");
+            pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
            
         }      
         void ini4()//вывод спсок зарегистрированных команд
@@ -737,6 +761,7 @@ namespace _700IQ
                     //сделать  запуск выидеоролика
                     //ini6();
                     steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
+                    infoOfserver = "Игровой стол " + myTeam.table + "\n" + "Игровая зона " + predUs.GameZone + "\n" + "Игровой сервер " + IP.ToString() + "\n";
                     Step1();
                     break;
                 #endregion
@@ -829,7 +854,7 @@ namespace _700IQ
                     tbl.Rassadka(steck);
                     Polosa pol = new Polosa();
                     pol.onPolosaEnd += Temy;
-                    pol.polosa(500, NewPoint(1600, 1350), this, "Step1");
+                    pol.polosa(70, NewPoint(1600, 1350), this, "Step1");
                 }
             }         
         }     
@@ -838,7 +863,7 @@ namespace _700IQ
             tbl.SetInfoTemy();
             Polosa pol = new Polosa();
             pol.onPolosaEnd += Step1_3;
-            pol.polosa(500, NewPoint(1600, 1350),this, "Temy");
+            pol.polosa(40, NewPoint(1600, 1350),this, "Temy");
          
         }
         void Step1_3()  // заставка игрового стола 
@@ -852,6 +877,11 @@ namespace _700IQ
             }
             else
             {
+                if (steck.iCon > 12)
+                {
+                    Step10();
+                    return;
+                }
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
@@ -1077,15 +1107,23 @@ namespace _700IQ
                 }
                 else
                 {
-                    bIconFinalised = true;
-                    Graphics g = this.CreateGraphics();
-                    g.DrawString("ЗЕРРО, Господа!", new Font("Cambria ", NewFontSize(20)), Brushes.Black, NewPoint(1403, 955));
-                    g.DrawString("ЗЕРРО, Господа!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 950));
-                    g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.Black, NewPoint(1403, 1055));
-                    g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 1050));
-                    Polosa pol = new Polosa();
-                    pol.onPolosaEnd += Step9;
-                    pol.polosa(100, NewPoint(1600, 1350), this, "Step4 - Zero");
+                  
+                        bIconFinalised = true;
+                        Graphics g = this.CreateGraphics();
+                        g.DrawString("ЗЕРРО, Господа!", new Font("Cambria ", NewFontSize(20)), Brushes.Black, NewPoint(1403, 955));
+                        g.DrawString("ЗЕРРО, Господа!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 950));
+                        g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.Black, NewPoint(1403, 1055));
+                        g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 1050));
+                        SendData sd = new SendData();
+                        sd.kluch = myTeam.kod;   //kluch;
+                        sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
+                        sd.uid = predUs.GameZone;
+                        sd.otvet = "";
+                        cn.SendUDP("ogg" + JsonConvert.SerializeObject(sd));
+                        Polosa pol = new Polosa();
+                        pol.onPolosaEnd += Step9;
+                        pol.polosa(50, NewPoint(1600, 1350), this, "Step4 - Zero");
+                    
                 }
             }
         }
