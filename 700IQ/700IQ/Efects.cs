@@ -49,12 +49,31 @@ namespace _700IQ
         {
             // Create a local version of the graphics object for the PictureBox.
             Graphics g = e.Graphics;
+            Rectangle Rect;
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;//выравнивание по горизонтали
+            sf.LineAlignment = StringAlignment.Center;//выравнивание по вертикали
+            int height = (workForm.ClientSize.Height - 350) / 2;// отступ от верхнего края
+            Rect = new Rectangle(6, height + 3, workForm.ClientSize.Width, 300);
+            g.DrawString((ikon).ToString(), new Font("Times New Roman", 250), Brushes.Black, Rect, sf);
+            Rect = new Rectangle(0, height, workForm.ClientSize.Width, 300);
+            g.DrawString((ikon).ToString(), new Font("Times New Roman", 250), Brushes.Yellow, Rect, sf);
+            //g.DrawRectangle(Pens.Blue, Rect);
+            Rect = new Rectangle(6, height + 3 + 250, workForm.ClientSize.Width, 100);
+            g.DrawString("айкон", new Font("Times New Roman", 52), Brushes.Black, Rect, sf);
+            Rect = new Rectangle(0, height + 250, workForm.ClientSize.Width, 100);
+            g.DrawString("айкон", new Font("Times New Roman", 52), Brushes.Yellow, Rect, sf);
+            //g.DrawRectangle(Pens.Blue, Rect);
+           
+            
+            /*
             int zdvig = ikon < 10 ? 100 : 0;
             //if (ikon < 10) zdvig = 100;
             g.DrawString((ikon).ToString(), new Font("Times New Roman", 250), Brushes.Black, NewPoint(843 + zdvig, 203));
             g.DrawString("айкон", new Font("Times New Roman", 52), Brushes.Black, NewPoint(1003, 853));
             g.DrawString((ikon).ToString(), new Font("Times New Roman", 250), Brushes.Yellow, NewPoint(840 + zdvig, 200));
             g.DrawString("айкон", new Font("Times New Roman", 52), Brushes.Yellow, NewPoint(1000, 850));
+            */
         }
 
         private void HideIkon()
@@ -127,9 +146,12 @@ namespace _700IQ
             PictureBox pc = new PictureBox();
             Label lb, lbSt;
             int stavka;
-
+            int komanda;
+            GeneralForm fsv;
             public void stak(int st1, Point point, GeneralForm fsv, int komanda)
             {
+                this.komanda = komanda;
+                this.fsv = fsv;
                 workForm = fsv;
                 if (workForm.InvokeRequired)
                 {
@@ -148,28 +170,25 @@ namespace _700IQ
                     lb = new Label()
                     {
                         Parent = workForm,
-                        Location = new Point(point.X, point.Y + pc.Size.Height + 20),
-                        Size = NewSize(150, 50),
+                        Location = new Point(point.X - 20, point.Y + pc.Size.Height + 20),
+                        Size = NewSize(150, 50) + new Size(40,0),
                         Name = "oneuse",
                         ForeColor = Color.White,
                         BackColor = Color.Transparent,
                         Font = new Font("arial", 12),
-                        TextAlign = ContentAlignment.MiddleLeft,
-
-
+                        TextAlign = ContentAlignment.TopCenter,
                     };
                     pc.BringToFront();
                     lbSt = new Label() //метка размера ставки
                     {
                         Parent = workForm,
-                        Location = new Point(point.X, point.Y - 50),
-                        Size = NewSize(150, 80),
+                        Location = new Point(point.X - 20, point.Y - 50),
+                        Size = NewSize(150, 50) + new Size(40, 0),
                         Name = "oneuse",
-                        ForeColor = Color.White,
+                        ForeColor = Color.Gold,
                         BackColor = Color.Transparent,
                         Font = new Font("arial", 18),
                         TextAlign = ContentAlignment.TopCenter,
-
                     };
                     if (komanda != 0 && komanda < 4) lb.Text = komanda + " команда";
                     if (komanda > 5)
@@ -209,8 +228,11 @@ namespace _700IQ
                 }
                 else
                 {
-                    lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint+1) / frameCount/25)*25).ToString();
-                    pc.Image = arr[indexToPaint];                           
+                    lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString();
+                    pc.Image = arr[indexToPaint];
+                    if (this.komanda == 1) this.fsv.iQash1.Text = (this.fsv.steck.team[0].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                    if (this.komanda == 2) this.fsv.iQash2.Text = (this.fsv.steck.team[1].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                    if (this.komanda == 3) this.fsv.iQash3.Text = (this.fsv.steck.team[2].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
                 }
             }
             public void del()
@@ -233,6 +255,8 @@ namespace _700IQ
         private Timer timer = new Timer();
         bool itsStavka;
         stakan st, st2, st3, st4;
+        int distance;
+        int size_stack;
         public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv)
         {
             //workForm = fsv;
@@ -247,10 +271,13 @@ namespace _700IQ
                 onStShow();
                 return;
             }
-                
+
+            size_stack = NewSize(150, 0).Width;
+            distance = NewSize(400, 0).Width / 2;
+
             if (st4 == 0 && st3 != 0)
             {
-                pn = NewPoint(900, 400);
+                pn = NewPoint(825, 400);
                 itsStavka = true;
             }
             else  pn = NewPoint(1300, 850);
@@ -270,14 +297,16 @@ namespace _700IQ
             }
             st2 = new stakan();
             st2.onStop += stavka3;
-            pn.X += 150;
+            pn.X += size_stack;//150
             int anons = 0;
             if (itsStavka)
             {
-                pn.X += 50;
+
                 anons = 2;
+                pn.X += distance;//50
             }
-           
+            else pn.X += distance / 2;
+
             st2.stak(stav2 / 25, pn, workForm, anons);
         }
         void stavka3()
@@ -289,13 +318,14 @@ namespace _700IQ
             }
             st3 = new stakan();
             st3.onStop += stavka4;
-            pn.X += 150;
+            pn.X += size_stack;
             int anons = 0;
             if (itsStavka)
             {
                 anons = 3;
-                pn.X += 50;
+                pn.X += distance;
             }
+            else pn.X += distance / 2;
             st3.stak(stav3 / 25, pn, workForm, anons);
         }
         void stavka4()
@@ -307,8 +337,9 @@ namespace _700IQ
             }
             st4 = new stakan();
             st4.onStop += endofStavka;
-            pn.X += 150;
-           
+            pn.X += size_stack;
+            pn.X += distance / 2;
+
             st4.stak(stav4 / 25, pn, workForm, 0);
         }
         void endofStavka()

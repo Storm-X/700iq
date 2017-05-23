@@ -51,6 +51,7 @@ namespace _700IQ
         private static IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
         public IPAddress IP = null;
         public static string infoOfserver;
+        public CustomLabel iQash1, iQash2, iQash3;
         struct SendData //структурированные данные отправляемые серверу
         {
             public int uid;         //игровая зона
@@ -87,7 +88,7 @@ namespace _700IQ
             path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
             path = Path.GetDirectoryName(path);//возврат на директорию вверх
             path = path + "\\Resources\\Cursors\\";//директория с курсорами
-            this.Cursor = SetCursor(path+ "Yellow_vopros.ani");//установка курсора из файла
+            this.Cursor = SetCursor(path+ "Yellow_vopros1.ani");//установка курсора из файла
         }
 
         #region//процедуры инициализации
@@ -171,6 +172,7 @@ namespace _700IQ
             // bmpNew.Dispose();
             #endregion
 
+
             axWindowsMediaPlayer1.Visible = false;
             #region //описание кнопки входа
             Point pn = NewPoint(1060, 691);
@@ -189,7 +191,18 @@ namespace _700IQ
             };
             
             pcBox.Click += onClickMedal;
-           
+
+            //тест рулетки, ставок, темы
+            /*   
+             StavkiShow stShow = new StavkiShow();
+             tbl = new Table(this);
+             stShow.inputStavki(100, 200, 300, 0, this);
+            Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+            ruletka = new Rul();
+            //ruletka.StartRul(0, kv, this, 2); // 2); //2 ячейка ??? надо ли??
+            tbl.TemaShow(true);
+           // stShow.inputStavki(100, 200, 300, 0, this);
+           */
             #endregion
         }
 
@@ -306,7 +319,6 @@ namespace _700IQ
         }
         void Ini1()//ввод логина и пароля
         {
-            
             //int ctrCount = Controls.Count;
             //for (int i = 0; i <= ctrCount; i++) this.Controls.RemoveByKey("oneuse");    //очистка экрана
             RemoveTempControls();
@@ -885,7 +897,7 @@ namespace _700IQ
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
-                Label lbStart = new Label()
+                CustomLabel lbStart = new CustomLabel()
                 {
                     Name = "oneuse",
                     Location = NewPoint(1650, 1200),
@@ -895,18 +907,23 @@ namespace _700IQ
                     ForeColor = Color.White,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
                     Parent = this,
+                    ShadowColor = Color.Black,
+                    ShadowOffset = new Point(3, 3),
                 };
-                Label iQon = new Label()
+                CustomLabel iQon = new CustomLabel()
                 {
                     Name = "Iqon",
-                    Location = NewPoint(1160, 30),
+                    //Location = NewPoint(1160, 30),
                     Text = steck.iCon + " айкон",
                     AutoSize = true,
                     Font = new Font("Arial ", NewFontSize(22)),
-                    ForeColor = Color.Gold,
+                    ForeColor = Color.Yellow,
                     Parent = this,
                     BackColor = Color.Transparent,
+                    ShadowColor = Color.Black,
+                    ShadowOffset = new Point(2, 2),
                 };
+                iQon.Location = new Point((this.ClientSize.Width - iQon.Size.Width) / 2, 30);
 
                 Polosa pol = new Polosa();
                 pol.onPolosaEnd += Step1_4;
@@ -1024,7 +1041,10 @@ namespace _700IQ
                 ruletka?.close();
                 ruletka = null;
                 int i = steck.Cell;
-                BackgroundImage = tbl.SetIQ(steck, myTeam.table - 1);
+                /*foreach (Control t in this.Controls.Find("iQash", true))
+                    this.Controls.Remove(t);
+                this.Invalidate();
+                BackgroundImage = tbl.SetIQ(steck, myTeam.table - 1);*/
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
                 stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
@@ -1060,6 +1080,9 @@ namespace _700IQ
             else
             {
                 RemoveTempControls();
+                foreach (Control t in this.Controls.Find("iQash", true))
+                    this.Controls.Remove(t);
+                this.Invalidate();
                 Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
                 Graphics g = Graphics.FromImage(bmp);
                 this.BackgroundImage = bmp;

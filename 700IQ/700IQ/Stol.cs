@@ -58,9 +58,27 @@ namespace _700IQ
             g.DrawImage(fish[mesto], NewPoint(1900, 150));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.Black, NewPoint(2105, 105));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.White, NewPoint(2100, 100));
-
+            //линии для выверки центра
+            //g.DrawLine(Pens.Red, new Point(workForm.ClientSize.Width / 2,0), new Point(workForm.ClientSize.Width / 2, workForm.ClientSize.Height));
+            //g.DrawLine(Pens.Red, new Point(0, workForm.ClientSize.Height / 2), new Point(workForm.ClientSize.Width, workForm.ClientSize.Height / 2));
 
         }
+        
+         public Table(GeneralForm fsv)//для тестирования
+         {
+             workForm = fsv;
+            bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
+            Graphics g = Graphics.FromImage(bmpStol);
+            Game steck = new Game();
+            steck.team[0] = new Game.Teames();
+            steck.team[0].iQash = 900;
+            steck.team[1] = new Game.Teames();
+            steck.team[1].iQash = 1000;
+            steck.team[2] = new Game.Teames();
+            steck.team[2].iQash = 1100;
+             SetIQ(steck, 1);
+         }
+         
 
         ~Table()
         {
@@ -73,20 +91,61 @@ namespace _700IQ
 
             int mesto = tableofkom;
 
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 1330 + 5));
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 1330));
+            CustomLabel iQash1 = new CustomLabel()
+            {
+                Name = "iQash",
+                Location = NewPoint(400, 1330),
+                Text = steck.team[mesto].iQash + " IQ",
+                BackColor = Color.Transparent,
+                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                ForeColor = Color.Gold,
+                Parent = this.workForm,
+                ShadowColor = Color.Black,
+                ShadowOffset = new Point(3, 3),
+            };
+
+           // g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 1330 + 5));
+           // g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 1330));
 
             mesto++;
             if (mesto > 2) mesto = 0;
             //лево
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 280 + 5));
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 280));
+            CustomLabel iQash2 = new CustomLabel()
+            {
+                Name = "iQash",
+                Location = NewPoint(400, 280),
+                Text = steck.team[mesto].iQash + " IQ",
+                BackColor = Color.Transparent,
+                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                ForeColor = Color.Gold,
+                Parent = this.workForm,
+                ShadowColor = Color.Black,
+                ShadowOffset = new Point(3, 3),
+            };
+            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 280 + 5));
+            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 280));
 
             mesto++;
             if (mesto > 2) mesto = 0;
             //право
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(2100 + 5, 280 + 5));
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(2100, 280));
+            CustomLabel iQash3 = new CustomLabel()
+            {
+                Name = "iQash",
+                Location = NewPoint(2100, 280),
+                Text = steck.team[mesto].iQash + " IQ",
+                BackColor = Color.Transparent,
+                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                ForeColor = Color.Gold,
+                Parent = this.workForm,
+                ShadowColor = Color.Black,
+                ShadowOffset = new Point(3, 3),
+            };
+            this.workForm.iQash1 = iQash1;
+            this.workForm.iQash2 = iQash2;
+            this.workForm.iQash3 = iQash3;
+
+            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(2100 + 5, 280 + 5));
+            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(2100, 280));
 
             g.Dispose();
             return bmp;
@@ -385,8 +444,8 @@ namespace _700IQ
                 {
                     Parent = workForm,
                     Name = "oneuse",
-                    Location = NewPoint(850, 1060),
-                    Size = NewSize(800, 100),
+                    Location = NewPoint(825, 1060),
+                    Size = NewSize(850, 100),
                     BackColor = Color.White,
                     Image = Properties.Resources.paper,
                     Text = tema ? "Выбор темы вопроса" : predUs.tema[steck.theme].theme,
@@ -397,13 +456,41 @@ namespace _700IQ
                 {
                     Parent = workForm,
                     Name = "oneuse",
-                    Location = new Point(NewPoint(850, 1060).X - 3, NewPoint(850, 1060).Y - 3),//NewPoint(847, 1057),
-                    Size = new Size(NewSize(800, 100).Width + 6, NewSize(800, 100).Height + 6),//NewSize(806, 106),
+                    Location = new Point(NewPoint(825, 1060).X - 3, NewPoint(825, 1060).Y - 3),//NewPoint(847, 1057),
+                    Size = new Size(NewSize(850, 100).Width + 6, NewSize(850, 100).Height + 6),//NewSize(806, 106),
                     BackColor = tema ? Color.Gray : Color.FromName(tmcolor[steck.theme]),
                 };
             }));
         }
-       
+/*
+        public void TemaShow(bool tema) //Form ff, //для тестирования
+        {
+            string[] tmcolor = { "Black", "Red", "Orange", "Yellow", "Green", "Blue", "Purple" };
+            workForm.BeginInvoke(new MethodInvoker(() =>
+            {
+                Label rec = new Label
+                {
+                    Parent = workForm,
+                    Name = "oneuse",
+                    Location = NewPoint(825, 1060),
+                    Size = NewSize(850, 100),
+                    BackColor = Color.White,
+                    Image = Properties.Resources.paper,
+                    Text = tema ? "Выбор темы вопроса" : "какая-то тема",
+                    Font = new Font("Buxton Sketch", NewFontSize(25)),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                };
+                Label rect = new Label
+                {
+                    Parent = workForm,
+                    Name = "oneuse",
+                    Location = new Point(NewPoint(825, 1060).X - 3, NewPoint(825, 1060).Y - 3),//NewPoint(847, 1057),
+                    Size = new Size(NewSize(850, 100).Width + 6, NewSize(850, 100).Height + 6),//NewSize(806, 106),
+                    BackColor = Color.Red,
+                };
+            }));
+        }
+*/
     }
     public class Padge : resize //заставка с зарегистрировавшимися командами
     {
@@ -699,6 +786,7 @@ namespace _700IQ
                     BackColor = Color.LightGreen,
                     Location = NewRelPoint(140, 30), //NewPoint(165, 30),
                     Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
+                    Cursor = workForm.SetCursor(workForm.path + "Text Select.ani"),//установка курсора из файла
                 };
                 bgrdPic.BringToFront();
             }
