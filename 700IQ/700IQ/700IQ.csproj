@@ -64,6 +64,9 @@
     </Compile>
     <Compile Include="Conn.cs" />
     <Compile Include="Connection.cs" />
+    <Compile Include="CustomLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomScrollbar.cs">
       <SubType>UserControl</SubType>
     </Compile>

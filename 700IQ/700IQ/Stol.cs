@@ -63,12 +63,22 @@ namespace _700IQ
             //g.DrawLine(Pens.Red, new Point(0, workForm.ClientSize.Height / 2), new Point(workForm.ClientSize.Width, workForm.ClientSize.Height / 2));
 
         }
-        /*
+        
          public Table(GeneralForm fsv)//для тестирования
          {
              workForm = fsv;
+            bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
+            Graphics g = Graphics.FromImage(bmpStol);
+            Game steck = new Game();
+            steck.team[0] = new Game.Teames();
+            steck.team[0].iQash = 900;
+            steck.team[1] = new Game.Teames();
+            steck.team[1].iQash = 1000;
+            steck.team[2] = new Game.Teames();
+            steck.team[2].iQash = 1100;
+             SetIQ(steck, 1);
          }
-         */
+         
 
         ~Table()
         {
@@ -81,20 +91,61 @@ namespace _700IQ
 
             int mesto = tableofkom;
 
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 1330 + 5));
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 1330));
+            CustomLabel iQash1 = new CustomLabel()
+            {
+                Name = "iQash",
+                Location = NewPoint(400, 1330),
+                Text = steck.team[mesto].iQash + " IQ",
+                BackColor = Color.Transparent,
+                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                ForeColor = Color.Gold,
+                Parent = this.workForm,
+                ShadowColor = Color.Black,
+                ShadowOffset = new Point(3, 3),
+            };
+
+           // g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 1330 + 5));
+           // g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 1330));
 
             mesto++;
             if (mesto > 2) mesto = 0;
             //лево
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 280 + 5));
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 280));
+            CustomLabel iQash2 = new CustomLabel()
+            {
+                Name = "iQash",
+                Location = NewPoint(400, 280),
+                Text = steck.team[mesto].iQash + " IQ",
+                BackColor = Color.Transparent,
+                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                ForeColor = Color.Gold,
+                Parent = this.workForm,
+                ShadowColor = Color.Black,
+                ShadowOffset = new Point(3, 3),
+            };
+            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 280 + 5));
+            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 280));
 
             mesto++;
             if (mesto > 2) mesto = 0;
             //право
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(2100 + 5, 280 + 5));
-            g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(2100, 280));
+            CustomLabel iQash3 = new CustomLabel()
+            {
+                Name = "iQash",
+                Location = NewPoint(2100, 280),
+                Text = steck.team[mesto].iQash + " IQ",
+                BackColor = Color.Transparent,
+                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                ForeColor = Color.Gold,
+                Parent = this.workForm,
+                ShadowColor = Color.Black,
+                ShadowOffset = new Point(3, 3),
+            };
+            this.workForm.iQash1 = iQash1;
+            this.workForm.iQash2 = iQash2;
+            this.workForm.iQash3 = iQash3;
+
+            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(2100 + 5, 280 + 5));
+            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(2100, 280));
 
             g.Dispose();
             return bmp;
@@ -1118,14 +1169,14 @@ namespace _700IQ
             }
             else
             {
-                pc1.Dispose(); pc2.Dispose(); pc3.Dispose();
-                lb1.Dispose(); lb2.Dispose(); lb3.Dispose();
-                pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
-                lbst1.Dispose(); lbst2.Dispose(); lbst3.Dispose();
-                tmSem.Dispose();
-                bgrdPic.Dispose();
-                workForm.Invalidate();
-                workForm.Refresh();
+                pc1?.Dispose(); pc2?.Dispose(); pc3?.Dispose();
+                lb1?.Dispose(); lb2?.Dispose(); lb3?.Dispose();
+                pc1rez?.Dispose(); pc2rez?.Dispose(); pc3rez?.Dispose();
+                lbst1?.Dispose(); lbst2?.Dispose(); lbst3?.Dispose();
+                tmSem?.Dispose();
+                bgrdPic?.Dispose();
+                workForm?.Invalidate();
+                workForm?.Refresh();
             }
         }
         public void polosaStart(GeneralForm ff, int Curstep)//старт временной полосы
