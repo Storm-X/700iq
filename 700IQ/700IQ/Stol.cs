@@ -1176,8 +1176,8 @@ namespace _700IQ
                 lbst1?.Dispose(); lbst2?.Dispose(); lbst3?.Dispose();
                 tmSem?.Dispose();
                 bgrdPic?.Dispose();
-                workForm?.Invalidate();
-                workForm?.Refresh();
+                workForm.Invalidate();
+                workForm.Refresh();
             }
         }
         public void polosaStart(GeneralForm ff, int Curstep)//старт временной полосы
