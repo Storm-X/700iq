@@ -231,9 +231,9 @@ namespace _700IQ
                     lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString();
                     pc.Image = arr[indexToPaint];
                     
-                    if (this.komanda == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[0].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
-                    if (this.komanda == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[1].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
-                    if (this.komanda == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[2].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                    if (this.komanda - 1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                    if (this.komanda - 1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                    if (this.komanda - 1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
                 }
             }
             public void del()
