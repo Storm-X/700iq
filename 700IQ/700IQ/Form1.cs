@@ -445,7 +445,7 @@ namespace _700IQ
             //for (int i = 0; i <= ctrCount; i++) this.Controls.RemoveByKey("oneuse");//очистка экрана от временных элементов          
             RemoveTempControls();
             predUs = JsonConvert.DeserializeObject<Data>(response);
-            myTeam = predUs.team.FirstOrDefault(c => c.name == myTeam.name);
+            myTeam = predUs.team.FirstOrDefault(c => string.Equals(c.name, myTeam.name, StringComparison.OrdinalIgnoreCase));
             //kluch = myTeam.kod;
             //uidKomand = myTeam.uid;
             ///if (myTeam.Resumption) MessageBox.Show("sdfsdf");

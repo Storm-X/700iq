@@ -279,6 +279,8 @@ namespace MainServer
         }
         public bool getOtvet(int table, string otv, byte step, IPEndPoint point)         //получение ответа команды
         {
+            if (gm.step < 4 && gm.step > 6)
+                return false;
             switch (step)
             {
                 case 4:
