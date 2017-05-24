@@ -284,6 +284,7 @@ namespace _700IQ
         SizeF spaceSize;
         uint numberOfLines;
         bool InPaint = false;
+        public int number;
 
         protected override void OnPaint(PaintEventArgs e)
         {
