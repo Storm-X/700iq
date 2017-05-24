@@ -1145,7 +1145,7 @@ namespace _700IQ
                         cn.SendUDP("ogg" + JsonConvert.SerializeObject(sd));
                         Polosa pol = new Polosa();
                         pol.onPolosaEnd += Step9;
-                        pol.polosa(50, NewPoint(1600, 1350), this, "Step4 - Zero");
+                        pol.polosa(50, NewPoint(1600, 1450), this, "Step4 - Zero");
                     
                 }
             }

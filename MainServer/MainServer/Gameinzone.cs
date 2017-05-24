@@ -379,7 +379,7 @@ namespace MainServer
                     case 1:
 
                         gm.step = 3;
-                        gm.Cell =  rn.rnd();
+                        gm.Cell = 0;// rn.rnd();
                        /* if (gm.Cell == 0)
                         {
                             gm.step = 2;
