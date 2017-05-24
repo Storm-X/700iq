@@ -1133,10 +1133,22 @@ namespace _700IQ
                   
                         bIconFinalised = true;
                         Graphics g = this.CreateGraphics();
-                        g.DrawString("ЗЕРРО, Господа!", new Font("Cambria ", NewFontSize(20)), Brushes.Black, NewPoint(1403, 955));
-                        g.DrawString("ЗЕРРО, Господа!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 950));
-                        g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.Black, NewPoint(1403, 1055));
-                        g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 1050));
+                    CustomLabel zerro = new CustomLabel()
+                    {
+                        Name = "oneuse",
+                        Location = NewPoint(1400, 1200),
+                        Text = "ЗЕРРО, Господа!\nВаши ставки сгорели!",
+                        BackColor = Color.Transparent,
+                        ForeColor = Color.White,
+                        Font = new Font("Cambria ", NewFontSize(20)),
+                        Parent = this,
+                        ShadowColor = Color.Black,
+                        ShadowOffset = new Point(3, 3),
+                    };
+                   // g.DrawString("ЗЕРРО, Господа!", new Font("Cambria ", NewFontSize(20)), Brushes.Black, NewPoint(1403, 955));
+                      //  g.DrawString("ЗЕРРО, Господа!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 950));
+                       // g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.Black, NewPoint(1403, 1055));
+                       // g.DrawString("Ваши ставки сгорели!", new Font("Cambria ", NewFontSize(20)), Brushes.White, NewPoint(1400, 1050));
                         SendData sd = new SendData();
                         sd.kluch = myTeam.kod;   //kluch;
                         sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
@@ -1145,7 +1157,7 @@ namespace _700IQ
                         cn.SendUDP("ogg" + JsonConvert.SerializeObject(sd));
                         Polosa pol = new Polosa();
                         pol.onPolosaEnd += Step9;
-                        pol.polosa(50, NewPoint(1600, 1450), this, "Step4 - Zero");
+                        pol.polosa(50, NewPoint(1600, 1350), this, "Step4 - Zero");
                     
                 }
             }
@@ -1275,11 +1287,25 @@ namespace _700IQ
                 if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
                 {
                     bIconFinalised = true;
+                    CustomLabel stavki = new CustomLabel()
+                    {
+                        Name = "oneuse",
+                        Location = NewPoint(1400, 950),
+                        Text = "Все ответы неверны\nВаши ставки переходят казино!!",
+                        BackColor = Color.Transparent,
+                        ForeColor = Color.White,
+                        Font = new Font("Cambria ", NewFontSize(25)),
+                        Parent = this,
+                        ShadowColor = Color.Black,
+                        ShadowOffset = new Point(3, 3),
+                    };
+                    /*
                     Graphics g = this.CreateGraphics();
                     g.DrawString("Все ответы неверны!", new Font("Cambria ", NewFontSize(25)), Brushes.Black, NewPoint(1405, 955));
                     g.DrawString("Все ответы неверны!", new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(1400, 950));
                     g.DrawString("Ваши ставки переходят казино!", new Font("Cambria ", NewFontSize(25)), Brushes.Black, NewPoint(1405, 1055));
                     g.DrawString("Ваши ставки переходят казино!", new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(1400, 1050));
+                    */
                     Polosa pol = new Polosa();
                     pol.onPolosaEnd += Step9;
                     pol.polosa(50, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
@@ -1308,6 +1334,7 @@ namespace _700IQ
             {
                 bIconFinalised = false;
                 this.Controls["Iqon"]?.Dispose(); // Text = "";
+                this.Controls["oneuse"]?.Dispose(); // Text = "";
                 otvetStatic?.close();
                 ruletka?.close();
                 this.Invalidate();
