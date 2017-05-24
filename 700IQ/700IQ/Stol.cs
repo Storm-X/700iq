@@ -23,7 +23,7 @@ namespace _700IQ
         Data predUs;
         Bitmap bmpStol;
         Bitmap[] fish = new Bitmap[3];
-        
+
         //private Form fsv;
         #endregion
 
@@ -88,9 +88,7 @@ namespace _700IQ
         {
             Bitmap bmp =(Bitmap) bmpStol.Clone();
             Graphics g = Graphics.FromImage(bmp);
-
             int mesto = tableofkom;
-
             CustomLabel iQash1 = new CustomLabel()
             {
                 Name = "iQash",
@@ -102,6 +100,7 @@ namespace _700IQ
                 Parent = this.workForm,
                 ShadowColor = Color.Black,
                 ShadowOffset = new Point(3, 3),
+                number = mesto,
             };
 
            // g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 1330 + 5));
@@ -121,6 +120,7 @@ namespace _700IQ
                 Parent = this.workForm,
                 ShadowColor = Color.Black,
                 ShadowOffset = new Point(3, 3),
+                number = mesto,
             };
             //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 280 + 5));
             //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 280));
@@ -139,6 +139,7 @@ namespace _700IQ
                 Parent = this.workForm,
                 ShadowColor = Color.Black,
                 ShadowOffset = new Point(3, 3),
+                number = mesto,
             };
             this.workForm.iQash1 = iQash1;
             this.workForm.iQash2 = iQash2;
@@ -146,7 +147,7 @@ namespace _700IQ
 
             //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(2100 + 5, 280 + 5));
             //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(2100, 280));
-
+            mesto = tableofkom;
             g.Dispose();
             return bmp;
         }
