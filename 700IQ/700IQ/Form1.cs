@@ -1064,7 +1064,7 @@ namespace _700IQ
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 CreateAnswerTable();
                 ruletka = new Rul();
-                ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 100), NewSizeKv(1000)), this, 0);
+                ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 100), NewSizeKv(1000)), this, 1);
                 ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
             }          
         }

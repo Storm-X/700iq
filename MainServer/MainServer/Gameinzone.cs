@@ -379,7 +379,7 @@ namespace MainServer
                     case 1:
 
                         gm.step = 3;
-                        gm.Cell = 0;// rn.rnd();
+                        gm.Cell =  rn.rnd();
                        /* if (gm.Cell == 0)
                         {
                             gm.step = 2;
@@ -472,7 +472,7 @@ namespace MainServer
                         Takt++;
                         //log();
                         txb.Text += "ogg" + gm.step;
-                        tmOtvet.Interval = 65000; //запускае таймер с ожиданием ответа 1 команды
+                        tmOtvet.Interval = 75000; //запускае таймер с ожиданием ответа 1 команды
                         tmOtvet.Start();
                         correct = false;
                         break;

@@ -230,9 +230,9 @@ namespace _700IQ
                 {
                     lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString();
                     pc.Image = arr[indexToPaint];
-                    if (this.komanda == 1) this.fsv.iQash1.Text = (this.fsv.steck.team[0].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
-                    if (this.komanda == 2) this.fsv.iQash2.Text = (this.fsv.steck.team[1].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
-                    if (this.komanda == 3) this.fsv.iQash3.Text = (this.fsv.steck.team[2].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                    if (this.komanda == 1) this.fsv.iQash1.Text = (this.fsv.steck.team[indexToPaint + 1].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                    if (this.komanda == 2) this.fsv.iQash2.Text = (this.fsv.steck.team[indexToPaint + 1].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                    if (this.komanda == 3) this.fsv.iQash3.Text = (this.fsv.steck.team[indexToPaint + 1].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
                 }
             }
             public void del()
@@ -409,16 +409,22 @@ namespace _700IQ
                 };
                 #endregion
                 #region //описание кнопки ОК
-                pcBox = new PictureBox
+                if ((txt!= "Step4 - Zero")&&(txt != "Step7 - NoAnswer"))
                 {
-                    Parent = ff,
-                    Visible = true,
-                    Location = NewPoint(350, 10),
-                    Size = NewSize(170, 170),
-                    SizeMode = PictureBoxSizeMode.Zoom,
-                    Image = Properties.Resources.Неактивная,
-                    //pcBox.BackColor = Color.Transparent;
-                };
+                    pcBox = new PictureBox
+                    {
+                        Parent = ff,
+                        Visible = true,
+                        Location = NewPoint(350, 10),
+                        Size = NewSize(170, 170),
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Image = Properties.Resources.Неактивная,
+                        //pcBox.BackColor = Color.Transparent;
+                    };
+                    pcBox.MouseDown += PcBox_MouseDown;
+                    pcBox.MouseUp += PcBox_MouseUp;
+                }
+
                 #endregion
                 #region//описание полосы
                 prBar = new ProgressBar
@@ -432,9 +438,7 @@ namespace _700IQ
                 };
                 //}));
 
-                pcBox.MouseDown += PcBox_MouseDown;
-                pcBox.MouseUp += PcBox_MouseUp;
-
+               
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
@@ -453,7 +457,7 @@ namespace _700IQ
                     tmBar.Stop();
                     tmBar.Dispose();
                     ff.Dispose();
-                    pcBox.Dispose();
+                    pcBox?.Dispose();
                     workForm.Invalidate();
                     onPolosaEnd();
                 }
