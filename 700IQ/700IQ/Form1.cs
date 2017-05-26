@@ -26,7 +26,7 @@ namespace _700IQ
         Otvet otvetStatic;
         Conn cn;
         Padge pdg=new Padge();
-        Rul ruletka;
+        Rul ruletka = new Rul();
         public Game steck = new Game();
         AutoCompleteStringCollection teamLst;
         Data predUs = new Data();
@@ -986,9 +986,10 @@ namespace _700IQ
                 tbl.TemaShow(steck, true);
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-                ruletka = new Rul();
-                ruletka.StartRul(steck.Cell, kv, this, 2); // 2); //2 ячейка ??? надо ли??
+                //ruletka = new Rul();
+                ruletka.AnyEventHarakiri();
                 ruletka.onStop += Step2_3;
+                ruletka.StartRul(steck.Cell, kv, this, 2); // 2); //2 ячейка ??? надо ли??
                 this.Invalidate();
             }
         }
@@ -1039,7 +1040,7 @@ namespace _700IQ
             else
             {
                 ruletka?.close();
-                ruletka = null;
+                //ruletka = null;
                 int i = steck.Cell;
                 /*foreach (Control t in this.Controls.Find("iQash", true))
                     this.Controls.Remove(t);
@@ -1063,9 +1064,10 @@ namespace _700IQ
             {
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 CreateAnswerTable();
-                ruletka = new Rul();
-                ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(1000)), this, 1);
+                //ruletka = new Rul();
+                ruletka.AnyEventHarakiri();
                 ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
+                ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(1000)), this, 1);
             }          
         }
         private void CreateAnswerTable(bool withQuery=false)
@@ -1175,7 +1177,7 @@ namespace _700IQ
             else
             {
                 ruletka?.close();
-                ruletka = null;
+                //ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1226,7 +1228,7 @@ namespace _700IQ
             else
             {
                 ruletka?.close();
-                ruletka = null;
+                //ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1278,7 +1280,7 @@ namespace _700IQ
             else
             {
                 ruletka?.close();
-                ruletka = null;
+                //ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);

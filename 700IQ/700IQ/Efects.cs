@@ -604,11 +604,20 @@ namespace _700IQ
             }
             else
             {
-                tm.Stop();
+                tm?.Stop();
                 ff.Visible = false;
                 this.enabled = false;
             }
         }
+        public void AnyEventHarakiri()
+        {
+            if (this.onStop == null) return;
+            foreach (Delegate d in this.onStop.GetInvocationList())
+            {
+                this.onStop -= (stopRul)d;
+            }
+        }
+
         private void ruletka()
         {
 
