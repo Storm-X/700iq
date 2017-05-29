@@ -26,7 +26,7 @@ namespace _700IQ
         Otvet otvetStatic;
         Conn cn;
         Padge pdg=new Padge();
-        Rul ruletka = new Rul();
+        public Rul Ruletka = new Rul();
         public Game steck = new Game();
         AutoCompleteStringCollection teamLst;
         Data predUs = new Data();
@@ -198,8 +198,8 @@ namespace _700IQ
              tbl = new Table(this);
              stShow.inputStavki(100, 200, 300, 0, this);
             Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            ruletka = new Rul();
-            //ruletka.StartRul(0, kv, this, 2); // 2); //2 ячейка ??? надо ли??
+            Ruletka = new Rul();
+            //Ruletka.StartRul(0, kv, this, 2); // 2); //2 ячейка ??? надо ли??
             tbl.TemaShow(true);
            // stShow.inputStavki(100, 200, 300, 0, this);
            */
@@ -986,10 +986,10 @@ namespace _700IQ
                 tbl.TemaShow(steck, true);
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-                //ruletka = new Rul();
-                ruletka.AnyEventHarakiri();
-                ruletka.onStop += Step2_3;
-                ruletka.StartRul(steck.Cell, kv, this, 2); // 2); //2 ячейка ??? надо ли??
+                //Ruletka = new Rul();
+                Ruletka.AnyEventHarakiri();
+                Ruletka.onStop += Step2_3;
+                Ruletka.StartRul(steck.Cell, kv, this, 2);
                 this.Invalidate();
             }
         }
@@ -1039,8 +1039,8 @@ namespace _700IQ
             }
             else
             {
-                ruletka?.close();
-                //ruletka = null;
+                Ruletka?.close();
+                //Ruletka = null;
                 int i = steck.Cell;
                 /*foreach (Control t in this.Controls.Find("iQash", true))
                     this.Controls.Remove(t);
@@ -1064,10 +1064,10 @@ namespace _700IQ
             {
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 CreateAnswerTable();
-                //ruletka = new Rul();
-                ruletka.AnyEventHarakiri();
-                ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
-                ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(1000)), this, 1);
+                //Ruletka = new Rul();
+                Ruletka.AnyEventHarakiri();
+                Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
+                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(1000)), this, 1);
             }          
         }
         private void CreateAnswerTable(bool withQuery=false)
@@ -1176,8 +1176,8 @@ namespace _700IQ
             }
             else
             {
-                ruletka?.close();
-                //ruletka = null;
+                Ruletka?.close();
+                //Ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1227,8 +1227,8 @@ namespace _700IQ
             }
             else
             {
-                ruletka?.close();
-                //ruletka = null;
+                Ruletka?.close();
+                //Ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1279,8 +1279,8 @@ namespace _700IQ
             }
             else
             {
-                ruletka?.close();
-                //ruletka = null;
+                Ruletka?.close();
+                //Ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1338,7 +1338,7 @@ namespace _700IQ
                 this.Controls["Iqon"]?.Dispose(); // Text = "";
                 this.Controls["oneuse"]?.Dispose(); // Text = "";
                 otvetStatic?.close();
-                ruletka?.close();
+                Ruletka?.close();
                 this.Invalidate();
                 if (steck.iCon > 12)
                     Step10();
@@ -1521,7 +1521,7 @@ namespace _700IQ
             DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти из игры?", "Предупреждение!!!", MessageBoxButtons.YesNo);
             if (result == DialogResult.No) e.Cancel = true;
             else
-                ruletka?.close();
+                Ruletka?.close();
         }
 
         private void GeneralForm_Load(object sender, EventArgs e)
