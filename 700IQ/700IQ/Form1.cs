@@ -164,6 +164,8 @@ namespace _700IQ
             Size maxClientSize = GetMaximizedClientSize(this);
             Bitmap bmpNew = new Bitmap(Properties.Resources.fon, maxClientSize.Width, maxClientSize.Height);
             Graphics g = Graphics.FromImage(bmpNew);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
             delta = (maxClientSize.Width - resolution.Width) / 2;               //координата х для рисования          
             g.DrawImage(bmp, delta, 0, resolution.Width, resolution.Height); // рисуем картинку в масштабе
             g.Dispose();
@@ -178,13 +180,15 @@ namespace _700IQ
             Point pn = NewPoint(1060, 691);
             pn.X += delta < 0 ? delta : 0;
             bmp = Properties.Resources.rotor;
-            PictureBox pcBox = new PictureBox()
+            PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
             {
                 Parent = this,
                 Name = "oneuse",
                 Visible = true,
                 Location = pn,
                 BackColor = Color.Transparent,
+                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic,
                 Size = NewSizeKv(390),
                 Image = bmp,
                 SizeMode = PictureBoxSizeMode.Zoom,
@@ -451,6 +455,8 @@ namespace _700IQ
             ///if (myTeam.Resumption) MessageBox.Show("sdfsdf");
             Bitmap bmpNew = new Bitmap(Properties.Resources.GreenTable, resolution.Width + delta * 2, resolution.Height);
             Graphics g = Graphics.FromImage(bmpNew);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
             g.DrawString("Добро пожаловать", new Font("Times New Roman", NewFontSize(40), FontStyle.Italic), Brushes.White, NewPoint(950, 50));
             g.DrawString("в интеллект-казино 700 IQ!", new Font("Times New Roman", NewFontSize(30), FontStyle.Regular), Brushes.White, NewPoint(950, 200));
            
@@ -1087,6 +1093,8 @@ namespace _700IQ
                 this.Invalidate();
                 Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
                 Graphics g = Graphics.FromImage(bmp);
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
                 this.BackgroundImage = bmp;
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
                 otvetStatic.svitok(steck, predUs);
@@ -1135,6 +1143,8 @@ namespace _700IQ
                   
                         bIconFinalised = true;
                         Graphics g = this.CreateGraphics();
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
                     CustomLabel zerro = new CustomLabel()
                     {
                         Name = "oneuse",

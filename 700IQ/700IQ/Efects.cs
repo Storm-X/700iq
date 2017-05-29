@@ -49,6 +49,8 @@ namespace _700IQ
         {
             // Create a local version of the graphics object for the PictureBox.
             Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
             Rectangle Rect;
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;//выравнивание по горизонтали
@@ -556,6 +558,9 @@ namespace _700IQ
             tm.Tick += new EventHandler(tm_Tick);
             bmp = Properties.Resources.Ruletka;
             g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+
 
             koef = (float)(rc.Width) / bmp.Width;
             centrx = 288;

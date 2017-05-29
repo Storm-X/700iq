@@ -32,6 +32,7 @@ namespace _700IQ
             workForm = fsv;
             bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmpStol);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             this.predUs = predus;
             //this.fsv = fsv;
            
@@ -65,6 +66,7 @@ namespace _700IQ
              workForm = fsv;
             bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmpStol);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             Game steck = new Game();
             steck.team[0] = new Game.Teames();
             steck.team[0].iQash = 900;
@@ -84,6 +86,7 @@ namespace _700IQ
         {
             Bitmap bmp =(Bitmap) bmpStol.Clone();
             Graphics g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             int mesto = tableofkom;
             CustomLabel iQash1 = new CustomLabel()
             {
@@ -167,11 +170,14 @@ namespace _700IQ
                 //serv.Location = new Point(workForm.Width - serv.Width - 3, workForm.Height - 3 - serv.Height);
                 serv.Location = new Point(3, workForm.Height - 3 - serv.Height);
 
-                PictureBox IQ700 = new PictureBox()
+                PictureBoxWithInterpolationMode IQ700 = new PictureBoxWithInterpolationMode()
                 {
                     Size = NewSizeKv(100),
                     Location = new Point(workForm.Width - NewSizeKv(100).Width - 3 , 3),//NewPoi,nt(2410, 0),
                     Image = Properties.Resources.rotor700,
+
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias,
+                    InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic,
                     BackColor = Color.Transparent,
                     Parent = workForm,
                     SizeMode = PictureBoxSizeMode.Zoom,
@@ -207,6 +213,7 @@ namespace _700IQ
         {
             Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             g.DrawString(predUs.GameZone + " игровая зона", new Font("Times New Roman", NewFontSize(50)), Brushes.Black, NewPoint(855, 55));
             g.DrawString(predUs.GameZone + " игровая зона", new Font("Times New Roman", NewFontSize(50)), Brushes.Yellow, NewPoint(850, 50));
@@ -237,6 +244,7 @@ namespace _700IQ
         {
             Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             g.DrawString("Темы вопросов на игру", new Font("Times New Roman", NewFontSize(48)), Brushes.Black, NewPoint(500 + 4, 55));
             g.DrawString("Темы вопросов на игру", new Font("Times New Roman", NewFontSize(48)), Brushes.Yellow, NewPoint(500, 50));
@@ -294,6 +302,7 @@ namespace _700IQ
             string[] txtPos = { "Победитель", "2 место", "3 место" };
             Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             string lbText = "";
 
             //var teamPos = steck.team.OrderByDescending(c => c.iQash);                         //Список команд, отсортированный по результату
