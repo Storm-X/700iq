@@ -715,13 +715,13 @@ namespace MainServer
                 int numZon = numKom / 3;            //количество троек
                 int komNextTur = numKom % 3;        //количество команд проходящих в следующий тур без игры
                 troika = 0;
-                for (int i = 0; i < 5; i++)
+               /* for (int i = 0; i < 5; i++)
                 {
                     data.team[0].member[i].N = "";
                     data.team[0].member[i].F = "";
                     data.team[0].member[i].rait = 0;
                     data.team[0].member[i].dr = 0;
-                }
+                }*/
                 MassGameZone.Clear();
 
                 #region создание троек
