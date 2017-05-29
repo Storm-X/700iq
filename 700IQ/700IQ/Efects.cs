@@ -536,32 +536,45 @@ namespace _700IQ
         Point point1, point2;
         Rectangle z1 = new Rectangle(new Point(0, 0), new Size(70, 70));
         Rectangle z2 = new Rectangle(new Point(0, 0), new Size(15, 15));
+
+        //float rotation_count = 5f;//количество полных оборотов рулетки (30сек.)
+
+        float centrx, centry, koef;
+        bool flag, flagStop;
         float i = 0f, radius = 0f, vr = 0f;
         float stepi = 0.00002f;// ускорение
         float vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
         float ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
         float stepr = 0.0001f;//шаг изменения радиуса
-        //float rotation_count = 5f;//количество полных оборотов рулетки (30сек.)
-
-        float centrx, centry, koef;
-        bool flag, flagStop;
         int tickNumber = 0, nStop = 100;
 
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
+            tm = null;
+            enabled = false;
+            i = 0f;
+            radius = 0f;
+            vr = 0f;
+            stepi = 0.00002f;// ускорение
+            vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
+            ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
+            stepr = 0.0001f;//шаг изменения радиуса
+            tickNumber = 0;
+            z1 = new Rectangle(new Point(0, 0), new Size(70, 70));
+            z2 = new Rectangle(new Point(0, 0), new Size(15, 15));
             this.fsv = fsv;
             tm = new System.Windows.Forms.Timer();
             tm.Interval = 10;
             tm.Tick += new EventHandler(tm_Tick);
             bmp = Properties.Resources.Ruletka;
             g = Graphics.FromImage(bmp);
-
             koef = (float)(rc.Width) / bmp.Width;
             centrx = 288;
             centry = 291;
             radius = bmp.Width / 2.5f - 10;
             flag = false;
+            flagStop = false;
             //vi = 0.04f;
             //vi += 0.00004f + 0.00008f;
             //i = 0.157080f+0.07854f;      //6.28319 количество радиан в 360 градусах
