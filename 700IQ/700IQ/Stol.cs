@@ -23,7 +23,7 @@ namespace _700IQ
         Data predUs;
         Bitmap bmpStol;
         Bitmap[] fish = new Bitmap[3];
-
+      
         //private Form fsv;
         #endregion
 
@@ -571,6 +571,7 @@ namespace _700IQ
         PictureBox pc3;
         PictureBox picBox1, bgrdPic;
         Label lb1, lb, vpramka;
+        Polosa pol = new Polosa();
         Label lb2;
         Label lb3;
         Label lbst1;
@@ -1121,7 +1122,7 @@ namespace _700IQ
             if (step != Curstep)
             {
                 step = Curstep;
-                Polosa pol = new Polosa();
+                pol.AnyEventHarakiri();
                 pol.polosa(100, NewPoint(1700, 1350), ff, "CurStep = " + Curstep.ToString());
                 pol.onPolosaEnd += sendOtvet;
             }
@@ -1148,12 +1149,13 @@ namespace _700IQ
         PictureBox lbPlus; // = new Panel();
         PictureBox lbMines; // = new Panel();
         public PictureBox stavkaRegion;
+        Polosa pol = new Polosa();
         Label lbText;
         Label ff = new Label();
         int stMin, stMax;
         int stDelta = 25;
         #endregion
-
+        
         public void stavka(int minSt, int MaxSt, GeneralForm fsv)
         {
             workForm = fsv;
@@ -1168,83 +1170,91 @@ namespace _700IQ
             }
             else
             {
-                stavkaRegion = new PictureBox
+                if (stavkaRegion == null)
                 {
-                    BackgroundImage = Properties.Resources.SpinEdit_color, // bit;
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    Parent = workForm,
-                    Location = NewPoint(1800, 940),
-                    Size = NewSize(585, 249),
-                    BackColor = Color.Transparent
-                };
-                /*
-                ff.BackColor = Color.Transparent;
-                ff.Location = NewPoint(1450, 450);
-                ff.Size = NewSize(650, 350);
-                ff.Name = "oneuse";
-                */
+                    stavkaRegion = new PictureBox
+                    {
+                        BackgroundImage = Properties.Resources.SpinEdit_color, // bit;
+                        BackgroundImageLayout = ImageLayout.Zoom,
+                        Parent = workForm,
+                        Location = NewPoint(1800, 940),
+                        Size = NewSize(585, 249),
+                        BackColor = Color.Transparent
+                    };
 
-                #region//описание кнопок увеличение и уменьшение ставок
-                stMin = minSt; stMax = MaxSt;
-                lbPlus = new PictureBox
+
+                    #region//описание кнопок увеличение и уменьшение ставок
+                    stMin = minSt; stMax = MaxSt;
+                    lbPlus = new PictureBox
+                    {
+                        BackgroundImage = Properties.Resources.Up,
+                        Parent = stavkaRegion,
+                        Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.15)),
+                        Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
+                        BackgroundImageLayout = ImageLayout.Zoom,
+                        Name = "oneuse",
+                    };
+                    lbPlus.Click += LbPlus_Click;
+                    lbPlus.MouseDown += lbSpinBtn_MouseDown;
+                    lbPlus.MouseUp += lbSpinBtn_MouseUp;
+
+                    lbMines = new PictureBox
+                    {
+                        Parent = stavkaRegion,
+                        BackgroundImage = Properties.Resources.Down,
+                        Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
+                        BackgroundImageLayout = ImageLayout.Zoom,
+                        Visible = true,
+                        Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.55)),
+                        Name = "oneuse"
+                    };
+                    lbMines.Click += LbMines_Click;
+                    lbMines.MouseDown += lbSpinBtn_MouseDown;
+                    lbMines.MouseUp += lbSpinBtn_MouseUp;
+                    #endregion
+
+                    #region //описание области ввода ставки
+                    lbin = new Label
+                    {
+                        Text = Convert.ToString(minSt),
+                        Parent = stavkaRegion,
+                        Location = new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1)),
+                        Visible = true,
+                        Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
+                        ForeColor = Color.Black,
+                        BackColor = Color.Transparent,
+                        Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
+                        TextAlign = ContentAlignment.TopCenter,
+                        Name = "oneuse"
+                    };
+
+                    lbin1 = new Label
+                    {
+                        Text = Convert.ToString(minSt),
+                        Parent = lbin,
+                        Location = NewRelPoint(-5, -5),// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
+                        Visible = true,
+                        Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
+                        ForeColor = Color.Gold,
+                        Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
+                        TextAlign = ContentAlignment.TopCenter,
+                        BackColor = Color.Transparent,
+                        Name = "oneuse"
+                    };
+                    #endregion
+
+                }
+                else
                 {
-                    BackgroundImage = Properties.Resources.Up,
-                    Parent = stavkaRegion,
-                    Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.15)),
-                    Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    Name = "oneuse",
-                };
-                lbPlus.Click += LbPlus_Click;
-                lbPlus.MouseDown += lbSpinBtn_MouseDown;
-                lbPlus.MouseUp += lbSpinBtn_MouseUp;
+                    stavkaRegion.Visible = true;
+                    stMin = minSt; stMax = MaxSt;
+                    stDelta = 25;
+                    lbin.Text = Convert.ToString(minSt);
+                    lbin1.Text = Convert.ToString(minSt);
+            
+                }
 
-                lbMines = new PictureBox
-                {
-                    Parent = stavkaRegion,
-                    BackgroundImage = Properties.Resources.Down,
-                    Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    Visible = true,
-                    Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.55)),
-                    Name = "oneuse"
-                };
-                lbMines.Click += LbMines_Click;
-                lbMines.MouseDown += lbSpinBtn_MouseDown;
-                lbMines.MouseUp += lbSpinBtn_MouseUp;
-                #endregion
-
-                #region //описание области ввода ставки
-                lbin = new Label
-                {
-                    Text = Convert.ToString(minSt),
-                    Parent = stavkaRegion,
-                    Location = new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1)),
-                    Visible = true,
-                    Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
-                    ForeColor = Color.Black,
-                    BackColor = Color.Transparent,
-                    Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
-                    TextAlign = ContentAlignment.TopCenter,
-                    Name = "oneuse"
-                };
-
-                lbin1 = new Label
-                {
-                    Text = Convert.ToString(minSt),
-                    Parent = lbin,
-                    Location = NewRelPoint(-5, -5),// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
-                    Visible = true,
-                    Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
-                    ForeColor = Color.Gold,
-                    Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
-                    TextAlign = ContentAlignment.TopCenter,
-                    BackColor = Color.Transparent,
-                    Name = "oneuse"
-                };
-                #endregion
-
-                Polosa pol = new Polosa();
+                pol.AnyEventHarakiri();
                 pol.onPolosaEnd += StavkaEndTime;
                 pol.polosa(200, NewPoint(1700, 1350), fsv, "Stavka");
             }
@@ -1277,12 +1287,12 @@ namespace _700IQ
         private void StavkaEndTime()
         {
             stDelta = 0;
-            lbMines.Dispose();
-            lbPlus.Dispose();
+            // lbMines.Dispose();
+            // lbPlus.Dispose();
             // lbText.Dispose();         
             onStavka(Convert.ToInt32(lbin.Text));
-            stavkaRegion.Dispose();
-            lbin.Dispose();
+            stavkaRegion.Visible=false;
+            //  lbin.Dispose();
             workForm.Invalidate();
         }
     }

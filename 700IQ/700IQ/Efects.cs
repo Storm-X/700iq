@@ -260,6 +260,14 @@ namespace _700IQ
         stakan st, st2, st3, st4;
         int distance;
         int size_stack;
+        public void AnyEventHarakiri()
+        {
+            if (this.onStShow == null) return;
+            foreach (Delegate d in this.onStShow.GetInvocationList())
+            {
+                this.onStShow -= (stShowFinish)d;
+            }
+        }
         public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv)
         {
             //workForm = fsv;
@@ -374,11 +382,12 @@ namespace _700IQ
         ProgressBar prBar;
         //private Form fsv;
 
-        Label ff;
+        public Label ff;
         System.Timers.Timer tmBar = new System.Timers.Timer();
         #endregion
         public void polosa(int t, Point pn, GeneralForm fsv, string txt = "")
         {
+         
             workForm = fsv;
             //resolution = Screen.FromControl(fsv).WorkingArea.Size;
             //resolution = fsv.ClientSize;
@@ -386,7 +395,14 @@ namespace _700IQ
             InitBar(t, pn, txt);
        
         }
-
+        public void AnyEventHarakiri()
+        {
+            if (this.onPolosaEnd == null) return;
+            foreach (Delegate d in this.onPolosaEnd.GetInvocationList())
+            {
+                this.onPolosaEnd -= (PolosaEnd)d;
+            }
+        }
 
         private void InitBar(int t, Point pn, string txt)
         {
@@ -401,52 +417,68 @@ namespace _700IQ
             }
             else
             {
-                #region //описание области вывода полосы
-                ff = new Label()
+                tmBar = new System.Timers.Timer();
+                
+                if (ff == null)
                 {
-                    BackColor = Color.Transparent,
-                    Location = pn,
-                    Size = NewSize(800, 200),
-                    Text = txt,
-                    Parent = workForm,
-                };
-                #endregion
-                #region //описание кнопки ОК
-                if ((txt!= "Step4 - Zero")&&(txt != "Step7 - NoAnswer"))
-                {
-                    pcBox = new PictureBox
+                    #region //описание области вывода полосы
+                    ff = new Label()
+                    {
+                        BackColor = Color.Transparent,
+                        Location = pn,
+                        Size = NewSize(800, 200),
+                        Text = txt,
+                        Parent = workForm,
+                    };
+                    #endregion
+                    #region //описание кнопки ОК
+                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer"))
+                    {
+                        pcBox = new PictureBox
+                        {
+                            Parent = ff,
+                            Visible = true,
+                            Location = NewPoint(350, 10),
+                            Size = NewSize(170, 170),
+                            SizeMode = PictureBoxSizeMode.Zoom,
+                            Image = Properties.Resources.Неактивная,
+                            //pcBox.BackColor = Color.Transparent;
+                        };
+                        pcBox.MouseDown += PcBox_MouseDown;
+                        pcBox.MouseUp += PcBox_MouseUp;
+                    }
+
+                    #endregion
+                    #region//описание полосы
+                    prBar = new ProgressBar
                     {
                         Parent = ff,
+                        Location = NewPoint(10, 90),
                         Visible = true,
-                        Location = NewPoint(350, 10),
-                        Size = NewSize(170, 170),
-                        SizeMode = PictureBoxSizeMode.Zoom,
-                        Image = Properties.Resources.Неактивная,
-                        //pcBox.BackColor = Color.Transparent;
+                        Size = NewSize(300, 35),
+                        Style = ProgressBarStyle.Continuous,
+                        Step = 1,
                     };
-                    pcBox.MouseDown += PcBox_MouseDown;
-                    pcBox.MouseUp += PcBox_MouseUp;
+                    //}));
+                    #endregion
+                }
+                else
+                {
+                    ff.Visible = true;
+                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer"))
+                    {
+                        pcBox.Visible = true;
+                    }else pcBox.Visible = false;
+
                 }
 
-                #endregion
-                #region//описание полосы
-                prBar = new ProgressBar
-                {
-                    Parent = ff,
-                    Location = NewPoint(10, 90),
-                    Visible = true,
-                    Size = NewSize(300, 35),
-                    Style = ProgressBarStyle.Continuous,
-                    Step = 1,
-                };
-                //}));
 
-               
+
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
                 tmBar.Enabled = true;
-                #endregion
+               
             }
         }
         //private void TmBar_Tick(object sender, EventArgs e)//изменение временной полосы
@@ -459,8 +491,11 @@ namespace _700IQ
                 {
                     tmBar.Stop();
                     tmBar.Dispose();
-                    ff.Dispose();
-                    pcBox?.Dispose();
+                    /* ff.Dispose();
+                     pcBox?.Dispose();*/
+                    ff.Visible = false;
+                    prBar.Value = 0;
+                    pcBox.Visible = false; 
                     workForm.Invalidate();
                     onPolosaEnd();
                 }
@@ -473,12 +508,6 @@ namespace _700IQ
             {
                 pcBox.Image = Properties.Resources.Неактивная;
                 prBar.Value = 100;
-                //tmBar.Stop();
-                //tmBar.Dispose();
-                //ff.Dispose();
-                //pcBox.Dispose();
-                //workForm.Invalidate();
-                //onPolosaEnd();
             });
             workForm.BeginInvoke(reportProgress);
         }
@@ -538,20 +567,33 @@ namespace _700IQ
         Point point1, point2;
         Rectangle z1 = new Rectangle(new Point(0, 0), new Size(70, 70));
         Rectangle z2 = new Rectangle(new Point(0, 0), new Size(15, 15));
+
+        //float rotation_count = 5f;//количество полных оборотов рулетки (30сек.)
+
+        float centrx, centry, koef;
+        bool flag, flagStop;
         float i = 0f, radius = 0f, vr = 0f;
         float stepi = 0.00002f;// ускорение
         float vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
         float ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
         float stepr = 0.0001f;//шаг изменения радиуса
-        //float rotation_count = 5f;//количество полных оборотов рулетки (30сек.)
-
-        float centrx, centry, koef;
-        bool flag, flagStop;
         int tickNumber = 0, nStop = 100;
 
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
+            tm = null;
+            enabled = false;
+            i = 0f;
+            radius = 0f;
+            vr = 0f;
+            stepi = 0.00002f;// ускорение
+            vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
+            ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
+            stepr = 0.0001f;//шаг изменения радиуса
+            tickNumber = 0;
+            z1 = new Rectangle(new Point(0, 0), new Size(70, 70));
+            z2 = new Rectangle(new Point(0, 0), new Size(15, 15));
             this.fsv = fsv;
             tm = new System.Windows.Forms.Timer();
             tm.Interval = 10;
@@ -567,6 +609,7 @@ namespace _700IQ
             centry = 291;
             radius = bmp.Width / 2.5f - 10;
             flag = false;
+            flagStop = false;
             //vi = 0.04f;
             //vi += 0.00004f + 0.00008f;
             //i = 0.157080f+0.07854f;      //6.28319 количество радиан в 360 градусах

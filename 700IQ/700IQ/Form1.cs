@@ -27,6 +27,8 @@ namespace _700IQ
         Conn cn;
         Padge pdg=new Padge();
         public Rul Ruletka = new Rul();
+        GetStavka st = new GetStavka();
+        Polosa pol = new Polosa();
         public Game steck = new Game();
         AutoCompleteStringCollection teamLst;
         Data predUs = new Data();
@@ -321,6 +323,7 @@ namespace _700IQ
                 }
             
         }
+
         void Ini1()//ввод логина и пароля
         {
             //int ctrCount = Controls.Count;
@@ -536,7 +539,7 @@ namespace _700IQ
             #endregion
             
 
-            Polosa pol = new Polosa();
+            pol.AnyEventHarakiri();
             pol.onPolosaEnd += ini4;
             pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
            
@@ -870,7 +873,8 @@ namespace _700IQ
                 else
                 {
                     tbl.Rassadka(steck);
-                    Polosa pol = new Polosa();
+                    //Polosa pol = new Polosa();
+                    pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Temy;
                     pol.polosa(70, NewPoint(1600, 1350), this, "Step1");
                 }
@@ -879,7 +883,8 @@ namespace _700IQ
         void Temy()     //  заставка с инфо о темах вопросов на игру
         {   
             tbl.SetInfoTemy();
-            Polosa pol = new Polosa();
+            // Polosa pol = new Polosa();
+            pol.AnyEventHarakiri();
             pol.onPolosaEnd += Step1_3;
             pol.polosa(40, NewPoint(1600, 1350),this, "Temy");
          
@@ -931,7 +936,8 @@ namespace _700IQ
                 };
                 iQon.Location = new Point((this.ClientSize.Width - iQon.Size.Width) / 2, 30);
 
-                Polosa pol = new Polosa();
+                // Polosa pol = new Polosa();
+                pol.AnyEventHarakiri();
                 pol.onPolosaEnd += Step1_4;
                 pol.polosa((StartStep == steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
                 this.Invalidate();
@@ -1014,7 +1020,7 @@ namespace _700IQ
             {
                 RemoveTempControls();
                 tbl.TemaShow(steck, false);
-                GetStavka st = new GetStavka();
+            //    GetStavka st = new GetStavka();
                 int MaxStavka = Math.Min(steck.team[myTeam.table - 1].iQash-(12 - steck.iCon) * 25, 300);
                 //if (MaxStavka > 300) MaxStavka = 300;
                 st.stavka(25, MaxStavka, this);
@@ -1167,8 +1173,9 @@ namespace _700IQ
                         sd.uid = predUs.GameZone;
                         sd.otvet = "";
                         cn.SendUDP("ogg" + JsonConvert.SerializeObject(sd));
-                        Polosa pol = new Polosa();
-                        pol.onPolosaEnd += Step9;
+                    //  Polosa pol = new Polosa();
+                    pol.AnyEventHarakiri();
+                    pol.onPolosaEnd += Step9;
                         pol.polosa(50, NewPoint(1600, 1350), this, "Step4 - Zero");
                     
                 }
@@ -1318,7 +1325,8 @@ namespace _700IQ
                     g.DrawString("Ваши ставки переходят казино!", new Font("Cambria ", NewFontSize(25)), Brushes.Black, NewPoint(1405, 1055));
                     g.DrawString("Ваши ставки переходят казино!", new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(1400, 1050));
                     */
-                    Polosa pol = new Polosa();
+                    //  Polosa pol = new Polosa();
+                    pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
                     pol.polosa(50, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
 
