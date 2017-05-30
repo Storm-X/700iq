@@ -157,6 +157,9 @@ namespace _700IQ
         }
         void IniScreen()//Инициализация начальной картинки и определение размеров экрана 
         {
+           
+            
+
             #region //описание графики начальной заставки
             this.Controls.Clear();                                      //очистка экрана
             Image bmp = Properties.Resources.nz;                        //начальная заставка
@@ -167,7 +170,6 @@ namespace _700IQ
             Bitmap bmpNew = new Bitmap(Properties.Resources.fon, maxClientSize.Width, maxClientSize.Height);
             Graphics g = Graphics.FromImage(bmpNew);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
             delta = (maxClientSize.Width - resolution.Width) / 2;               //координата х для рисования          
             g.DrawImage(bmp, delta, 0, resolution.Width, resolution.Height); // рисуем картинку в масштабе
             g.Dispose();
@@ -908,12 +910,17 @@ namespace _700IQ
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
+                GC.Collect();
+                GC.Collect();
+
                 CustomLabel lbStart = new CustomLabel()
                 {
                     Name = "oneuse",
                     Location = NewPoint(1650, 1200),
                     Size = NewSize(950, 100),
                     Text = TextLabel,
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
                     BackColor = Color.Transparent,
                     ForeColor = Color.White,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
@@ -928,6 +935,8 @@ namespace _700IQ
                     Text = steck.iCon + " айкон",
                     AutoSize = true,
                     Font = new Font("Arial ", NewFontSize(22)),
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.Yellow,
                     Parent = this,
                     BackColor = Color.Transparent,
@@ -1023,7 +1032,7 @@ namespace _700IQ
             //    GetStavka st = new GetStavka();
                 int MaxStavka = Math.Min(steck.team[myTeam.table - 1].iQash-(12 - steck.iCon) * 25, 300);
                 //if (MaxStavka > 300) MaxStavka = 300;
-                st.stavka(25, MaxStavka, this);
+                st.stavka(25, MaxStavka, this,pol);
                 st.onStavka += doStavka;
             }     
         }
@@ -1061,6 +1070,7 @@ namespace _700IQ
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
                 stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
+                stShow = null;
             }
         }
         void Step3_1()  //показ вопроса, запуск рулетки
@@ -1075,6 +1085,8 @@ namespace _700IQ
             else
             {
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
+                GC.Collect();
+                GC.Collect();
                 CreateAnswerTable();
                 //Ruletka = new Rul();
                 Ruletka.AnyEventHarakiri();
@@ -1131,7 +1143,7 @@ namespace _700IQ
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         //Debug.WriteLine();
-                        otvetStatic.polosaStart(this, 4);
+                        otvetStatic.polosaStart(this, 4,pol);
                         //otvetStatic.onSendOtvet += NextStep;
                     }
                     else //если не мой ответ, то ждем следующей команды сервера
@@ -1158,6 +1170,8 @@ namespace _700IQ
                         Text = "ЗЕРРО, Господа!\nВаши ставки сгорели!",
                         BackColor = Color.Transparent,
                         ForeColor = Color.White,
+                        SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                        InterpolationMode = InterpolationMode.HighQualityBicubic,
                         Font = new Font("Cambria ", NewFontSize(20)),
                         Parent = this,
                         ShadowColor = Color.Black,
@@ -1209,7 +1223,7 @@ namespace _700IQ
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
-                        otvetStatic.polosaStart(this, 5);
+                        otvetStatic.polosaStart(this, 5,pol);
                         //otvetStatic.onSendOtvet += NextStep;
                     }
                     else
@@ -1230,6 +1244,7 @@ namespace _700IQ
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = steck.team[steck.o1 - 1].stavka;
                     stShow.inputStavki(stav, stav, stav, stav, this);
+                    stShow = null;
                 }
             }
         }
@@ -1260,7 +1275,7 @@ namespace _700IQ
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
-                        otvetStatic.polosaStart(this, 6);
+                        otvetStatic.polosaStart(this, 6,pol);
                         // otvetStatic.onSendOtvet += NextStep;
                     }
                     else
@@ -1313,6 +1328,8 @@ namespace _700IQ
                         Text = "Все ответы неверны\nВаши ставки переходят казино!!",
                         BackColor = Color.Transparent,
                         ForeColor = Color.White,
+                        SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                        InterpolationMode = InterpolationMode.HighQualityBicubic,
                         Font = new Font("Cambria ", NewFontSize(25)),
                         Parent = this,
                         ShadowColor = Color.Black,

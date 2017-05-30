@@ -50,13 +50,14 @@ namespace _700IQ
             // Create a local version of the graphics object for the PictureBox.
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             Rectangle Rect;
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;//выравнивание по горизонтали
             sf.LineAlignment = StringAlignment.Center;//выравнивание по вертикали
             int height = (workForm.ClientSize.Height - 350) / 2;// отступ от верхнего края
             Rect = new Rectangle(6, height + 3, workForm.ClientSize.Width, 300);
+
             g.DrawString((ikon).ToString(), new Font("Times New Roman", 250), Brushes.Black, Rect, sf);
             Rect = new Rectangle(0, height, workForm.ClientSize.Width, 300);
             g.DrawString((ikon).ToString(), new Font("Times New Roman", 250), Brushes.Yellow, Rect, sf);
@@ -150,6 +151,10 @@ namespace _700IQ
             int stavka;
             int komanda;
             GeneralForm fsv;
+            ~stakan()
+            {
+                
+            }
             public void stak(int st1, Point point, GeneralForm fsv, int komanda)
             {
                 this.komanda = komanda;
@@ -260,6 +265,10 @@ namespace _700IQ
         stakan st, st2, st3, st4;
         int distance;
         int size_stack;
+        ~StavkiShow()
+        {
+          
+        }
         public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv)
         {
             //workForm = fsv;
@@ -374,7 +383,7 @@ namespace _700IQ
         ProgressBar prBar;
         //private Form fsv;
 
-        Label ff;
+        public Label ff;
         System.Timers.Timer tmBar = new System.Timers.Timer();
         #endregion
         public void polosa(int t, Point pn, GeneralForm fsv, string txt = "")
@@ -386,7 +395,14 @@ namespace _700IQ
             InitBar(t, pn, txt);
        
         }
-
+        public void AnyEventHarakiri()
+        {
+            if (this.onPolosaEnd == null) return;
+            foreach (Delegate d in this.onPolosaEnd.GetInvocationList())
+            {
+                this.onPolosaEnd -= (PolosaEnd)d;
+            }
+        }
 
         private void InitBar(int t, Point pn, string txt)
         {
@@ -401,52 +417,70 @@ namespace _700IQ
             }
             else
             {
-                #region //описание области вывода полосы
-                ff = new Label()
+                tmBar = new System.Timers.Timer();
+
+                if (ff == null)
                 {
-                    BackColor = Color.Transparent,
-                    Location = pn,
-                    Size = NewSize(800, 200),
-                    Text = txt,
-                    Parent = workForm,
-                };
-                #endregion
-                #region //описание кнопки ОК
-                if ((txt!= "Step4 - Zero")&&(txt != "Step7 - NoAnswer"))
-                {
-                    pcBox = new PictureBox
+                    #region //описание области вывода полосы
+
+                    ff = new Label()
+                    {
+                        BackColor = Color.Transparent,
+                        Location = pn,
+                        Size = NewSize(800, 200),
+                        Text = txt,
+                        Parent = workForm,
+                    };
+                    #endregion
+                    #region //описание кнопки ОК
+                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer"))
+                    {
+                        pcBox = new PictureBox
+                        {
+                            Parent = ff,
+                            Visible = true,
+                            Location = NewPoint(350, 10),
+                            Size = NewSize(170, 170),
+                            SizeMode = PictureBoxSizeMode.Zoom,
+                            Image = Properties.Resources.Неактивная,
+                            //pcBox.BackColor = Color.Transparent;
+                        };
+                        pcBox.MouseDown += PcBox_MouseDown;
+                        pcBox.MouseUp += PcBox_MouseUp;
+                    }
+
+                    #endregion
+                    #region//описание полосы
+                    prBar = new ProgressBar
                     {
                         Parent = ff,
+                        Location = NewPoint(10, 90),
                         Visible = true,
-                        Location = NewPoint(350, 10),
-                        Size = NewSize(170, 170),
-                        SizeMode = PictureBoxSizeMode.Zoom,
-                        Image = Properties.Resources.Неактивная,
-                        //pcBox.BackColor = Color.Transparent;
+                        Size = NewSize(300, 35),
+                        Style = ProgressBarStyle.Continuous,
+                        Step = 1,
                     };
-                    pcBox.MouseDown += PcBox_MouseDown;
-                    pcBox.MouseUp += PcBox_MouseUp;
+                    #endregion
+             
+                }
+                else
+                {
+        
+                    ff.Visible = true;
+                    ff.Text = txt;
+                    prBar.Value = 0;
+                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer")) pcBox.Visible = true;
+
                 }
 
-                #endregion
-                #region//описание полосы
-                prBar = new ProgressBar
-                {
-                    Parent = ff,
-                    Location = NewPoint(10, 90),
-                    Visible = true,
-                    Size = NewSize(300, 35),
-                    Style = ProgressBarStyle.Continuous,
-                    Step = 1,
-                };
-                //}));
-
-               
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
-                tmBar.Enabled = true;
-                #endregion
+                tmBar.Start();
+
+
+
+
             }
         }
         //private void TmBar_Tick(object sender, EventArgs e)//изменение временной полосы
@@ -459,8 +493,8 @@ namespace _700IQ
                 {
                     tmBar.Stop();
                     tmBar.Dispose();
-                    ff.Dispose();
-                    pcBox?.Dispose();
+                    ff.Visible = false;
+                    pcBox.Visible = false;
                     workForm.Invalidate();
                     onPolosaEnd();
                 }
@@ -552,6 +586,16 @@ namespace _700IQ
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
+            i = 0f;
+            radius = 0f;
+            vr = 0f;
+            stepi = 0.00002f;// ускорение
+            vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
+            ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
+            stepr = 0.0001f;//шаг изменения радиуса
+
+            flagStop =false;
+            tickNumber = 0; 
             this.fsv = fsv;
             tm = new System.Windows.Forms.Timer();
             tm.Interval = 10;
