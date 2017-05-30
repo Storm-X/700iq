@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -95,6 +96,8 @@ namespace _700IQ
                 Text = steck.team[mesto].iQash + " IQ",
                 BackColor = Color.Transparent,
                 Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic,
                 ForeColor = Color.Gold,
                 Parent = this.workForm,
                 ShadowColor = Color.Black,
@@ -112,6 +115,8 @@ namespace _700IQ
                 Text = steck.team[mesto].iQash + " IQ",
                 BackColor = Color.Transparent,
                 Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic,
                 ForeColor = Color.Gold,
                 Parent = this.workForm,
                 ShadowColor = Color.Black,
@@ -129,6 +134,8 @@ namespace _700IQ
                 Text = steck.team[mesto].iQash + " IQ",
                 BackColor = Color.Transparent,
                 Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic,
                 ForeColor = Color.Gold,
                 Parent = this.workForm,
                 ShadowColor = Color.Black,

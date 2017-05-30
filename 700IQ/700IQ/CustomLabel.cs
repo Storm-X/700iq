@@ -13,8 +13,15 @@ namespace _700IQ
 {
     [ToolboxBitmapAttribute(typeof(CustomLabel), "EffectsLabel.bmp"),
     Description("Label with shadow and animation (transparency, rotation and zoom)")]
+
     public partial class CustomLabel : Control, ICustomTypeDescriptor
     {
+        public SmoothingMode SmoothingMode { get; set; }
+        public InterpolationMode InterpolationMode { get; set; }
+
+      
+        
+        
         public CustomLabel()
         {
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
@@ -288,6 +295,10 @@ namespace _700IQ
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = SmoothingMode;
+            e.Graphics.InterpolationMode = InterpolationMode;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            base.OnPaint(e);
             lock (this)
             {
                 if (InPaint)
