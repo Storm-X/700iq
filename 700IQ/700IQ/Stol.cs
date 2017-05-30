@@ -620,6 +620,10 @@ namespace _700IQ
             public string otvet;
             public int stavka;
         }
+        ~Otvet()
+        {
+            
+        }
         #endregion
         public Otvet(Conn cn, Data predus, int tableofkom, GeneralForm fsv)
         {
@@ -1123,7 +1127,7 @@ namespace _700IQ
                 workForm.Refresh();
             }
         }
-        public void polosaStart(GeneralForm ff, int Curstep,Polosa pol)//старт временной полосы
+        public void polosaStart(GeneralForm ff, int Curstep,Polosa pol)//старт временной полосы?походу больше не нужен
         {
             if (step != Curstep)
             {

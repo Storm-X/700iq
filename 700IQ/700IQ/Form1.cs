@@ -157,6 +157,9 @@ namespace _700IQ
         }
         void IniScreen()//Инициализация начальной картинки и определение размеров экрана 
         {
+           
+            
+
             #region //описание графики начальной заставки
             this.Controls.Clear();                                      //очистка экрана
             Image bmp = Properties.Resources.nz;                        //начальная заставка
@@ -167,7 +170,6 @@ namespace _700IQ
             Bitmap bmpNew = new Bitmap(Properties.Resources.fon, maxClientSize.Width, maxClientSize.Height);
             Graphics g = Graphics.FromImage(bmpNew);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
             delta = (maxClientSize.Width - resolution.Width) / 2;               //координата х для рисования          
             g.DrawImage(bmp, delta, 0, resolution.Width, resolution.Height); // рисуем картинку в масштабе
             g.Dispose();
@@ -908,6 +910,9 @@ namespace _700IQ
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
+                GC.Collect();
+                GC.Collect();
+
                 CustomLabel lbStart = new CustomLabel()
                 {
                     Name = "oneuse",
@@ -1065,6 +1070,7 @@ namespace _700IQ
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
                 stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
+                stShow = null;
             }
         }
         void Step3_1()  //показ вопроса, запуск рулетки
@@ -1079,6 +1085,8 @@ namespace _700IQ
             else
             {
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
+                GC.Collect();
+                GC.Collect();
                 CreateAnswerTable();
                 //Ruletka = new Rul();
                 Ruletka.AnyEventHarakiri();
@@ -1236,6 +1244,7 @@ namespace _700IQ
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = steck.team[steck.o1 - 1].stavka;
                     stShow.inputStavki(stav, stav, stav, stav, this);
+                    stShow = null;
                 }
             }
         }

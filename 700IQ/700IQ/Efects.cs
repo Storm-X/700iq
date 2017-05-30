@@ -50,13 +50,14 @@ namespace _700IQ
             // Create a local version of the graphics object for the PictureBox.
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             Rectangle Rect;
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;//выравнивание по горизонтали
             sf.LineAlignment = StringAlignment.Center;//выравнивание по вертикали
             int height = (workForm.ClientSize.Height - 350) / 2;// отступ от верхнего края
             Rect = new Rectangle(6, height + 3, workForm.ClientSize.Width, 300);
+
             g.DrawString((ikon).ToString(), new Font("Times New Roman", 250), Brushes.Black, Rect, sf);
             Rect = new Rectangle(0, height, workForm.ClientSize.Width, 300);
             g.DrawString((ikon).ToString(), new Font("Times New Roman", 250), Brushes.Yellow, Rect, sf);
@@ -150,6 +151,10 @@ namespace _700IQ
             int stavka;
             int komanda;
             GeneralForm fsv;
+            ~stakan()
+            {
+                
+            }
             public void stak(int st1, Point point, GeneralForm fsv, int komanda)
             {
                 this.komanda = komanda;
@@ -260,6 +265,10 @@ namespace _700IQ
         stakan st, st2, st3, st4;
         int distance;
         int size_stack;
+        ~StavkiShow()
+        {
+          
+        }
         public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv)
         {
             //workForm = fsv;
