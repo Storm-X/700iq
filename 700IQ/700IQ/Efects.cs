@@ -409,6 +409,7 @@ namespace _700IQ
             else
             {
                 tmBar = new System.Timers.Timer();
+
                 if (ff == null)
                 {
                     #region //описание области вывода полосы
@@ -451,23 +452,26 @@ namespace _700IQ
                         Step = 1,
                     };
                     #endregion
-
-                }else
+             
+                }
+                else
                 {
+        
                     ff.Visible = true;
+                    ff.Text = txt;
                     prBar.Value = 0;
-                    pcBox.Visible = true;
+                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer")) pcBox.Visible = true;
 
                 }
-
-                //}));
-
 
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
-                tmBar.Enabled = true;
-             
+                tmBar.Start();
+
+
+
+
             }
         }
         //private void TmBar_Tick(object sender, EventArgs e)//изменение временной полосы
@@ -482,8 +486,6 @@ namespace _700IQ
                     tmBar.Dispose();
                     ff.Visible = false;
                     pcBox.Visible = false;
-                   //ff.Dispose();
-                   // pcBox?.Dispose();
                     workForm.Invalidate();
                     onPolosaEnd();
                 }

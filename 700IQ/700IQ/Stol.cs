@@ -578,7 +578,6 @@ namespace _700IQ
         PictureBox pc3;
         PictureBox picBox1, bgrdPic;
         Label lb1, lb, vpramka;
-        Polosa pol = new Polosa();
         Label lb2;
         Label lb3;
         Label lbst1;
@@ -1124,7 +1123,7 @@ namespace _700IQ
                 workForm.Refresh();
             }
         }
-        public void polosaStart(GeneralForm ff, int Curstep)//старт временной полосы
+        public void polosaStart(GeneralForm ff, int Curstep,Polosa pol)//старт временной полосы
         {
             if (step != Curstep)
             {
@@ -1156,14 +1155,13 @@ namespace _700IQ
         PictureBox lbPlus; // = new Panel();
         PictureBox lbMines; // = new Panel();
         public PictureBox stavkaRegion;
-        Polosa pol = new Polosa();
         Label lbText;
         Label ff = new Label();
         int stMin, stMax;
         int stDelta = 25;
         #endregion
         
-        public void stavka(int minSt, int MaxSt, GeneralForm fsv)
+        public void stavka(int minSt, int MaxSt, GeneralForm fsv,Polosa pol)
         {
             workForm = fsv;
             //Bitmap bit = new Bitmap(Properties.Resources.SpinEdit_color);
@@ -1172,7 +1170,7 @@ namespace _700IQ
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
-                    stavka(minSt, MaxSt, fsv);
+                    stavka(minSt, MaxSt, fsv,pol);
                 });
             }
             else

@@ -1027,7 +1027,7 @@ namespace _700IQ
             //    GetStavka st = new GetStavka();
                 int MaxStavka = Math.Min(steck.team[myTeam.table - 1].iQash-(12 - steck.iCon) * 25, 300);
                 //if (MaxStavka > 300) MaxStavka = 300;
-                st.stavka(25, MaxStavka, this);
+                st.stavka(25, MaxStavka, this,pol);
                 st.onStavka += doStavka;
             }     
         }
@@ -1135,7 +1135,7 @@ namespace _700IQ
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         //Debug.WriteLine();
-                        otvetStatic.polosaStart(this, 4);
+                        otvetStatic.polosaStart(this, 4,pol);
                         //otvetStatic.onSendOtvet += NextStep;
                     }
                     else //если не мой ответ, то ждем следующей команды сервера
@@ -1215,7 +1215,7 @@ namespace _700IQ
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
-                        otvetStatic.polosaStart(this, 5);
+                        otvetStatic.polosaStart(this, 5,pol);
                         //otvetStatic.onSendOtvet += NextStep;
                     }
                     else
@@ -1266,7 +1266,7 @@ namespace _700IQ
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
-                        otvetStatic.polosaStart(this, 6);
+                        otvetStatic.polosaStart(this, 6,pol);
                         // otvetStatic.onSendOtvet += NextStep;
                     }
                     else
