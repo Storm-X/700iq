@@ -17,7 +17,7 @@ namespace _700IQ
         {
             paintEventArgs.Graphics.SmoothingMode = SmoothingMode;
             paintEventArgs.Graphics.InterpolationMode = InterpolationMode;
-            paintEventArgs.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            //paintEventArgs.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             base.OnPaint(paintEventArgs);
         }
     }
