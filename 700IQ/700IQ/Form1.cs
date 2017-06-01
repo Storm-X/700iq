@@ -306,6 +306,7 @@ namespace _700IQ
             {
                 foreach (Control t in this.Controls.Find("oneuse", true))
                     this.Controls.Remove(t);
+                    //t.Visible = false;
                 this.Invalidate();
             }
         }
@@ -913,6 +914,7 @@ namespace _700IQ
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
+                otvetStatic = null;
                 GC.Collect();
                 GC.Collect();
 
@@ -1139,7 +1141,7 @@ namespace _700IQ
                     if(otvetStatic == null)
                         CreateAnswerTable(true);
                     else
-                        otvetStatic.ochered(steck);
+                    otvetStatic.ochered(steck);
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
 
@@ -1201,6 +1203,7 @@ namespace _700IQ
         #endregion
         void Step5()    //получение ответа 1 команды 
         {
+          
             if (this.InvokeRequired)
             {
                 this.BeginInvoke((MethodInvoker)delegate

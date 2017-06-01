@@ -271,6 +271,7 @@ namespace MainServer
             }
 
             this.gs.iCon.Text = (sLog.gmLog.iCon + 1).ToString();
+            sLog = null;
 
 
         }

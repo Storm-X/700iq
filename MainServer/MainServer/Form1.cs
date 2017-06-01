@@ -1412,7 +1412,7 @@ namespace MainServer
                                     #endregion
                                     #region ogg- обработка ответа команды
                                     case "ogg":
-
+                                        Application.DoEvents();//////////////////////////////////////////////////////////////////////////////////????????????????????????????????
                                         dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
                                         if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table)) //проверяем ключ сессии
                                         {
@@ -1453,7 +1453,7 @@ namespace MainServer
                                         textBox3.Text += txt.Substring(3);
                                         break;
                                 }
-
+                                Application.DoEvents();//////////////////////////////////////////////////////////////////////////////////????????????????????????????????
                             }
                          
                         }
