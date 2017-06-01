@@ -205,29 +205,34 @@ namespace MainServer
                 #endregion
                 #region обработка ставок
                 case 2:
-                    if (stavka[table] == 0)
+                    if (gm.step == step)
                     {
-                        stavka[table] = stav;
-                        tm.Interval = 25000;
-                        if(!tm.Enabled)
-                            tm.Start();
-                    }
-                    else
-                    {
-                        if (Array.TrueForAll(stavka, value => value != 0) && tm.Enabled) //if((stavka[0] & stavka[1] & stavka[2]) != 0)
+                        if (stavka[table] == 0)
                         {
-                            Tm_Tick(this, null);
-                            //tm.Stop();
-                            //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                            //udp.Send(bytes, bytes.Length, point);
-                            //nextTakt();
+                            stavka[table] = stav;
+                            tm.Interval = 25000;
+                            if (!tm.Enabled)
+                                tm.Start();
                         }
-                        ////if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
-                        ////{
-                        //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                        //    udp.Send(bytes, bytes.Length, point);
-                        ////}
+                        else
+                        {
+                            if (Array.TrueForAll(stavka, value => value != 0) && tm.Enabled) //if((stavka[0] & stavka[1] & stavka[2]) != 0)
+                            {
+                                Tm_Tick(this, null);
+                                //tm.Stop();
+                                //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                                //udp.Send(bytes, bytes.Length, point);
+                                //nextTakt();
+                            }
+                            ////if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
+                            ////{
+                            //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                            //    udp.Send(bytes, bytes.Length, point);
+                            ////}
+                        }
                     }
+                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                    udp.Send(bytes, bytes.Length, point);
                     break;
                     #endregion
             }
