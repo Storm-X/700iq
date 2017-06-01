@@ -1388,7 +1388,7 @@ namespace MainServer
                                             {
                                                 if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена
                                                 {
-                                                    MassGameZone[dataZapros.uid - 1].Update(dataZapros.step, dataZapros.table, dataZapros.otvet, dataZapros.stavka, endpoint);
+                                                    MassGameZone[dataZapros.uid - 1].Update(MassGameZone[dataZapros.uid - 1].gm.step, dataZapros.table, dataZapros.otvet, dataZapros.stavka, endpoint);
                                                 }
                                             }
                                             ToJS();

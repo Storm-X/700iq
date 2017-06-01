@@ -112,9 +112,9 @@ namespace MainServer
         private void Tm_Tick(object sender, EventArgs e)
         {
             tm.Stop();
-            Array.ForEach(stavka, value => value = (value == 0) ? 25 : value);
+            //Array.ForEach(stavka, value => value = (value == 0) ? 25 : value);
             //stavka[0]  & stavka[1] & stavka[2]
-            //nextTakt();
+            nextTakt();
         }
         private void TmOtvet_Tick(object sender, EventArgs e)
         {
@@ -214,12 +214,13 @@ namespace MainServer
                     }
                     else
                     {
-                        if (Array.TrueForAll(stavka, value => value != 0)) //if((stavka[0] & stavka[1] & stavka[2]) != 0)
+                        if (Array.TrueForAll(stavka, value => value != 0) && tm.Enabled) //if((stavka[0] & stavka[1] & stavka[2]) != 0)
                         {
-                            tm.Stop();
-                            bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                            udp.Send(bytes, bytes.Length, point);
-                            nextTakt();
+                            Tm_Tick(this, null);
+                            //tm.Stop();
+                            //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                            //udp.Send(bytes, bytes.Length, point);
+                            //nextTakt();
                         }
                         ////if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
                         ////{
@@ -387,20 +388,21 @@ namespace MainServer
 
                         gm.step = 3;
                         gm.Cell = rn.rnd();
-                       /* if (gm.Cell == 0)
-                        {
-                            gm.step = 2;
-                            //gm.iCon++;                  
-                            //Takt = 0;
-                            endOfIqon = true;
-                            txb.Text += "ogg-zerro" + gm.step;
-                            //tmSync.Start();
-                            for (int i = 0; i < 3; i++) ok[i] = false;
-                            break;
-                        }*/
+                        /* if (gm.Cell == 0)
+                         {
+                             gm.step = 2;
+                             //gm.iCon++;                  
+                             //Takt = 0;
+                             endOfIqon = true;
+                             txb.Text += "ogg-zerro" + gm.step;
+                             //tmSync.Start();
+                             for (int i = 0; i < 3; i++) ok[i] = false;
+                             break;
+                         }*/
+                        Array.ForEach(stavka, value => value = (value == 0) ? 25 : value);
                         for (int i = 0; i < 3; i++)
                         {
-                            stavka[i] = (stavka[i] == 0) ? 25 : stavka[i];
+                            //stavka[i] = (stavka[i] == 0) ? 25 : stavka[i];
                             // if (stavka[i] > gm.team[i].iQash) stavka[i] = gm.team[i].iQash;   ВАЖНО!!!
                             gm.team[i].stavka = stavka[i];
                             gm.team[i].iQash -= gm.team[i].stavka;
@@ -418,7 +420,6 @@ namespace MainServer
                             gm.o3 = (byte)o[2];
                         }
                         
-
                         gm.activeTable = gm.o1;
 
                         #region получение вопроса
