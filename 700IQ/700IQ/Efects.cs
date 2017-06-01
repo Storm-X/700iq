@@ -552,7 +552,7 @@ namespace _700IQ
         }
 
     }
-    public class Rul   //класс рулетка
+    public class Rul : Label  //класс рулетка
     {
         #region //описание переменных
         public delegate void stopRul();
@@ -564,14 +564,14 @@ namespace _700IQ
         private bool enabled = false;
         System.Windows.Forms.Timer tm = null;
         private GeneralForm fsv;
-        Label ff = new Label();
+        //Label ff = new Label();
         Bitmap bmp;
-        Bitmap zona = new Bitmap(80, 80);
+        Image RouletteBall; // = new Bitmap(15, 15);
         Graphics g;
         Point point = new Point(300, 300);
         Point point1, point2;
-        Rectangle z1 = new Rectangle(new Point(0, 0), new Size(70, 70));
-        Rectangle z2 = new Rectangle(new Point(0, 0), new Size(15, 15));
+        Rectangle z1 = new Rectangle(new Point(0, 0), new Size(35, 35));
+        Rectangle z2 = new Rectangle(new Point(-100, -100), new Size(25, 25));
         float i = 0f, radius = 0f, vr = 0f;
         float stepi = 0.00002f;// ускорение
         float vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
@@ -602,9 +602,8 @@ namespace _700IQ
             tm.Tick += new EventHandler(tm_Tick);
             bmp = Properties.Resources.Ruletka;
             g = Graphics.FromImage(bmp);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-
+            RouletteBall = Properties.Resources.ShadowBall;
+            //RouletteBall = Image.FromFile(@"d:\Картинки\700IQ\ShadowBall.png");
 
             koef = (float)(rc.Width) / bmp.Width;
             centrx = 288;
@@ -631,22 +630,36 @@ namespace _700IQ
             // начало отсчета с 14 поля или 2,   зеро равно при n=14
             tm.Start();
             #region//описание свойств формы
-            ff.Visible = true;
-            ff.Location = rc.Location;
-            ff.BackgroundImage = bmp;
-            ff.BackgroundImageLayout = ImageLayout.Zoom;
-            ff.BackColor = Color.Transparent;
-            ff.Size = rc.Size;
-            ff.Parent = fsv;
+            this.Visible = true;
+            this.Location = rc.Location;
+            this.BackgroundImage = bmp;
+            this.BackgroundImageLayout = ImageLayout.Zoom;
+            this.BackColor = Color.Transparent;
+            this.Size = rc.Size;
+            this.Parent = fsv;
+            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            DoubleBuffered = true;
             this.enabled = true;
-            ff.BringToFront();
+            this.BringToFront();
             #endregion
+            g.Dispose();
         }
+
+        protected override void OnPaint(PaintEventArgs pe)
+        {
+            pe.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            pe.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            //pe.Graphics.FillEllipse(Brushes.White, z2);
+            base.OnPaint(pe);
+            pe.Graphics.DrawImage(RouletteBall, z2);
+        }
+
+
         public void close()
         {
-            if (ff.InvokeRequired)
+            if (this.InvokeRequired)
             {
-                ff.BeginInvoke((MethodInvoker)delegate
+                this.BeginInvoke((MethodInvoker)delegate
                 {
                     close();
                 });
@@ -654,7 +667,7 @@ namespace _700IQ
             else
             {
                 tm?.Stop();
-                ff.Visible = false;
+                this.Visible = false;
                 this.enabled = false;
             }
         }
@@ -670,22 +683,24 @@ namespace _700IQ
         private void ruletka()
         {
 
+            z1.Location = z2.Location;
+            z1.Offset(-10, -10);
             point.X = (int)(centrx + radius * Math.Cos(i));
             point.Y = (int)(centry + radius * Math.Sin(i));
-            point2.X = point.X - 30;
-            point2.Y = point.Y - 30;
-            z1.Location = point2;
+            //point2.X = point.X - 30;
+            //point2.Y = point.Y - 30;
+            //z1.Location = point2;
             z2.Location = point;
 
-            if (flag) g.DrawImage(zona, point1);
-            else flag = true;
+            ////if (flag) g.DrawImage(zona, point1);
+            ////else flag = true;
 
-            zona = bmp.Clone(z1, bmp.PixelFormat);
-            g.FillEllipse(Brushes.White, z2);
-            point1 = point2;
-            z1.X = (int)(z1.X * koef);
-            z1.Y = (int)(z1.Y * koef);
-            ff.Invalidate(z1);
+            ////zona = bmp.Clone(z1, bmp.PixelFormat);
+            ////g.FillEllipse(Brushes.White, z2);
+            //point1 = point2;
+            //z1.X = (int)(z1.X * koef);
+            //z1.Y = (int)(z1.Y * koef);
+            this.Invalidate(); //z1
          
         }
         private void tm_Tick(object sender, EventArgs e)

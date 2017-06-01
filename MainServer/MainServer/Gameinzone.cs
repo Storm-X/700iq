@@ -112,7 +112,9 @@ namespace MainServer
         private void Tm_Tick(object sender, EventArgs e)
         {
             tm.Stop();
-            nextTakt();
+            Array.ForEach(stavka, value => value = (value == 0) ? 25 : value);
+            //stavka[0]  & stavka[1] & stavka[2]
+            //nextTakt();
         }
         private void TmOtvet_Tick(object sender, EventArgs e)
         {
@@ -171,7 +173,19 @@ namespace MainServer
             {
                 #region обработка команд готов
                 case 1:
-                    if (ok[table])
+                    if (!ok[table])
+                    {
+                        if (Takt != 0) return;
+                        ok[table] = true;
+                        tm.Interval = 40000;
+                        tm.Start();
+                        if (ok[0] & ok[1] & ok[2])
+                        {
+                            tm.Stop();
+                            nextTakt();
+                        }
+                    }
+                    else
                     {
                         if (ok[0] & ok[1] & ok[2] || Takt != 0)
                         {
@@ -187,40 +201,31 @@ namespace MainServer
                         //    }
                         //}
                     }
-                    else
-                    {
-                        if (Takt != 0) return;
-                        ok[table] = true;
-                        tm.Interval = 40000;
-                        tm.Start();
-                        if (ok[0] & ok[1] & ok[2])
-                        {
-                            tm.Stop();
-                            nextTakt();
-                        }
-                    }
                     break;
                 #endregion
                 #region обработка ставок
                 case 2:
-                    if (stavka[table] != 0)
-                    {
-                        //if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
-                        //{
-                            bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                            udp.Send(bytes, bytes.Length, point);
-                        //}
-                    }
-                    else
+                    if (stavka[table] == 0)
                     {
                         stavka[table] = stav;
                         tm.Interval = 25000;
-                        tm.Start();
-                        if ((stavka[0] & stavka[1] & stavka[2]) != 0)
+                        if(!tm.Enabled)
+                            tm.Start();
+                    }
+                    else
+                    {
+                        if (Array.TrueForAll(stavka, value => value != 0)) //if((stavka[0] & stavka[1] & stavka[2]) != 0)
                         {
                             tm.Stop();
+                            bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                            udp.Send(bytes, bytes.Length, point);
                             nextTakt();
                         }
+                        ////if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
+                        ////{
+                        //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                        //    udp.Send(bytes, bytes.Length, point);
+                        ////}
                     }
                     break;
                     #endregion
