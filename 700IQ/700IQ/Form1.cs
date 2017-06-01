@@ -212,6 +212,9 @@ namespace _700IQ
            // stShow.inputStavki(100, 200, 300, 0, this);
            */
             #endregion
+            ////для теста Рулетки на старте проги
+            Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+            Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
         }
 
         private void dataReceive(string response)
@@ -1091,7 +1094,7 @@ namespace _700IQ
                 //Ruletka = new Rul();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
-                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(1000)), this, 1);
+                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(900)), this, 1);
             }          
         }
         private void CreateAnswerTable(bool withQuery=false)

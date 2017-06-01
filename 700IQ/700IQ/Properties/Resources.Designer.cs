@@ -263,6 +263,16 @@ namespace _700IQ.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap RouletteBall {
+            get {
+                object obj = ResourceManager.GetObject("RouletteBall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap rul {
             get {
                 object obj = ResourceManager.GetObject("rul", resourceCulture);
@@ -316,6 +326,16 @@ namespace _700IQ.Properties {
         internal static System.Drawing.Bitmap SB_up {
             get {
                 object obj = ResourceManager.GetObject("SB_up", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ShadowBall {
+            get {
+                object obj = ResourceManager.GetObject("ShadowBall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
