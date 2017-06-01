@@ -1315,6 +1315,7 @@ namespace MainServer
                 try
                 {
                     var result = await Udp.ReceiveAsync();
+                    Application.DoEvents();
                     byte[] receiveBytes = result.Buffer;
                     byte[] bytes;
                     string txt = Encoding.UTF8.GetString(receiveBytes);
