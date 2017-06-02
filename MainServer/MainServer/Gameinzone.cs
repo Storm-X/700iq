@@ -230,9 +230,9 @@ namespace MainServer
                             //    udp.Send(bytes, bytes.Length, point);
                             ////}
                         }
+                        bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                        udp.Send(bytes, bytes.Length, point);
                     }
-                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                    udp.Send(bytes, bytes.Length, point);
                     break;
                     #endregion
             }
@@ -573,35 +573,35 @@ namespace MainServer
             if (gm.Cell != 0)
             {
                 Send2All("ogg");
-              }
+            }
 
-                if (endOfIqon)
+            if (endOfIqon)
+            {
+                endOfIqon = false;
+                gm.step = 1;
+                Takt = 0;
+                if (gm.iCon >= 12)
                 {
-                    endOfIqon = false;
-                    gm.step = 1;
-                    Takt = 0;
-                    if (gm.iCon >= 12)
+                    gm.Cell = rn.rnd();
+                    gm.quest = "";
+                    gm.theme = 0;
+                    //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
+                    var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
+                    Ratings rating = new Ratings(this, mycon, mesta);
+                    var rat = rating.getRatings();
+                    for (int i = 0; i < 3; i++)
                     {
-                        gm.Cell = rn.rnd();
-                        gm.quest = "";
-                        gm.theme = 0;
-                        //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
-                        var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
-                        Ratings rating = new Ratings(this, mycon, mesta);
-                        var rat = rating.getRatings();
-                        for (int i = 0; i < 3; i++)
-                        {
-                            this.data.team[i].rating += rat[i];
-                            string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + "WHERE name=" + this.data.team[i].name;
-                            MySqlCommand cm = new MySqlCommand(sql, mycon);
-                        }
-                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        this.data.team[i].rating += rat[i];
+                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + "WHERE name=" + this.data.team[i].name;
+                        MySqlCommand cm = new MySqlCommand(sql, mycon);
                     }
-                    log();
-                    gm.iCon++;
-                    Array.Clear(stavka, 0, stavka.Length);
-                    Array.Clear(ok, 0, ok.Length);
-                    Send2All("ogg");
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                }
+                log();
+                gm.iCon++;
+                Array.Clear(stavka, 0, stavka.Length);
+                Array.Clear(ok, 0, ok.Length);
+                Send2All("ogg");
             }
 
             if (gm.Cell == 0)
