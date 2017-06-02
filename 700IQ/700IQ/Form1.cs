@@ -1351,7 +1351,7 @@ namespace _700IQ
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
-                    pol.polosa(50, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
+                    pol.polosa(100, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
 
                 }
                 else
