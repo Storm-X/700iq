@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Storm\AppData\Local\Temp\vs9191.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Kursov\AppData\Local\Temp\vs3F88.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Storm\AppData\Local\Temp\vs9191.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Kursov\AppData\Local\Temp\vs3F88.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\700iq.ico</ApplicationIcon>
@@ -80,6 +80,9 @@
     <Compile Include="GameData.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="ListViewWithoutScrollBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PictureBoxWithInterpolationMode .cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
@@ -205,6 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\1.gif" />
+    <None Include="Resources\12_50int3.gif" />
     <Content Include="Resources\700iq.ico" />
     <Content Include="Resources\cup-1.png" />
     <Content Include="Resources\cup_2.png" />
@@ -223,6 +227,8 @@
     <None Include="Resources\SB_down.png" />
     <None Include="Resources\SB_up.png" />
     <None Include="Resources\SB_center.png" />
+    <Content Include="Resources\RouletteBall.png" />
+    <Content Include="Resources\ShadowBall.png" />
     <Content Include="Resources\SpinEdit color.png" />
     <Content Include="Resources\ThumbBottom.png" />
     <Content Include="Resources\ThumbMiddle.png" />

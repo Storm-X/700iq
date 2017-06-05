@@ -31,6 +31,7 @@ namespace MainServer
         List<SendLog> logsOfzones = new List<SendLog>();
         public DataTable dt, dtVoprosCheck;
         public RegData rgData = new RegData();
+        ResiveData dataZapros = new ResiveData();
         Registration reg;
         int indexOfThemes;
         string[] text1;
@@ -49,6 +50,7 @@ namespace MainServer
         bool stopGame = false;              //флаг о преостановке игры
         private MediaServer mServer;
         private System.Timers.Timer tmr;
+        private Object losker = new Object();
         
 
         Form f = new Form();
@@ -715,13 +717,13 @@ namespace MainServer
                 int numZon = numKom / 3;            //количество троек
                 int komNextTur = numKom % 3;        //количество команд проходящих в следующий тур без игры
                 troika = 0;
-                for (int i = 0; i < 5; i++)
+               /* for (int i = 0; i < 5; i++)
                 {
                     data.team[0].member[i].N = "";
                     data.team[0].member[i].F = "";
                     data.team[0].member[i].rait = 0;
                     data.team[0].member[i].dr = 0;
-                }
+                }*/
                 MassGameZone.Clear();
 
                 #region создание троек
@@ -1313,6 +1315,7 @@ namespace MainServer
                 try
                 {
                     var result = await Udp.ReceiveAsync();
+                    Application.DoEvents();
                     byte[] receiveBytes = result.Buffer;
                     byte[] bytes;
                     string txt = Encoding.UTF8.GetString(receiveBytes);
@@ -1323,131 +1326,136 @@ namespace MainServer
                         {
                             endpoint = result.RemoteEndPoint;
                             string gm;
-
-                            switch (txt.Substring(0, 3))
+                            lock (losker)
                             {
-                                #region zsp- запрос списка команд, если известна рассадка троек, то отправляется рассадка 
-                                case "zsp":
-                                    if (RassadkaFlag)
-                                    {
-                                        string kluch = txt.Substring(3);  //ключ сессии в полученном сообщении                             
-                                        for (int i = 0; i < MassGameZone.Count; i++)//перебором игровых зон находим кому принадлежит этот ключ
+                                switch (txt.Substring(0, 3))
+                                {
+                                    #region zsp- запрос списка команд, если известна рассадка троек, то отправляется рассадка 
+                                    case "zsp":
+                                        if (RassadkaFlag)
                                         {
-                                            if (MassGameZone[i].inGameZone(kluch))//метод определения принадлежногсти ключа игровой зоне
+                                            string kluch = txt.Substring(3);  //ключ сессии в полученном сообщении                             
+                                            for (int i = 0; i < MassGameZone.Count; i++)//перебором игровых зон находим кому принадлежит этот ключ
                                             {
-                                                if (!MassGameZone[i].stopGm)//если игровая зона не приостановлена
+                                                if (MassGameZone[i].inGameZone(kluch))//метод определения принадлежногсти ключа игровой зоне
                                                 {
-                                                    // отправляем data клинету                                
-                                                    bytes = Encoding.UTF8.GetBytes("osp" + JsonConvert.SerializeObject(MassGameZone[i].data));
-                                                    Udp.Send(bytes, bytes.Length, endpoint);
-                                                    textBox3.Text += "osp";
-                                                    break;
+                                                    if (!MassGameZone[i].stopGm)//если игровая зона не приостановлена
+                                                    {
+                                                        // отправляем data клинету                                
+                                                        bytes = Encoding.UTF8.GetBytes("osp" + JsonConvert.SerializeObject(MassGameZone[i].data));
+                                                        Udp.Send(bytes, bytes.Length, endpoint);
+                                                        textBox3.Text += "osp";
+                                                        break;
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    else
-                                    {
-                                        bytes = Encoding.UTF8.GetBytes("+sp" + JsonConvert.SerializeObject(dt));
-                                        Udp.Send(bytes, bytes.Length, endpoint);
-                                        textBox3.Text += "+sp";
-                                    }
-                                    break;
-                                #endregion
-                                #region zst- запрос на старт игры
-                                case "zst":
-                                    if (rgData.gameStart)
-                                    {
-                                        ResiveData dat = new ResiveData();
-                                        dat = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
-                                        if (MassGameZone.Count >= dat.uid && MassGameZone[dat.uid - 1].verify(dat.kluch, dat.table))
+                                        else
                                         {
-                                            if (!MassGameZone[dat.uid - 1].stopGm)//если игровая зона не приостановлена
-                                            {
-                                                gm = MassGameZone[dat.uid - 1].startGM();
-                                                bytes = Encoding.UTF8.GetBytes("ost" + gm);
-                                                Udp.Send(bytes, bytes.Length, endpoint);
-                                                textBox3.Text += "ost";
-                                            }
+                                            bytes = Encoding.UTF8.GetBytes("+sp" + JsonConvert.SerializeObject(dt));
+                                            Udp.Send(bytes, bytes.Length, endpoint);
+                                            textBox3.Text += "+sp";
                                         }
-                                    }
-                                    break;
-                                #endregion
-                                #region zgg- обработка шагов игры команды
-                                case "zgg":
-                                    try
-                                    {
-                                        ResiveData resD = new ResiveData();
-                                        resD = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
-                                        if (MassGameZone.Count >= resD.uid && MassGameZone[resD.uid - 1].verify(resD.kluch, resD.table))
+                                        break;
+                                    #endregion
+                                    #region zst- запрос на старт игры
+                                    case "zst":
+                                        if (rgData.gameStart)
                                         {
-                                            if (!MassGameZone[resD.uid - 1].stopGm)//если игровая зона не приостановлена
-                                            {
-                                                MassGameZone[resD.uid - 1].Update(resD.step, resD.table, resD.otvet, resD.stavka, endpoint);
-                                            }
-                                        }
-                                        ToJS();
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        MessageBox.Show(e.Message, "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                    }
-                                    break;
-                                case "zww":
-                                    ResiveData resDw = new ResiveData();
-                                    resDw = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
-                                    if (MassGameZone.Count >= resDw.uid && MassGameZone[resDw.uid - 1].verify(resDw.kluch, resDw.table))
-                                    {
-                                        if (!MassGameZone[resDw.uid - 1].stopGm)//если игровая зона не приостановлена
-                                        {
-                                            MassGameZone[resDw.uid - 1].wait(resDw.step, resDw.table, endpoint);
-                                        }
-                                    }
-                                    break;
-                                #endregion
-                                #region ogg- обработка ответа команды
-                                case "ogg":
-                                    ResiveData resDoo = new ResiveData();
-                                    resDoo = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
-                                    if (MassGameZone.Count >= resDoo.uid && MassGameZone[resDoo.uid - 1].verify(resDoo.kluch, resDoo.table)) //проверяем ключ сессии
-                                    {
-                                        if (!MassGameZone[resDoo.uid - 1].stopGm)//если игровая зона не приостановлена
-                                        {
-                                            if (MassGameZone[resDoo.uid - 1].getOtvet(resDoo.table, resDoo.otvet, resDoo.step, endpoint)) //если ответа не было, то принимаем ответ
-                                            {
-                                                string[] info = MassGameZone[resDoo.uid - 1].otvetInfo();
 
-                                                DataRow row = dtVoprosCheck.NewRow();
-                                                row[0] = Convert.ToByte(info[0]);
-                                                row[1] = resDoo.table;
-                                                row[2] = Convert.ToInt32(info[2]);
-                                                row[3] = info[3];
-                                                row[4] = info[4];
-                                                row[5] = info[5];
-                                                row[6] = resDoo.otvet;
-                                                if (String.Compare(row[5].ToString(), row[6].ToString(), true) == 0)
+                                            dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
+                                            if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table))
+                                            {
+                                                if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена
                                                 {
-                                                    MassGameZone[resDoo.uid - 1].checkOtvet(true);
+                                                    gm = MassGameZone[dataZapros.uid - 1].startGM();
+                                                    bytes = Encoding.UTF8.GetBytes("ost" + gm);
+                                                    Udp.Send(bytes, bytes.Length, endpoint);
+                                                    textBox3.Text += "ost";
                                                 }
-                                                else
+                                            }
+                                            
+                                        }
+                                        break;
+                                    #endregion
+                                    #region zgg- обработка шагов игры команды
+                                    case "zgg":
+                                        try
+                                        {
+                                          
+                                            dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
+                                            if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table))
+                                            {
+                                                if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена
                                                 {
-                                                    dtVoprosCheck.Rows.Add(row);
-                                                    dataGridView2.DataSource = dtVoprosCheck;
-                                                    tabControl1.SelectedTab = tabControl1.TabPages["Control"];
-                                                    this.Show();
-                                                    this.Activate();
+                                                    MassGameZone[dataZapros.uid - 1].Update(dataZapros.step, dataZapros.table, dataZapros.otvet, dataZapros.stavka, endpoint);
+                                                }
+                                            }
+                                            ToJS();
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            MessageBox.Show(e.Message, "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                        }
+                                        break;
+                                    case "zww":
+
+                                        dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
+                                        if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table))
+                                        {
+                                            if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена
+                                            {
+                                                MassGameZone[dataZapros.uid - 1].wait(dataZapros.step, dataZapros.table, endpoint);
+                                            }
+                                        }
+                                        break;
+                                    #endregion
+                                    #region ogg- обработка ответа команды
+                                    case "ogg":
+                                        Application.DoEvents();//////////////////////////////////////////////////////////////////////////////////????????????????????????????????
+                                        dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
+                                        if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table)) //проверяем ключ сессии
+                                        {
+                                            if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена
+                                            {
+                                                if (MassGameZone[dataZapros.uid - 1].getOtvet(dataZapros.table, dataZapros.otvet, dataZapros.step, endpoint)) //если ответа не было, то принимаем ответ
+                                                {
+                                                    string[] info = MassGameZone[dataZapros.uid - 1].otvetInfo();
+
+                                                    DataRow row = dtVoprosCheck.NewRow();
+                                                    row[0] = Convert.ToByte(info[0]);
+                                                    row[1] = dataZapros.table;
+                                                    row[2] = Convert.ToInt32(info[2]);
+                                                    row[3] = info[3];
+                                                    row[4] = info[4];
+                                                    row[5] = info[5];
+                                                    row[6] = dataZapros.otvet;
+                                                    if (String.Compare(row[5].ToString(), row[6].ToString(), true) == 0)
+                                                    {
+                                                        MassGameZone[dataZapros.uid - 1].checkOtvet(true);
+                                                    }
+                                                    else
+                                                    {
+                                                        dtVoprosCheck.Rows.Add(row);
+                                                        dataGridView2.DataSource = dtVoprosCheck;
+                                                        tabControl1.SelectedTab = tabControl1.TabPages["Control"];
+                                                        this.Show();
+                                                        this.Activate();
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    //bytes = Encoding.UTF8.GetBytes("wgg" + resDoo.uid); //ответ ожидание
-                                    //Udp.Send(bytes, bytes.Length, endpoint);
-                                    break;
-                                #endregion
-                                case "wgg":
-                                    textBox3.Text += txt.Substring(3);
-                                    break;
+                                        //bytes = Encoding.UTF8.GetBytes("wgg" + resDoo.uid); //ответ ожидание
+                                        //Udp.Send(bytes, bytes.Length, endpoint);
+                                        break;
+                                    #endregion
+                                    case "wgg":
+                                        textBox3.Text += txt.Substring(3);
+                                        break;
+                                }
+                                Application.DoEvents();//////////////////////////////////////////////////////////////////////////////////????????????????????????????????
                             }
+                         
                         }
                     }
                 }

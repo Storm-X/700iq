@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace _700IQ
         Data predUs;
         Bitmap bmpStol;
         Bitmap[] fish = new Bitmap[3];
-
+      
         //private Form fsv;
         #endregion
 
@@ -32,6 +33,7 @@ namespace _700IQ
             workForm = fsv;
             bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmpStol);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             this.predUs = predus;
             //this.fsv = fsv;
            
@@ -58,10 +60,6 @@ namespace _700IQ
             g.DrawImage(fish[mesto], NewPoint(1900, 150));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.Black, NewPoint(2105, 105));
             g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.White, NewPoint(2100, 100));
-            //линии для выверки центра
-            //g.DrawLine(Pens.Red, new Point(workForm.ClientSize.Width / 2,0), new Point(workForm.ClientSize.Width / 2, workForm.ClientSize.Height));
-            //g.DrawLine(Pens.Red, new Point(0, workForm.ClientSize.Height / 2), new Point(workForm.ClientSize.Width, workForm.ClientSize.Height / 2));
-
         }
         
          public Table(GeneralForm fsv)//для тестирования
@@ -69,6 +67,7 @@ namespace _700IQ
              workForm = fsv;
             bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmpStol);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             Game steck = new Game();
             steck.team[0] = new Game.Teames();
             steck.team[0].iQash = 900;
@@ -88,6 +87,7 @@ namespace _700IQ
         {
             Bitmap bmp =(Bitmap) bmpStol.Clone();
             Graphics g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             int mesto = tableofkom;
             CustomLabel iQash1 = new CustomLabel()
             {
@@ -96,15 +96,14 @@ namespace _700IQ
                 Text = steck.team[mesto].iQash + " IQ",
                 BackColor = Color.Transparent,
                 Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic,
                 ForeColor = Color.Gold,
                 Parent = this.workForm,
                 ShadowColor = Color.Black,
                 ShadowOffset = new Point(3, 3),
                 number = mesto,
             };
-
-           // g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 1330 + 5));
-           // g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 1330));
 
             mesto++;
             if (mesto > 2) mesto = 0;
@@ -116,14 +115,14 @@ namespace _700IQ
                 Text = steck.team[mesto].iQash + " IQ",
                 BackColor = Color.Transparent,
                 Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic,
                 ForeColor = Color.Gold,
                 Parent = this.workForm,
                 ShadowColor = Color.Black,
                 ShadowOffset = new Point(3, 3),
                 number = mesto,
             };
-            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(400 + 5, 280 + 5));
-            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(400, 280));
 
             mesto++;
             if (mesto > 2) mesto = 0;
@@ -135,6 +134,8 @@ namespace _700IQ
                 Text = steck.team[mesto].iQash + " IQ",
                 BackColor = Color.Transparent,
                 Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic,
                 ForeColor = Color.Gold,
                 Parent = this.workForm,
                 ShadowColor = Color.Black,
@@ -145,8 +146,6 @@ namespace _700IQ
             this.workForm.iQash2 = iQash2;
             this.workForm.iQash3 = iQash3;
 
-            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Black, NewPoint(2100 + 5, 280 + 5));
-            //g.DrawString(steck.team[mesto].iQash + " IQ", new Font("Calibri", NewFontSize(20), FontStyle.Bold), Brushes.Yellow, NewPoint(2100, 280));
             mesto = tableofkom;
             g.Dispose();
             return bmp;
@@ -178,31 +177,18 @@ namespace _700IQ
                 //serv.Location = new Point(workForm.Width - serv.Width - 3, workForm.Height - 3 - serv.Height);
                 serv.Location = new Point(3, workForm.Height - 3 - serv.Height);
 
-                PictureBox IQ700 = new PictureBox()
+                PictureBoxWithInterpolationMode IQ700 = new PictureBoxWithInterpolationMode()
                 {
                     Size = NewSizeKv(100),
                     Location = new Point(workForm.Width - NewSizeKv(100).Width - 3 , 3),//NewPoi,nt(2410, 0),
                     Image = Properties.Resources.rotor700,
+
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias,
+                    InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic,
                     BackColor = Color.Transparent,
                     Parent = workForm,
                     SizeMode = PictureBoxSizeMode.Zoom,
                 };
-                /*
-                Label intel1 = new Label()
-                {
-                    AutoSize = true,
-                    Text = "Интеллект-казино",
-                    //Location = NewPoint(2150, 30),
-                    Font = new Font("Cambria ", NewFontSize(12)),
-                    ForeColor = Color.Black,
-                    Parent = workForm,
-                    BackColor = Color.Transparent,
-                    TextAlign = ContentAlignment.MiddleRight,
-                    //listView1.BackgroundImage = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(listView1.Location.X, listView1.Location.Y, listView1.Width, listView1.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                };
-                intel1.Location = new Point(workForm.Width - NewSizeKv(100).Width - intel1.Width +5, 8 + (NewSizeKv(100).Height - intel1.Height) / 2);
-               // Bitmap bmp = new Bitmap(workForm.BackgroundImage).Clone(new Rectangle(intel1.Location.X-1, intel1.Location.Y-1, intel1.Width, intel1.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-               */
                 Label intel = new Label()
                 {
                     AutoSize = true,
@@ -234,6 +220,7 @@ namespace _700IQ
         {
             Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             g.DrawString(predUs.GameZone + " игровая зона", new Font("Times New Roman", NewFontSize(50)), Brushes.Black, NewPoint(855, 55));
             g.DrawString(predUs.GameZone + " игровая зона", new Font("Times New Roman", NewFontSize(50)), Brushes.Yellow, NewPoint(850, 50));
@@ -264,6 +251,7 @@ namespace _700IQ
         {
             Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             g.DrawString("Темы вопросов на игру", new Font("Times New Roman", NewFontSize(48)), Brushes.Black, NewPoint(500 + 4, 55));
             g.DrawString("Темы вопросов на игру", new Font("Times New Roman", NewFontSize(48)), Brushes.Yellow, NewPoint(500, 50));
@@ -321,16 +309,9 @@ namespace _700IQ
             string[] txtPos = { "Победитель", "2 место", "3 место" };
             Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Graphics g = Graphics.FromImage(bmp);
-            
-            //int first, second, third;
-            //int[,] mass = new int[4,2];
-            //for (int i = 0; i < 3; i++)
-            //{               //первый элемент массива Айкэш, второй элемент номер стола
-            //    mass[i, 0] = steck.team[i].iQash;
-            //    mass[i, 1] = i;
-            //}
-
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             string lbText = "";
+
             //var teamPos = steck.team.OrderByDescending(c => c.iQash);                         //Список команд, отсортированный по результату
             int[] o = ResponsePriority(steck.Cell, steck.team.Select(x => x.iQash << 2).ToArray());
             var cntEqualTeamsGrp = steck.team.GroupBy(x => x.iQash);                            //Группировка по результату
@@ -367,24 +348,10 @@ namespace _700IQ
                     Size = NewSize(900, 200),
                 };
 
-                //int Cell = new Random().Next(36) + 1;
-                //for (int i=0;i<2;i++)    //сортируем команды по айкеш
-                //    for(int j=0; j < 2; j++)
-                //    {
-                //        if (mass[j, 0] < mass[j + 1, 0])
-                //        {
-                //            int b = mass[j, 0];
-                //            mass[j, 0] = mass[j + 1, 0];
-                //            mass[j + 1, 0] = b;
-                //            b = mass[j, 1];
-                //            mass[j, 1] = mass[j + 1, 1];
-                //            mass[j + 1, 1] = b;
-                //        }
-                //    }
-
-                Rul Ruletka = new Rul();
-                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1700, 210), NewSizeKv(900)), workForm, 3);
-                while (Ruletka.Enabled && !this.workForm.IsDisposed)
+                //Rul Ruletka = new Rul();
+                workForm.Ruletka.AnyEventHarakiri();
+                workForm.Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1700, 210), NewSizeKv(900)), workForm, 3);
+                while (workForm.Ruletka.Enabled && !this.workForm.IsDisposed)
                     Application.DoEvents();
                 zagolovok.Dispose();
                 workForm.Invalidate();
@@ -392,16 +359,6 @@ namespace _700IQ
             int iPositions = 0;
             foreach (var table in o)
             {
-                //g.DrawImage(fish[0], NewPoint(100, 350 + 380 ));
-                //g.DrawString("Победитель  -  команда  " + predUs.team[mass[0,1]].name, new Font("Cambria ", NewFontSize(25)), Brushes.Black, NewPoint(255, 350 +  0));
-                //g.DrawString("Победитель  -  команда  " + predUs.team[mass[0,1]].name, new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(250, 345 +  0));
-                //g.DrawString("с результатом  -  " + mass[0,0] + " Iq", new Font("Cambria ", NewFontSize(20)), Brushes.YellowGreen, NewPoint(1200, 350 +  0));
-
-                //g.DrawString(txtPos[iPositions] + "  -  команда  " + predUs.team[table-1].name, new Font("Cambria ", NewFontSize(25)), Brushes.Black, NewPoint(255, 350 + 380 * iPositions));
-                //g.DrawString(txtPos[iPositions] + "  -  команда  " + predUs.team[table-1].name, new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(250, 345 + 380 * iPositions));
-                //g.DrawString("с результатом  -  " + steck.team[table-1].iQash + " Iq", new Font("Cambria ", NewFontSize(20)), Brushes.YellowGreen, NewPoint(1250, 350 + 380 * iPositions));
-                //g.DrawLine(Pens.Red, NewPoint(50, 280 + 380 * iPositions), NewPoint(2000, 280 + 380 * iPositions));
-
                 g.DrawString(string.Format("{0} (стол {1})", predUs.team[table - 1].name, predUs.team[table - 1].table), new Font("Cambria ", NewFontSize(25)), Brushes.Black, NewPoint(305, 350 + 380 * iPositions));
                 g.DrawString(string.Format("{0} (стол {1})", predUs.team[table - 1].name, predUs.team[table - 1].table), new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(300, 345 + 380 * iPositions));
                 g.DrawString("с результатом  -  " + steck.team[table - 1].iQash + " Iq", new Font("Cambria ", NewFontSize(20)), Brushes.YellowGreen, NewPoint(1250, 350 + 380 * iPositions));
@@ -417,19 +374,7 @@ namespace _700IQ
                     Parent = workForm,
                     SizeMode = PictureBoxSizeMode.Zoom,
                 };
-
-                //g.DrawImage(place, NewPoint(50, 330 + 380 * iPositions).X, NewPoint(50,330  + 380 * iPositions).Y, NewPoint(0, 280).X, NewPoint(0, 280).Y);
                 iPositions++;
-                
-                //g.DrawString("Второе место  -  команда  " + predUs.team[mass[1, 1]].name, new Font("Cambria ", NewFontSize(24)), Brushes.Black, NewPoint(255, 350 + 380));
-                //g.DrawString("Второе место  -  команда  " + predUs.team[mass[1, 1]].name, new Font("Cambria ", NewFontSize(24)), Brushes.White, NewPoint(250, 345 + 380));
-                //g.DrawString("с результатом  -  " + mass[1, 0] + " Iq", new Font("Cambria ", NewFontSize(20)), Brushes.YellowGreen, NewPoint(1200, 350 + 380));
-                //g.DrawLine(Pens.Red, NewPoint(50, 280 + 380), NewPoint(2000, 280 + 380));
-
-                //g.DrawString("Третье место  -  команда  " + predUs.team[mass[2, 1]].name, new Font("Cambria ", NewFontSize(24)), Brushes.Black, NewPoint(255, 350 + 760));
-                //g.DrawString("Третье место  -  команда  " + predUs.team[mass[2, 1]].name, new Font("Cambria ", NewFontSize(24)), Brushes.White, NewPoint(250, 345 + 760));
-                //g.DrawString("с результатом  -  " + mass[2, 0] + " Iq", new Font("Cambria ", NewFontSize(20)), Brushes.YellowGreen, NewPoint(1200, 350 + 760));
-                //g.DrawLine(Pens.Red, NewPoint(50, 280 + 760), NewPoint(2000, 280 + 760));
             }
             g.Dispose();
             //workForm.BackgroundImage = bmp;
@@ -495,7 +440,6 @@ namespace _700IQ
     }
     public class Padge : resize //заставка с зарегистрировавшимися командами
     {
-
         public CustomScrollbar cs;
         public ListViewWithoutScrollBar listView1;
         int visible_count = 0;
@@ -619,7 +563,6 @@ namespace _700IQ
                 };
             }));
             #endregion
-
         }
 
         private void Cs_Scroll(object sender, EventArgs e)
@@ -676,6 +619,10 @@ namespace _700IQ
             public byte step;       //шаг игры
             public string otvet;
             public int stavka;
+        }
+        ~Otvet()
+        {
+            
         }
         #endregion
         public Otvet(Conn cn, Data predus, int tableofkom, GeneralForm fsv)
@@ -1180,12 +1127,12 @@ namespace _700IQ
                 workForm.Refresh();
             }
         }
-        public void polosaStart(GeneralForm ff, int Curstep)//старт временной полосы
+        public void polosaStart(GeneralForm ff, int Curstep,Polosa pol)//старт временной полосы?походу больше не нужен
         {
             if (step != Curstep)
             {
                 step = Curstep;
-                Polosa pol = new Polosa();
+                pol.AnyEventHarakiri();
                 pol.polosa(100, NewPoint(1700, 1350), ff, "CurStep = " + Curstep.ToString());
                 pol.onPolosaEnd += sendOtvet;
             }
@@ -1217,8 +1164,8 @@ namespace _700IQ
         int stMin, stMax;
         int stDelta = 25;
         #endregion
-
-        public void stavka(int minSt, int MaxSt, GeneralForm fsv)
+        
+        public void stavka(int minSt, int MaxSt, GeneralForm fsv,Polosa pol)
         {
             workForm = fsv;
             //Bitmap bit = new Bitmap(Properties.Resources.SpinEdit_color);
@@ -1227,99 +1174,100 @@ namespace _700IQ
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
-                    stavka(minSt, MaxSt, fsv);
+                    stavka(minSt, MaxSt, fsv,pol);
                 });
             }
             else
             {
-                stavkaRegion = new PictureBox
+                if (stavkaRegion == null)
                 {
-                    BackgroundImage = Properties.Resources.SpinEdit_color, // bit;
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    Parent = workForm,
-                    Location = NewPoint(1800, 940),
-                    Size = NewSize(585, 249),
-                    BackColor = Color.Transparent
-                };
-                /*
-                ff.BackColor = Color.Transparent;
-                ff.Location = NewPoint(1450, 450);
-                ff.Size = NewSize(650, 350);
-                ff.Name = "oneuse";
-                */
+                    stavkaRegion = new PictureBox
+                    {
+                        BackgroundImage = Properties.Resources.SpinEdit_color, // bit;
+                        BackgroundImageLayout = ImageLayout.Zoom,
+                        Parent = workForm,
+                        Location = NewPoint(1800, 940),
+                        Size = NewSize(585, 249),
+                        BackColor = Color.Transparent
+                    };
 
-                #region//описание кнопок увеличение и уменьшение ставок
-                stMin = minSt; stMax = MaxSt;
-                lbPlus = new PictureBox
+
+                    #region//описание кнопок увеличение и уменьшение ставок
+                    stMin = minSt; stMax = MaxSt;
+                    lbPlus = new PictureBox
+                    {
+                        BackgroundImage = Properties.Resources.Up,
+                        Parent = stavkaRegion,
+                        Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.15)),
+                        Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
+                        BackgroundImageLayout = ImageLayout.Zoom,
+                        Name = "oneuse",
+                    };
+                    lbPlus.Click += LbPlus_Click;
+                    lbPlus.MouseDown += lbSpinBtn_MouseDown;
+                    lbPlus.MouseUp += lbSpinBtn_MouseUp;
+
+                    lbMines = new PictureBox
+                    {
+                        Parent = stavkaRegion,
+                        BackgroundImage = Properties.Resources.Down,
+                        Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
+                        BackgroundImageLayout = ImageLayout.Zoom,
+                        Visible = true,
+                        Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.55)),
+                        Name = "oneuse"
+                    };
+                    lbMines.Click += LbMines_Click;
+                    lbMines.MouseDown += lbSpinBtn_MouseDown;
+                    lbMines.MouseUp += lbSpinBtn_MouseUp;
+                    #endregion
+
+                    #region //описание области ввода ставки
+                    lbin = new Label
+                    {
+                        Text = Convert.ToString(minSt),
+                        Parent = stavkaRegion,
+                        Location = new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1)),
+                        Visible = true,
+                        Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
+                        ForeColor = Color.Black,
+                        BackColor = Color.Transparent,
+                        Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
+                        TextAlign = ContentAlignment.TopCenter,
+                        Name = "oneuse"
+                    };
+
+                    lbin1 = new Label
+                    {
+                        Text = Convert.ToString(minSt),
+                        Parent = lbin,
+                        Location = NewRelPoint(-5, -5),// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
+                        Visible = true,
+                        Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
+                        ForeColor = Color.Gold,
+                        Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
+                        TextAlign = ContentAlignment.TopCenter,
+                        BackColor = Color.Transparent,
+                        Name = "oneuse"
+                    };
+                    #endregion
+
+                }
+                else
                 {
-                    BackgroundImage = Properties.Resources.Up,
-                    Parent = stavkaRegion,
-                    Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.15)),
-                    Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    Name = "oneuse",
-                };
-                lbPlus.Click += LbPlus_Click;
-                lbPlus.MouseDown += lbSpinBtn_MouseDown;
-                lbPlus.MouseUp += lbSpinBtn_MouseUp;
+                    stavkaRegion.Visible = true;
+                    stMin = minSt; stMax = MaxSt;
+                    stDelta = 25;
+                    lbin.Text = Convert.ToString(minSt);
+                    lbin1.Text = Convert.ToString(minSt);
+            
+                }
 
-                lbMines = new PictureBox
-                {
-                    Parent = stavkaRegion,
-                    BackgroundImage = Properties.Resources.Down,
-                    Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    Visible = true,
-                    Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.55)),
-                    Name = "oneuse"
-                };
-                lbMines.Click += LbMines_Click;
-                lbMines.MouseDown += lbSpinBtn_MouseDown;
-                lbMines.MouseUp += lbSpinBtn_MouseUp;
-                #endregion
-
-                #region //описание области ввода ставки
-                lbin = new Label
-                {
-                    Text = Convert.ToString(minSt),
-                    Parent = stavkaRegion,
-                    Location = new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1)),
-                    Visible = true,
-                    Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
-                    ForeColor = Color.Black,
-                    BackColor = Color.Transparent,
-                    Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
-                    TextAlign = ContentAlignment.TopCenter,
-                    Name = "oneuse"
-                };
-
-
-
-
-                lbin1 = new Label
-                {
-                    Text = Convert.ToString(minSt),
-                    Parent = lbin,
-                    Location = NewRelPoint(-5, -5),// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
-                    Visible = true,
-                    Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
-                    ForeColor = Color.Gold,
-                    Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
-                    TextAlign = ContentAlignment.TopCenter,
-                    BackColor = Color.Transparent,
-                    Name = "oneuse"
-
-                };
-               
-                #endregion
-
-                Polosa pol = new Polosa();
+                pol.AnyEventHarakiri();
                 pol.onPolosaEnd += StavkaEndTime;
                 pol.polosa(200, NewPoint(1700, 1350), fsv, "Stavka");
             }
         }
-
-       
 
         private void lbSpinBtn_MouseDown(object sender, EventArgs e)
         {
@@ -1336,8 +1284,6 @@ namespace _700IQ
                 lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) + stDelta);
                 lbin1.Text = Convert.ToString(Convert.ToInt32(lbin1.Text) + stDelta);
             }
-                
-
         }
         private void LbMines_Click(object sender, EventArgs e)//уменьшение ставки
         {
@@ -1350,18 +1296,17 @@ namespace _700IQ
         private void StavkaEndTime()
         {
             stDelta = 0;
-            lbMines.Dispose();
-            lbPlus.Dispose();
+            // lbMines.Dispose();
+            // lbPlus.Dispose();
             // lbText.Dispose();         
             onStavka(Convert.ToInt32(lbin.Text));
-            stavkaRegion.Dispose();
-            lbin.Dispose();
+            stavkaRegion.Visible=false;
+            //  lbin.Dispose();
             workForm.Invalidate();
         }
     }
     public class resize
     {
-        
         public static Size resolution; // = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         private static GeneralForm myWorkForm;
         private static int delta;

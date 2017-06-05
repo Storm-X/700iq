@@ -26,7 +26,9 @@ namespace _700IQ
         Otvet otvetStatic;
         Conn cn;
         Padge pdg=new Padge();
-        Rul ruletka;
+        public Rul Ruletka = new Rul();
+        GetStavka st = new GetStavka();
+        Polosa pol = new Polosa();
         public Game steck = new Game();
         AutoCompleteStringCollection teamLst;
         Data predUs = new Data();
@@ -155,6 +157,9 @@ namespace _700IQ
         }
         void IniScreen()//Инициализация начальной картинки и определение размеров экрана 
         {
+           
+            
+
             #region //описание графики начальной заставки
             this.Controls.Clear();                                      //очистка экрана
             Image bmp = Properties.Resources.nz;                        //начальная заставка
@@ -164,6 +169,7 @@ namespace _700IQ
             Size maxClientSize = GetMaximizedClientSize(this);
             Bitmap bmpNew = new Bitmap(Properties.Resources.fon, maxClientSize.Width, maxClientSize.Height);
             Graphics g = Graphics.FromImage(bmpNew);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             delta = (maxClientSize.Width - resolution.Width) / 2;               //координата х для рисования          
             g.DrawImage(bmp, delta, 0, resolution.Width, resolution.Height); // рисуем картинку в масштабе
             g.Dispose();
@@ -178,32 +184,42 @@ namespace _700IQ
             Point pn = NewPoint(1060, 691);
             pn.X += delta < 0 ? delta : 0;
             bmp = Properties.Resources.rotor;
-            PictureBox pcBox = new PictureBox()
+            PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
             {
                 Parent = this,
                 Name = "oneuse",
                 Visible = true,
                 Location = pn,
                 BackColor = Color.Transparent,
+                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic,
                 Size = NewSizeKv(390),
                 Image = bmp,
                 SizeMode = PictureBoxSizeMode.Zoom,
             };
             
             pcBox.Click += onClickMedal;
-
+           
+           
+            
             //тест рулетки, ставок, темы
-            /*   
+            /*
+            StavkiShow stShow = new StavkiShow();
+            tbl = new Table(this);
+            stShow.inputStavki(300, 300, 300, 300, this);   
              StavkiShow stShow = new StavkiShow();
              tbl = new Table(this);
              stShow.inputStavki(100, 200, 300, 0, this);
             Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            ruletka = new Rul();
-            //ruletka.StartRul(0, kv, this, 2); // 2); //2 ячейка ??? надо ли??
+            Ruletka = new Rul();
+            //Ruletka.StartRul(0, kv, this, 2); // 2); //2 ячейка ??? надо ли??
             tbl.TemaShow(true);
            // stShow.inputStavki(100, 200, 300, 0, this);
            */
             #endregion
+            ////для теста Рулетки на старте проги
+            //Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+            //Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
         }
 
         private void dataReceive(string response)
@@ -295,6 +311,7 @@ namespace _700IQ
             {
                 foreach (Control t in this.Controls.Find("oneuse", true))
                     this.Controls.Remove(t);
+                    //t.Visible = false;
                 this.Invalidate();
             }
         }
@@ -317,6 +334,7 @@ namespace _700IQ
                 }
             
         }
+
         void Ini1()//ввод логина и пароля
         {
             //int ctrCount = Controls.Count;
@@ -451,6 +469,8 @@ namespace _700IQ
             ///if (myTeam.Resumption) MessageBox.Show("sdfsdf");
             Bitmap bmpNew = new Bitmap(Properties.Resources.GreenTable, resolution.Width + delta * 2, resolution.Height);
             Graphics g = Graphics.FromImage(bmpNew);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
             g.DrawString("Добро пожаловать", new Font("Times New Roman", NewFontSize(40), FontStyle.Italic), Brushes.White, NewPoint(950, 50));
             g.DrawString("в интеллект-казино 700 IQ!", new Font("Times New Roman", NewFontSize(30), FontStyle.Regular), Brushes.White, NewPoint(950, 200));
            
@@ -530,7 +550,7 @@ namespace _700IQ
             #endregion
             
 
-            Polosa pol = new Polosa();
+            pol.AnyEventHarakiri();
             pol.onPolosaEnd += ini4;
             pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
            
@@ -864,7 +884,8 @@ namespace _700IQ
                 else
                 {
                     tbl.Rassadka(steck);
-                    Polosa pol = new Polosa();
+                    //Polosa pol = new Polosa();
+                    pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Temy;
                     pol.polosa(70, NewPoint(1600, 1350), this, "Step1");
                 }
@@ -873,7 +894,8 @@ namespace _700IQ
         void Temy()     //  заставка с инфо о темах вопросов на игру
         {   
             tbl.SetInfoTemy();
-            Polosa pol = new Polosa();
+            // Polosa pol = new Polosa();
+            pol.AnyEventHarakiri();
             pol.onPolosaEnd += Step1_3;
             pol.polosa(40, NewPoint(1600, 1350),this, "Temy");
          
@@ -897,12 +919,18 @@ namespace _700IQ
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
+                otvetStatic = null;
+                GC.Collect();
+                GC.Collect();
+
                 CustomLabel lbStart = new CustomLabel()
                 {
                     Name = "oneuse",
                     Location = NewPoint(1650, 1200),
                     Size = NewSize(950, 100),
                     Text = TextLabel,
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
                     BackColor = Color.Transparent,
                     ForeColor = Color.White,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
@@ -917,6 +945,8 @@ namespace _700IQ
                     Text = steck.iCon + " айкон",
                     AutoSize = true,
                     Font = new Font("Arial ", NewFontSize(22)),
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.Yellow,
                     Parent = this,
                     BackColor = Color.Transparent,
@@ -925,7 +955,8 @@ namespace _700IQ
                 };
                 iQon.Location = new Point((this.ClientSize.Width - iQon.Size.Width) / 2, 30);
 
-                Polosa pol = new Polosa();
+                // Polosa pol = new Polosa();
+                pol.AnyEventHarakiri();
                 pol.onPolosaEnd += Step1_4;
                 pol.polosa((StartStep == steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
                 this.Invalidate();
@@ -986,9 +1017,10 @@ namespace _700IQ
                 tbl.TemaShow(steck, true);
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
                 Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-                ruletka = new Rul();
-                ruletka.StartRul(steck.Cell, kv, this, 2); // 2); //2 ячейка ??? надо ли??
-                ruletka.onStop += Step2_3;
+                //Ruletka = new Rul();
+                Ruletka.AnyEventHarakiri();
+                Ruletka.onStop += Step2_3;
+                Ruletka.StartRul(steck.Cell, kv, this, 2);
                 this.Invalidate();
             }
         }
@@ -1007,10 +1039,10 @@ namespace _700IQ
             {
                 RemoveTempControls();
                 tbl.TemaShow(steck, false);
-                GetStavka st = new GetStavka();
+            //    GetStavka st = new GetStavka();
                 int MaxStavka = Math.Min(steck.team[myTeam.table - 1].iQash-(12 - steck.iCon) * 25, 300);
                 //if (MaxStavka > 300) MaxStavka = 300;
-                st.stavka(25, MaxStavka, this);
+                st.stavka(25, MaxStavka, this,pol);
                 st.onStavka += doStavka;
             }     
         }
@@ -1038,8 +1070,8 @@ namespace _700IQ
             }
             else
             {
-                ruletka?.close();
-                ruletka = null;
+                Ruletka?.close();
+                //Ruletka = null;
                 int i = steck.Cell;
                 /*foreach (Control t in this.Controls.Find("iQash", true))
                     this.Controls.Remove(t);
@@ -1048,6 +1080,7 @@ namespace _700IQ
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
                 stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
+                stShow = null;
             }
         }
         void Step3_1()  //показ вопроса, запуск рулетки
@@ -1062,10 +1095,13 @@ namespace _700IQ
             else
             {
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
+                GC.Collect();
+                GC.Collect();
                 CreateAnswerTable();
-                ruletka = new Rul();
-                ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(1000)), this, 1);
-                ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
+                //Ruletka = new Rul();
+                Ruletka.AnyEventHarakiri();
+                Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
+                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(900)), this, 1);
             }          
         }
         private void CreateAnswerTable(bool withQuery=false)
@@ -1085,6 +1121,8 @@ namespace _700IQ
                 this.Invalidate();
                 Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
                 Graphics g = Graphics.FromImage(bmp);
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
                 this.BackgroundImage = bmp;
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
                 otvetStatic.svitok(steck, predUs);
@@ -1108,14 +1146,14 @@ namespace _700IQ
                     if(otvetStatic == null)
                         CreateAnswerTable(true);
                     else
-                        otvetStatic.ochered(steck);
+                    otvetStatic.ochered(steck);
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         //Debug.WriteLine();
-                        otvetStatic.polosaStart(this, 4);
+                        otvetStatic.polosaStart(this, 4,pol);
                         //otvetStatic.onSendOtvet += NextStep;
                     }
                     else //если не мой ответ, то ждем следующей команды сервера
@@ -1133,6 +1171,8 @@ namespace _700IQ
                   
                         bIconFinalised = true;
                         Graphics g = this.CreateGraphics();
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
                     CustomLabel zerro = new CustomLabel()
                     {
                         Name = "oneuse",
@@ -1140,6 +1180,8 @@ namespace _700IQ
                         Text = "ЗЕРРО, Господа!\nВаши ставки сгорели!",
                         BackColor = Color.Transparent,
                         ForeColor = Color.White,
+                        SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                        InterpolationMode = InterpolationMode.HighQualityBicubic,
                         Font = new Font("Cambria ", NewFontSize(20)),
                         Parent = this,
                         ShadowColor = Color.Black,
@@ -1155,8 +1197,9 @@ namespace _700IQ
                         sd.uid = predUs.GameZone;
                         sd.otvet = "";
                         cn.SendUDP("ogg" + JsonConvert.SerializeObject(sd));
-                        Polosa pol = new Polosa();
-                        pol.onPolosaEnd += Step9;
+                    //  Polosa pol = new Polosa();
+                    pol.AnyEventHarakiri();
+                    pol.onPolosaEnd += Step9;
                         pol.polosa(50, NewPoint(1600, 1350), this, "Step4 - Zero");
                     
                 }
@@ -1165,6 +1208,7 @@ namespace _700IQ
         #endregion
         void Step5()    //получение ответа 1 команды 
         {
+          
             if (this.InvokeRequired)
             {
                 this.BeginInvoke((MethodInvoker)delegate
@@ -1174,8 +1218,8 @@ namespace _700IQ
             }
             else
             {
-                ruletka?.close();
-                ruletka = null;
+                Ruletka?.close();
+                //Ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1190,7 +1234,7 @@ namespace _700IQ
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
-                        otvetStatic.polosaStart(this, 5);
+                        otvetStatic.polosaStart(this, 5,pol);
                         //otvetStatic.onSendOtvet += NextStep;
                     }
                     else
@@ -1211,6 +1255,7 @@ namespace _700IQ
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = steck.team[steck.o1 - 1].stavka;
                     stShow.inputStavki(stav, stav, stav, stav, this);
+                    stShow = null;
                 }
             }
         }
@@ -1225,8 +1270,8 @@ namespace _700IQ
             }
             else
             {
-                ruletka?.close();
-                ruletka = null;
+                Ruletka?.close();
+                //Ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1241,7 +1286,7 @@ namespace _700IQ
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
-                        otvetStatic.polosaStart(this, 6);
+                        otvetStatic.polosaStart(this, 6,pol);
                         // otvetStatic.onSendOtvet += NextStep;
                     }
                     else
@@ -1277,8 +1322,8 @@ namespace _700IQ
             }
             else
             {
-                ruletka?.close();
-                ruletka = null;
+                Ruletka?.close();
+                //Ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1294,6 +1339,8 @@ namespace _700IQ
                         Text = "Все ответы неверны\nВаши ставки переходят казино!!",
                         BackColor = Color.Transparent,
                         ForeColor = Color.White,
+                        SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                        InterpolationMode = InterpolationMode.HighQualityBicubic,
                         Font = new Font("Cambria ", NewFontSize(25)),
                         Parent = this,
                         ShadowColor = Color.Black,
@@ -1306,9 +1353,10 @@ namespace _700IQ
                     g.DrawString("Ваши ставки переходят казино!", new Font("Cambria ", NewFontSize(25)), Brushes.Black, NewPoint(1405, 1055));
                     g.DrawString("Ваши ставки переходят казино!", new Font("Cambria ", NewFontSize(25)), Brushes.White, NewPoint(1400, 1050));
                     */
-                    Polosa pol = new Polosa();
+                    //  Polosa pol = new Polosa();
+                    pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
-                    pol.polosa(50, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
+                    pol.polosa(100, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
 
                 }
                 else
@@ -1336,7 +1384,7 @@ namespace _700IQ
                 this.Controls["Iqon"]?.Dispose(); // Text = "";
                 this.Controls["oneuse"]?.Dispose(); // Text = "";
                 otvetStatic?.close();
-                ruletka?.close();
+                Ruletka?.close();
                 this.Invalidate();
                 if (steck.iCon > 12)
                     Step10();
@@ -1519,7 +1567,7 @@ namespace _700IQ
             DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти из игры?", "Предупреждение!!!", MessageBoxButtons.YesNo);
             if (result == DialogResult.No) e.Cancel = true;
             else
-                ruletka?.close();
+                Ruletka?.close();
         }
 
         private void GeneralForm_Load(object sender, EventArgs e)

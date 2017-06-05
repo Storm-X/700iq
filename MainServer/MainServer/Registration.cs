@@ -133,6 +133,7 @@ namespace MainServer
                                         datRow[5] = 700;                //Iqesh                                                             
                                         ddt.Rows.Add(datRow);
 
+                                        data.team[0] = new teams();
                                         data.team[0].uid = Convert.ToInt32(dat.Rows[0][3]);
                                         data.team[0].name = dat.Rows[0][2].ToString();
                                         data.team[0].rating = Convert.ToInt32(dat.Rows[0][1]);
@@ -142,6 +143,7 @@ namespace MainServer
                                         if (dat.Rows.Count < 5) numbermember = dat.Rows.Count;
                                         for (int i = 0; i < numbermember; i++)
                                         {
+                                            data.team[0].member[i] = new teams.members();
                                             data.team[0].member[i].N = dat.Rows[i][4].ToString();
                                             data.team[0].member[i].F = dat.Rows[i][7].ToString();
                                             data.team[0].member[i].rait = Convert.ToInt32(dat.Rows[i][6]);

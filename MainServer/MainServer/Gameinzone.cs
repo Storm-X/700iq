@@ -112,6 +112,8 @@ namespace MainServer
         private void Tm_Tick(object sender, EventArgs e)
         {
             tm.Stop();
+            //Array.ForEach(stavka, value => value = (value == 0) ? 25 : value);
+            //stavka[0]  & stavka[1] & stavka[2]
             nextTakt();
         }
         private void TmOtvet_Tick(object sender, EventArgs e)
@@ -171,7 +173,19 @@ namespace MainServer
             {
                 #region обработка команд готов
                 case 1:
-                    if (ok[table])
+                    if (!ok[table])
+                    {
+                        if (Takt != 0) return;
+                        ok[table] = true;
+                        tm.Interval = 40000;
+                        tm.Start();
+                        if (ok[0] & ok[1] & ok[2])
+                        {
+                            tm.Stop();
+                            nextTakt();
+                        }
+                    }
+                    else
                     {
                         if (ok[0] & ok[1] & ok[2] || Takt != 0)
                         {
@@ -187,40 +201,37 @@ namespace MainServer
                         //    }
                         //}
                     }
-                    else
-                    {
-                        if (Takt != 0) return;
-                        ok[table] = true;
-                        tm.Interval = 40000;
-                        tm.Start();
-                        if (ok[0] & ok[1] & ok[2])
-                        {
-                            tm.Stop();
-                            nextTakt();
-                        }
-                    }
                     break;
                 #endregion
                 #region обработка ставок
                 case 2:
-                    if (stavka[table] != 0)
+                    if (gm.step == step)
                     {
-                        //if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
-                        //{
-                            bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                            udp.Send(bytes, bytes.Length, point);
-                        //}
-                    }
-                    else
-                    {
-                        stavka[table] = stav;
-                        tm.Interval = 25000;
-                        tm.Start();
-                        if ((stavka[0] & stavka[1] & stavka[2]) != 0)
+                        if (stavka[table] == 0)
                         {
-                            tm.Stop();
-                            nextTakt();
+                            stavka[table] = stav;
+                            tm.Interval = 25000;
+                            if (!tm.Enabled)
+                                tm.Start();
                         }
+                        else
+                        {
+                            if (Array.TrueForAll(stavka, value => value != 0) && tm.Enabled) //if((stavka[0] & stavka[1] & stavka[2]) != 0)
+                            {
+                                Tm_Tick(this, null);
+                                //tm.Stop();
+                                //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                                //udp.Send(bytes, bytes.Length, point);
+                                //nextTakt();
+                            }
+                            ////if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
+                            ////{
+                            //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                            //    udp.Send(bytes, bytes.Length, point);
+                            ////}
+                        }
+                        bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                        udp.Send(bytes, bytes.Length, point);
                     }
                     break;
                     #endregion
@@ -265,6 +276,7 @@ namespace MainServer
             }
 
             this.gs.iCon.Text = (sLog.gmLog.iCon + 1).ToString();
+            sLog = null;
 
 
         }
@@ -380,22 +392,24 @@ namespace MainServer
                     #region  1 такт - обработка полученных ставок, определение очереди, получение вопроса
                     case 1:
 
+
                         gm.step = 3;
-                        gm.Cell = rn.rnd();
-                       /* if (gm.Cell == 0)
-                        {
-                            gm.step = 2;
-                            //gm.iCon++;                  
-                            //Takt = 0;
-                            endOfIqon = true;
-                            txb.Text += "ogg-zerro" + gm.step;
-                            //tmSync.Start();
-                            for (int i = 0; i < 3; i++) ok[i] = false;
-                            break;
-                        }*/
+                        gm.Cell =  rn.rnd();
+                        /* if (gm.Cell == 0)
+                         {
+                             gm.step = 2;
+                             //gm.iCon++;                  
+                             //Takt = 0;
+                             endOfIqon = true;
+                             txb.Text += "ogg-zerro" + gm.step;
+                             //tmSync.Start();
+                             for (int i = 0; i < 3; i++) ok[i] = false;
+                             break;
+                         }*/
+                        Array.ForEach(stavka, value => value = (value == 0) ? 25 : value);
                         for (int i = 0; i < 3; i++)
                         {
-                            stavka[i] = (stavka[i] == 0) ? 25 : stavka[i];
+                            //stavka[i] = (stavka[i] == 0) ? 25 : stavka[i];
                             // if (stavka[i] > gm.team[i].iQash) stavka[i] = gm.team[i].iQash;   ВАЖНО!!!
                             gm.team[i].stavka = stavka[i];
                             gm.team[i].iQash -= gm.team[i].stavka;
@@ -413,7 +427,6 @@ namespace MainServer
                             gm.o3 = (byte)o[2];
                         }
                         
-
                         gm.activeTable = gm.o1;
 
                         #region получение вопроса
@@ -502,7 +515,7 @@ namespace MainServer
                             }
                             else//если ответ не верен запускаем таймер для приема ответа 2-ой команды
                             {
-                                tmOtvet.Interval = 20000;
+                                tmOtvet.Interval = 40000;
                                 tmOtvet.Start();
                                 gm.activeTable = gm.o2;
                             }
@@ -532,7 +545,7 @@ namespace MainServer
                         else //если ответ не верен запускаем таймер для приема ответа 3-ой команды
                         {
                             gm.activeTable = gm.o3;
-                            tmOtvet.Interval = 20000;
+                            tmOtvet.Interval = 40000;
                             tmOtvet.Start();
                         }
                         Takt++;
@@ -561,36 +574,37 @@ namespace MainServer
             if (gm.Cell != 0)
             {
                 Send2All("ogg");
-              }
-
-                if (endOfIqon)
-                {
-                    endOfIqon = false;
-                    gm.step = 1;
-                    Takt = 0;
-                    if (gm.iCon >= 12)
-                    {
-                        gm.Cell = rn.rnd();
-                        gm.quest = "";
-                        gm.theme = 0;
-                        //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
-                        var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
-                        Ratings rating = new Ratings(this, mycon, mesta);
-                        var rat = rating.getRatings();
-                        for (int i = 0; i < 3; i++)
-                        {
-                            this.data.team[i].rating += rat[i];
-                            string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + "WHERE name=" + this.data.team[i].name;
-                            MySqlCommand cm = new MySqlCommand(sql, mycon);
-                        }
-                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    }
-                    log();
-                    gm.iCon++;
-                    Array.Clear(stavka, 0, stavka.Length);
-                    Array.Clear(ok, 0, ok.Length);
-                    Send2All("ogg");
             }
+
+            if (endOfIqon)
+            {
+                endOfIqon = false;
+                gm.step = 1;
+                Takt = 0;
+                if (gm.iCon >= 12)
+                {
+                    gm.Cell = rn.rnd();
+                    gm.quest = "";
+                    gm.theme = 0;
+                    //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
+                    var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
+                    Ratings rating = new Ratings(this, mycon, mesta);
+                    var rat = rating.getRatings();
+                    for (int i = 0; i < 3; i++)
+                    {
+                        this.data.team[i].rating += rat[i];
+                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + "WHERE name=" + this.data.team[i].name;
+                        MySqlCommand cm = new MySqlCommand(sql, mycon);
+                    }
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                }
+                log();
+                gm.iCon++;
+                Array.Clear(stavka, 0, stavka.Length);
+                Array.Clear(ok, 0, ok.Length);
+                Send2All("ogg");
+            }
+
 
             if (gm.Cell == 0)
             {
