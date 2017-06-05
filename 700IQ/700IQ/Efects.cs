@@ -51,6 +51,8 @@ namespace _700IQ
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
             Rectangle Rect;
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;//выравнивание по горизонтали
@@ -486,20 +488,44 @@ namespace _700IQ
         //private void TmBar_Tick(object sender, EventArgs e)//изменение временной полосы
         private void TmBar_Tick(object state, System.Timers.ElapsedEventArgs e)//изменение временной полосы
         {
-            var reportProgress = new Action(() =>
+            if (ff.InvokeRequired)
+            {
+                ff.BeginInvoke((MethodInvoker)delegate
+                {
+                    TmBar_Tick(state, e);
+                });
+            }
+            else
             {
                 if (prBar.Value < 100) prBar.PerformStep(); // Value++;
                 else
                 {
-                    tmBar.Stop();
-                    tmBar.Dispose();
+                    ((System.Timers.Timer)state).Stop();
+                    ((System.Timers.Timer)state).Dispose();
+                    //tmBar.Stop();
+                    //tmBar.Dispose();
                     ff.Visible = false;
                     pcBox.Visible = false;
                     workForm.Invalidate();
                     onPolosaEnd();
                 }
-            });
-            workForm.BeginInvoke(reportProgress);
+            }
+
+            //var reportProgress = new Action(() =>
+            //{
+            //    if (prBar.Value < 100) prBar.PerformStep(); // Value++;
+            //    else
+            //    {
+            //        tmBar.Enabled = false;
+            //        //tmBar.Stop();
+            //        tmBar.Dispose();
+            //        ff.Visible = false;
+            //        pcBox.Visible = false;
+            //        workForm.Invalidate();
+            //        onPolosaEnd();
+            //    }
+            //});
+            //workForm.BeginInvoke(reportProgress);
         }
         public void PcBox_MouseUp(object sender, MouseEventArgs e)//нажатие кнопки ОК
         {

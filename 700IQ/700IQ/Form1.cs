@@ -1175,6 +1175,7 @@ namespace _700IQ
                         Text = "ЗЕРРО, Господа!\nВаши ставки сгорели!",
                         BackColor = Color.Transparent,
                         ForeColor = Color.White,
+                        //TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit,
                         SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                         InterpolationMode = InterpolationMode.HighQualityBicubic,
                         Font = new Font("Cambria ", NewFontSize(20)),

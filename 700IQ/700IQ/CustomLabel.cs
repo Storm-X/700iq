@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Collections;
+using System.Drawing.Text;
 
 namespace _700IQ
 {
@@ -18,9 +19,7 @@ namespace _700IQ
     {
         public SmoothingMode SmoothingMode { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
-
-      
-        
+        public TextRenderingHint TextRenderingHint { get; set; }
         
         public CustomLabel()
         {
@@ -298,6 +297,8 @@ namespace _700IQ
             e.Graphics.SmoothingMode = SmoothingMode;
             e.Graphics.InterpolationMode = InterpolationMode;
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;      
+
             base.OnPaint(e);
             lock (this)
             {
@@ -311,7 +312,7 @@ namespace _700IQ
             {
                 //e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 //e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit; //System.Drawing.Text.TextRenderingHint.AntiAlias;
 
                 SizeF tsize = e.Graphics.MeasureString(Text, Font);
                 tsize = new SizeF(tsize.Width + ShadowOffset.X, tsize.Height + ShadowOffset.Y);
@@ -337,7 +338,7 @@ namespace _700IQ
             }
             else//_Letterwise=true
             {
-                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;  //System.Drawing.Text.TextRenderingHint.AntiAlias;
                 //animation is not smooth without anti-aliasing
                 const float _ZeroRotationAngle = 0.1f;
                 //if this is 0, text shakes if zoom is applied, but no rotation is applied
