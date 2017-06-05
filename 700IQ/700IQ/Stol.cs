@@ -638,7 +638,6 @@ namespace _700IQ
         }
         private async Task<Image> ResultOfCycle(string fileName)
         {
-            
             MediaReceiver mReceiver = new MediaReceiver(workForm.IP, 8080);
             byte[] filecontent = mReceiver.GetMedia(fileName);
             if (filecontent.Length == 0)
@@ -646,6 +645,7 @@ namespace _700IQ
             else
             {
                 MemoryStream ms = new MemoryStream(filecontent);
+                mReceiver = null; //Сделать Dispose() ОБЯЗАТЕЛЬНО!!!!
                 return Image.FromStream(ms, true);
             }
         }
@@ -685,7 +685,7 @@ namespace _700IQ
                     Location = NewRelPoint(25, 200), //new Point(25, NewPoint(25, 200).Y),
                     BackColor = Color.Transparent,
                     SizeMode = PictureBoxSizeMode.Zoom,
-                    Image = await ResultOfCycle(fileName)
+                    Image = (fileName=="") ? null : await ResultOfCycle(fileName)
                 };
                 lb = new Label()
                 {
@@ -954,16 +954,13 @@ namespace _700IQ
             switch (semaforN)
             {
                 case 1:
-                    if (pc1.Visible) pc1.Visible = false;
-                    else pc1.Visible = true;
+                    pc1.Visible = !pc1.Visible;
                     break;
                 case 2:
-                    if (pc2.Visible) pc2.Visible = false;
-                    else pc2.Visible = true;
+                    pc2.Visible = !pc2.Visible;
                     break;
                 case 3:
-                    if (pc3.Visible) pc3.Visible = false;
-                    else pc3.Visible = true;
+                    pc3.Visible = !pc3.Visible;
                     break;
             }
         }
