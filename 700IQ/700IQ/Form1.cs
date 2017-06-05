@@ -914,9 +914,9 @@ namespace _700IQ
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
-                otvetStatic = null;
-                GC.Collect();
-                GC.Collect();
+                otvetStatic.Dispose(); // = null;
+                //GC.Collect();
+                //GC.Collect();
 
                 CustomLabel lbStart = new CustomLabel()
                 {
@@ -1141,7 +1141,7 @@ namespace _700IQ
                     if(otvetStatic == null)
                         CreateAnswerTable(true);
                     else
-                    otvetStatic.ochered(steck);
+                        otvetStatic.ochered(steck);
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
 

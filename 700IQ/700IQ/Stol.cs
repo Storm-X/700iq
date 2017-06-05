@@ -610,6 +610,7 @@ namespace _700IQ
         Data predUs;
         int tableofkom;
         int step = 0;
+        private bool disposed = false;
 
         struct SendData //структурированные данные отправляемые серверу
         {
@@ -620,9 +621,37 @@ namespace _700IQ
             public string otvet;
             public int stavka;
         }
+        // реализация интерфейса IDisposable.
+        public void Dispose()
+        {
+            Dispose(true);
+            // подавляем финализацию
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // Освобождаем управляемые ресурсы
+                    pc1.Dispose(); pc2.Dispose(); pc3.Dispose();
+                    lb1.Dispose(); lb2.Dispose(); lb3.Dispose();
+                    pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
+                    lbst1.Dispose(); lbst2.Dispose(); lbst3.Dispose();
+                    tmSem.Dispose();
+                    bgrdPic.Dispose();
+                }
+                // освобождаем неуправляемые объекты
+                disposed = true;
+            }
+        }
+
+        //Деструктор класса
         ~Otvet()
         {
-            
+            Dispose(false);
         }
         #endregion
         public Otvet(Conn cn, Data predus, int tableofkom, GeneralForm fsv)
@@ -1114,12 +1143,7 @@ namespace _700IQ
             }
             else
             {
-                pc1?.Dispose(); pc2?.Dispose(); pc3?.Dispose();
-                lb1?.Dispose(); lb2?.Dispose(); lb3?.Dispose();
-                pc1rez?.Dispose(); pc2rez?.Dispose(); pc3rez?.Dispose();
-                lbst1?.Dispose(); lbst2?.Dispose(); lbst3?.Dispose();
-                tmSem?.Dispose();
-                bgrdPic?.Dispose();
+                this.Dispose();
                 workForm.Invalidate();
                 workForm.Refresh();
             }
