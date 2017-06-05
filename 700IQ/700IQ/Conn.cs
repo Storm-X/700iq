@@ -119,7 +119,7 @@ namespace _700IQ
                 //byte[] cleanBuffer = byteData.TakeWhile(b => b != 0).ToArray();
                 nextKom = Encoding.UTF8.GetString(byteData, 0, bytesReaded);
                 if (nextKom.Length > 2)
-                    onGetKom(nextKom);
+                    onGetKom.Invoke(nextKom);
             //server.BeginReceiveFrom(byteData, 0, byteData.Length, SocketFlags.None, ref senderRemote, new AsyncCallback(OnReceive), null);
             //tm.Start();
             //}
