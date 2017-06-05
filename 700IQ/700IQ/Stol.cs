@@ -1317,8 +1317,12 @@ namespace _700IQ
         private void StavkaEndTime()
         {
             stDelta = 0;
+            // lbMines.Dispose();
+            // lbPlus.Dispose();
+            // lbText.Dispose();         
             onStavka(Convert.ToInt32(lbin.Text));
             stavkaRegion.Visible=false;
+            //  lbin.Dispose();
             workForm.Invalidate();
         }
     }

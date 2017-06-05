@@ -218,6 +218,7 @@ namespace MainServer
                         {
                             if (Array.TrueForAll(stavka, value => value != 0) && tm.Enabled) //if((stavka[0] & stavka[1] & stavka[2]) != 0)
                             {
+                                tm.Stop();
                                 Tm_Tick(this, null);
                                 //tm.Stop();
                                 //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
@@ -230,7 +231,7 @@ namespace MainServer
                             //    udp.Send(bytes, bytes.Length, point);
                             ////}
                         }
-                        bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                        bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
                         udp.Send(bytes, bytes.Length, point);
                     }
                     break;
@@ -406,7 +407,7 @@ namespace MainServer
                              for (int i = 0; i < 3; i++) ok[i] = false;
                              break;
                          }*/
-                        Array.ForEach(stavka, value => value = (value == 0) ? 25 : value);
+                        stavka = stavka.Select(value => (value == 0) ? 25 : value).ToArray();
                         for (int i = 0; i < 3; i++)
                         {
                             //stavka[i] = (stavka[i] == 0) ? 25 : stavka[i];
