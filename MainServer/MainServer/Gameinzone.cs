@@ -392,8 +392,9 @@ namespace MainServer
                     #region  1 такт - обработка полученных ставок, определение очереди, получение вопроса
                     case 1:
 
+
                         gm.step = 3;
-                        gm.Cell = rn.rnd();
+                        gm.Cell =  rn.rnd();
                         /* if (gm.Cell == 0)
                          {
                              gm.step = 2;
@@ -514,7 +515,7 @@ namespace MainServer
                             }
                             else//если ответ не верен запускаем таймер для приема ответа 2-ой команды
                             {
-                                tmOtvet.Interval = 20000;
+                                tmOtvet.Interval = 40000;
                                 tmOtvet.Start();
                                 gm.activeTable = gm.o2;
                             }
@@ -544,7 +545,7 @@ namespace MainServer
                         else //если ответ не верен запускаем таймер для приема ответа 3-ой команды
                         {
                             gm.activeTable = gm.o3;
-                            tmOtvet.Interval = 20000;
+                            tmOtvet.Interval = 40000;
                             tmOtvet.Start();
                         }
                         Takt++;
@@ -603,6 +604,7 @@ namespace MainServer
                 Array.Clear(ok, 0, ok.Length);
                 Send2All("ogg");
             }
+
 
             if (gm.Cell == 0)
             {
