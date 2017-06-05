@@ -51,6 +51,8 @@ namespace _700IQ
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
             Rectangle Rect;
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;//выравнивание по горизонтали
@@ -209,21 +211,20 @@ namespace _700IQ
                     img = Properties.Resources._12_50int2;
                     dimension = new FrameDimension(img.FrameDimensionsList[0]);
                     frameCount = img.GetFrameCount(dimension);
-                    //arr = new Bitmap[frameCount];
-                     int[] frame = new int[] { 12, 24, 36, 47, 58, 69, 80, 90, 100, 110, 120, 130 };
+                    arr = new Bitmap[frameCount];
+                    int[] frame = new int[] { 12, 24, 36, 47, 58, 69, 80, 90, 100, 110, 120, 130 };
 
-                     frameCount = frame[st1 - 1];
-                    /*
-                     for (int i = 0; i < frameCount; i++)
-                     {
-                         img.SelectActiveFrame(dimension, i);
-                         arr[i] = new Bitmap(img);
-                     }
-                     */
-                     stavka = st1;
-                     timer.Interval = 15;
-                     timer.Tick += new EventHandler(timer_Tick);
-                     timer.Start();
+                    frameCount = frame[st1 - 1];
+                    for (int i = 0; i < frameCount; i++)
+                    {
+                        img.SelectActiveFrame(dimension, i);
+                        var bit = new Bitmap(img);
+                        arr[i] = bit;
+                    }
+                    stavka = st1;
+                    timer.Interval = 15;
+                    timer.Tick += new EventHandler(timer_Tick);
+                    timer.Start();
                 }
             }
             void timer_Tick(object sender, EventArgs e)
@@ -237,8 +238,8 @@ namespace _700IQ
                 else
                 {
                     lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString();
-                    img.SelectActiveFrame(dimension, indexToPaint);
-                    pc.Image = new Bitmap(img);//arr[indexToPaint];
+                    pc.Image = arr[indexToPaint];
+                    
                     if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
                     if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
                     if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
@@ -487,20 +488,44 @@ namespace _700IQ
         //private void TmBar_Tick(object sender, EventArgs e)//изменение временной полосы
         private void TmBar_Tick(object state, System.Timers.ElapsedEventArgs e)//изменение временной полосы
         {
-            var reportProgress = new Action(() =>
+            if (ff.InvokeRequired)
+            {
+                ff.BeginInvoke((MethodInvoker)delegate
+                {
+                    TmBar_Tick(state, e);
+                });
+            }
+            else
             {
                 if (prBar.Value < 100) prBar.PerformStep(); // Value++;
                 else
                 {
-                    tmBar.Stop();
-                    tmBar.Dispose();
+                    ((System.Timers.Timer)state).Stop();
+                    ((System.Timers.Timer)state).Dispose();
+                    //tmBar.Stop();
+                    //tmBar.Dispose();
                     ff.Visible = false;
                     pcBox.Visible = false;
                     workForm.Invalidate();
                     onPolosaEnd();
                 }
-            });
-            workForm.BeginInvoke(reportProgress);
+            }
+
+            //var reportProgress = new Action(() =>
+            //{
+            //    if (prBar.Value < 100) prBar.PerformStep(); // Value++;
+            //    else
+            //    {
+            //        tmBar.Enabled = false;
+            //        //tmBar.Stop();
+            //        tmBar.Dispose();
+            //        ff.Visible = false;
+            //        pcBox.Visible = false;
+            //        workForm.Invalidate();
+            //        onPolosaEnd();
+            //    }
+            //});
+            //workForm.BeginInvoke(reportProgress);
         }
         public void PcBox_MouseUp(object sender, MouseEventArgs e)//нажатие кнопки ОК
         {

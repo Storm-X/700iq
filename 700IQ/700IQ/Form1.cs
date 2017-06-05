@@ -199,14 +199,9 @@ namespace _700IQ
             };
             
             pcBox.Click += onClickMedal;
-           
-           
-            
+
             //тест рулетки, ставок, темы
-            /*
-            StavkiShow stShow = new StavkiShow();
-            tbl = new Table(this);
-            stShow.inputStavki(300, 300, 300, 300, this);   
+            /*   
              StavkiShow stShow = new StavkiShow();
              tbl = new Table(this);
              stShow.inputStavki(100, 200, 300, 0, this);
@@ -1180,6 +1175,7 @@ namespace _700IQ
                         Text = "ЗЕРРО, Господа!\nВаши ставки сгорели!",
                         BackColor = Color.Transparent,
                         ForeColor = Color.White,
+                        //TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit,
                         SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                         InterpolationMode = InterpolationMode.HighQualityBicubic,
                         Font = new Font("Cambria ", NewFontSize(20)),
