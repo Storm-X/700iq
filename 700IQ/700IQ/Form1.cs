@@ -54,6 +54,8 @@ namespace _700IQ
         public IPAddress IP = null;
         public static string infoOfserver;
         public CustomLabel iQash1, iQash2, iQash3;
+        private int currStep = 0;
+
         struct SendData //структурированные данные отправляемые серверу
         {
             public int uid;         //игровая зона
@@ -199,15 +201,15 @@ namespace _700IQ
             };
             
             pcBox.Click += onClickMedal;
-
-            //тест рулетки, ставок, темы
-            /*   
+   //тест рулетки, ставок, темы
+            /* 
+            Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+            Ruletka.StartRul(0, kv, this, 2); // 2);
+           
              StavkiShow stShow = new StavkiShow();
              tbl = new Table(this);
              stShow.inputStavki(100, 200, 300, 0, this);
-            Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            Ruletka = new Rul();
-            //Ruletka.StartRul(0, kv, this, 2); // 2); //2 ячейка ??? надо ли??
+
             tbl.TemaShow(true);
            // stShow.inputStavki(100, 200, 300, 0, this);
            */
@@ -560,95 +562,6 @@ namespace _700IQ
             //spisokOut(this, dt, predUs);    //обновление списка зарегистрировавшихся команд
         }
 
-
-
-       /* public void spisokOut(Form fm, DataTable dt, Data predUs)//вывод спсок зарегистрированных команд
-        {
-            //    if (iniEnd) return;
-            RemoveTempControls();
-            //int ctrCount = fm.Controls.Count;
-            //for (int i = 0; i <= ctrCount; i++) fm.Controls.RemoveByKey("oneuse");//очистка экрана от временных элементов
-            string spis = "";
-            //= "Зарегистрировавшиеся команды:\n\n";          
-            int ii = 1;
-            string tab = "";
-            DataRow[] dtRow = dt.Select();
-            for (int i = 0; i < dtRow.Length; i++)
-            {
-                spis += ii.ToString() + ". " + dtRow[i][2];
-                if ((ii.ToString() + ". " + dtRow[i][2]).Length < 9) tab = "\t\t\t\t\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 13) tab = "\t\t\t\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 17) tab = "\t\t\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 21) tab = "\t\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 25) tab = "\t\t";
-                else if ((ii.ToString() + ". " + dtRow[i][2]).Length < 29) tab = "\t";
-                spis += tab + dtRow[i][4] + "\n";
-                ii += 1;
-            };
-            #region//описание полей вывода информации список команд
-            //fm.Invoke(
-            //    new MethodInvoker(() =>
-            //    {
-                    Label zagolovok = new Label
-                    {
-                        Parent = this,
-                        Name = "oneuse",
-                        BackColor = Color.Transparent,
-                        ForeColor = Color.White,
-                        Font = new Font("times new roman", NewFontSize(20), FontStyle.Italic),
-                        Text = "Зарегистрировавшиеся команды:",
-                        Location = NewPoint(800, 350),
-                        Size = NewSize(700, 100),
-                    };
-                    RichTextBox lb = new RichTextBox()//список команд
-                    {
-                        Location = NewPoint(800, 520),
-                        Size = NewSize(1200, 900),
-                        Parent = this,
-                        Text = spis,
-                        Font = new Font("times new roman", NewFontSize(25), FontStyle.Italic),//Courier New
-                        BackColor = Color.Green,
-                        ForeColor = Color.WhiteSmoke,
-                        Name = "oneuse",
-                        Multiline = true,
-                    };
-
-                    #endregion
-                    #region начало игры
-                    Label lbr = new Label()//--------------------игра начнется
-                    {
-                        Parent = this,
-                        Visible = true,
-                        Location = NewPoint(80, 800),
-                        TextAlign = ContentAlignment.TopCenter,
-                        Size = NewSize(500, 100),
-                        Name = "oneuse",
-                        Text = "Игра начнется в",
-                        BackColor = Color.Transparent,
-                        Font = new Font("Cambria ", NewFontSize(20)),
-                        ForeColor = Color.White
-
-                    };
-                    Label lbrn = new Label()//время
-                    {
-                        Parent = this,
-                        Visible = true,
-                        Location = NewPoint(80, 890),
-                        Name = "oneuse",
-                        TextAlign = ContentAlignment.TopCenter,
-                        Size = NewSize(500, 300),
-                        Text = predUs.startTime.ToString("t"),
-                        BackColor = Color.Transparent,
-                        Font = new Font("Cambria ", NewFontSize(25)),
-                        ForeColor = Color.White
-                    };
-                //}
-                //));
-            #endregion
-        }*/
-
-
-
     void ini5()//команды  игровой зоны 
         {
             if (this.InvokeRequired)
@@ -761,7 +674,8 @@ namespace _700IQ
         #endregion
 
         void DoIt(string komanda)
-        {           
+        {
+            Debug.WriteLine(komanda);
             switch (komanda?.Substring(0, 3))
             {            
                 #region case +sp - список зарегистрировавшихся команд
@@ -794,7 +708,6 @@ namespace _700IQ
                 #endregion
                 case "ogg":              
                     steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
-                    Debug.WriteLine(komanda);
                     if (!bIconFinalised)
                         //if (myTeam.Resumption) myTeam.Resumption = false;
                         //else
@@ -804,8 +717,8 @@ namespace _700IQ
                     break;
                 #region case owt - ожидание
                 case "oww":
-                    steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
-                    Debug.WriteLine(komanda);
+                    //steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
+                    //Debug.WriteLine(komanda);
                     //CheckSteck();
                     break;
                 #endregion
@@ -818,32 +731,52 @@ namespace _700IQ
         {
             if (StartStep != steck.step)
             {
-                switch (steck.step)
+                if (steck.step != currStep) //то завершить предыдущий шаг. Step7_finalise();
                 {
-                    case 1:
-                        Step1_3();
-                        break;
-                    case 2:
-                        Step2();
-                        break;
-                    case 3:
-                        Step3();
-                        break;
-                    case 4:
-                        Step4();
-                        break;
-                    case 5:
-                        Step5();
-                        break;
-                    case 6:
-                        Step6();
-                        break;
-                    case 7:
-                        Step7();
-                        break;
-                        //default:
-                        //    NextStep();                                 
-                        //    break;
+                    switch (currStep)
+                    {
+                        case 7:
+                        case 6:
+                        case 5:
+                            if(steck.step < 5 && steck.step > 7)
+                                Step5_7_finalise();
+                            break;
+                        case 4:
+                        case 3:
+                            Step4_finalise();
+                            break;
+                        case 2:
+                            Step2_finalise();
+                            break;
+                    }
+                    switch (steck.step)
+                    {
+                        case 1:
+                            Step1_3();
+                            break;
+                        case 2:
+                            Step2();
+                            break;
+                        case 3:
+                            Step3();
+                            break;
+                        case 4:
+                            Step4();
+                            break;
+                        case 5:
+                            Step5();
+                            break;
+                        case 6:
+                            Step6();
+                            break;
+                        case 7:
+                            Step7();
+                            break;
+                            //default:
+                            //    NextStep();                                 
+                            //    break;
+                    }
+                    currStep = steck.step; //Вынести сюда
                 }
                 StartStep = 0;
             }
@@ -914,7 +847,7 @@ namespace _700IQ
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
-                otvetStatic.Dispose(); // = null;
+                //otvetStatic?.Dispose(); // = null;
                 //GC.Collect();
                 //GC.Collect();
 
@@ -1034,9 +967,7 @@ namespace _700IQ
             {
                 RemoveTempControls();
                 tbl.TemaShow(steck, false);
-            //    GetStavka st = new GetStavka();
                 int MaxStavka = Math.Min(steck.team[myTeam.table - 1].iQash-(12 - steck.iCon) * 25, 300);
-                //if (MaxStavka > 300) MaxStavka = 300;
                 st.stavka(25, MaxStavka, this,pol);
                 st.onStavka += doStavka;
             }     
@@ -1053,7 +984,23 @@ namespace _700IQ
             cn.SendUDP("zgg" + JsonConvert.SerializeObject(sd));
         }
         #endregion
-          #region шаг 3
+        void Step2_finalise()
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    Step2_finalise();
+                });
+            }
+            else
+            {
+                Ruletka?.close();
+                this.Invalidate();
+            }
+        }
+
+        #region шаг 3
         void Step3()    //показ ставок команд
         {
             if (this.InvokeRequired)
@@ -1065,13 +1012,6 @@ namespace _700IQ
             }
             else
             {
-                Ruletka?.close();
-                //Ruletka = null;
-                int i = steck.Cell;
-                /*foreach (Control t in this.Controls.Find("iQash", true))
-                    this.Controls.Remove(t);
-                this.Invalidate();
-                BackgroundImage = tbl.SetIQ(steck, myTeam.table - 1);*/
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
                 stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
@@ -1089,11 +1029,7 @@ namespace _700IQ
             }
             else
             {
-                //this.Controls["Iqon"].Text = steck.iCon + " айкон";
-                GC.Collect();
-                GC.Collect();
                 CreateAnswerTable();
-                //Ruletka = new Rul();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
                 Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(900)), this, 1);
@@ -1114,15 +1050,16 @@ namespace _700IQ
                 foreach (Control t in this.Controls.Find("iQash", true))
                     this.Controls.Remove(t);
                 this.Invalidate();
-                Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
-                Graphics g = Graphics.FromImage(bmp);
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                //Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
+                //Graphics g = Graphics.FromImage(bmp);
+                //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-                this.BackgroundImage = bmp;
+                this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
                 otvetStatic.svitok(steck, predUs);
                 if(withQuery)
                     otvetStatic.ochered(steck);
+                //g.Dispose();
             }
         }
         void Step4()    //показ очереди и передача хода первой команде
@@ -1202,6 +1139,22 @@ namespace _700IQ
             }
         }
         #endregion
+        void Step4_finalise()
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    Step4_finalise();
+                });
+            }
+            else
+            {
+                Ruletka?.close();
+                this.Invalidate();
+            }
+        }
+
         void Step5()    //получение ответа 1 команды 
         {
           
@@ -1214,8 +1167,6 @@ namespace _700IQ
             }
             else
             {
-                Ruletka?.close();
-                //Ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 otvetStatic.semafor(0);
@@ -1255,6 +1206,23 @@ namespace _700IQ
                 }
             }
         }
+        void Step5_7_finalise()
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    Step5_7_finalise();
+                });
+            }
+            else
+            {
+                otvetStatic.close();
+                otvetStatic = null;
+                this.Invalidate();
+            }
+        }
+
         void Step6()    //получение ответа от второй команды 
         {
             if (this.InvokeRequired)
@@ -1266,7 +1234,7 @@ namespace _700IQ
             }
             else
             {
-                Ruletka?.close();
+                //Ruletka?.close();
                 //Ruletka = null;
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
