@@ -200,14 +200,16 @@ namespace _700IQ
             
             pcBox.Click += onClickMedal;
 
+
+
             //тест рулетки, ставок, темы
             /*   
+            Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+            Ruletka.StartRul(0, kv, this, 2);
              StavkiShow stShow = new StavkiShow();
              tbl = new Table(this);
              stShow.inputStavki(100, 200, 300, 0, this);
-            Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            Ruletka = new Rul();
-            //Ruletka.StartRul(0, kv, this, 2); // 2); //2 ячейка ??? надо ли??
+
             tbl.TemaShow(true);
            // stShow.inputStavki(100, 200, 300, 0, this);
            */
