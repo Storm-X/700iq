@@ -92,8 +92,8 @@ namespace MainServer
             deadLine = DateTime.Now.AddMinutes(3);
             tm.Tick += Tm_Tick;
             tmOtvet.Tick += TmOtvet_Tick;
-            deadLinetmr.Tick += DeadLinetmr_Tick;
-            deadLinetmr.Start();
+            //deadLinetmr.Tick += DeadLinetmr_Tick;
+           // deadLinetmr.Start();
 
         }
 
@@ -516,6 +516,7 @@ namespace MainServer
                             }
                             else//если ответ не верен запускаем таймер для приема ответа 2-ой команды
                             {
+                                tmOtvet.Stop();
                                 tmOtvet.Interval = 40000;
                                 tmOtvet.Start();
                                 gm.activeTable = gm.o2;
@@ -546,6 +547,7 @@ namespace MainServer
                         else //если ответ не верен запускаем таймер для приема ответа 3-ой команды
                         {
                             gm.activeTable = gm.o3;
+                            tmOtvet.Stop();
                             tmOtvet.Interval = 40000;
                             tmOtvet.Start();
                         }
