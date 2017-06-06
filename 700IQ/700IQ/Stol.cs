@@ -16,7 +16,7 @@ using System.Windows.Forms;
 namespace _700IQ
 {
 
-    class Table:resize//отрисовка команд за столом
+    class Table : resize //отрисовка команд за столом
     {
         #region переменные
 
@@ -570,7 +570,7 @@ namespace _700IQ
                 listView1.TopItem = listView1.Items[cs.Value];
         }
     }
-    public class Otvet : resize//ответ на вопрос и показ очереди ответа
+    public class Otvet : resize //ответ на вопрос и показ очереди ответа
     {
         #region//переменные  
         PictureBox pc1;
@@ -610,7 +610,7 @@ namespace _700IQ
         Data predUs;
         int tableofkom;
         int step = 0;
-        private bool disposed = false;
+        private bool IsDisposed = false;
 
         struct SendData //структурированные данные отправляемые серверу
         {
@@ -629,9 +629,9 @@ namespace _700IQ
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!IsDisposed)
             {
                 if (disposing)
                 {
@@ -644,8 +644,10 @@ namespace _700IQ
                     bgrdPic.Dispose();
                 }
                 // освобождаем неуправляемые объекты
-                disposed = true;
+                IsDisposed = true;
             }
+            // Обращение к методу Dispose базового класса
+            base.Dispose(disposing);
         }
 
         //Деструктор класса
@@ -770,7 +772,18 @@ namespace _700IQ
         }
         public void focus()
         {
-            txBox.BeginInvoke(new MethodInvoker(() => { txBox.Focus(); }));
+            if (workForm.InvokeRequired)
+            {
+                workForm.BeginInvoke((MethodInvoker)delegate
+                {
+                    focus();
+                });
+            }
+            else
+            {
+                //txBox.BeginInvoke(new MethodInvoker(() => { txBox.Focus(); }));
+                txBox.Focus();
+            }
         }
         public void ochered(Game steckIn) //, Form fsv)//расчет очереди-----------------------------------
         {
@@ -1143,9 +1156,9 @@ namespace _700IQ
             }
             else
             {
-                this.Dispose();
                 workForm.Invalidate();
                 workForm.Refresh();
+                this.Dispose();
             }
         }
         public void polosaStart(GeneralForm ff, int Curstep,Polosa pol)//старт временной полосы?походу больше не нужен
@@ -1326,7 +1339,7 @@ namespace _700IQ
             workForm.Invalidate();
         }
     }
-    public class resize
+    public class resize : IDisposable
     {
         public static Size resolution; // = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         private static GeneralForm myWorkForm;
@@ -1334,6 +1347,29 @@ namespace _700IQ
         public static Size workResolution;
         public GeneralForm workForm { get { return myWorkForm; }
                                       set { GetWorkingClientSize(value); } }
+        private bool disposed = false;
+
+        // реализация интерфейса IDisposable.
+        public void Dispose()
+        {
+            Dispose(true);
+            // подавляем финализацию
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // Освобождаем управляемые ресурсы
+                }
+                // освобождаем неуправляемые объекты
+                disposed = true;
+            }
+        }
+
         private static Size GetMaximizedClientSize(Form form)
         {
             var original = form.WindowState;

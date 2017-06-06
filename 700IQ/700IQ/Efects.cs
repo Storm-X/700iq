@@ -614,6 +614,8 @@ namespace _700IQ
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
+            this.enabled = true;
+            flagStop = false;
             i = 0f;
             radius = 0f;
             vr = 0f;
@@ -622,7 +624,6 @@ namespace _700IQ
             ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
             stepr = 0.0001f;//шаг изменения радиуса
 
-            flagStop =false;
             tickNumber = 0; 
             this.fsv = fsv;
             tm = new System.Windows.Forms.Timer();
@@ -667,7 +668,6 @@ namespace _700IQ
             this.Parent = fsv;
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
             DoubleBuffered = true;
-            this.enabled = true;
             this.BringToFront();
             #endregion
             g.Dispose();
