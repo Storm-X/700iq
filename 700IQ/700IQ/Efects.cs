@@ -596,34 +596,37 @@ namespace _700IQ
         Bitmap bmp;
         Image RouletteBall; // = new Bitmap(15, 15);
         Graphics g;
-        Point point = new Point(300, 300);
-        Point point1, point2;
-        Rectangle z1 = new Rectangle(new Point(0, 0), new Size(35, 35));
-        Rectangle z2 = new Rectangle(new Point(-100, -100), new Size(25, 25));
-        float i = 0f, radius = 0f, vr = 0f;
+        Point point;
+        //Point point1, point2;
+        Rectangle z1;
+        Rectangle z2;
+        float i = 0f, vr = 0f;
+        double centrx, centry, radius;
         float stepi = 0.00002f;// ускорение
         float vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
         float ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
         float stepr = 0.0001f;//шаг изменения радиуса
         //float rotation_count = 5f;//количество полных оборотов рулетки (30сек.)
 
-        float centrx, centry, koef;
+        float koef;
         bool flag, flagStop;
         int tickNumber = 0, nStop = 100;
+        int offset;
 
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
-            this.enabled = true;
-            flagStop = false;
+            z1 = new Rectangle(new Point(0, 0), fsv.NewSizeKv(35));
+            z2 = new Rectangle(new Point(0, 0), fsv.NewSizeKv(35));
+            point = new Point(0, 0);
             i = 0f;
-            radius = 0f;
             vr = 0f;
             stepi = 0.00002f;// ускорение
             vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
             ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
             stepr = 0.0001f;//шаг изменения радиуса
 
+            flagStop =false;
             tickNumber = 0; 
             this.fsv = fsv;
             tm = new System.Windows.Forms.Timer();
@@ -635,9 +638,10 @@ namespace _700IQ
             //RouletteBall = Image.FromFile(@"d:\Картинки\700IQ\ShadowBall.png");
 
             koef = (float)(rc.Width) / bmp.Width;
-            centrx = 288;
-            centry = 291;
-            radius = bmp.Width / 2.5f - 10;
+            centrx = 288 * koef;
+            centry = 291 * koef;
+            radius = 230 * koef;
+            offset = (int)(offset * koef);
             flag = false;
             //vi = 0.04f;
             //vi += 0.00004f + 0.00008f;
@@ -668,6 +672,7 @@ namespace _700IQ
             this.Parent = fsv;
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
             DoubleBuffered = true;
+            this.enabled = true;
             this.BringToFront();
             #endregion
             g.Dispose();
@@ -681,8 +686,6 @@ namespace _700IQ
             base.OnPaint(pe);
             pe.Graphics.DrawImage(RouletteBall, z2);
         }
-
-
         public void close()
         {
             if (this.InvokeRequired)
@@ -712,13 +715,14 @@ namespace _700IQ
         {
 
             z1.Location = z2.Location;
-            z1.Offset(-10, -10);
+            z1.Offset(-offset, -offset);
             point.X = (int)(centrx + radius * Math.Cos(i));
             point.Y = (int)(centry + radius * Math.Sin(i));
             //point2.X = point.X - 30;
             //point2.Y = point.Y - 30;
             //z1.Location = point2;
             z2.Location = point;
+
 
             ////if (flag) g.DrawImage(zona, point1);
             ////else flag = true;
@@ -756,10 +760,10 @@ namespace _700IQ
                                 //if (radius > 118 && vr >= 0) { vr -= stepr * 30; }//0.0001f
                                 //if (radius <= 118 && radius >= 110) { vr += stepr * 3; }
                                 //if (radius < 110) { vr = Math.Abs(vr); }
-                                if (radius > 118 && vr < 0) { vr -= 0.0008f; }
-                                if (radius > 118 && vr >= 0) { vr -= 0.003f; }
-                                if (radius <= 118 && radius >= 110) { vr += 0.0003f; }
-                                if (radius < 110) { vr = Math.Abs(vr); }
+                                if (radius > 118 * koef && vr < 0) { vr -= 0.0008f; }
+                                if (radius > 118 * koef && vr >= 0) { vr -= 0.003f; }
+                                if (radius <= 118 * koef && radius >= 110 * koef) { vr += 0.0003f; }
+                                if (radius < 110 * koef) { vr = Math.Abs(vr); }
                                 radius += vr;
                             }
                         }
