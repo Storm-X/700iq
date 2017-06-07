@@ -396,6 +396,7 @@ namespace MainServer
 
                         gm.step = 3;
                         gm.Cell =  rn.rnd();
+                        if (gm.Cell == 0) gm.Cell = 1;
                         /* if (gm.Cell == 0)
                          {
                              gm.step = 2;
