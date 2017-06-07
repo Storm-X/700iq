@@ -878,7 +878,7 @@ namespace _700IQ
                 lbst1 = new Label()
                 {
                     Parent = workForm,
-                    Visible = true,
+                    Visible = false,
                     BackColor = Color.Transparent,
                     Size = NewSize(95, 120),
                     Location = NewPoint(1400, 275 + dy),
@@ -890,7 +890,7 @@ namespace _700IQ
                 lbst2 = new Label()
                 {
                     Parent = workForm,
-                    Visible = true,
+                    Visible = false,
                     BackColor = Color.Transparent,
                     Size = NewSize(95, 120),
                     Location = NewPoint(1400, 470 + dy),
@@ -902,7 +902,7 @@ namespace _700IQ
                 lbst3 = new Label()
                 {
                     Parent = workForm,
-                    Visible = true,
+                    Visible = false,
                     BackColor = Color.Transparent,
                     Size = NewSize(95, 120),
                     Location = NewPoint(1400, 680 + dy),
@@ -951,7 +951,7 @@ namespace _700IQ
 
                 tm.Interval = 60;
                 tm.Tick += Tm_Tick;
-                tm.Start();
+                //tm.Start();
                 tmSem.Interval = 300;
                 tmSem.Tick += TmSem_Tick;
             //}
@@ -969,7 +969,7 @@ namespace _700IQ
         public void Ot3Show() { pc3.Visible = true; pc3.BringToFront(); }
         #endregion    
         #region методы для мигания поля
-        public void semafor(int number)//запуск и остановка таймара для мигания
+        public void semafor(int number)//запуск и остановка таймера для мигания
         {
             //var reportProgress = new Action(() =>
             //{
@@ -982,12 +982,19 @@ namespace _700IQ
             }
             else
             {*/
-                if (tmSem.Enabled) tmSem.Stop();
-                else if (number != 0) tmSem.Start();
+            if (tmSem.Enabled || number == 0)
+            {
+                tmSem.Stop();
                 pc1.Visible = true;
+                lbst1.Visible = true;
                 pc2.Visible = true;
+                lbst2.Visible = true;
                 pc3.Visible = true;
-                semaforN = number;
+                lbst3.Visible = true;
+            }
+            else
+                tmSem.Start();
+            semaforN = number;
             /*}*/
         }
         void semStart()//мигание отвечающей команды
