@@ -1314,20 +1314,19 @@ namespace MainServer
                 // Ожидаем данные от него
                 try
                 {
-                    var result = await Udp.ReceiveAsync();
-                    Application.DoEvents();
-                    byte[] receiveBytes = result.Buffer;
-                    byte[] bytes;
-                    string txt = Encoding.UTF8.GetString(receiveBytes);
-                    textBox1.Text += (txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt;
-                    if (!stopGame) //если игра не приостановлена, то ...
-                    {
-                        if (txt != null && txt.Length > 2)
+                        var result = await Udp.ReceiveAsync();
+                        Application.DoEvents();
+                        byte[] receiveBytes = result.Buffer;
+                        byte[] bytes;
+                        string txt = Encoding.UTF8.GetString(receiveBytes);
+                        textBox1.Text += (txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt;
+                        if (!stopGame) //если игра не приостановлена, то ...
                         {
-                            endpoint = result.RemoteEndPoint;
-                            string gm;
-                            lock (losker)
+                            if (txt != null && txt.Length > 2)
                             {
+                                endpoint = result.RemoteEndPoint;
+                                string gm;
+
                                 switch (txt.Substring(0, 3))
                                 {
                                     #region zsp- запрос списка команд, если известна рассадка троек, то отправляется рассадка 
@@ -1374,7 +1373,7 @@ namespace MainServer
                                                     textBox3.Text += "ost";
                                                 }
                                             }
-                                            
+
                                         }
                                         break;
                                     #endregion
@@ -1382,7 +1381,7 @@ namespace MainServer
                                     case "zgg":
                                         try
                                         {
-                                          
+
                                             dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
                                             if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table))
                                             {
@@ -1453,11 +1452,12 @@ namespace MainServer
                                         textBox3.Text += txt.Substring(3);
                                         break;
                                 }
-                                Application.DoEvents();//////////////////////////////////////////////////////////////////////////////////????????????????????????????????
+                              
+
+
                             }
-                         
                         }
-                    }
+                    
                 }
                 catch (Exception ex)
                 {
