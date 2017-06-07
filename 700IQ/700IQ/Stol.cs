@@ -667,7 +667,7 @@ namespace _700IQ
             gifTimer2.Tick += gifTimer_Tick2;
             gifTimer3.Tick += gifTimer_Tick3;
         }
-        private async Task<Image> ResultOfCycle(string fileName)
+        private Image ResultOfCycle(string fileName) //async Task<Image> ResultOfCycle(string fileName)
         {
             MediaReceiver mReceiver = new MediaReceiver(workForm.IP, 8080);
             byte[] filecontent = mReceiver.GetMedia(fileName);
@@ -680,7 +680,7 @@ namespace _700IQ
                 return Image.FromStream(ms, true);
             }
         }
-        public async void svitok(Game steckIn, Data predUs)
+        public void svitok(Game steckIn, Data predUs)
         {
             /*if (workForm.InvokeRequired)
             {
@@ -716,7 +716,7 @@ namespace _700IQ
                     Location = NewRelPoint(25, 200), //new Point(25, NewPoint(25, 200).Y),
                     BackColor = Color.Transparent,
                     SizeMode = PictureBoxSizeMode.Zoom,
-                    Image = (fileName=="") ? null : await ResultOfCycle(fileName)
+                    Image = (fileName=="") ? null : ResultOfCycle(fileName) //await ResultOfCycle(fileName)
                 };
                 lb = new Label()
                 {
@@ -951,6 +951,8 @@ namespace _700IQ
                 tm.Interval = 60;
                 tm.Tick += Tm_Tick;
                 tm.Start();
+                tmSem.Interval = 300;
+                tmSem.Tick += TmSem_Tick;
             //}
         }
         private void Tm_Tick(object sender, EventArgs e)
@@ -979,8 +981,6 @@ namespace _700IQ
             }
             else
             {*/
-                tmSem.Interval = 300;
-                tmSem.Tick += TmSem_Tick;
                 if (tmSem.Enabled) tmSem.Stop();
                 else if (number != 0) tmSem.Start();
                 pc1.Visible = true;
