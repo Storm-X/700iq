@@ -1319,7 +1319,7 @@ namespace MainServer
                         byte[] receiveBytes = result.Buffer;
                         byte[] bytes;
                         string txt = Encoding.UTF8.GetString(receiveBytes);
-                        textBox1.Text += (txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt;
+                       // textBox1.Text += (txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt;
                         if (!stopGame) //если игра не приостановлена, то ...
                         {
                             if (txt != null && txt.Length > 2)
@@ -1343,7 +1343,7 @@ namespace MainServer
                                                         // отправляем data клинету                                
                                                         bytes = Encoding.UTF8.GetBytes("osp" + JsonConvert.SerializeObject(MassGameZone[i].data));
                                                         Udp.Send(bytes, bytes.Length, endpoint);
-                                                        textBox3.Text += "osp";
+                                                     //   textBox3.Text += "osp";
                                                         break;
                                                     }
                                                 }
@@ -1353,7 +1353,7 @@ namespace MainServer
                                         {
                                             bytes = Encoding.UTF8.GetBytes("+sp" + JsonConvert.SerializeObject(dt));
                                             Udp.Send(bytes, bytes.Length, endpoint);
-                                            textBox3.Text += "+sp";
+                                           // textBox3.Text += "+sp";
                                         }
                                         break;
                                     #endregion
@@ -1370,7 +1370,7 @@ namespace MainServer
                                                     gm = MassGameZone[dataZapros.uid - 1].startGM();
                                                     bytes = Encoding.UTF8.GetBytes("ost" + gm);
                                                     Udp.Send(bytes, bytes.Length, endpoint);
-                                                    textBox3.Text += "ost";
+                                                   /// textBox3.Text += "ost";
                                                 }
                                             }
 
@@ -1449,7 +1449,7 @@ namespace MainServer
                                         break;
                                     #endregion
                                     case "wgg":
-                                        textBox3.Text += txt.Substring(3);
+                                    //    textBox3.Text += txt.Substring(3);
                                         break;
                                 }
                               
