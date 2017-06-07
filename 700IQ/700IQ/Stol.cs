@@ -1045,7 +1045,7 @@ namespace _700IQ
             }
         }
 
-        public void answer(int o, string otv, bool correct)//неправильный ответ
+        public void answer(int o, string otv, bool correct) //неправильный ответ
         {
            /* if (workForm.InvokeRequired)
             {
@@ -1061,7 +1061,8 @@ namespace _700IQ
                 gifTimer1.Interval = 25;
                 gifTimer2.Interval = 25;
                 gifTimer3.Interval = 25;
-
+                
+                semafor(0);
                 //if (correct)
                 //{
                     getArrayOfFrames(correct ? im2 : im3);
