@@ -1078,7 +1078,8 @@ namespace _700IQ
                     if(otvetStatic == null)
                         CreateAnswerTable(true);
                     //else
-                        //otvetStatic.ochered(steck);
+                    //otvetStatic.ochered(steck);
+                    otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
 
