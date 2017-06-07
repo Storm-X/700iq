@@ -78,6 +78,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GameData.cs" />
+    <Compile Include="GifImage.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="ListViewWithoutScrollBar.cs">
       <SubType>Component</SubType>

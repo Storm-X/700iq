@@ -586,9 +586,10 @@ namespace _700IQ
         TextBox txBox;
         Label otv;
         private int frameCount;
-        Bitmap[] arr;
-        Bitmap img;
+        //Bitmap[] arr;
+        //Bitmap img;
         private FrameDimension dimension;
+        GifImage gifImage;
         PictureBox pc1rez;
         PictureBox pc2rez;
         PictureBox pc3rez;
@@ -667,7 +668,7 @@ namespace _700IQ
             gifTimer2.Tick += gifTimer_Tick2;
             gifTimer3.Tick += gifTimer_Tick3;
         }
-        private Image ResultOfCycle(string fileName) //async Task<Image> ResultOfCycle(string fileName)
+        private async Task<Image> ResultOfCycle(string fileName)
         {
             MediaReceiver mReceiver = new MediaReceiver(workForm.IP, 8080);
             byte[] filecontent = mReceiver.GetMedia(fileName);
@@ -680,7 +681,7 @@ namespace _700IQ
                 return Image.FromStream(ms, true);
             }
         }
-        public void svitok(Game steckIn, Data predUs)
+        public async Task svitok(Game steckIn, Data predUs)
         {
             /*if (workForm.InvokeRequired)
             {
@@ -716,7 +717,7 @@ namespace _700IQ
                     Location = NewRelPoint(25, 200), //new Point(25, NewPoint(25, 200).Y),
                     BackColor = Color.Transparent,
                     SizeMode = PictureBoxSizeMode.Zoom,
-                    Image = (fileName=="") ? null : ResultOfCycle(fileName) //await ResultOfCycle(fileName)
+                    Image = (fileName == "") ? null : await ResultOfCycle(fileName)
                 };
                 lb = new Label()
                 {
@@ -767,7 +768,7 @@ namespace _700IQ
                     Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
                     Cursor = workForm.SetCursor(workForm.path + "Text Select.ani"),//установка курсора из файла
                 };
-                ochered(steckIn);
+                //ochered(steckIn);
                 bgrdPic.BringToFront();
             //}
         }
@@ -804,7 +805,7 @@ namespace _700IQ
                 int dy = -50;
 
                 #region//описание фишек с номерами команд
-                pc1 = new PictureBox()
+                pc1 = new PictureBoxWithInterpolationMode()
                 {
                     Parent = workForm,
                     Visible = false,
@@ -814,8 +815,10 @@ namespace _700IQ
                     BackgroundImage = im[steckIn.o1 - 1],
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
+                    SmoothingMode = SmoothingMode.AntiAlias,
+                    InterpolationMode = InterpolationMode.NearestNeighbor
                 };
-                pc2 = new PictureBox()
+                pc2 = new PictureBoxWithInterpolationMode()
                 {
                     Parent = workForm,
                     Visible = false,
@@ -825,8 +828,10 @@ namespace _700IQ
                     BackgroundImage = im[steckIn.o2 - 1],
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
+                    SmoothingMode = SmoothingMode.AntiAlias,
+                    InterpolationMode = InterpolationMode.NearestNeighbor
                 };
-                pc3 = new PictureBox()
+                pc3 = new PictureBoxWithInterpolationMode()
                 {
                     Parent = workForm,
                     Visible = false,
@@ -836,41 +841,52 @@ namespace _700IQ
                     BackgroundImage = im[steckIn.o3 - 1],
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
+                    SmoothingMode = SmoothingMode.AntiAlias,
+                    InterpolationMode = InterpolationMode.NearestNeighbor
                 };
                 #endregion
                 #region//описание полей выигрыш проигрыш
-                pc1rez = new PictureBox()
+                pc1rez = new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc1,
                     Name = "oneuse",
                     Visible = true,
+                    Enabled = false,
                     BackColor = Color.Transparent,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
+                    SmoothingMode = SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.NearestNeighbor
                 };
-                pc2rez = new PictureBox()
+                pc2rez = new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc2,
                     Name = "oneuse",
                     Visible = true,
+                    Enabled = false,
                     BackColor = Color.Transparent,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
+                    SmoothingMode = SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.NearestNeighbor
                 };
-                pc3rez = new PictureBox()
+                pc3rez = new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc3,
                     Name = "oneuse",
                     Visible = true,
+                    Enabled = false,
                     BackColor = Color.Transparent,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
+                    SmoothingMode = SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.NearestNeighbor
                 };
 
                 #endregion
@@ -878,7 +894,7 @@ namespace _700IQ
                 lbst1 = new Label()
                 {
                     Parent = workForm,
-                    Visible = false,
+                    Visible = true,
                     BackColor = Color.Transparent,
                     Size = NewSize(95, 120),
                     Location = NewPoint(1400, 275 + dy),
@@ -890,7 +906,7 @@ namespace _700IQ
                 lbst2 = new Label()
                 {
                     Parent = workForm,
-                    Visible = false,
+                    Visible = true,
                     BackColor = Color.Transparent,
                     Size = NewSize(95, 120),
                     Location = NewPoint(1400, 470 + dy),
@@ -902,7 +918,7 @@ namespace _700IQ
                 lbst3 = new Label()
                 {
                     Parent = workForm,
-                    Visible = false,
+                    Visible = true,
                     BackColor = Color.Transparent,
                     Size = NewSize(95, 120),
                     Location = NewPoint(1400, 680 + dy),
@@ -951,7 +967,7 @@ namespace _700IQ
 
                 tm.Interval = 60;
                 tm.Tick += Tm_Tick;
-                //tm.Start();
+                tm.Start();
                 tmSem.Interval = 300;
                 tmSem.Tick += TmSem_Tick;
             //}
@@ -986,11 +1002,11 @@ namespace _700IQ
             {
                 tmSem.Stop();
                 pc1.Visible = true;
-                lbst1.Visible = true;
+                //lbst1.Visible = true;
                 pc2.Visible = true;
-                lbst2.Visible = true;
+                //lbst2.Visible = true;
                 pc3.Visible = true;
-                lbst3.Visible = true;
+                //lbst3.Visible = true;
             }
             else
                 tmSem.Start();
@@ -1043,14 +1059,16 @@ namespace _700IQ
         #endregion
         public void getArrayOfFrames(Image im)
         {
-            dimension = new FrameDimension(im.FrameDimensionsList[0]);
-            frameCount = im.GetFrameCount(dimension);
-            arr = new Bitmap[frameCount];
-            for (int i = 0; i < frameCount; i++)
-            {
-                im.SelectActiveFrame(dimension, i);
-                arr[i] = new Bitmap(im);
-            }
+            gifImage = new GifImage(im);
+            gifImage.ReverseAtEnd = false; //dont reverse at end
+            //dimension = new FrameDimension(im.FrameDimensionsList[0]);
+            //frameCount = im.GetFrameCount(dimension);
+            //arr = new Bitmap[frameCount];
+            //for (int i = 0; i < frameCount; i++)
+            //{
+            //    im.SelectActiveFrame(dimension, i);
+            //    arr[i] = new Bitmap(im);
+            //}
         }
 
         public void answer(int o, string otv, bool correct) //неправильный ответ
@@ -1109,46 +1127,47 @@ namespace _700IQ
         void gifTimer_Tick1(object sender, EventArgs e)
         {
             indexToPaint++;
-            if (indexToPaint >= frameCount)
+            if (indexToPaint > gifImage.FrameCount / 2)
             {
                 indexToPaint = 0;
                 gifTimer1.Stop();
-                Bitmap bt = new Bitmap(pc1.BackgroundImage);
-                pc1rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230); 
+                //ImageAnimator.StopAnimate(this.pc1rez.Image, null);
+                //Bitmap bt = new Bitmap(pc1.BackgroundImage);
+                //pc1rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230); 
             }
             else
             {
-                pc1rez.Image = arr[indexToPaint];
+                pc1rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
             }
         }
         void gifTimer_Tick2(object sender, EventArgs e)
         {
             indexToPaint++;
-            if (indexToPaint >= frameCount)
+            if (indexToPaint > gifImage.FrameCount / 2)
             {
                 indexToPaint = 0;
                 gifTimer2.Stop();
-                Bitmap bt = new Bitmap(pc2.BackgroundImage);
-                pc2rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
+                //Bitmap bt = new Bitmap(pc2.BackgroundImage);
+                //pc2rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
             }
             else
             {
-                pc2rez.Image = arr[indexToPaint];
+                pc2rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
             }
         }
         void gifTimer_Tick3(object sender, EventArgs e)
         {
             indexToPaint++;
-            if (indexToPaint >= frameCount)
+            if (indexToPaint > gifImage.FrameCount / 2)
             {
                 indexToPaint = 0;
                 gifTimer3.Stop();
-                Bitmap bt = new Bitmap(pc3.BackgroundImage);
-                pc3rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
+                //Bitmap bt = new Bitmap(pc3.BackgroundImage);
+                //pc3rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
             }
             else
             {
-                pc3rez.Image = arr[indexToPaint];
+                pc3rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
             }
         }
 
