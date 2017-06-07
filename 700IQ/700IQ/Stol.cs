@@ -596,7 +596,8 @@ namespace _700IQ
         PictureBox pc4rez;
         PictureBox pc5rez;
         PictureBox pc6rez;
-        PictureBox temp=new PictureBox();
+        PictureBox[] pcResult;
+        PictureBox temp =new PictureBox();
         private System.Windows.Forms.Timer gifTimer1 = new System.Windows.Forms.Timer();
         private System.Windows.Forms.Timer gifTimer2 = new System.Windows.Forms.Timer();
         private System.Windows.Forms.Timer gifTimer3 = new System.Windows.Forms.Timer();
@@ -636,7 +637,15 @@ namespace _700IQ
             {
                 if (disposing)
                 {
+                    //this.DisposeSequence(pcResult);
                     // Освобождаем управляемые ресурсы
+                    foreach (object o in this.pcResult.OfType<IDisposable>())
+                    {
+                        if (o is IDisposable)
+                            ((IDisposable)o).Dispose();
+                    }
+                    Array.Clear(pcResult, 0, pcResult.Length);
+
                     pc1.Dispose(); pc2.Dispose(); pc3.Dispose();
                     lb1.Dispose(); lb2.Dispose(); lb3.Dispose();
                     pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
@@ -844,9 +853,11 @@ namespace _700IQ
                     SmoothingMode = SmoothingMode.AntiAlias,
                     InterpolationMode = InterpolationMode.NearestNeighbor
                 };
-                #endregion
-                #region//описание полей выигрыш проигрыш
-                pc1rez = new PictureBoxWithInterpolationMode()
+            #endregion
+            #region//описание полей выигрыш проигрыш
+            pcResult = new PictureBoxWithInterpolationMode[] { 
+                //pc1rez = 
+                new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc1,
                     Name = "oneuse",
@@ -859,8 +870,9 @@ namespace _700IQ
                     SizeMode = PictureBoxSizeMode.Zoom,
                     SmoothingMode = SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.NearestNeighbor
-                };
-                pc2rez = new PictureBoxWithInterpolationMode()
+                }, //;
+                //pc2rez = 
+                new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc2,
                     Name = "oneuse",
@@ -873,8 +885,9 @@ namespace _700IQ
                     SizeMode = PictureBoxSizeMode.Zoom,
                     SmoothingMode = SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.NearestNeighbor
-                };
-                pc3rez = new PictureBoxWithInterpolationMode()
+                }, //;
+                   //pc3rez = 
+                new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc3,
                     Name = "oneuse",
@@ -887,6 +900,7 @@ namespace _700IQ
                     SizeMode = PictureBoxSizeMode.Zoom,
                     SmoothingMode = SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.NearestNeighbor
+                }
                 };
 
                 #endregion
@@ -1104,7 +1118,8 @@ namespace _700IQ
                     lb1.Visible = true;
                     lb1.BringToFront();
                     gifTimer1.Start();
-                    pc1rez.Visible = true;
+                    pcResult[0].Visible = true;
+                    //pc1rez.Visible = true;
                 }
                 if (o == 2)
                 {
@@ -1112,7 +1127,8 @@ namespace _700IQ
                     lb2.Visible = true;
                     lb2.BringToFront();
                     gifTimer2.Start();
-                    pc2rez.Visible = true;     
+                    pcResult[1].Visible = true;
+                    //pc2rez.Visible = true;     
                 }
                 if (o == 3)
                 {
@@ -1120,7 +1136,8 @@ namespace _700IQ
                     lb3.Visible = true;
                     lb3.BringToFront();
                     gifTimer3.Start();
-                    pc3rez.Visible = true;
+                    pcResult[2].Visible = true;
+                    //pc3rez.Visible = true;
                 }
             //}
         }
@@ -1137,7 +1154,8 @@ namespace _700IQ
             }
             else
             {
-                pc1rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+                //pc1rez.Image = 
+                pcResult[0].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
             }
         }
         void gifTimer_Tick2(object sender, EventArgs e)
@@ -1152,7 +1170,8 @@ namespace _700IQ
             }
             else
             {
-                pc2rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+                //pc2rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+                pcResult[1].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
             }
         }
         void gifTimer_Tick3(object sender, EventArgs e)
@@ -1167,7 +1186,8 @@ namespace _700IQ
             }
             else
             {
-                pc3rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+                //pc3rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+                pcResult[2].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
             }
         }
 
@@ -1382,6 +1402,30 @@ namespace _700IQ
             // подавляем финализацию
             GC.SuppressFinalize(this);
         }
+        /*public void DisposeItems<T>(this IEnumerable<T> source) where T : IDisposable
+        {
+            foreach (var item in source)
+            {
+                item.Dispose();
+            }
+        }
+        public void DisposeSequence<T>(this IEnumerable<T> source)
+        {
+            foreach (IDisposable disposableObject in source
+                     .Where(source is System.IDisposable)
+                     .Select(source as System.IDisposable)
+            {
+                disposableObject.Dispose();
+            };
+        }
+        public void DisposeAll(this IEnumerable set)
+        {
+            foreach (Object obj in set)
+            {
+                IDisposable disp = obj as IDisposable;
+                if (disp != null) { disp.Dispose(); }
+            }
+        }*/
 
         protected virtual void Dispose(bool disposing)
         {
