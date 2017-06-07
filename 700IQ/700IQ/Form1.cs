@@ -1037,7 +1037,7 @@ namespace _700IQ
         }
         private void CreateAnswerTable(bool withQuery=false)
         {
-            if (this.InvokeRequired)
+           /* if (this.InvokeRequired)
             {
                 this.BeginInvoke((MethodInvoker)delegate
                 {
@@ -1045,7 +1045,7 @@ namespace _700IQ
                 });
             }
             else
-            {
+            {*/
                 RemoveTempControls();
                 foreach (Control t in this.Controls.Find("iQash", true))
                     this.Controls.Remove(t);
@@ -1060,7 +1060,7 @@ namespace _700IQ
                 if(withQuery)
                     otvetStatic.ochered(steck);
                 //g.Dispose();
-            }
+           // }
         }
         void Step4()    //показ очереди и передача хода первой команде
         {
@@ -1347,9 +1347,10 @@ namespace _700IQ
                 bIconFinalised = false;
                 this.Controls["Iqon"]?.Dispose(); // Text = "";
                 this.Controls["oneuse"]?.Dispose(); // Text = "";
-                otvetStatic?.close();
-                Ruletka?.close();
-                this.Invalidate();
+                Step5_7_finalise();
+                //otvetStatic?.close();
+                //Ruletka?.close();
+                //this.Invalidate();
                 if (steck.iCon > 12)
                     Step10();
                 else

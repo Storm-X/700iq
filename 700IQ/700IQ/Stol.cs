@@ -682,7 +682,7 @@ namespace _700IQ
         }
         public async void svitok(Game steckIn, Data predUs)
         {
-            if (workForm.InvokeRequired)
+            /*if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
@@ -690,7 +690,7 @@ namespace _700IQ
                 });
             }
             else
-            {
+            {*/
                 String fileName = "";
                 int picWidth = 0;
                 #region//описание свитка с вопросом               
@@ -768,11 +768,11 @@ namespace _700IQ
                     Cursor = workForm.SetCursor(workForm.path + "Text Select.ani"),//установка курсора из файла
                 };
                 bgrdPic.BringToFront();
-            }
+            //}
         }
         public void focus()
         {
-            if (workForm.InvokeRequired)
+            /*if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
@@ -780,14 +780,14 @@ namespace _700IQ
                 });
             }
             else
-            {
+            {*/
                 //txBox.BeginInvoke(new MethodInvoker(() => { txBox.Focus(); }));
                 txBox.Focus();
-            }
+            //}
         }
         public void ochered(Game steckIn) //, Form fsv)//расчет очереди-----------------------------------
         {
-            if (workForm.InvokeRequired)
+           /* if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
@@ -795,7 +795,7 @@ namespace _700IQ
                 });
             }
             else
-            {
+            {*/
                 Image[] im = new Image[3];
                 im[0] = Properties.Resources.kom1;
                 im[1] = Properties.Resources.kom2;
@@ -951,7 +951,7 @@ namespace _700IQ
                 tm.Interval = 60;
                 tm.Tick += Tm_Tick;
                 tm.Start();
-            }
+            //}
         }
         private void Tm_Tick(object sender, EventArgs e)
         {
@@ -970,7 +970,7 @@ namespace _700IQ
         {
             //var reportProgress = new Action(() =>
             //{
-            if (workForm.InvokeRequired)
+            /*if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
@@ -978,7 +978,7 @@ namespace _700IQ
                 });
             }
             else
-            {
+            {*/
                 tmSem.Interval = 300;
                 tmSem.Tick += TmSem_Tick;
                 if (tmSem.Enabled) tmSem.Stop();
@@ -987,9 +987,7 @@ namespace _700IQ
                 pc2.Visible = true;
                 pc3.Visible = true;
                 semaforN = number;
-            }
-            //});
-            //fsv.Invoke(reportProgress);
+            /*}*/
         }
         void semStart()//мигание отвечающей команды
         {
@@ -1049,7 +1047,7 @@ namespace _700IQ
 
         public void answer(int o, string otv, bool correct)//неправильный ответ
         {
-            if (workForm.InvokeRequired)
+           /* if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
@@ -1057,7 +1055,7 @@ namespace _700IQ
                 });
             }
             else
-            {
+            {*/
                 Bitmap im2 = Properties.Resources.галочка;
                 Bitmap im3 = Properties.Resources.крестик;
                 gifTimer1.Interval = 25;
@@ -1097,7 +1095,7 @@ namespace _700IQ
                     gifTimer3.Start();
                     pc3rez.Visible = true;
                 }
-            }
+            //}
         }
         void gifTimer_Tick1(object sender, EventArgs e)
         {
@@ -1147,7 +1145,7 @@ namespace _700IQ
 
         public void close()//удаление всех элементов с поля ответ
         {
-            if (workForm.InvokeRequired)
+            /*if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
@@ -1155,11 +1153,11 @@ namespace _700IQ
                 });
             }
             else
-            {
+            {*/
                 workForm.Invalidate();
                 workForm.Refresh();
                 this.Dispose();
-            }
+            //}
         }
         public void polosaStart(GeneralForm ff, int Curstep,Polosa pol)//старт временной полосы?походу больше не нужен
         {
