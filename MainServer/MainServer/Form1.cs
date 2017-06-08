@@ -52,7 +52,9 @@ namespace MainServer
         private MediaServer mServer;
         private System.Timers.Timer tmr;
         private Object losker = new Object();
-        
+        string fileName = "out.txt";
+        FileStream aFile;
+        StreamWriter sw; 
 
         Form f = new Form();
         WebBrowser wb;
@@ -66,6 +68,8 @@ namespace MainServer
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             Rn = new RND();
+            aFile = new FileStream(fileName, FileMode.OpenOrCreate);
+            sw = new StreamWriter(aFile);
         }
 
         #region//кнопки
@@ -1320,7 +1324,8 @@ namespace MainServer
                         byte[] receiveBytes = result.Buffer;
                         byte[] bytes;
                         string txt = Encoding.UTF8.GetString(receiveBytes);
-                       // textBox1.Text += (txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt;
+                        // textBox1.Text += (txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt;
+                        sw.WriteLine((txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt);
                         if (!stopGame) //если игра не приостановлена, то ...
                         {
                             if (txt != null && txt.Length > 2)

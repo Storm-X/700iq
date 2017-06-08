@@ -732,7 +732,7 @@ namespace _700IQ
             //point1 = point2;
             //z1.X = (int)(z1.X * koef);
             //z1.Y = (int)(z1.Y * koef);
-            this.Invalidate(z2); //z1
+            this.Invalidate(); //z1
          
         }
         private void tm_Tick(object sender, EventArgs e)
