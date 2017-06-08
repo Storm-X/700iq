@@ -703,7 +703,7 @@ namespace _700IQ
             {*/
                 String fileName = "";
                 int picWidth = 0;
-                #region//описание свитка с вопросом               
+                #region //описание свитка с вопросом               
                 Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1190));
                 bgrdPic = new PictureBox()
                 {
@@ -777,7 +777,7 @@ namespace _700IQ
                     Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
                     Cursor = workForm.SetCursor(workForm.path + "Text Select.ani"),//установка курсора из файла
                 };
-                //ochered(steckIn);
+                //await ochered(steckIn);
                 bgrdPic.BringToFront();
             //}
         }
@@ -796,7 +796,7 @@ namespace _700IQ
                 txBox.Focus();
             //}
         }
-        public void ochered(Game steckIn) //, Form fsv)//расчет очереди-----------------------------------
+        public async Task ochered(Game steckIn) //, Form fsv)//расчет очереди-----------------------------------
         {
            /* if (workForm.InvokeRequired)
             {
@@ -869,7 +869,7 @@ namespace _700IQ
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     SmoothingMode = SmoothingMode.HighQuality,
-                    InterpolationMode = InterpolationMode.NearestNeighbor
+                    InterpolationMode = InterpolationMode.HighQualityBicubic
                 }, //;
                 //pc2rez = 
                 new PictureBoxWithInterpolationMode()
@@ -884,7 +884,7 @@ namespace _700IQ
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     SmoothingMode = SmoothingMode.HighQuality,
-                    InterpolationMode = InterpolationMode.NearestNeighbor
+                    InterpolationMode = InterpolationMode.HighQualityBicubic
                 }, //;
                    //pc3rez = 
                 new PictureBoxWithInterpolationMode()
@@ -899,7 +899,7 @@ namespace _700IQ
                     BackgroundImageLayout = ImageLayout.Zoom,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     SmoothingMode = SmoothingMode.HighQuality,
-                    InterpolationMode = InterpolationMode.NearestNeighbor
+                    InterpolationMode = InterpolationMode.HighQualityBicubic
                 }
                 };
 
@@ -1144,7 +1144,7 @@ namespace _700IQ
         void gifTimer_Tick1(object sender, EventArgs e)
         {
             indexToPaint++;
-            if (indexToPaint > gifImage.FrameCount / 2)
+            if (indexToPaint > gifImage.FrameCount)
             {
                 indexToPaint = 0;
                 gifTimer1.Stop();
@@ -1161,7 +1161,7 @@ namespace _700IQ
         void gifTimer_Tick2(object sender, EventArgs e)
         {
             indexToPaint++;
-            if (indexToPaint > gifImage.FrameCount / 2)
+            if (indexToPaint > gifImage.FrameCount)
             {
                 indexToPaint = 0;
                 gifTimer2.Stop();
@@ -1177,7 +1177,7 @@ namespace _700IQ
         void gifTimer_Tick3(object sender, EventArgs e)
         {
             indexToPaint++;
-            if (indexToPaint > gifImage.FrameCount / 2)
+            if (indexToPaint > gifImage.FrameCount)
             {
                 indexToPaint = 0;
                 gifTimer3.Stop();
