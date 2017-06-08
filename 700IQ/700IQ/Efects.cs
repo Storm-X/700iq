@@ -611,7 +611,7 @@ namespace _700IQ
         float koef;
         bool flag, flagStop;
         int tickNumber = 0, nStop = 100;
-        int offset;
+        int offset=10;
 
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
@@ -732,7 +732,7 @@ namespace _700IQ
             //point1 = point2;
             //z1.X = (int)(z1.X * koef);
             //z1.Y = (int)(z1.Y * koef);
-            this.Invalidate(); //z1
+            this.Invalidate(z2); //z1
          
         }
         private void tm_Tick(object sender, EventArgs e)
@@ -746,7 +746,7 @@ namespace _700IQ
                     {
                         i += vi;
                         vi -= stepi;
-                        if (vi <= 0.0000)
+                        if (vi <= 0)
                         {
                             flagStop = true;
                             tickNumber = 0;

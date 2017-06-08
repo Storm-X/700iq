@@ -386,7 +386,7 @@ namespace MainServer
                         gm.theme = (byte)((gm.Cell + 5) / 6);
 
                         Takt++;
-                        txb.Text += "ogg" + gm.step;
+                       // txb.Text += "ogg" + gm.step;
                         //tm.Start();
                         break;
                     #endregion
@@ -488,7 +488,7 @@ namespace MainServer
                         #endregion
                         Takt++;
                         //log();
-                        txb.Text += "ogg" + gm.step;
+                       // txb.Text += "ogg" + gm.step;
                         tmOtvet.Interval = 90000; //запускае таймер с ожиданием ответа 1 команды
                         tmOtvet.Start();
                         correct = false;
@@ -524,7 +524,7 @@ namespace MainServer
                             }
                             Takt++;
                             //log();
-                            txb.Text += "ogg" + gm.step;
+                          //  txb.Text += "ogg" + gm.step;
 
                         }
                         
@@ -554,7 +554,7 @@ namespace MainServer
                         }
                         Takt++;
                         //log();
-                        txb.Text += "ogg" + gm.step;
+                     //   txb.Text += "ogg" + gm.step;
                         break;
                     #endregion
                     #region 4 такт - обработка ответ третьей команды (если дойдет дело)
@@ -567,7 +567,7 @@ namespace MainServer
                         }
                         endOfIqon = true;
                         //log();
-                        txb.Text += "ogg" + gm.step;
+                     //   txb.Text += "ogg" + gm.step;
                         break;
                         #endregion
                 }

@@ -24,6 +24,7 @@ namespace MainServer
         public MySqlConnection mycon;
         public MySqlCommand mycom;
         public SQLiteConnection conn;
+        GameinZone gz;
         SQLiteCommand cm;
         SQLiteDataReader rd;
         List<SendLog> logsOfteams = new List<SendLog>();
@@ -212,7 +213,7 @@ namespace MainServer
                         SendLog log = new SendLog();    //структура для получения log данных
                         string json = dat.Rows[i][4].ToString();
                         log = JsonConvert.DeserializeObject<SendLog>(json);
-                        GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
+                        gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
                         gz.usersid = log.usersid;               //список пользователей тройки
                         gz.setThemes(log.idTheme, log.Themes);  //список id тем и названий
                         gz.data = log.dataLog;                  //класс data
@@ -228,7 +229,7 @@ namespace MainServer
                     }
                     else
                     {
-                        GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
+                        gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
                         MassGameZone.Add(gz);
                     }
                 }
@@ -470,7 +471,7 @@ namespace MainServer
                         SendLog log = new SendLog();    //структура для получения log данных
                         string json = dat.Rows[i][4].ToString();
                         log = JsonConvert.DeserializeObject<SendLog>(json);
-                        GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
+                        //GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
                         gz.usersid = log.usersid;               //список пользователей тройки
                         gz.setThemes(log.idTheme, log.Themes);  //список id тем и названий
                         gz.data = log.dataLog;                  //класс data
@@ -496,7 +497,7 @@ namespace MainServer
                     }
                     else
                     {
-                        GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
+                 //       GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
                         MassGameZone.Add(gz);
                     }
 
