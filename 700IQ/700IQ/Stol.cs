@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace _700IQ
 {
@@ -648,7 +649,7 @@ namespace _700IQ
 
                     pc1.Dispose(); pc2.Dispose(); pc3.Dispose();
                     lb1.Dispose(); lb2.Dispose(); lb3.Dispose();
-                    pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
+                    //pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
                     lbst1.Dispose(); lbst2.Dispose(); lbst3.Dispose();
                     tmSem.Dispose();
                     bgrdPic.Dispose();
@@ -860,7 +861,7 @@ namespace _700IQ
                 new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc1,
-                    Name = "oneuse",
+                    //Name = "oneuse",
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
@@ -875,7 +876,7 @@ namespace _700IQ
                 new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc2,
-                    Name = "oneuse",
+                    //Name = "oneuse",
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
@@ -890,7 +891,7 @@ namespace _700IQ
                 new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc3,
-                    Name = "oneuse",
+                    //Name = "oneuse",
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
@@ -984,6 +985,7 @@ namespace _700IQ
                 tm.Start();
                 tmSem.Interval = 300;
                 tmSem.Tick += TmSem_Tick;
+            Thread.Sleep(3000);
             //}
         }
         private void Tm_Tick(object sender, EventArgs e)
@@ -1101,7 +1103,7 @@ namespace _700IQ
                 gifTimer1.Interval = 25;
                 gifTimer2.Interval = 25;
                 gifTimer3.Interval = 25;
-                
+
                 semafor(0);
                 //if (correct)
                 //{
