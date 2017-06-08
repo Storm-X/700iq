@@ -611,7 +611,7 @@ namespace _700IQ
         float koef;
         bool flag, flagStop;
         int tickNumber = 0, nStop = 100;
-        int offset=10;
+        int offset=5;
 
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
