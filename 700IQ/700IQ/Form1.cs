@@ -1056,7 +1056,7 @@ namespace _700IQ
 
                 this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
-                await otvetStatic.svitok(steck, predUs);
+                otvetStatic.svitok(steck, predUs); //.GetAwaiter().GetResult();
                 if(withQuery)
                     await otvetStatic.ochered(steck);
                 //g.Dispose();
@@ -1079,7 +1079,7 @@ namespace _700IQ
                         CreateAnswerTable(true);
                     else
                         await otvetStatic.ochered(steck);
-                    //otvetStatic.semafor(0);
+                    otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
 
@@ -1207,23 +1207,6 @@ namespace _700IQ
                 }
             }
         }
-        void Step5_7_finalise()
-        {
-            if (this.InvokeRequired)
-            {
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    Step5_7_finalise();
-                });
-            }
-            else
-            {
-                otvetStatic.close();
-                otvetStatic = null;
-                this.Invalidate();
-            }
-        }
-
         void Step6()    //получение ответа от второй команды 
         {
             if (this.InvokeRequired)
@@ -1333,7 +1316,24 @@ namespace _700IQ
                     stShow.inputStavki(stav, 0, 0, 0, this);
                 }
             }
-        }    
+        }
+        void Step5_7_finalise()
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    Step5_7_finalise();
+                });
+            }
+            else
+            {
+                otvetStatic.close();
+                otvetStatic = null;
+                this.Invalidate();
+            }
+        }
+
         private void Step9()//  окончание айкона
         {
             if (this.InvokeRequired)
