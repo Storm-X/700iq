@@ -806,7 +806,7 @@ namespace _700IQ
                 if (steck.step != 0)
                 {
                     //CheckSteck();
-                    StartStep = steck.step;
+                    StartStep = steck.step - 1;
                     Step1_3();
                 }
                 else
@@ -1035,7 +1035,7 @@ namespace _700IQ
                 Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(900)), this, 1);
             }          
         }
-        private void CreateAnswerTable(bool withQuery=false)
+        private async void CreateAnswerTable(bool withQuery=false)
         {
            /* if (this.InvokeRequired)
             {
@@ -1056,9 +1056,9 @@ namespace _700IQ
 
                 this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
-                otvetStatic.svitok(steck, predUs);
-                //if(withQuery)
-                    //otvetStatic.ochered(steck);
+                await otvetStatic.svitok(steck, predUs);
+                if(withQuery)
+                    otvetStatic.ochered(steck);
                 //g.Dispose();
            // }
         }
@@ -1077,9 +1077,9 @@ namespace _700IQ
                 {
                     if(otvetStatic == null)
                         CreateAnswerTable(true);
-                    //else
-                    //otvetStatic.ochered(steck);
-                    otvetStatic.semafor(0);
+                    else
+                        otvetStatic.ochered(steck);
+                    //otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
 
