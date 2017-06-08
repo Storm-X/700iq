@@ -1058,11 +1058,11 @@ namespace _700IQ
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
                 await otvetStatic.svitok(steck, predUs);
                 if(withQuery)
-                    otvetStatic.ochered(steck);
+                    await otvetStatic.ochered(steck);
                 //g.Dispose();
            // }
         }
-        void Step4()    //показ очереди и передача хода первой команде
+        async void Step4()    //показ очереди и передача хода первой команде
         {
             if (this.InvokeRequired)
             {
@@ -1078,7 +1078,7 @@ namespace _700IQ
                     if(otvetStatic == null)
                         CreateAnswerTable(true);
                     else
-                        otvetStatic.ochered(steck);
+                        await otvetStatic.ochered(steck);
                     //otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
                     otvetStatic.focus();
