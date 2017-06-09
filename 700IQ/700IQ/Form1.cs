@@ -1079,9 +1079,9 @@ namespace _700IQ
                         CreateAnswerTable(true);
                     else
                         await otvetStatic.ochered(steck);
-                    otvetStatic.semafor(0);
+                    //otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
-                    otvetStatic.focus();
+                    otvetStatic.SetFocus();
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
@@ -1178,7 +1178,7 @@ namespace _700IQ
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
                     otvetStatic.semafor(2);
-                    otvetStatic.focus();
+                    otvetStatic.SetFocus();
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
@@ -1230,7 +1230,7 @@ namespace _700IQ
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
                     otvetStatic.semafor(3);
-                    otvetStatic.focus();
+                    otvetStatic.SetFocus();
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {

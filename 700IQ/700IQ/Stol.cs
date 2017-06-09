@@ -693,15 +693,6 @@ namespace _700IQ
         }
         public async Task svitok(Game steckIn, Data predUs)
         {
-            /*if (workForm.InvokeRequired)
-            {
-                workForm.BeginInvoke((MethodInvoker)delegate
-                {
-                    svitok(steckIn, predUs);
-                });
-            }
-            else
-            {*/
                 String fileName = "";
                 int picWidth = 0;
                 #region //описание свитка с вопросом               
@@ -715,11 +706,6 @@ namespace _700IQ
                     BackColor = Color.Transparent
                 };
 
-                /*if (steckIn.iCon % 2 != 0)
-                {
-                    fileName = steckIn.iCon + ".jpg";
-                    picWidth = 600;
-                }*/
                 picBox1 = new PictureBox()
                 {
                     Parent = bgrdPic,
@@ -780,22 +766,10 @@ namespace _700IQ
                 };
                 //await ochered(steckIn);
                 bgrdPic.BringToFront();
-            //}
         }
-        public void focus()
+        public void SetFocus()
         {
-            /*if (workForm.InvokeRequired)
-            {
-                workForm.BeginInvoke((MethodInvoker)delegate
-                {
-                    focus();
-                });
-            }
-            else
-            {*/
-                //txBox.BeginInvoke(new MethodInvoker(() => { txBox.Focus(); }));
-                txBox.Focus();
-            //}
+            txBox.Focus();
         }
         public async Task ochered(Game steckIn) //, Form fsv)//расчет очереди-----------------------------------
         {
@@ -985,7 +959,7 @@ namespace _700IQ
                 tm.Start();
                 tmSem.Interval = 300;
                 tmSem.Tick += TmSem_Tick;
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             //}
         }
         private void Tm_Tick(object sender, EventArgs e)
@@ -1014,19 +988,19 @@ namespace _700IQ
             }
             else
             {*/
-            if (tmSem.Enabled || number == 0)
-            {
+            //if (tmSem.Enabled || number == 0)
+            //{
                 tmSem.Stop();
-                pc1.Visible = true;
+                //pc1.Visible = true;
                 //lbst1.Visible = true;
-                pc2.Visible = true;
+                //pc2.Visible = true;
                 //lbst2.Visible = true;
-                pc3.Visible = true;
+                //pc3.Visible = true;
                 //lbst3.Visible = true;
-            }
-            else
+            //}
+            //else
                 tmSem.Start();
-            semaforN = number;
+                semaforN = number;
             /*}*/
         }
         void semStart()//мигание отвечающей команды
@@ -1035,12 +1009,18 @@ namespace _700IQ
             {
                 case 1:
                     pc1.Visible = !pc1.Visible;
+                    pc2.Visible = true;
+                    pc3.Visible = true;
                     break;
                 case 2:
                     pc2.Visible = !pc2.Visible;
+                    pc1.Visible = true;
+                    pc3.Visible = true;
                     break;
                 case 3:
                     pc3.Visible = !pc3.Visible;
+                    pc2.Visible = true;
+                    pc1.Visible = true;
                     break;
             }
         }
