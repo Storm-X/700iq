@@ -959,7 +959,6 @@ namespace _700IQ
                 tm.Start();
                 tmSem.Interval = 300;
                 tmSem.Tick += TmSem_Tick;
-            Thread.Sleep(1000);
             //}
         }
         private void Tm_Tick(object sender, EventArgs e)
@@ -1005,6 +1004,9 @@ namespace _700IQ
         }
         void semStart()//мигание отвечающей команды
         {
+         //   string ss;
+         //   foreach (var sss in ((System.Reflection.TypeInfo)(this.GetType())).DeclaredMembers)
+         //       ss = sss.Name.ToString();
             switch (semaforN)
             {
                 case 1:
