@@ -1418,6 +1418,15 @@ namespace _700IQ
             return x * resolution.Height / 1017;
             //return new Point((int)(x  this.Width / 2500), (int)(this.Height  y / 1600));
         }
+
+        public int NewWidth(int x)
+        {
+            return x * resolution.Width / 2500;
+        }
+        public int NewHeight(int x)
+        {
+            return x * resolution.Height / 1600;
+        }
         public void cleanTable(Point pn, Size sz)
         {
             //Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);

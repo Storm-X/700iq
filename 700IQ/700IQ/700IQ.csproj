@@ -80,6 +80,7 @@
     <Compile Include="GameData.cs" />
     <Compile Include="GifImage.cs" />
     <Compile Include="IniFile.cs" />
+    <Compile Include="italk_theme_-_c#.cs" />
     <Compile Include="ListViewWithoutScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>
