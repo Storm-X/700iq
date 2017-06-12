@@ -1106,7 +1106,7 @@ namespace _700IQ
                     indexImage = 2;
                     gifTimer.Start();
                 }
-            pcResult[indexImage].Visible = true;
+           
             //}
         }
         void gifTimer_Tick(object sender, EventArgs e)
@@ -1124,6 +1124,7 @@ namespace _700IQ
             {
                 //pc1rez.Image = 
                 pcResult[indexImage].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+                pcResult[indexImage].Visible = true;
             }
         }
         //void gifTimer_Tick2(object sender, EventArgs e)
