@@ -491,14 +491,15 @@ namespace _700IQ
                     Parent = workForm,
                };
                 listView1.Items.Add(new ListViewItem(new string[] { "№", "Название", "Рейтинг" }));
+
                 int count = 1;
-                for (int j = 0; j < 20; j++)
-                {
+                //for (int j = 0; j < 20; j++)
+                //{
                     for (int i = 0; i < dtRow.Length; i++)
                     {
                         listView1.Items.Add(new ListViewItem(new string[] { (count++).ToString(), dtRow[i][2].ToString(), dtRow[i][4].ToString() }));
                     };
-                }
+                //}
  
                 listView1.Columns.Add("", -2, HorizontalAlignment.Left);
                 listView1.Columns.Add("", -2, HorizontalAlignment.Left);
@@ -586,23 +587,13 @@ namespace _700IQ
         Label lbst3;
         TextBox txBox;
         Label otv;
-        private int frameCount;
         //Bitmap[] arr;
         //Bitmap img;
-        private FrameDimension dimension;
         GifImage gifImage;
-        PictureBox pc1rez;
-        PictureBox pc2rez;
-        PictureBox pc3rez;
-        PictureBox pc4rez;
-        PictureBox pc5rez;
-        PictureBox pc6rez;
+        int indexImage = 0;
         PictureBox[] pcResult;
         PictureBox temp =new PictureBox();
-        private System.Windows.Forms.Timer gifTimer1 = new System.Windows.Forms.Timer();
-        private System.Windows.Forms.Timer gifTimer2 = new System.Windows.Forms.Timer();
-        private System.Windows.Forms.Timer gifTimer3 = new System.Windows.Forms.Timer();
-
+        private System.Windows.Forms.Timer gifTimer = new System.Windows.Forms.Timer();
         private int indexToPaint = 0;
         //private Form fsv;
         System.Windows.Forms.Timer tm = new System.Windows.Forms.Timer();
@@ -674,9 +665,7 @@ namespace _700IQ
             this.cn = cn;
             this.tableofkom = tableofkom;
             //this.fsv = fsv;
-            gifTimer1.Tick += gifTimer_Tick1;
-            gifTimer2.Tick += gifTimer_Tick2;
-            gifTimer3.Tick += gifTimer_Tick3;
+            gifTimer.Tick += gifTimer_Tick;
         }
         private async Task<Image> ResultOfCycle(string fileName)
         {
@@ -1082,10 +1071,7 @@ namespace _700IQ
             {*/
                 Bitmap im2 = Properties.Resources.галочка;
                 Bitmap im3 = Properties.Resources.крестик;
-                gifTimer1.Interval = 25;
-                gifTimer2.Interval = 25;
-                gifTimer3.Interval = 25;
-
+                gifTimer.Interval = 25;
                 semafor(0);
                 //if (correct)
                 //{
@@ -1099,9 +1085,10 @@ namespace _700IQ
                 if (o == 1)
                 {
                     lb1.Text = otv;
+                    indexImage = 0;
                     lb1.Visible = true;
                     lb1.BringToFront();
-                    gifTimer1.Start();
+                    gifTimer.Start();
                     pcResult[0].Visible = true;
                     //pc1rez.Visible = true;
                 }
@@ -1109,8 +1096,9 @@ namespace _700IQ
                 {
                     lb2.Text = otv;
                     lb2.Visible = true;
+                    indexImage = 1;
                     lb2.BringToFront();
-                    gifTimer2.Start();
+                    gifTimer.Start();
                     pcResult[1].Visible = true;
                     //pc2rez.Visible = true;     
                 }
@@ -1119,19 +1107,20 @@ namespace _700IQ
                     lb3.Text = otv;
                     lb3.Visible = true;
                     lb3.BringToFront();
-                    gifTimer3.Start();
+                    indexImage = 2;
+                    gifTimer.Start();
                     pcResult[2].Visible = true;
                     //pc3rez.Visible = true;
                 }
             //}
         }
-        void gifTimer_Tick1(object sender, EventArgs e)
+        void gifTimer_Tick(object sender, EventArgs e)
         {
             indexToPaint++;
             if (indexToPaint > gifImage.FrameCount)
             {
                 indexToPaint = 0;
-                gifTimer1.Stop();
+                gifTimer.Stop();
                 //ImageAnimator.StopAnimate(this.pc1rez.Image, null);
                 //Bitmap bt = new Bitmap(pc1.BackgroundImage);
                 //pc1rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230); 
@@ -1139,41 +1128,41 @@ namespace _700IQ
             else
             {
                 //pc1rez.Image = 
-                pcResult[0].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+                pcResult[indexImage].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
             }
         }
-        void gifTimer_Tick2(object sender, EventArgs e)
-        {
-            indexToPaint++;
-            if (indexToPaint > gifImage.FrameCount)
-            {
-                indexToPaint = 0;
-                gifTimer2.Stop();
-                //Bitmap bt = new Bitmap(pc2.BackgroundImage);
-                //pc2rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
-            }
-            else
-            {
-                //pc2rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
-                pcResult[1].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
-            }
-        }
-        void gifTimer_Tick3(object sender, EventArgs e)
-        {
-            indexToPaint++;
-            if (indexToPaint > gifImage.FrameCount)
-            {
-                indexToPaint = 0;
-                gifTimer3.Stop();
-                //Bitmap bt = new Bitmap(pc3.BackgroundImage);
-                //pc3rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
-            }
-            else
-            {
-                //pc3rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
-                pcResult[2].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
-            }
-        }
+        //void gifTimer_Tick2(object sender, EventArgs e)
+        //{
+        //    indexToPaint++;
+        //    if (indexToPaint > gifImage.FrameCount)
+        //    {
+        //        indexToPaint = 0;
+        //        gifTimer2.Stop();
+        //        //Bitmap bt = new Bitmap(pc2.BackgroundImage);
+        //        //pc2rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
+        //    }
+        //    else
+        //    {
+        //        //pc2rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+        //        pcResult[1].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+        //    }
+        //}
+        //void gifTimer_Tick3(object sender, EventArgs e)
+        //{
+        //    indexToPaint++;
+        //    if (indexToPaint > gifImage.FrameCount)
+        //    {
+        //        indexToPaint = 0;
+        //        gifTimer3.Stop();
+        //        //Bitmap bt = new Bitmap(pc3.BackgroundImage);
+        //        //pc3rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
+        //    }
+        //    else
+        //    {
+        //        //pc3rez.Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+        //        pcResult[2].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+        //    }
+        //}
 
         public void close()//удаление всех элементов с поля ответ
         {

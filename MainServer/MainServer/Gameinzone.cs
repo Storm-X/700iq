@@ -92,8 +92,8 @@ namespace MainServer
             deadLine = DateTime.Now.AddMinutes(3);
             tm.Tick += Tm_Tick;
             tmOtvet.Tick += TmOtvet_Tick;
-            //deadLinetmr.Tick += DeadLinetmr_Tick;
-           // deadLinetmr.Start();
+            deadLinetmr.Tick += DeadLinetmr_Tick;
+            deadLinetmr.Start();
 
         }
 
@@ -375,7 +375,7 @@ namespace MainServer
             }
             else
             {
-                deadLine = DateTime.Now.AddMinutes(2);
+                deadLine = DateTime.Now.AddMinutes(4);
                 switch (Takt)
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд

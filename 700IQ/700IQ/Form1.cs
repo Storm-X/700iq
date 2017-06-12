@@ -806,7 +806,7 @@ namespace _700IQ
                 if (steck.step != 0)
                 {
                     //CheckSteck();
-                    StartStep = steck.step - 1;
+                    StartStep = steck.step;
                     Step1_3();
                 }
                 else
