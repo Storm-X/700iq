@@ -1056,9 +1056,9 @@ namespace _700IQ
 
                 this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
-                otvetStatic.svitok(steck, predUs); //.GetAwaiter().GetResult();
+                otvetStatic.svitok(steck, predUs).GetAwaiter().GetResult();
                 if(withQuery)
-                    await otvetStatic.ochered(steck);
+                    otvetStatic.ochered(steck).GetAwaiter().GetResult();
                 //g.Dispose();
            // }
         }
@@ -1078,7 +1078,7 @@ namespace _700IQ
                     if(otvetStatic == null)
                         CreateAnswerTable(true);
                     else
-                        await otvetStatic.ochered(steck);
+                        otvetStatic.ochered(steck).GetAwaiter().GetResult();
                     //otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
                     otvetStatic.SetFocus();
