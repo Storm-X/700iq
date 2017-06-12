@@ -1089,8 +1089,6 @@ namespace _700IQ
                     lb1.Visible = true;
                     lb1.BringToFront();
                     gifTimer.Start();
-                    pcResult[0].Visible = true;
-                    //pc1rez.Visible = true;
                 }
                 if (o == 2)
                 {
@@ -1099,8 +1097,6 @@ namespace _700IQ
                     indexImage = 1;
                     lb2.BringToFront();
                     gifTimer.Start();
-                    pcResult[1].Visible = true;
-                    //pc2rez.Visible = true;     
                 }
                 if (o == 3)
                 {
@@ -1109,9 +1105,8 @@ namespace _700IQ
                     lb3.BringToFront();
                     indexImage = 2;
                     gifTimer.Start();
-                    pcResult[2].Visible = true;
-                    //pc3rez.Visible = true;
                 }
+            pcResult[indexImage].Visible = true;
             //}
         }
         void gifTimer_Tick(object sender, EventArgs e)
