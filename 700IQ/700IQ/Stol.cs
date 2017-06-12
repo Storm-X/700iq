@@ -1125,6 +1125,9 @@ namespace _700IQ
                 //pc1rez.Image = 
                 pcResult[indexImage].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
                 pcResult[indexImage].Visible = true;
+                pc1.Visible = true;
+                pc2.Visible = true;
+                pc3.Visible = true;
             }
         }
         //void gifTimer_Tick2(object sender, EventArgs e)

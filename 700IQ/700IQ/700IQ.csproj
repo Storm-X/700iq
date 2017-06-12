@@ -62,6 +62,9 @@
     <Compile Include="..\..\MediaTransfer\MediaTransfer.cs">
       <Link>MediaTransfer.cs</Link>
     </Compile>
+    <Compile Include="CircularProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Conn.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="CustomLabel.cs">

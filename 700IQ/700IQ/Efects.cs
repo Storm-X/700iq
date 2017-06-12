@@ -385,7 +385,7 @@ namespace _700IQ
         public PolosaEnd onPolosaEnd;
         //Size resolution; // = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         PictureBoxWithInterpolationMode pcBox;
-        iTalk.iTalk_ProgressBar prBar;
+        CircularProgressBar prBar;
         //private Form fsv;
 
         public Label ff;
@@ -437,7 +437,7 @@ namespace _700IQ
                         Parent = workForm,
                     };
                     #endregion
-                    prBar = new iTalk.iTalk_ProgressBar()
+                    prBar = new CircularProgressBar()
                     {
                         Location = NewRelPoint(350, 0),
                         ProgressColor1 = Color.FromArgb(200, 12, 163, 218),
@@ -446,14 +446,15 @@ namespace _700IQ
                         Value = 0,
                         Visible = true,
                         Maximum = 100,
-                        ProgressSize = NewWidth(10),
+                        Gradient=false,
+                        ProgressSize = NewWidth(15),
                     };
                     pcBox = new PictureBoxWithInterpolationMode
                     {
                         Parent = prBar,
                         Visible = true,
                         Location = new Point(prBar.ProgressSize, prBar.ProgressSize),
-                        Size = NewSizeKv(200 - NewWidth(10) * 2),
+                        Size = new Size(prBar.Size.Width - NewWidth(15 * 2), prBar.Size.Width - NewWidth(15 * 2)),
                         SizeMode = PictureBoxSizeMode.Zoom,
                         SmoothingMode = SmoothingMode.AntiAlias,
                         InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -501,8 +502,8 @@ namespace _700IQ
                 {
                     ff.Text = prBar.Value.ToString();
                     prBar.Value++; // Value++;
-                    if (prBar.Value < 51) prBar.ProgressColor1 = Color.FromArgb(200, (int)prBar.Value * 5, 250, 0);
-                    else prBar.ProgressColor1 = Color.FromArgb(200, 250, 255 - ((int)prBar.Value - 50) * 5, 0);
+                    if (prBar.Value < 51) prBar.ProgressColor1 = Color.FromArgb(150, (int)prBar.Value * 5, 250, 0);
+                    else prBar.ProgressColor1 = Color.FromArgb(150, 250, 255 - ((int)prBar.Value - 50) * 5, 0);
                 }
 
                 else
