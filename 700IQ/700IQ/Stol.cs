@@ -753,70 +753,70 @@ namespace _700IQ
                     Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
                     Cursor = workForm.SetCursor(workForm.path + "Text Select.ani"),//установка курсора из файла
                 };
-                await ochered(steckIn);
+                ochered(steckIn);
                 bgrdPic.BringToFront();
         }
         public void SetFocus()
         {
             txBox.Focus();
         }
-        public async Task ochered(Game steckIn) //, Form fsv)//расчет очереди-----------------------------------
+        public void ochered(Game steckIn) //, Form fsv)//расчет очереди-----------------------------------
         {
-           /* if (workForm.InvokeRequired)
-            {
-                workForm.BeginInvoke((MethodInvoker)delegate
-                {
-                    ochered(steckIn);
-                });
-            }
-            else
-            {*/
-                Image[] im = new Image[3];
-                im[0] = Properties.Resources.kom1;
-                im[1] = Properties.Resources.kom2;
-                im[2] = Properties.Resources.kom3;
-                int dy = -50;
+            /* if (workForm.InvokeRequired)
+             {
+                 workForm.BeginInvoke((MethodInvoker)delegate
+                 {
+                     ochered(steckIn);
+                 });
+             }
+             else
+             {*/
+            Image[] im = new Image[3];
+            im[0] = Properties.Resources.kom1;
+            im[1] = Properties.Resources.kom2;
+            im[2] = Properties.Resources.kom3;
+            int dy = -50;
 
-                #region//описание фишек с номерами команд
-                pc1 = new PictureBoxWithInterpolationMode()
-                {
-                    Parent = workForm,
-                    Visible = false,
-                    BackColor = Color.Transparent,
-                    Size = NewSizeKv(170),
-                    Location = NewPoint(1250, 250 + dy),
-                    BackgroundImage = im[steckIn.o1 - 1],
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    SizeMode = PictureBoxSizeMode.Zoom,
-                    SmoothingMode = SmoothingMode.AntiAlias,
-                    InterpolationMode = InterpolationMode.NearestNeighbor
-                };
-                pc2 = new PictureBoxWithInterpolationMode()
-                {
-                    Parent = workForm,
-                    Visible = false,
-                    BackColor = Color.Transparent,
-                    Size = NewSizeKv(170),
-                    Location = NewPoint(1250, 450 + dy),
-                    BackgroundImage = im[steckIn.o2 - 1],
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    SizeMode = PictureBoxSizeMode.Zoom,
-                    SmoothingMode = SmoothingMode.AntiAlias,
-                    InterpolationMode = InterpolationMode.NearestNeighbor
-                };
-                pc3 = new PictureBoxWithInterpolationMode()
-                {
-                    Parent = workForm,
-                    Visible = false,
-                    BackColor = Color.Transparent,
-                    Size = NewSizeKv(170),
-                    Location = NewPoint(1250, 650 + dy),
-                    BackgroundImage = im[steckIn.o3 - 1],
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    SizeMode = PictureBoxSizeMode.Zoom,
-                    SmoothingMode = SmoothingMode.AntiAlias,
-                    InterpolationMode = InterpolationMode.NearestNeighbor
-                };
+            #region//описание фишек с номерами команд
+            pc1 = new PictureBoxWithInterpolationMode()
+            {
+                Parent = workForm,
+                Visible = false,
+                BackColor = Color.Transparent,
+                Size = NewSizeKv(170),
+                Location = NewPoint(1250, 250 + dy),
+                BackgroundImage = im[steckIn.o1 - 1],
+                BackgroundImageLayout = ImageLayout.Zoom,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                SmoothingMode = SmoothingMode.AntiAlias,
+                InterpolationMode = InterpolationMode.NearestNeighbor
+            };
+            pc2 = new PictureBoxWithInterpolationMode()
+            {
+                Parent = workForm,
+                Visible = false,
+                BackColor = Color.Transparent,
+                Size = NewSizeKv(170),
+                Location = NewPoint(1250, 450 + dy),
+                BackgroundImage = im[steckIn.o2 - 1],
+                BackgroundImageLayout = ImageLayout.Zoom,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                SmoothingMode = SmoothingMode.AntiAlias,
+                InterpolationMode = InterpolationMode.NearestNeighbor
+            };
+            pc3 = new PictureBoxWithInterpolationMode()
+            {
+                Parent = workForm,
+                Visible = false,
+                BackColor = Color.Transparent,
+                Size = NewSizeKv(170),
+                Location = NewPoint(1250, 650 + dy),
+                BackgroundImage = im[steckIn.o3 - 1],
+                BackgroundImageLayout = ImageLayout.Zoom,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                SmoothingMode = SmoothingMode.AntiAlias,
+                InterpolationMode = InterpolationMode.NearestNeighbor
+            };
             #endregion
             #region//описание полей выигрыш проигрыш
             pcResult = new PictureBoxWithInterpolationMode[] { 
@@ -867,87 +867,87 @@ namespace _700IQ
                 }
                 };
 
-                #endregion
-                #region//описание полей со ставками команд
-                lbst1 = new Label()
-                {
-                    Parent = workForm,
-                    Visible = true,
-                    BackColor = Color.Transparent,
-                    Size = NewSize(95, 120),
-                    Location = NewPoint(1400, 275 + dy),
-                    Font = new Font("times new roman", NewFontSize(17)),
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    ForeColor = Color.Yellow,
-                    Text = steckIn.team[steckIn.o1 - 1].stavka + "\n IQ",
-                };
-                lbst2 = new Label()
-                {
-                    Parent = workForm,
-                    Visible = true,
-                    BackColor = Color.Transparent,
-                    Size = NewSize(95, 120),
-                    Location = NewPoint(1400, 470 + dy),
-                    Font = new Font("times new roman", NewFontSize(16)),
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    ForeColor = Color.Yellow,
-                    Text = steckIn.team[steckIn.o2 - 1].stavka.ToString() + "\n IQ",
-                };
-                lbst3 = new Label()
-                {
-                    Parent = workForm,
-                    Visible = true,
-                    BackColor = Color.Transparent,
-                    Size = NewSize(95, 120),
-                    Location = NewPoint(1400, 680 + dy),
-                    Font = new Font("Times New Roman", NewFontSize(16)),
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    ForeColor = Color.Yellow,
-                    Text = steckIn.team[steckIn.o3 - 1].stavka.ToString() + "\n IQ",
-                };
-                #endregion
-                #region//описание полей с ответами команд
-                lb1 = new Label()
-                {
-                    Parent = workForm,
-                    Visible = false,
-                    //BackColor = Color.Transparent,
-                    Image = Properties.Resources.paper,
-                    Size = NewSize(600, 70),
-                    Location = NewPoint(1560, 310 + dy),
-                    Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
-                    TextAlign = ContentAlignment.MiddleLeft,
+            #endregion
+            #region//описание полей со ставками команд
+            lbst1 = new Label()
+            {
+                Parent = workForm,
+                Visible = true,
+                BackColor = Color.Transparent,
+                Size = NewSize(95, 120),
+                Location = NewPoint(1400, 275 + dy),
+                Font = new Font("times new roman", NewFontSize(17)),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.Yellow,
+                Text = steckIn.team[steckIn.o1 - 1].stavka + "\n IQ",
+            };
+            lbst2 = new Label()
+            {
+                Parent = workForm,
+                Visible = true,
+                BackColor = Color.Transparent,
+                Size = NewSize(95, 120),
+                Location = NewPoint(1400, 470 + dy),
+                Font = new Font("times new roman", NewFontSize(16)),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.Yellow,
+                Text = steckIn.team[steckIn.o2 - 1].stavka.ToString() + "\n IQ",
+            };
+            lbst3 = new Label()
+            {
+                Parent = workForm,
+                Visible = true,
+                BackColor = Color.Transparent,
+                Size = NewSize(95, 120),
+                Location = NewPoint(1400, 680 + dy),
+                Font = new Font("Times New Roman", NewFontSize(16)),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.Yellow,
+                Text = steckIn.team[steckIn.o3 - 1].stavka.ToString() + "\n IQ",
+            };
+            #endregion
+            #region//описание полей с ответами команд
+            lb1 = new Label()
+            {
+                Parent = workForm,
+                Visible = false,
+                //BackColor = Color.Transparent,
+                Image = Properties.Resources.paper,
+                Size = NewSize(600, 70),
+                Location = NewPoint(1560, 310 + dy),
+                Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleLeft,
 
-                };
-                lb2 = new Label()
-                {
-                    Parent = workForm,
-                    Visible = false,
-                    //BackColor = Color.Green,
-                    Image = Properties.Resources.paper,
-                    Size = NewSize(600, 70),
-                    Location = NewPoint(1560, 510 + dy),
-                    Font = new Font("Arial Black Italic", NewFontSize(19), FontStyle.Bold),
-                    TextAlign = ContentAlignment.MiddleLeft,
-                    //ForeColor = Color.White,
-                };
-                lb3 = new Label()
-                {
-                    Parent = workForm,
-                    Visible = false,
-                    Image = Properties.Resources.paper,
-                    Size = NewSize(600, 70),
-                    Location = NewPoint(1560, 710 + dy),
-                    Font = new Font("Arial Black Italic", NewFontSize(20), FontStyle.Bold),
-                    TextAlign = ContentAlignment.MiddleLeft
-                };
-                #endregion
+            };
+            lb2 = new Label()
+            {
+                Parent = workForm,
+                Visible = false,
+                //BackColor = Color.Green,
+                Image = Properties.Resources.paper,
+                Size = NewSize(600, 70),
+                Location = NewPoint(1560, 510 + dy),
+                Font = new Font("Arial Black Italic", NewFontSize(19), FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleLeft,
+                //ForeColor = Color.White,
+            };
+            lb3 = new Label()
+            {
+                Parent = workForm,
+                Visible = false,
+                Image = Properties.Resources.paper,
+                Size = NewSize(600, 70),
+                Location = NewPoint(1560, 710 + dy),
+                Font = new Font("Arial Black Italic", NewFontSize(20), FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+            #endregion
 
-                tm.Interval = 60;
-                tm.Tick += Tm_Tick;
-                tm.Start();
-                tmSem.Interval = 300;
-                tmSem.Tick += TmSem_Tick;
+            tm.Interval = 60;
+            tm.Tick += Tm_Tick;
+            tm.Start();
+            tmSem.Interval = 300;
+            tmSem.Tick += TmSem_Tick;
             //}
         }
         private void Tm_Tick(object sender, EventArgs e)

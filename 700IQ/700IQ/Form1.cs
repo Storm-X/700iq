@@ -1075,10 +1075,10 @@ namespace _700IQ
             {
                 if (steck.Cell != 0)
                 {
-                    if(otvetStatic == null)
+                    if (otvetStatic == null)
                         CreateAnswerTable(true);
-                    else
-                        otvetStatic.ochered(steck).GetAwaiter().GetResult();
+                    //else
+                    //    otvetStatic.ochered(steck); //.GetAwaiter().GetResult();
                     //otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
                     otvetStatic.SetFocus();
