@@ -753,7 +753,7 @@ namespace _700IQ
                     Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
                     Cursor = workForm.SetCursor(workForm.path + "Text Select.ani"),//установка курсора из файла
                 };
-                //await ochered(steckIn);
+                await ochered(steckIn);
                 bgrdPic.BringToFront();
         }
         public void SetFocus()

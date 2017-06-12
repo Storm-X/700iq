@@ -1057,8 +1057,8 @@ namespace _700IQ
                 this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
                 otvetStatic.svitok(steck, predUs).GetAwaiter().GetResult();
-                if(withQuery)
-                    otvetStatic.ochered(steck).GetAwaiter().GetResult();
+               // if(withQuery)
+                 //   otvetStatic.ochered(steck).GetAwaiter().GetResult();
                 //g.Dispose();
            // }
         }
