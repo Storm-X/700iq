@@ -1035,7 +1035,7 @@ namespace _700IQ
                 Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(900)), this, 1);
             }          
         }
-        private async void CreateAnswerTable(bool withQuery=false)
+        private void CreateAnswerTable(bool withQuery=false)
         {
            /* if (this.InvokeRequired)
             {
@@ -1062,7 +1062,7 @@ namespace _700IQ
                 //g.Dispose();
            // }
         }
-        async void Step4()    //показ очереди и передача хода первой команде
+        private void Step4()    //показ очереди и передача хода первой команде
         {
             if (this.InvokeRequired)
             {
