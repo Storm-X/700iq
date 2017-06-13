@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Storm\AppData\Local\Temp\vs8E7B.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\User\AppData\Local\Temp\vsDA8E.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Storm\AppData\Local\Temp\vs8E7B.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\User\AppData\Local\Temp\vsDA8E.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\700iq.ico</ApplicationIcon>
@@ -83,7 +83,6 @@
     <Compile Include="GameData.cs" />
     <Compile Include="GifImage.cs" />
     <Compile Include="IniFile.cs" />
-    <Compile Include="italk_theme_-_c#.cs" />
     <Compile Include="ListViewWithoutScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -467,15 +467,13 @@ namespace _700IQ
                 }
                 else
                 {
-        
                     ff.Visible = true;
                     ff.Text = txt;
                     prBar.Value = 0;
                     if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer")) pcBox.Visible = true;
-
-
                 }
                 prBar.BackgroundImage = ((Bitmap)workForm.BackgroundImage).Clone(new Rectangle(new Point(pn.X + prBar.Location.X, pn.Y + prBar.Location.Y), prBar.Size), PixelFormat.Format32bppArgb);
+                pcBox.Visible = (t == 1) ? false : true;
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;

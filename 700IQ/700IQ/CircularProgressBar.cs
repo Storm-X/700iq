@@ -26,6 +26,7 @@ namespace _700IQ
         private _ProgressShape ProgressShapeVal;
         private int progress_size = 14;
         private bool gradient = false;
+        private bool infinit = false;
 
         #endregion
         #region Custom Properties
@@ -99,6 +100,15 @@ namespace _700IQ
             set
             {
                 gradient = value;
+                Invalidate();
+            }
+        }
+        public bool Infinit
+        {
+            get { return infinit; }
+            set
+            {
+                infinit = value;
                 Invalidate();
             }
         }
