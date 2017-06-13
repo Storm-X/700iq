@@ -493,7 +493,7 @@ namespace _700IQ
             {
                 if (prBar.Value < prBar.Maximum)
                 {
-                    ff.Text = prBar.Value.ToString();//prBar.ProgressColor1.R + "  " + prBar.ProgressColor1.G;
+                    ff.Text = prBar.ProgressColor1.R + "  " + prBar.ProgressColor1.G;
                     prBar.Value++; // Value++;
                 }
 
