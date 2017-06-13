@@ -26,7 +26,8 @@ namespace _700IQ
         private _ProgressShape ProgressShapeVal;
         private int progress_size = 14;
         private bool gradient = false;
-        private bool infinit = false;
+        private bool autoReset = false;
+
 
         #endregion
         #region Custom Properties
@@ -36,8 +37,8 @@ namespace _700IQ
             get { return _Value; }
             set
             {
-                if (value > _Maximum)
-                    value = _Maximum;
+                if (value >= _Maximum)
+                    value = (autoReset) ? 0 : _Maximum;
                 _Value = value;
                 Invalidate();
             }
@@ -103,12 +104,12 @@ namespace _700IQ
                 Invalidate();
             }
         }
-        public bool Infinit
+        public bool AutoReset
         {
-            get { return infinit; }
+            get { return autoReset; }
             set
             {
-                infinit = value;
+                autoReset = value;
                 Invalidate();
             }
         }
@@ -196,7 +197,7 @@ namespace _700IQ
                     {
                         graphics.FillEllipse(brush2, progress_size + 2, progress_size + 2, (this.Width - (progress_size + 2) * 2), (this.Height - (progress_size + 2) * 2));
                     }*/
-                    SizeF MS = graphics.MeasureString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font);
+                    //SizeF MS = graphics.MeasureString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font);
                     //graphics.DrawString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font, Brushes.White, Convert.ToInt32(Width / 2 - MS.Width / 2), Convert.ToInt32(Height / 2 - MS.Height / 2));
                     e.Graphics.DrawImage(bitmap, 0, 0);
                     graphics.Dispose();

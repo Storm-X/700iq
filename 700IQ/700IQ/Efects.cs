@@ -445,10 +445,9 @@ namespace _700IQ
                         Size = NewSizeKv(200),
                         Value = 0,
                         Visible = true,
-                        Maximum = 100,
+                        Maximum = 360,
                         Gradient=false,
                         ProgressSize = NewWidth(15),
-                        BackColor = System.Drawing.Color.Transparent
                 };
                     pcBox = new PictureBoxWithInterpolationMode
                     {
@@ -478,10 +477,6 @@ namespace _700IQ
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
                 tmBar.Start();
-
-
-
-
             }
         }
         //private void TmBar_Tick(object sender, EventArgs e)//изменение временной полосы
@@ -496,23 +491,19 @@ namespace _700IQ
             }
             else
             {
-                if (prBar.Value < 100)
+                if (prBar.Value < prBar.Maximum)
                 {
                     ff.Text = prBar.Value.ToString();
                     prBar.Value++; // Value++;
-                    if (prBar.Value < 51) prBar.ProgressColor1 = Color.FromArgb(150, (int)prBar.Value * 5, 250, 0);
-                    else prBar.ProgressColor1 = Color.FromArgb(150, 250, 255 - ((int)prBar.Value - 50) * 5, 0);
+                    if (prBar.Value <= prBar.Maximum / 2) prBar.ProgressColor1 = Color.FromArgb(150, (int)(prBar.Value * 2 * 255 / prBar.Maximum), 255, 0);
+                    else prBar.ProgressColor1 = Color.FromArgb(150, 255, 255 - (int)((prBar.Value * 2 - prBar.Maximum)*255/prBar.Maximum), 0);
                 }
 
                 else
                 {
                     ((System.Timers.Timer)state).Stop();
                     ((System.Timers.Timer)state).Dispose();
-                    //tmBar.Stop();
-                    //tmBar.Dispose();
                     ff.Visible = false;
-                    prBar.Value = 0;
-                    pcBox.Visible = false;
                     workForm.Invalidate();
                     onPolosaEnd?.Invoke();
                 }
@@ -539,13 +530,8 @@ namespace _700IQ
             var reportProgress = new Action(() =>
             {
                 pcBox.Image = Properties.Resources.Неактивная;
-                prBar.Value = 100;
-                //tmBar.Stop();
-                //tmBar.Dispose();
-                //ff.Dispose();
-                //pcBox.Dispose();
-                //workForm.Invalidate();
-                //onPolosaEnd();
+                ff.Visible = false;
+                prBar.Value = prBar.Maximum;
             });
             workForm.BeginInvoke(reportProgress);
         }
