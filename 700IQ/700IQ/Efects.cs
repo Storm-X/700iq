@@ -493,10 +493,8 @@ namespace _700IQ
             {
                 if (prBar.Value < prBar.Maximum)
                 {
-                    ff.Text = prBar.Value.ToString();
+                    ff.Text = prBar.Value.ToString();//prBar.ProgressColor1.R + "  " + prBar.ProgressColor1.G;
                     prBar.Value++; // Value++;
-                    if (prBar.Value <= prBar.Maximum / 2) prBar.ProgressColor1 = Color.FromArgb(150, (int)(prBar.Value * 2 * 255 / prBar.Maximum), 255, 0);
-                    else prBar.ProgressColor1 = Color.FromArgb(150, 255, 255 - (int)((prBar.Value * 2 - prBar.Maximum)*255/prBar.Maximum), 0);
                 }
 
                 else

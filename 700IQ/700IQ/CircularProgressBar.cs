@@ -19,8 +19,8 @@ namespace _700IQ
         #endregion
         #region Variables
 
-        private long _Value;
-        private long _Maximum = 100;
+        private int _Value;
+        private int _Maximum = 100;
         private Color _ProgressColor1 = Color.FromArgb(92, 92, 92);
         private Color _ProgressColor2 = Color.FromArgb(92, 92, 92);
         private _ProgressShape ProgressShapeVal;
@@ -28,11 +28,10 @@ namespace _700IQ
         private bool gradient = false;
         private bool autoReset = false;
 
-
         #endregion
         #region Custom Properties
 
-        public long Value
+        public int Value
         {
             get { return _Value; }
             set
@@ -44,7 +43,7 @@ namespace _700IQ
             }
         }
 
-        public long Maximum
+        public int Maximum
         {
             get { return _Maximum; }
             set
@@ -167,6 +166,9 @@ namespace _700IQ
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            if (_ProgressColor1 != null)
+            if (_Value <= _Maximum / 2) _ProgressColor1 = Color.FromArgb(150, _Value * 2 * 255 / _Maximum, 255, 0);
+            else _ProgressColor1 = Color.FromArgb(150, 255, 255 - (_Value * 2 - _Maximum) * 255 / _Maximum, 0);
             using (Bitmap bitmap = new Bitmap(this.Width, this.Height)) // BackgroundImage))
             {
                 using (Graphics graphics = Graphics.FromImage(bitmap))
