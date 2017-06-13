@@ -385,7 +385,7 @@ namespace _700IQ
         public PolosaEnd onPolosaEnd;
         //Size resolution; // = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         PictureBoxWithInterpolationMode pcBox;
-        CircularProgressBar prBar;
+        public CircularProgressBar prBar;
         //private Form fsv;
 
         public Label ff;
@@ -440,7 +440,7 @@ namespace _700IQ
                     prBar = new CircularProgressBar()
                     {
                         Location = NewRelPoint(350, 0),
-                        ProgressColor1 = Color.FromArgb(200, 12, 163, 218),
+                        AutoResetColor = Color.FromArgb(200, 12, 163, 218),
                         Parent = ff,
                         Size = NewSizeKv(200),
                         Value = 0,
@@ -473,6 +473,7 @@ namespace _700IQ
                 }
                 //prBar.BackgroundImage = ((Bitmap)workForm.BackgroundImage).Clone(new Rectangle(new Point(pn.X + prBar.Location.X, pn.Y + prBar.Location.Y), prBar.Size), PixelFormat.Format32bppArgb);
                 pcBox.Visible = (t == 1) ? false : true;
+                prBar.AutoReset = (t == 1) ? true : false;
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
@@ -506,7 +507,6 @@ namespace _700IQ
                     onPolosaEnd?.Invoke();
                 }
             }
-
             //var reportProgress = new Action(() =>
             //{
             //    if (prBar.Value < 100) prBar.PerformStep(); // Value++;

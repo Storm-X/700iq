@@ -735,6 +735,8 @@ namespace _700IQ
             {
                 if (steck.step != currStep) //то завершить предыдущий шаг. Step7_finalise();
                 {
+                    pol.prBar.AutoReset = false;
+                    pol.prBar.Value = pol.prBar.Maximum;
                     switch (currStep)
                     {
                         case 7:
@@ -887,8 +889,12 @@ namespace _700IQ
 
                 // Polosa pol = new Polosa();
                 pol.AnyEventHarakiri();
-                pol.onPolosaEnd += Step1_4;
-                pol.polosa((StartStep == steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
+                if (StartStep == steck.step) Step1_4();
+                else
+                {
+                    pol.onPolosaEnd += Step1_4;
+                    pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
+                }
                 this.Invalidate();
             }
         }
@@ -910,6 +916,7 @@ namespace _700IQ
                 gotov.otvet = "gotov";
                 gotov.kluch = myTeam.kod; //kluch;
                 cn.SendUDP("zgg" + JsonConvert.SerializeObject(gotov));
+                if (StartStep == steck.step) pol.polosa(1, NewPoint(1600, 1350), this, "синхр");
             }
         }
         #endregion

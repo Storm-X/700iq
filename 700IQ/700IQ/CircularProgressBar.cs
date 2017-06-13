@@ -21,12 +21,14 @@ namespace _700IQ
 
         private int _Value;
         private int _Maximum = 100;
-        private Color _ProgressColor1 = Color.FromArgb(92, 92, 92);
-        private Color _ProgressColor2 = Color.FromArgb(92, 92, 92);
+        private Color _ProgressColor1 = Color.Green;
+        private Color _ProgressColor2 = Color.Red;
+        private Color _AutoResetColor = Color.Blue;
         private _ProgressShape ProgressShapeVal;
         private int progress_size = 14;
         private bool gradient = false;
         private bool autoReset = false;
+        private bool defaul_color = true;
 
         #endregion
         #region Custom Properties
@@ -71,6 +73,17 @@ namespace _700IQ
             set
             {
                 _ProgressColor2 = value;
+                defaul_color = ((_ProgressColor1 == Color.Green) && (_ProgressColor2 == Color.Red)) ? true : false;
+                Invalidate();
+            }
+        }
+
+        public Color AutoResetColor
+        {
+            get { return _AutoResetColor; }
+            set
+            {
+                _AutoResetColor = value;
                 Invalidate();
             }
         }
@@ -81,6 +94,7 @@ namespace _700IQ
             set
             {
                 ProgressShapeVal = value;
+                defaul_color = ((_ProgressColor1 == Color.Green) && (_ProgressColor2 == Color.Red)) ? true : false;
                 Invalidate();
             }
         }
@@ -166,12 +180,12 @@ namespace _700IQ
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            if (_ProgressColor1 != null)
+            if (defaul_color) 
             {
-                //if (_Value <= _Maximum / 2) _ProgressColor1 = Color.FromArgb(150, _Value * 2 * 255 / _Maximum, 255, 0);
-                //else _ProgressColor1 = Color.FromArgb(150, 255, 255 - (_Value * 2 - _Maximum) * 255 / _Maximum, 0);
-                double curVal = (2 * (double)_Value / (double)_Maximum) - 1;
-                _ProgressColor1 = Color.FromArgb(150, (int)(Math.Max(curVal, 0) * 255), (int)(-Math.Min(curVal, -1) * 255), 0);
+                if (_Value <= _Maximum / 2) _ProgressColor1 = Color.FromArgb(150, _Value * 2 * 255 / _Maximum, 255, 0);
+                else _ProgressColor1 = Color.FromArgb(150, 255, 255 - (_Value * 2 - _Maximum) * 255 / _Maximum, 0);
+               /* double curVal = (2 * (double)_Value / (double)_Maximum) - 1;
+                _ProgressColor1 = Color.FromArgb(150, (int)(Math.Max(curVal, 0) * 255), (int)(-Math.Min(curVal, -1) * 255), 0);*/
             }
             using (Bitmap bitmap = new Bitmap(this.Width, this.Height)) // BackgroundImage))
             {
@@ -195,7 +209,8 @@ namespace _700IQ
                                     pen.EndCap = LineCap.Flat;
                                     break;
                             }
-                            graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
+                            if (autoReset) graphics.DrawArc(new Pen(_AutoResetColor, progress_size), progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))), 120);
+                            else graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
                         }
                     }
                     /*
