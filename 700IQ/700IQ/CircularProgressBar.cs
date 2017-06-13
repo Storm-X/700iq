@@ -141,6 +141,8 @@ namespace _700IQ
             Font = new Font("Segoe UI", 15);
             MinimumSize = new Size(100, 100);
             DoubleBuffered = true;
+            this.SetStyle(System.Windows.Forms.ControlStyles.SupportsTransparentBackColor, true);
+            this.BackColor = System.Drawing.Color.Transparent;
         }
 
         private void SetStandardSize()
@@ -164,11 +166,12 @@ namespace _700IQ
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            using (Bitmap bitmap = new Bitmap(BackgroundImage))
+            using (Bitmap bitmap = new Bitmap(this.Width, this.Height)) // BackgroundImage))
             {
                 using (Graphics graphics = Graphics.FromImage(bitmap))
                 {
                     graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    graphics.Clear(this.BackColor);
                     using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, this._ProgressColor1, (gradient) ? this._ProgressColor2 : this._ProgressColor1, LinearGradientMode.ForwardDiagonal))
                     {
                         using (Pen pen = new Pen(brush, progress_size))
@@ -194,7 +197,7 @@ namespace _700IQ
                         graphics.FillEllipse(brush2, progress_size + 2, progress_size + 2, (this.Width - (progress_size + 2) * 2), (this.Height - (progress_size + 2) * 2));
                     }*/
                     SizeF MS = graphics.MeasureString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font);
-                    graphics.DrawString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font, Brushes.White, Convert.ToInt32(Width / 2 - MS.Width / 2), Convert.ToInt32(Height / 2 - MS.Height / 2));
+                    //graphics.DrawString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font, Brushes.White, Convert.ToInt32(Width / 2 - MS.Width / 2), Convert.ToInt32(Height / 2 - MS.Height / 2));
                     e.Graphics.DrawImage(bitmap, 0, 0);
                     graphics.Dispose();
                     bitmap.Dispose();
