@@ -63,6 +63,7 @@ namespace _700IQ
             set
             {
                 _ProgressColor1 = value;
+                defaul_color = ((_ProgressColor1 == Color.Green) && (_ProgressColor2 == Color.Red)) ? true : false;
                 Invalidate();
             }
         }
@@ -94,7 +95,6 @@ namespace _700IQ
             set
             {
                 ProgressShapeVal = value;
-                defaul_color = ((_ProgressColor1 == Color.Green) && (_ProgressColor2 == Color.Red)) ? true : false;
                 Invalidate();
             }
         }
@@ -182,10 +182,12 @@ namespace _700IQ
             base.OnPaint(e);
             if (defaul_color) 
             {
-                if (_Value <= _Maximum / 2) _ProgressColor1 = Color.FromArgb(150, _Value * 2 * 255 / _Maximum, 255, 0);
-                else _ProgressColor1 = Color.FromArgb(150, 255, 255 - (_Value * 2 - _Maximum) * 255 / _Maximum, 0);
-               /* double curVal = (2 * (double)_Value / (double)_Maximum) - 1;
-                _ProgressColor1 = Color.FromArgb(150, (int)(Math.Max(curVal, 0) * 255), (int)(-Math.Min(curVal, -1) * 255), 0);*/
+                //if (_Value <= _Maximum / 2) _ProgressColor1 = Color.FromArgb(150, _Value * 2 * 255 / _Maximum, 255, 0);
+                //else _ProgressColor1 = Color.FromArgb(150, 255, 255 - (_Value * 2 - _Maximum) * 255 / _Maximum, 0);
+                Double curVal = (2 * (double)_Value / (double)_Maximum) - 1;
+                //Double Red = 255 * (1 + Math.Min(curVal, 0));
+                //Double Green = 255 * (1 - Math.Max(curVal, 0));
+                _ProgressColor1 = Color.FromArgb(200, Convert.ToByte(255 * (1 + Math.Min(curVal, 0))), Convert.ToByte(255 * (1 - Math.Max(curVal, 0))), 0);
             }
             using (Bitmap bitmap = new Bitmap(this.Width, this.Height)) // BackgroundImage))
             {
