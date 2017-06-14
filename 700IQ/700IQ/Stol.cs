@@ -789,7 +789,8 @@ namespace _700IQ
                 BackgroundImageLayout = ImageLayout.Zoom,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
-                InterpolationMode = InterpolationMode.NearestNeighbor
+                InterpolationMode = InterpolationMode.NearestNeighbor,
+              
             };
             pc2 = new PictureBoxWithInterpolationMode()
             {
@@ -825,7 +826,7 @@ namespace _700IQ
                 {
                     Parent = pc1,
                     //Name = "oneuse",
-                    Visible = true,
+                    Visible =  true,
                     Enabled = false,
                     BackColor = Color.Transparent,
                     Size = NewSizeKv(170),
@@ -872,7 +873,7 @@ namespace _700IQ
             lbst1 = new Label()
             {
                 Parent = workForm,
-                Visible = true,
+                Visible = false,
                 BackColor = Color.Transparent,
                 Size = NewSize(95, 120),
                 Location = NewPoint(1400, 275 + dy),
@@ -884,7 +885,7 @@ namespace _700IQ
             lbst2 = new Label()
             {
                 Parent = workForm,
-                Visible = true,
+                Visible = false,
                 BackColor = Color.Transparent,
                 Size = NewSize(95, 120),
                 Location = NewPoint(1400, 470 + dy),
@@ -896,7 +897,7 @@ namespace _700IQ
             lbst3 = new Label()
             {
                 Parent = workForm,
-                Visible = true,
+                Visible = false,
                 BackColor = Color.Transparent,
                 Size = NewSize(95, 120),
                 Location = NewPoint(1400, 680 + dy),
@@ -945,7 +946,7 @@ namespace _700IQ
 
             tm.Interval = 60;
             tm.Tick += Tm_Tick;
-            tm.Start();
+          //  tm.Start();
             tmSem.Interval = 300;
             tmSem.Tick += TmSem_Tick;
             //}
@@ -957,11 +958,11 @@ namespace _700IQ
             if (tick == 6) pc2.Visible = true;
             if (tick == 12) { pc3.Visible = true; tm.Dispose(); }
         }
-        #region включение полей ответов
-        public void Ot1Show() { pc1.Visible = true; pc1.BringToFront(); }
-        public void Ot2Show() { pc2.Visible = true; pc2.BringToFront(); }
-        public void Ot3Show() { pc3.Visible = true; pc3.BringToFront(); }
-        #endregion    
+        //#region включение полей ответов
+        //public void Ot1Show() { pc1.Visible = true; pc1.BringToFront(); }
+        //public void Ot2Show() { pc2.Visible = true; pc2.BringToFront(); }
+        //public void Ot3Show() { pc3.Visible = true; pc3.BringToFront(); }
+        //#endregion    
         #region методы для мигания поля
         public void semafor(int number)//запуск и остановка таймера для мигания
         {
@@ -996,6 +997,7 @@ namespace _700IQ
          //   string ss;
          //   foreach (var sss in ((System.Reflection.TypeInfo)(this.GetType())).DeclaredMembers)
          //       ss = sss.Name.ToString();
+
             switch (semaforN)
             {
                 case 1:
@@ -1185,7 +1187,7 @@ namespace _700IQ
             {
                 step = Curstep;
                 pol.AnyEventHarakiri();
-                pol.polosa(100, NewPoint(1700, 1350), ff, "CurStep = " + Curstep.ToString());
+                pol.polosa(28, NewPoint(1700, 1350), ff, "CurStep = " + Curstep.ToString());
                 pol.onPolosaEnd += sendOtvet;
             }
         }
@@ -1317,7 +1319,7 @@ namespace _700IQ
 
                 pol.AnyEventHarakiri();
                 pol.onPolosaEnd += StavkaEndTime;
-                pol.polosa(200, NewPoint(1700, 1350), fsv, "Stavka");
+                pol.polosa(56, NewPoint(1700, 1350), fsv, "Stavka");
             }
         }
 

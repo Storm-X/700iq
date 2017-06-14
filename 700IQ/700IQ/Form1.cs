@@ -217,7 +217,7 @@ namespace _700IQ
             ////для теста Рулетки на старте проги
             ///Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
             ///Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
-            pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+            //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
 
         }
 
@@ -551,7 +551,7 @@ namespace _700IQ
 
             pol.AnyEventHarakiri();
             pol.onPolosaEnd += ini4;
-            pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+            pol.polosa(11, NewPoint(1600, 1350), this, "ini3");
            
         }      
         void ini4()//вывод спсок зарегистрированных команд
@@ -733,10 +733,10 @@ namespace _700IQ
         {
             if (StartStep != steck.step)
             {
+               
                 if (steck.step != currStep) //то завершить предыдущий шаг. Step7_finalise();
                 {
-                    pol.prBar.AutoReset = false;
-                    pol.prBar.Value = pol.prBar.Maximum;
+            
                     switch (currStep)
                     {
                         case 7:
@@ -752,6 +752,11 @@ namespace _700IQ
                         case 2:
                             Step2_finalise();
                             break;
+                        case 0:
+                            pol.prBar.AutoReset = false;
+                            pol.prBar.Value = pol.prBar.Maximum;
+                            break;
+
                     }
                     switch (steck.step)
                     {
@@ -819,7 +824,7 @@ namespace _700IQ
                     //Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Temy;
-                    pol.polosa(70, NewPoint(1600, 1350), this, "Step1");
+                    pol.polosa(20, NewPoint(1600, 1350), this, "Step1");
                 }
             }         
         }     
@@ -829,7 +834,7 @@ namespace _700IQ
             // Polosa pol = new Polosa();
             pol.AnyEventHarakiri();
             pol.onPolosaEnd += Step1_3;
-            pol.polosa(40, NewPoint(1600, 1350),this, "Temy");
+            pol.polosa(11, NewPoint(1600, 1350),this, "Temy");
          
         }
         void Step1_3()  // заставка игрового стола 
@@ -893,7 +898,7 @@ namespace _700IQ
                 else
                 {
                     pol.onPolosaEnd += Step1_4;
-                    pol.polosa(200, NewPoint(1600, 1350), this, "Step1_3");
+                    pol.polosa(56, NewPoint(1600, 1350), this, "Step1_3");
                 }
                 this.Invalidate();
             }
@@ -1005,6 +1010,7 @@ namespace _700IQ
             else
             {
                 Ruletka?.close();
+
                 this.Invalidate();
             }
         }
@@ -1143,7 +1149,7 @@ namespace _700IQ
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
-                        pol.polosa(50, NewPoint(1600, 1350), this, "Step4 - Zero");
+                        pol.polosa(14, NewPoint(1600, 1350), this, "Step4 - Zero");
                     
                 }
             }
@@ -1313,7 +1319,7 @@ namespace _700IQ
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
-                    pol.polosa(100, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
+                    pol.polosa(28, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
 
                 }
                 else
@@ -1337,7 +1343,7 @@ namespace _700IQ
             }
             else
             {
-                otvetStatic.close();
+                otvetStatic?.close();
                 otvetStatic = null;
                 this.Invalidate();
             }
