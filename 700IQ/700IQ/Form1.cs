@@ -54,6 +54,7 @@ namespace _700IQ
         public IPAddress IP = null;
         public static string infoOfserver;
         public CustomLabel iQash1, iQash2, iQash3;
+        public CustomLabel name1, name2, name3;
         private int currStep = 0;
 
         struct SendData //структурированные данные отправляемые серверу
@@ -201,7 +202,7 @@ namespace _700IQ
             };
             
             pcBox.Click += onClickMedal;
-   //тест рулетки, ставок, темы
+            //тест рулетки, ставок, темы
             /* 
             Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
             Ruletka.StartRul(0, kv, this, 2); // 2);
@@ -215,8 +216,10 @@ namespace _700IQ
            */
             #endregion
             ////для теста Рулетки на старте проги
-            //Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            //Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+            ///Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+            ///Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+            //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+
         }
 
         private void dataReceive(string response)
@@ -549,7 +552,7 @@ namespace _700IQ
 
             pol.AnyEventHarakiri();
             pol.onPolosaEnd += ini4;
-            pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+            pol.polosa(11, NewPoint(1600, 1350), this, "ini3");
            
         }      
         void ini4()//вывод спсок зарегистрированных команд
@@ -731,8 +734,10 @@ namespace _700IQ
         {
             if (StartStep != steck.step)
             {
+               
                 if (steck.step != currStep) //то завершить предыдущий шаг. Step7_finalise();
                 {
+            
                     switch (currStep)
                     {
                         case 7:
@@ -748,6 +753,11 @@ namespace _700IQ
                         case 2:
                             Step2_finalise();
                             break;
+                        case 0:
+                            pol.prBar.AutoReset = false;
+                            pol.prBar.Value = pol.prBar.Maximum;
+                            break;
+
                     }
                     switch (steck.step)
                     {
@@ -796,7 +806,7 @@ namespace _700IQ
             else
             {
                 RemoveTempControls();
-                tbl = new Table(predUs, myTeam.table-1, this);
+                tbl = new Table(predUs, steck, myTeam.table-1, this);
                 if (steck.iCon > 12)
                 {
                     Step10();
@@ -806,7 +816,7 @@ namespace _700IQ
                 if (steck.step != 0)
                 {
                     //CheckSteck();
-                    StartStep = steck.step - 1;
+                    StartStep = steck.step;
                     Step1_3();
                 }
                 else
@@ -815,7 +825,7 @@ namespace _700IQ
                     //Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Temy;
-                    pol.polosa(70, NewPoint(1600, 1350), this, "Step1");
+                    pol.polosa(20, NewPoint(1600, 1350), this, "Step1");
                 }
             }         
         }     
@@ -825,7 +835,7 @@ namespace _700IQ
             // Polosa pol = new Polosa();
             pol.AnyEventHarakiri();
             pol.onPolosaEnd += Step1_3;
-            pol.polosa(40, NewPoint(1600, 1350),this, "Temy");
+            pol.polosa(11, NewPoint(1600, 1350),this, "Temy");
          
         }
         void Step1_3()  // заставка игрового стола 
@@ -885,8 +895,12 @@ namespace _700IQ
 
                 // Polosa pol = new Polosa();
                 pol.AnyEventHarakiri();
-                pol.onPolosaEnd += Step1_4;
-                pol.polosa((StartStep == steck.step) ? 1 : 200, NewPoint(1600, 1350), this, "Step1_3");
+                if (StartStep == steck.step) Step1_4();
+                else
+                {
+                    pol.onPolosaEnd += Step1_4;
+                    pol.polosa(56, NewPoint(1600, 1350), this, "Step1_3");
+                }
                 this.Invalidate();
             }
         }
@@ -908,6 +922,7 @@ namespace _700IQ
                 gotov.otvet = "gotov";
                 gotov.kluch = myTeam.kod; //kluch;
                 cn.SendUDP("zgg" + JsonConvert.SerializeObject(gotov));
+                if (StartStep == steck.step) pol.polosa(1, NewPoint(1600, 1350), this, "синхр");
             }
         }
         #endregion
@@ -996,6 +1011,7 @@ namespace _700IQ
             else
             {
                 Ruletka?.close();
+
                 this.Invalidate();
             }
         }
@@ -1035,7 +1051,7 @@ namespace _700IQ
                 Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1640, 150), NewSizeKv(900)), this, 1);
             }          
         }
-        private async void CreateAnswerTable(bool withQuery=false)
+        private void CreateAnswerTable(bool withQuery=false)
         {
            /* if (this.InvokeRequired)
             {
@@ -1049,6 +1065,8 @@ namespace _700IQ
                 RemoveTempControls();
                 foreach (Control t in this.Controls.Find("iQash", true))
                     this.Controls.Remove(t);
+                foreach (Control t in this.Controls.Find("names", true))
+                    this.Controls.Remove(t);
                 this.Invalidate();
                 //Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
                 //Graphics g = Graphics.FromImage(bmp);
@@ -1056,13 +1074,13 @@ namespace _700IQ
 
                 this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
-                await otvetStatic.svitok(steck, predUs);
-                if(withQuery)
-                    await otvetStatic.ochered(steck);
+                otvetStatic.svitok(steck, predUs).GetAwaiter().GetResult();
+               // if(withQuery)
+                 //   otvetStatic.ochered(steck).GetAwaiter().GetResult();
                 //g.Dispose();
            // }
         }
-        async void Step4()    //показ очереди и передача хода первой команде
+        private void Step4()    //показ очереди и передача хода первой команде
         {
             if (this.InvokeRequired)
             {
@@ -1075,13 +1093,13 @@ namespace _700IQ
             {
                 if (steck.Cell != 0)
                 {
-                    if(otvetStatic == null)
+                    if (otvetStatic == null)
                         CreateAnswerTable(true);
-                    else
-                        await otvetStatic.ochered(steck);
+                    //else
+                    //    otvetStatic.ochered(steck); //.GetAwaiter().GetResult();
                     //otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
-                    otvetStatic.focus();
+                    otvetStatic.SetFocus();
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
@@ -1134,7 +1152,7 @@ namespace _700IQ
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
-                        pol.polosa(50, NewPoint(1600, 1350), this, "Step4 - Zero");
+                        pol.polosa(14, NewPoint(1600, 1350), this, "Step4 - Zero");
                     
                 }
             }
@@ -1178,7 +1196,7 @@ namespace _700IQ
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
                     otvetStatic.semafor(2);
-                    otvetStatic.focus();
+                    otvetStatic.SetFocus();
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
@@ -1207,23 +1225,6 @@ namespace _700IQ
                 }
             }
         }
-        void Step5_7_finalise()
-        {
-            if (this.InvokeRequired)
-            {
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    Step5_7_finalise();
-                });
-            }
-            else
-            {
-                otvetStatic.close();
-                otvetStatic = null;
-                this.Invalidate();
-            }
-        }
-
         void Step6()    //получение ответа от второй команды 
         {
             if (this.InvokeRequired)
@@ -1247,7 +1248,7 @@ namespace _700IQ
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
                     otvetStatic.semafor(3);
-                    otvetStatic.focus();
+                    otvetStatic.SetFocus();
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
@@ -1321,7 +1322,7 @@ namespace _700IQ
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
-                    pol.polosa(100, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
+                    pol.polosa(28, NewPoint(1600, 1350), this, "Step7 - NoAnswer"); 
 
                 }
                 else
@@ -1333,7 +1334,24 @@ namespace _700IQ
                     stShow.inputStavki(stav, 0, 0, 0, this);
                 }
             }
-        }    
+        }
+        void Step5_7_finalise()
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    Step5_7_finalise();
+                });
+            }
+            else
+            {
+                otvetStatic?.close();
+                otvetStatic = null;
+                this.Invalidate();
+            }
+        }
+
         private void Step9()//  окончание айкона
         {
             if (this.InvokeRequired)
@@ -1417,6 +1435,15 @@ namespace _700IQ
         {
             return x * resolution.Height / 1017;
             //return new Point((int)(x  this.Width / 2500), (int)(this.Height  y / 1600));
+        }
+
+        public int NewWidth(int x)
+        {
+            return x * resolution.Width / 2500;
+        }
+        public int NewHeight(int x)
+        {
+            return x * resolution.Height / 1600;
         }
         public void cleanTable(Point pn, Size sz)
         {

@@ -1324,9 +1324,9 @@ namespace MainServer
                         byte[] receiveBytes = result.Buffer;
                         byte[] bytes;
                         string txt = Encoding.UTF8.GetString(receiveBytes);
-                        // textBox1.Text += (txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt;
-                        sw.WriteLine((txt.Length > 3) ? (txt.Length > 4) ? txt.Substring(0, 5) : txt.Substring(0, 4) : txt);
-                        if (!stopGame) //если игра не приостановлена, то ...
+          
+                         sw.WriteLine(txt);
+                    if (!stopGame) //если игра не приостановлена, то ...
                         {
                             if (txt != null && txt.Length > 2)
                             {
