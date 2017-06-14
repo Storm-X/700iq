@@ -198,7 +198,7 @@ namespace _700IQ
             };
             PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
             {
-                Parent = ePanel,
+                Parent = ePanel, //this,
                 Name = "oneuse",
                 Visible = true,
                 //Location = pn,
