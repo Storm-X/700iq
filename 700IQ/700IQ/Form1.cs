@@ -199,7 +199,6 @@ namespace _700IQ
                 Image = bmp,
                 SizeMode = PictureBoxSizeMode.Zoom,
             };
-            
             pcBox.Click += onClickMedal;
             //тест рулетки, ставок, темы
             /* 
@@ -217,8 +216,21 @@ namespace _700IQ
             ////для теста Рулетки на старте проги
             ///Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
             ///Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+            PictureBoxWithInterpolationMode pcTest = new PictureBoxWithInterpolationMode()
+            {
+                Parent = this,
+                //Name = "oneuse",
+                Visible = true,
+                Enabled = false,
+                BackColor = Color.Transparent,
+                Size = NewSizeKv(170),
+                Location = NewRelPoint(0, 0),
+                BackgroundImageLayout = ImageLayout.Zoom,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                SmoothingMode = SmoothingMode.HighQuality,
+                InterpolationMode = InterpolationMode.HighQualityBicubic
+            };
             pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
-
         }
 
         private void dataReceive(string response)

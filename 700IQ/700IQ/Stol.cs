@@ -978,17 +978,17 @@ namespace _700IQ
             {*/
             //if (tmSem.Enabled || number == 0)
             //{
-                tmSem.Stop();
-                //pc1.Visible = true;
-                //lbst1.Visible = true;
-                //pc2.Visible = true;
-                //lbst2.Visible = true;
-                //pc3.Visible = true;
-                //lbst3.Visible = true;
+            tmSem.Stop();
+            //pc1.Visible = true;
+            //lbst1.Visible = true;
+            //pc2.Visible = true;
+            //lbst2.Visible = true;
+            //pc3.Visible = true;
+            //lbst3.Visible = true;
             //}
             //else
-                tmSem.Start();
-                semaforN = number;
+            semaforN = number;
+            tmSem.Start();
             /*}*/
         }
         void semStart()//мигание отвечающей команды
@@ -1044,7 +1044,7 @@ namespace _700IQ
         }
         
         #endregion
-        public void getArrayOfFrames(Image im)
+        /*public void getArrayOfFrames(Image im)
         {
             gifImage = new GifImage(im);
             gifImage.ReverseAtEnd = false; //dont reverse at end
@@ -1056,7 +1056,7 @@ namespace _700IQ
             //    im.SelectActiveFrame(dimension, i);
             //    arr[i] = new Bitmap(im);
             //}
-        }
+        }*/
 
         public void answer(int o, string otv, bool correct) //неправильный ответ
         {
@@ -1069,44 +1069,44 @@ namespace _700IQ
             }
             else
             {*/
-                Bitmap im2 = Properties.Resources.галочка;
-                Bitmap im3 = Properties.Resources.крестик;
+                //Image im2 = Properties.Resources.галочка;
+                //Image im3 = Properties.Resources.крестик;
+                Image imCorrect = correct ? Properties.Resources.галочка : Properties.Resources.крестик;
                 gifTimer.Interval = 25;
                 semafor(0);
-                //if (correct)
-                //{
-                    getArrayOfFrames(correct ? im2 : im3);
-                //}
-                //else
-                //{
-                //    getArrayOfFrames(im3);
-                //}
-                    
-                if (o == 1)
+            //getArrayOfFrames(imCorrect);
+            gifImage = new GifImage(imCorrect);
+            gifImage.ReverseAtEnd = false; //dont reverse at end
+
+            switch (o)
                 {
+                case 1:
                     lb1.Text = otv;
-                    indexImage = 0;
                     lb1.Visible = true;
                     lb1.BringToFront();
-                    gifTimer.Start();
-                }
-                if (o == 2)
-                {
+                    break;
+                case 2:
                     lb2.Text = otv;
                     lb2.Visible = true;
-                    indexImage = 1;
                     lb2.BringToFront();
-                    gifTimer.Start();
-                }
-                if (o == 3)
-                {
+                    break;
+                case 3:
                     lb3.Text = otv;
                     lb3.Visible = true;
                     lb3.BringToFront();
-                    indexImage = 2;
-                    gifTimer.Start();
-                }
-           
+                    break;
+                default:
+                    return;
+            }
+            indexImage = --o;
+            for (int i = 0; i < indexImage; i++)
+            {
+                pcResult[indexImage].Image = Properties.Resources.крестик;
+                FrameDimension dimension = new FrameDimension(pcResult[indexImage].Image.FrameDimensionsList[0]);
+                pcResult[indexImage].Image.SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
+            }
+            indexToPaint = 0;
+            gifTimer.Start();
             //}
         }
         void gifTimer_Tick(object sender, EventArgs e)
