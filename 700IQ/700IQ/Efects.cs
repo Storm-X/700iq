@@ -468,11 +468,10 @@ namespace _700IQ
                 {
                     ff.Visible = true;
                     ff.Text = txt;
-                    prBar.Value = 0;
-                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer")) pcBox.Visible = true;
+                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer")&& (txt != "синхр")) pcBox.Visible = true;
                 }
                 //prBar.BackgroundImage = ((Bitmap)workForm.BackgroundImage).Clone(new Rectangle(new Point(pn.X + prBar.Location.X, pn.Y + prBar.Location.Y), prBar.Size), PixelFormat.Format32bppArgb);
-                pcBox.Visible = (t == 1) ? false : true;
+                //pcBox.Visible = (txt == "синхр") ? false : true;
                 prBar.AutoReset = (t == 1) ? true : false;
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
@@ -494,7 +493,7 @@ namespace _700IQ
             {
                 if (prBar.Value < prBar.Maximum)
                 {
-                    ff.Text = prBar.ProgressColor1.R + "  " + prBar.ProgressColor1.G;
+                    //ff.Text = prBar.ProgressColor1.R + "  " + prBar.ProgressColor1.G;
                     prBar.Value++; // Value++;
                 }
 
@@ -502,6 +501,8 @@ namespace _700IQ
                 {
                     ((System.Timers.Timer)state).Stop();
                     ((System.Timers.Timer)state).Dispose();
+                    prBar.Value = 0;
+                    pcBox.Visible = false;
                     ff.Visible = false;
                     workForm.Invalidate();
                     onPolosaEnd?.Invoke();
