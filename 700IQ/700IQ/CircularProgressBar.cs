@@ -184,10 +184,10 @@ namespace _700IQ
             {
                 //if (_Value <= _Maximum / 2) _ProgressColor1 = Color.FromArgb(150, _Value * 2 * 255 / _Maximum, 255, 0);
                 //else _ProgressColor1 = Color.FromArgb(150, 255, 255 - (_Value * 2 - _Maximum) * 255 / _Maximum, 0);
-                Double curVal = (2 * (double)_Value / (double)_Maximum) - 1;
+                Double curVal = (2 * (double)_Value / _Maximum) - 1;
                 //Double Red = 255 * (1 + Math.Min(curVal, 0));
                 //Double Green = 255 * (1 - Math.Max(curVal, 0));
-                _ProgressColor1 = Color.FromArgb(200, Convert.ToByte(255 * (1 + Math.Min(curVal, 0))), Convert.ToByte(255 * (1 - Math.Max(curVal, 0))), 0);
+                _ProgressColor1 = Color.FromArgb(200, (byte)(255 * (1 + Math.Min(curVal, 0))), (byte)(255 * (1 - Math.Max(curVal, 0))), 0);
             }
             using (Bitmap bitmap = new Bitmap(this.Width, this.Height)) // BackgroundImage))
             {
