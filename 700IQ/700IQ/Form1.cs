@@ -186,12 +186,22 @@ namespace _700IQ
             Point pn = NewPoint(1060, 691);
             pn.X += delta < 0 ? delta : 0;
             bmp = Properties.Resources.rotor;
-            PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
+            ExtendedPanel ePanel = new ExtendedPanel()
             {
                 Parent = this,
                 Name = "oneuse",
                 Visible = true,
                 Location = pn,
+                BackColor = Color.Transparent,
+                Size = NewSizeKv(390),
+                Opacity = 30
+            };
+            PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
+            {
+                Parent = ePanel, //this,
+                Name = "oneuse",
+                Visible = true,
+                //Location = pn,
                 BackColor = Color.Transparent,
                 SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                 InterpolationMode = InterpolationMode.HighQualityBicubic,
