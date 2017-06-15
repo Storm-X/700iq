@@ -30,7 +30,7 @@ namespace _700IQ
             this.SetStyle(ControlStyles.UserPaint, true);
 
             InitializeComponent();
-            //DoubleBuffered = true;//Flickers a lot without this
+            DoubleBuffered = true;//Flickers a lot without this
 
             _CurrentAlpha = 255;
             _MinAlpha = 255;

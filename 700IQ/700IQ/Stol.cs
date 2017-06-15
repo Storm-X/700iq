@@ -20,64 +20,39 @@ namespace _700IQ
     class Table : resize //отрисовка команд за столом
     {
         #region переменные
-
-        //Image[] fish = new Image[] { Properties.Resources.kom1, Properties.Resources.kom2, Properties.Resources.kom3 };
         Data predUs;
         Bitmap bmpStol;
-        Bitmap[] fish = new Bitmap[3];
-      
-        //private Form fsv;
+        Bitmap[] fish;
+        CustomLabel[] teams;
+        CustomLabel[] iQash;
         #endregion
 
-        public Table(Data predus, int tableofkom, GeneralForm fsv)
+        public Table(Data predus, GeneralForm fsv)
         {
             workForm = fsv;
-            bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
-            Graphics g = Graphics.FromImage(bmpStol);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             this.predUs = predus;
-            //this.fsv = fsv;
-           
-            fish[0] = new Bitmap(Properties.Resources.kom1, NewSizeKv(170));
-            fish[1] = new Bitmap(Properties.Resources.kom2, NewSizeKv(170));
-            fish[2] = new Bitmap(Properties.Resources.kom3, NewSizeKv(170));
-
-            int mesto = tableofkom;
-
-            g.DrawImage(fish[mesto], NewPoint(200, 1200));
-            g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.Black, NewPoint(405, 1155));
-            g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.White, NewPoint(400, 1150));
-
-            mesto++;
-            if (mesto > 2) mesto = 0;
-            //лево
-            g.DrawImage(fish[mesto], NewPoint(200, 150));
-            g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.Black, NewPoint(410, 105));
-            g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.White, NewPoint(410, 100));
-
-            mesto++;
-            if (mesto > 2) mesto = 0;
-            //право
-            g.DrawImage(fish[mesto], NewPoint(1900, 150));
-            g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.Black, NewPoint(2105, 105));
-            g.DrawString(predUs.team[mesto].name, new Font("Calibri", NewFontSize(40)), Brushes.White, NewPoint(2100, 100));
+            fish = new Bitmap[] {
+                new Bitmap(Properties.Resources.kom1, NewSizeKv(170)),
+                new Bitmap(Properties.Resources.kom2, NewSizeKv(170)),
+                new Bitmap(Properties.Resources.kom3, NewSizeKv(170))
+            };
         }
         
-         public Table(GeneralForm fsv)//для тестирования
-         {
-             workForm = fsv;
-            bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
-            Graphics g = Graphics.FromImage(bmpStol);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            Game steck = new Game();
-            steck.team[0] = new Game.Teames();
-            steck.team[0].iQash = 900;
-            steck.team[1] = new Game.Teames();
-            steck.team[1].iQash = 1000;
-            steck.team[2] = new Game.Teames();
-            steck.team[2].iQash = 1100;
-             SetIQ(steck, 1);
-         }
+         //public Table(GeneralForm fsv)//для тестирования
+         //{
+         //    workForm = fsv;
+         //   bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
+         //   Graphics g = Graphics.FromImage(bmpStol);
+         //   g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+         //   Game steck = new Game();
+         //   steck.team[0] = new Game.Teames();
+         //   steck.team[0].iQash = 900;
+         //   steck.team[1] = new Game.Teames();
+         //   steck.team[1].iQash = 1000;
+         //   steck.team[2] = new Game.Teames();
+         //   steck.team[2].iQash = 1100;
+         //    SetIQ(steck, 1);
+         //}
          
 
         ~Table()
@@ -86,66 +61,165 @@ namespace _700IQ
         }
         public Bitmap SetIQ(Game steck, int tableofkom) //рассадка тройки за столом
         {
+            bmpStol = new Bitmap(Properties.Resources.GreenTable, workResolution);
             Bitmap bmp =(Bitmap) bmpStol.Clone();
             Graphics g = Graphics.FromImage(bmp);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            Point[] fishPoint = new Point[] { NewPoint(200, 1200), NewPoint(200, 150), NewPoint(1900, 150) };
             int mesto = tableofkom;
-            CustomLabel iQash1 = new CustomLabel()
-            {
-                Name = "iQash",
-                Location = NewPoint(400, 1330),
-                Text = steck.team[mesto].iQash + " IQ",
-                BackColor = Color.Transparent,
-                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
-                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
-                InterpolationMode = InterpolationMode.HighQualityBicubic,
-                ForeColor = Color.Gold,
-                Parent = this.workForm,
-                ShadowColor = Color.Black,
-                ShadowOffset = new Point(3, 3),
-                number = mesto,
+            teams = new CustomLabel[] {
+                new CustomLabel()
+                {
+
+                    Name = "iQash",
+                    Location = NewPoint(405, 1170),
+                    BackColor = Color.Transparent,
+                    Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
+                    ForeColor = Color.WhiteSmoke,
+                    Parent = this.workForm,
+                    ShadowColor = Color.Black,
+                    ShadowOffset = new Point(5, 5),
+
+                },
+                new CustomLabel()
+                {
+                    Name = "iQash",
+                    BackColor = Color.Transparent,
+                    Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
+                    ForeColor = Color.WhiteSmoke,
+                    Parent = this.workForm,
+                    ShadowColor = Color.Black,
+                    ShadowOffset = new Point(5, 5),
+                    Location = NewPoint(410, 105),
+                },
+                new CustomLabel()
+                {
+                    Name = "iQash",
+                    BackColor = Color.Transparent,
+                    Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
+                    ForeColor = Color.WhiteSmoke,
+                    Parent = this.workForm,
+                    ShadowColor = Color.Black,
+                    ShadowOffset = new Point(5, 5),
+                    Location = NewPoint(2105, 105),
+                }
+                };
+
+            //CustomLabel iQash1 = new CustomLabel()
+            //{
+            //    Name = "iQash",
+            //    Location = NewPoint(400, 1350),
+            //    Text = steck.team[mesto].iQash + " IQ",
+            //    BackColor = Color.Transparent,
+            //    Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+            //    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+            //    InterpolationMode = InterpolationMode.HighQualityBicubic,
+            //    ForeColor = Color.Gold,
+            //    Parent = this.workForm,
+            //    ShadowColor = Color.Black,
+            //    ShadowOffset = new Point(3, 3),
+            //    number = mesto,
+            //};
+
+            //mesto++;
+            //if (mesto > 2) mesto = 0;
+            ////лево
+            //CustomLabel iQash2 = new CustomLabel()
+            //{
+            //    Name = "iQash",
+            //    Location = NewPoint(400, 300),
+            //    Text = steck.team[mesto].iQash + " IQ",
+            //    BackColor = Color.Transparent,
+            //    Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+            //    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+            //    InterpolationMode = InterpolationMode.HighQualityBicubic,
+            //    ForeColor = Color.Gold,
+            //    Parent = this.workForm,
+            //    ShadowColor = Color.Black,
+            //    ShadowOffset = new Point(3, 3),
+            //    number = mesto,
+            //};
+
+            //mesto++;
+            //if (mesto > 2) mesto = 0;
+            ////право
+            //CustomLabel iQash3 = new CustomLabel()
+            //{
+            //    Name = "iQash",
+            //    Location = NewPoint(2100, 300),
+            //    Text = steck.team[mesto].iQash + " IQ",
+            //    BackColor = Color.Transparent,
+            //    Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+            //    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+            //    InterpolationMode = InterpolationMode.HighQualityBicubic,
+            //    ForeColor = Color.Gold,
+            //    Parent = this.workForm,
+            //    ShadowColor = Color.Black,
+            //    ShadowOffset = new Point(3, 3),
+            //    number = mesto,
+            //};
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+             CustomLabel[] iQash = new CustomLabel[]{
+                new CustomLabel()
+                {
+                    Name = "iQash",
+                    Location = NewPoint(420, 1365),
+                    BackColor = Color.Transparent,
+                    Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
+                    ForeColor = Color.Gold,
+                    Parent = this.workForm,
+                    ShadowColor = Color.Black,
+                    ShadowOffset = new Point(3, 3),
+                },
+                new CustomLabel()
+                {
+                    Name = "iQash",
+                    Location = NewPoint(420, 300),
+                    BackColor = Color.Transparent,
+                    Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
+                    ForeColor = Color.Gold,
+                    Parent = this.workForm,
+                    ShadowColor = Color.Black,
+                    ShadowOffset = new Point(3, 3),
+                },
+                new CustomLabel()
+                {
+                    Name = "iQash",
+                    Location = NewPoint(2115, 300),
+                    BackColor = Color.Transparent,
+                    Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
+                    ForeColor = Color.Gold,
+                    Parent = this.workForm,
+                    ShadowColor = Color.Black,
+                    ShadowOffset = new Point(3, 3),
+                }
             };
 
-            mesto++;
-            if (mesto > 2) mesto = 0;
-            //лево
-            CustomLabel iQash2 = new CustomLabel()
+             mesto = tableofkom;
+            for (int i = 0; i < teams.Count(); i++)
             {
-                Name = "iQash",
-                Location = NewPoint(400, 280),
-                Text = steck.team[mesto].iQash + " IQ",
-                BackColor = Color.Transparent,
-                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
-                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
-                InterpolationMode = InterpolationMode.HighQualityBicubic,
-                ForeColor = Color.Gold,
-                Parent = this.workForm,
-                ShadowColor = Color.Black,
-                ShadowOffset = new Point(3, 3),
-                number = mesto,
-            };
+                g.DrawImage(fish[mesto], fishPoint[i]);
+                teams[i].Text = predUs.team[mesto].name.Replace(" ", Environment.NewLine);
+                iQash[i].Text = steck.team[mesto].iQash + " IQ";
+                iQash[i].number = mesto;
+                mesto = (mesto >= 2) ? 0 : mesto += 1;
+            }
 
-            mesto++;
-            if (mesto > 2) mesto = 0;
-            //право
-            CustomLabel iQash3 = new CustomLabel()
-            {
-                Name = "iQash",
-                Location = NewPoint(2100, 280),
-                Text = steck.team[mesto].iQash + " IQ",
-                BackColor = Color.Transparent,
-                Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
-                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
-                InterpolationMode = InterpolationMode.HighQualityBicubic,
-                ForeColor = Color.Gold,
-                Parent = this.workForm,
-                ShadowColor = Color.Black,
-                ShadowOffset = new Point(3, 3),
-                number = mesto,
-            };
-            this.workForm.iQash1 = iQash1;
-            this.workForm.iQash2 = iQash2;
-            this.workForm.iQash3 = iQash3;
+            this.workForm.iQash1 = iQash[0];
+            this.workForm.iQash2 = iQash[1];
+            this.workForm.iQash3 = iQash[2];
 
             mesto = tableofkom;
             g.Dispose();

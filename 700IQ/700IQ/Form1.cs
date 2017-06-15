@@ -218,6 +218,7 @@ namespace _700IQ
             ///Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
 
+
         }
 
         private void dataReceive(string response)
@@ -804,7 +805,7 @@ namespace _700IQ
             else
             {
                 RemoveTempControls();
-                tbl = new Table(predUs, myTeam.table-1, this);
+                tbl = new Table(predUs, this);
                 if (steck.iCon > 12)
                 {
                     Step10();
@@ -1028,8 +1029,8 @@ namespace _700IQ
             {
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
-                stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
-                stShow = null;
+               stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
+               stShow = null;
             }
         }
         void Step3_1()  //показ вопроса, запуск рулетки
