@@ -902,7 +902,7 @@ namespace _700IQ
                 new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc1,
-                    //Name = "oneuse",
+                    Name = "questControls",
                     Visible =  true,
                     Enabled = false,
                     BackColor = Color.Transparent,
@@ -917,7 +917,7 @@ namespace _700IQ
                 new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc2,
-                    //Name = "oneuse",
+                    Name = "questControls",
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
@@ -932,7 +932,7 @@ namespace _700IQ
                 new PictureBoxWithInterpolationMode()
                 {
                     Parent = pc3,
-                    //Name = "oneuse",
+                    Name = "questControls",
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
@@ -951,6 +951,7 @@ namespace _700IQ
             {
                 Parent = workForm,
                 Visible = false,
+                Name = "questControls",
                 BackColor = Color.Transparent,
                 Size = NewSize(95, 120),
                 Location = NewPoint(1400, 275 + dy),
@@ -963,6 +964,7 @@ namespace _700IQ
             {
                 Parent = workForm,
                 Visible = false,
+                Name = "questControls",
                 BackColor = Color.Transparent,
                 Size = NewSize(95, 120),
                 Location = NewPoint(1400, 470 + dy),
@@ -975,6 +977,7 @@ namespace _700IQ
             {
                 Parent = workForm,
                 Visible = false,
+                Name = "questControls",
                 BackColor = Color.Transparent,
                 Size = NewSize(95, 120),
                 Location = NewPoint(1400, 680 + dy),
@@ -989,6 +992,7 @@ namespace _700IQ
             {
                 Parent = workForm,
                 Visible = false,
+                Name = "questControls",
                 //BackColor = Color.Transparent,
                 Image = Properties.Resources.paper,
                 Size = NewSize(600, 70),
@@ -1002,6 +1006,7 @@ namespace _700IQ
                 Parent = workForm,
                 Visible = false,
                 //BackColor = Color.Green,
+                Name = "questControls",
                 Image = Properties.Resources.paper,
                 Size = NewSize(600, 70),
                 Location = NewPoint(1560, 510 + dy),
@@ -1013,6 +1018,7 @@ namespace _700IQ
             {
                 Parent = workForm,
                 Visible = false,
+                Name = "questControls",
                 Image = Properties.Resources.paper,
                 Size = NewSize(600, 70),
                 Location = NewPoint(1560, 710 + dy),
@@ -1180,6 +1186,9 @@ namespace _700IQ
             pc1.Visible = true;
             pc2.Visible = true;
             pc3.Visible = true;
+
+            foreach (Control t in workForm.Controls.Find("questControls", true)) t.Visible = true;
+
             indexImage = --o;
             for (int i = 0; i < indexImage; i++)
             {
