@@ -73,7 +73,7 @@ namespace _700IQ
 
                     Name = "iQash",
                     Location = NewPoint(405, 1170),
-                    BackColor = Color.Transparent,
+                    BackColor = Color.Red,
                     Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -86,7 +86,7 @@ namespace _700IQ
                 new CustomLabel()
                 {
                     Name = "iQash",
-                    BackColor = Color.Transparent,
+                    BackColor = Color.Red,
                     Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -99,7 +99,7 @@ namespace _700IQ
                 new CustomLabel()
                 {
                     Name = "iQash",
-                    BackColor = Color.Transparent,
+                    BackColor = Color.Red,
                     Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -169,8 +169,8 @@ namespace _700IQ
                 new CustomLabel()
                 {
                     Name = "iQash",
-                    Location = NewPoint(420, 1365),
-                    BackColor = Color.Transparent,
+                    Location = NewPoint(420, 1170+teams[0].Height),//1365),
+                    BackColor = Color.Red,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -182,8 +182,8 @@ namespace _700IQ
                 new CustomLabel()
                 {
                     Name = "iQash",
-                    Location = NewPoint(420, 300),
-                    BackColor = Color.Transparent,
+                    Location = NewPoint(420, 105+teams[1].Height),
+                    BackColor = Color.Red,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -195,8 +195,8 @@ namespace _700IQ
                 new CustomLabel()
                 {
                     Name = "iQash",
-                    Location = NewPoint(2115, 300),
-                    BackColor = Color.Transparent,
+                    Location = NewPoint(2115, 105+teams[2].Height),
+                    BackColor = Color.Red,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -211,11 +211,13 @@ namespace _700IQ
             for (int i = 0; i < teams.Count(); i++)
             {
                 g.DrawImage(fish[mesto], fishPoint[i]);
-                teams[i].Text = predUs.team[mesto].name.Replace(" ", Environment.NewLine);
+                teams[i].Text =(predUs.team[mesto].name.Length>10)? predUs.team[mesto].name.Replace(" ", Environment.NewLine): predUs.team[mesto].name;
                 iQash[i].Text = steck.team[mesto].iQash + " IQ";
+                iQash[i].Location = new Point(teams[i].Location.X + (teams[i].Width / 2)- iQash[i].Width/2, teams[i].Location.Y + teams[i].Height+10);
                 iQash[i].number = mesto;
                 mesto = (mesto >= 2) ? 0 : mesto += 1;
             }
+        
 
             this.workForm.iQash1 = iQash[0];
             this.workForm.iQash2 = iQash[1];
@@ -703,6 +705,8 @@ namespace _700IQ
             {
                 if (disposing)
                 {
+                    tmSem.Dispose();
+                    gifTimer.Dispose();
                     //this.DisposeSequence(pcResult);
                     // Освобождаем управляемые ресурсы
                     foreach (object o in this.pcResult.OfType<IDisposable>())
@@ -716,7 +720,6 @@ namespace _700IQ
                     lb1.Dispose(); lb2.Dispose(); lb3.Dispose();
                     //pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
                     lbst1.Dispose(); lbst2.Dispose(); lbst3.Dispose();
-                    tmSem.Dispose();
                     bgrdPic.Dispose();
                 }
                 // освобождаем неуправляемые объекты
@@ -1063,7 +1066,7 @@ namespace _700IQ
             //}
             //else
             semaforN = number;
-            tmSem.Start();
+            if (semaforN != 0)tmSem.Start();
             /*}*/
         }
         void semStart()//мигание отвечающей команды
@@ -1174,23 +1177,27 @@ namespace _700IQ
                 default:
                     return;
             }
+            pc1.Visible = true;
+            pc2.Visible = true;
+            pc3.Visible = true;
             indexImage = --o;
             for (int i = 0; i < indexImage; i++)
             {
                 pcResult[indexImage].Image = Properties.Resources.крестик;
                 FrameDimension dimension = new FrameDimension(pcResult[indexImage].Image.FrameDimensionsList[0]);
                 pcResult[indexImage].Image.SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
+                pcResult[indexImage].Visible = true;
             }
             indexToPaint = 0;
             gifTimer.Start();
-            //}
+
         }
         void gifTimer_Tick(object sender, EventArgs e)
         {
-            indexToPaint++;
-            if (indexToPaint > gifImage.FrameCount)
+            
+            if (indexToPaint >= gifImage.FrameCount)
             {
-                indexToPaint = 0;
+                //indexToPaint = 0;
                 gifTimer.Stop();
                 //ImageAnimator.StopAnimate(this.pc1rez.Image, null);
                 //Bitmap bt = new Bitmap(pc1.BackgroundImage);
@@ -1199,11 +1206,10 @@ namespace _700IQ
             else
             {
                 //pc1rez.Image = 
+                indexToPaint++;
                 pcResult[indexImage].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
-                pcResult[indexImage].Visible = true;
-                pc1.Visible = true;
-                pc2.Visible = true;
-                pc3.Visible = true;
+                //pcResult[indexImage].Visible = true;
+
             }
         }
         //void gifTimer_Tick2(object sender, EventArgs e)
@@ -1250,6 +1256,8 @@ namespace _700IQ
             }
             else
             {*/
+            //gifTimer.Stop();
+            //tmSem.Stop();
                 workForm.Invalidate();
                 workForm.Refresh();
                 this.Dispose();
