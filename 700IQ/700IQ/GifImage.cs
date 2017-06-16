@@ -81,5 +81,11 @@ namespace _700IQ
             return (Image)gifImage.Clone();
             //return a copy of it
         }
+        public Image GetLastFrame()
+        {
+            gifImage.SelectActiveFrame(dimension, frameCount - 1);
+            //find the frame
+            return (Image)gifImage.Clone();
+        }
     }
 }

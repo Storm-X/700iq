@@ -1196,7 +1196,7 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.team[steck.o1-1].correct);// вывод ответа первой команды
+                otvetStatic.answer(1, steck.team);// вывод ответа первой команды
 
                 if (!steck.team[steck.o1-1].correct)//если ответ не верный
                 {

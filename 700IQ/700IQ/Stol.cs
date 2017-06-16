@@ -655,18 +655,15 @@ namespace _700IQ
         PictureBox pc2;
         PictureBox pc3;
         PictureBox picBox1, bgrdPic;
-        Label lb1, lb, vpramka;
-        Label lb2;
-        Label lb3;
+        Label lb, vpramka;
         Label lbst1;
         Label lbst2;
         Label lbst3;
         TextBox txBox;
         Label otv;
-        //Bitmap[] arr;
-        //Bitmap img;
         GifImage gifImage;
         int indexImage = 0;
+        Label[] lbAnswer;
         PictureBox[] pcResult;
         PictureBox temp =new PictureBox();
         private System.Windows.Forms.Timer gifTimer = new System.Windows.Forms.Timer();
@@ -906,6 +903,7 @@ namespace _700IQ
                     Visible =  true,
                     Enabled = false,
                     BackColor = Color.Transparent,
+                    Image = Properties.Resources.крестик,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
@@ -921,6 +919,7 @@ namespace _700IQ
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
+                    Image = Properties.Resources.крестик,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
@@ -936,6 +935,7 @@ namespace _700IQ
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
+                    Image = Properties.Resources.крестик,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
@@ -988,46 +988,48 @@ namespace _700IQ
             };
             #endregion
             #region//описание полей с ответами команд
-            lb1 = new Label()
+            Label[] lbAnswer = new Label[]
             {
-                Parent = workForm,
-                Visible = false,
-                Name = "questControls",
-                //BackColor = Color.Transparent,
-                Image = Properties.Resources.paper,
-                Size = NewSize(600, 70),
-                Location = NewPoint(1560, 310 + dy),
-                Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
-                TextAlign = ContentAlignment.MiddleLeft,
-
-            };
-            lb2 = new Label()
-            {
-                Parent = workForm,
-                Visible = false,
-                //BackColor = Color.Green,
-                Name = "questControls",
-                Image = Properties.Resources.paper,
-                Size = NewSize(600, 70),
-                Location = NewPoint(1560, 510 + dy),
-                Font = new Font("Arial Black Italic", NewFontSize(19), FontStyle.Bold),
-                TextAlign = ContentAlignment.MiddleLeft,
-                //ForeColor = Color.White,
-            };
-            lb3 = new Label()
-            {
-                Parent = workForm,
-                Visible = false,
-                Name = "questControls",
-                Image = Properties.Resources.paper,
-                Size = NewSize(600, 70),
-                Location = NewPoint(1560, 710 + dy),
-                Font = new Font("Arial Black Italic", NewFontSize(20), FontStyle.Bold),
-                TextAlign = ContentAlignment.MiddleLeft
+                new Label()
+                {
+                    Parent = workForm,
+                    Visible = false,
+                    Name = "questControls",
+                    //BackColor = Color.Transparent,
+                    Image = Properties.Resources.paper,
+                    Size = NewSize(600, 70),
+                    Location = NewPoint(1560, 310 + dy),
+                    Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
+                    TextAlign = ContentAlignment.MiddleLeft,
+                },
+                new Label()
+                {
+                    Parent = workForm,
+                    Visible = false,
+                    //BackColor = Color.Green,
+                    Name = "questControls",
+                    Image = Properties.Resources.paper,
+                    Size = NewSize(600, 70),
+                    Location = NewPoint(1560, 510 + dy),
+                    Font = new Font("Arial Black Italic", NewFontSize(19), FontStyle.Bold),
+                    TextAlign = ContentAlignment.MiddleLeft,
+                    //ForeColor = Color.White,
+                },
+                new Label()
+                {
+                    Parent = workForm,
+                    Visible = false,
+                    Name = "questControls",
+                    Image = Properties.Resources.paper,
+                    Size = NewSize(600, 70),
+                    Location = NewPoint(1560, 710 + dy),
+                    Font = new Font("Arial Black Italic", NewFontSize(20), FontStyle.Bold),
+                    TextAlign = ContentAlignment.MiddleLeft
+                }
             };
             #endregion
 
-            tm.Interval = 60;
+            tm.Interval = 500;
             tm.Tick += Tm_Tick;
           //  tm.Start();
             tmSem.Interval = 300;
@@ -1037,9 +1039,24 @@ namespace _700IQ
         private void Tm_Tick(object sender, EventArgs e)
         {
             tick += 1;
-            if (tick == 1) pc1.Visible = true;
-            if (tick == 6) pc2.Visible = true;
-            if (tick == 12) { pc3.Visible = true; tm.Dispose(); }
+            switch(tick)
+            {
+                case 1:
+                    pc1.Visible = true;
+                    lbst1.Visible = true;
+                    break;
+                case 2:
+                    pc2.Visible = true;
+                    lbst2.Visible = true;
+                    break;
+                case 3:
+                    pc3.Visible = true; tm.Dispose();
+                    lbst3.Visible = true;
+                    break;
+            }
+            //if (tick == 1) pc1.Visible = true;
+            //if (tick == 6) pc2.Visible = true;
+            //if (tick == 12) { pc3.Visible = true; tm.Dispose(); }
         }
         //#region включение полей ответов
         //public void Ot1Show() { pc1.Visible = true; pc1.BringToFront(); }
@@ -1143,59 +1160,61 @@ namespace _700IQ
             //}
         }*/
 
-        public void answer(int o, string otv, bool correct) //неправильный ответ
+        public void answer(int o, Game.Teames[] teams) //неправильный ответ
         {
-           /* if (workForm.InvokeRequired)
-            {
-                workForm.BeginInvoke((MethodInvoker)delegate
-                {
-                    answer(o, otv, correct);
-                });
-            }
-            else
-            {*/
-                //Image im2 = Properties.Resources.галочка;
-                //Image im3 = Properties.Resources.крестик;
-                Image imCorrect = correct ? Properties.Resources.галочка : Properties.Resources.крестик;
+            /* if (workForm.InvokeRequired)
+             {
+                 workForm.BeginInvoke((MethodInvoker)delegate
+                 {
+                     answer(o, otv, correct);
+                 });
+             }
+             else
+             {*/
+            //Image im2 = Properties.Resources.галочка;
+            //Image im3 = Properties.Resources.крестик;
+            o--;
+            Image imCorrect = teams[o].correct ? Properties.Resources.галочка : Properties.Resources.крестик;
                 gifTimer.Interval = 25;
                 semafor(0);
             //getArrayOfFrames(imCorrect);
             gifImage = new GifImage(imCorrect);
             gifImage.ReverseAtEnd = false; //dont reverse at end
 
-            switch (o)
-                {
-                case 1:
-                    lb1.Text = otv;
-                    lb1.Visible = true;
-                    lb1.BringToFront();
-                    break;
-                case 2:
-                    lb2.Text = otv;
-                    lb2.Visible = true;
-                    lb2.BringToFront();
-                    break;
-                case 3:
-                    lb3.Text = otv;
-                    lb3.Visible = true;
-                    lb3.BringToFront();
-                    break;
-                default:
-                    return;
-            }
+            //switch (o)
+            //    {
+            //    case 0:
+            //        lb1.Text = teams[o].answer;
+            //        lb1.Visible = true;
+            //        lb1.BringToFront();
+            //        break;
+            //    case 1:
+            //        lb2.Text = teams[o].answer;
+            //        lb2.Visible = true;
+            //        lb2.BringToFront();
+            //        break;
+            //    case 2:
+            //        lb3.Text = teams[o].answer;
+            //        lb3.Visible = true;
+            //        lb3.BringToFront();
+            //        break;
+            //    default:
+            //        return;
+            //}
             pc1.Visible = true;
             pc2.Visible = true;
             pc3.Visible = true;
 
-            foreach (Control t in workForm.Controls.Find("questControls", true)) t.Visible = true;
+            //foreach (Control t in workForm.Controls.Find("questControls", true)) t.Visible = true;
 
-            indexImage = --o;
-            for (int i = 0; i < indexImage; i++)
+            //indexImage = --o;
+            for (int indexImage = 0; indexImage < o; indexImage++)
             {
-                pcResult[indexImage].Image = Properties.Resources.крестик;
-                FrameDimension dimension = new FrameDimension(pcResult[indexImage].Image.FrameDimensionsList[0]);
-                pcResult[indexImage].Image.SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
-                pcResult[indexImage].Visible = true;
+                //pcResult[indexImage].Image = Properties.Resources.крестик;
+                //FrameDimension dimension = new FrameDimension(pcResult[indexImage].Image.FrameDimensionsList[0]);
+                pcResult[indexImage].Image = gifImage.GetLastFrame(); //SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
+                lbAnswer[indexImage].Text = teams[indexImage].answer;
+                lbAnswer[indexImage].Visible = true;
             }
             indexToPaint = 0;
             gifTimer.Start();
