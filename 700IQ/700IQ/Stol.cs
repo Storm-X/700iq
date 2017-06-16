@@ -1152,7 +1152,7 @@ namespace _700IQ
                 }
             return bmp;
         }
-        
+
         #endregion
         /*public void getArrayOfFrames(Image im)
         {
@@ -1168,7 +1168,7 @@ namespace _700IQ
             //}
         }*/
 
-        public void answer(int o, string otv, bool correct) //неправильный ответ
+        public void answer(int o, Game.Teames[] teams) //неправильный ответ
         {
             /* if (workForm.InvokeRequired)
              {
@@ -1179,13 +1179,12 @@ namespace _700IQ
              }
              else
              {*/
-         
             //Image im2 = Properties.Resources.галочка;
             //Image im3 = Properties.Resources.крестик;
-           // o--;
-            Image imCorrect = correct ? Properties.Resources.галочка : Properties.Resources.крестик;
-                gifTimer.Interval = 25;
-                semafor(0);
+            o--;
+            Image imCorrect = teams[o].correct ? Properties.Resources.галочка : Properties.Resources.крестик;
+            gifTimer.Interval = 25;
+            semafor(0);
             //getArrayOfFrames(imCorrect);
             gifImage = new GifImage(imCorrect);
             gifImage.ReverseAtEnd = false; //dont reverse at end
@@ -1216,14 +1215,14 @@ namespace _700IQ
 
             //foreach (Control t in workForm.Controls.Find("questControls", true)) t.Visible = true;
 
-            indexImage = --o;
-            for (int i = 0; i <= indexImage; i++)
+            //indexImage = --o;
+            for (int indexImage = 0; indexImage < o; indexImage++)
             {
                 //pcResult[indexImage].Image = Properties.Resources.крестик;
                 //FrameDimension dimension = new FrameDimension(pcResult[indexImage].Image.FrameDimensionsList[0]);
-                pcResult[i].Image = gifImage.GetLastFrame(); //SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
-                lbAnswer[i].Text = otv;
-                lbAnswer[i].Visible = true;
+                pcResult[indexImage].Image = gifImage.GetLastFrame(); //SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
+                lbAnswer[indexImage].Text = teams[indexImage].answer;
+                lbAnswer[indexImage].Visible = true;
             }
             indexToPaint = 0;
             gifTimer.Start();
