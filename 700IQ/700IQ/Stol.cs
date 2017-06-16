@@ -856,6 +856,9 @@ namespace _700IQ
             im[2] = Properties.Resources.kom3;
             int dy = -50;
 
+            var answTeam = steckIn.team.OrderBy(x => x.answerOrder);
+            //byte[] answOrder = answTeam.Select(x => x.answerOrder).ToArray();
+
             #region//описание фишек с номерами команд
             pc1 = new PictureBoxWithInterpolationMode()
             {
@@ -864,7 +867,7 @@ namespace _700IQ
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
                 Location = NewPoint(1250, 250 + dy),
-                BackgroundImage = im[steckIn.o1 - 1],
+                BackgroundImage = im[answTeam.ElementAt(0).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
@@ -878,7 +881,7 @@ namespace _700IQ
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
                 Location = NewPoint(1250, 450 + dy),
-                BackgroundImage = im[steckIn.o2 - 1],
+                BackgroundImage = im[answTeam.ElementAt(1).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
@@ -891,7 +894,7 @@ namespace _700IQ
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
                 Location = NewPoint(1250, 650 + dy),
-                BackgroundImage = im[steckIn.o3 - 1],
+                BackgroundImage = im[answTeam.ElementAt(2).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
@@ -963,7 +966,7 @@ namespace _700IQ
                 Font = new Font("times new roman", NewFontSize(17)),
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = Color.Yellow,
-                Text = steckIn.team[steckIn.o1 - 1].stavka + "\n IQ",
+                Text = answTeam.ElementAt(0).stavka.ToString() + "\n IQ",
             };
             lbst2 = new Label()
             {
@@ -976,7 +979,7 @@ namespace _700IQ
                 Font = new Font("times new roman", NewFontSize(16)),
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = Color.Yellow,
-                Text = steckIn.team[steckIn.o2 - 1].stavka.ToString() + "\n IQ",
+                Text = answTeam.ElementAt(1).stavka.ToString() + "\n IQ",
             };
             lbst3 = new Label()
             {
@@ -989,7 +992,7 @@ namespace _700IQ
                 Font = new Font("Times New Roman", NewFontSize(16)),
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = Color.Yellow,
-                Text = steckIn.team[steckIn.o3 - 1].stavka.ToString() + "\n IQ",
+                Text = answTeam.ElementAt(2).stavka.ToString() + "\n IQ",
             };
             #endregion
             #region//описание полей с ответами команд

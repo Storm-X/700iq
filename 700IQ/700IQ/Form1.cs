@@ -35,7 +35,6 @@ namespace _700IQ
         Table tbl;
         IPAddress server=null;
 
-
         Data.teams myTeam;
         //string kluch; //ключ игровой сессии
         //int uidKomand;//идентификатор команды
@@ -1201,9 +1200,11 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(1,steck.team[steck.o1 - 1].answer, steck.team[steck.o1 - 1].correct);// вывод ответа первой команды
+                otvetStatic.answer(1, steck.team);// вывод ответа первой команды
+                var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
 
-                if (!steck.team[steck.o1-1].correct)//если ответ не верный
+                //if (!steck.team[steck.o1-1].correct)//если ответ не верный
+                if (!answTeam.ElementAt(0).correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
@@ -1231,7 +1232,7 @@ namespace _700IQ
                     bIconFinalised = true;
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
-                    int stav = steck.team[steck.o1 - 1].stavka;
+                    int stav = answTeam.ElementAt(0).stavka;
                     stShow.inputStavki(stav, stav, stav, stav, this);
                     stShow = null;
                 }
@@ -1253,9 +1254,11 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(2, steck.team[steck.o2 - 1].answer, steck.team[steck.o2 - 1].correct);// вывод ответа второй команды
+                otvetStatic.answer(2, steck.team);// вывод ответа второй команды
 
-                if (!steck.team[steck.o2-1].correct)//если ответ не верный
+                var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
+                //if (!steck.team[steck.o2-1].correct)//если ответ не верный
+                if (!answTeam.ElementAt(1).correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
@@ -1284,7 +1287,7 @@ namespace _700IQ
                     bIconFinalised = true;
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
-                    int stav = steck.team[steck.o2 - 1].stavka;
+                    int stav = answTeam.ElementAt(1).stavka;
                     stShow.inputStavki(stav, stav, 0, 0, this);
                 }
             }
@@ -1305,9 +1308,11 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.team[steck.o3 - 1].correct);// вывод ответа третьей команды
+                otvetStatic.answer(3, steck.team);// вывод ответа третьей команды
 
-                if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
+                var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
+                //if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
+                if (!answTeam.ElementAt(2).correct)//если ответ не верный
                 {
                     bIconFinalised = true;
                     CustomLabel stavki = new CustomLabel()
@@ -1342,7 +1347,7 @@ namespace _700IQ
                     bIconFinalised = true;
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
-                    int stav = steck.team[steck.o3 - 1].stavka;
+                    int stav = answTeam.ElementAt(2).stavka;
                     stShow.inputStavki(stav, 0, 0, 0, this);
                 }
             }
