@@ -78,6 +78,7 @@ namespace _700IQ
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.WhiteSmoke,
+                    AutoSize=true,
                     Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
@@ -91,6 +92,7 @@ namespace _700IQ
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.WhiteSmoke,
+                    AutoSize=true,
                     Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
@@ -104,6 +106,7 @@ namespace _700IQ
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.WhiteSmoke,
+                    AutoSize=true,
                     Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
@@ -214,6 +217,7 @@ namespace _700IQ
                 teams[i].Text =(predUs.team[mesto].name.Length>10)? predUs.team[mesto].name.Replace(" ", Environment.NewLine): predUs.team[mesto].name;
                 iQash[i].Text = steck.team[mesto].iQash + " IQ";
                 iQash[i].Location = new Point(teams[i].Location.X + (teams[i].Width / 2)- iQash[i].Width/2, teams[i].Location.Y + teams[i].Height+10);
+                //teams[i].TextAlign = ContentAlignment.TopCenter;
                 iQash[i].number = mesto;
                 mesto = (mesto >= 2) ? 0 : mesto += 1;
             }
@@ -989,7 +993,7 @@ namespace _700IQ
             };
             #endregion
             #region//описание полей с ответами команд
-            Label[] lbAnswer = new Label[]
+            lbAnswer = new Label[]
             {
                 new Label()
                 {
@@ -1161,7 +1165,7 @@ namespace _700IQ
             //}
         }*/
 
-        public void answer(int o, Game.Teames[] teams) //неправильный ответ
+        public void answer(int o, string otv, bool correct) //неправильный ответ
         {
             /* if (workForm.InvokeRequired)
              {
@@ -1172,10 +1176,11 @@ namespace _700IQ
              }
              else
              {*/
+         
             //Image im2 = Properties.Resources.галочка;
             //Image im3 = Properties.Resources.крестик;
-            o--;
-            Image imCorrect = teams[o].correct ? Properties.Resources.галочка : Properties.Resources.крестик;
+           // o--;
+            Image imCorrect = correct ? Properties.Resources.галочка : Properties.Resources.крестик;
                 gifTimer.Interval = 25;
                 semafor(0);
             //getArrayOfFrames(imCorrect);
@@ -1208,14 +1213,14 @@ namespace _700IQ
 
             //foreach (Control t in workForm.Controls.Find("questControls", true)) t.Visible = true;
 
-            //indexImage = --o;
-            for (int indexImage = 0; indexImage < o; indexImage++)
+            indexImage = --o;
+            for (int i = 0; i <= indexImage; i++)
             {
                 //pcResult[indexImage].Image = Properties.Resources.крестик;
                 //FrameDimension dimension = new FrameDimension(pcResult[indexImage].Image.FrameDimensionsList[0]);
-                pcResult[indexImage].Image = gifImage.GetLastFrame(); //SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
-                lbAnswer[indexImage].Text = teams[indexImage].answer;
-                lbAnswer[indexImage].Visible = true;
+                pcResult[i].Image = gifImage.GetLastFrame(); //SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
+                lbAnswer[i].Text = otv;
+                lbAnswer[i].Visible = true;
             }
             indexToPaint = 0;
             gifTimer.Start();

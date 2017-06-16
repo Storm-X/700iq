@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Collections;
 using System.Drawing.Text;
+using System.IO;
 
 namespace _700IQ
 {
@@ -20,7 +21,7 @@ namespace _700IQ
         public SmoothingMode SmoothingMode { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
         public TextRenderingHint TextRenderingHint { get; set; }
-        
+
         public CustomLabel()
         {
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
@@ -297,9 +298,14 @@ namespace _700IQ
             e.Graphics.SmoothingMode = SmoothingMode;
             e.Graphics.InterpolationMode = InterpolationMode;
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;      
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-            base.OnPaint(e);
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+           
+
+            //base.OnPaint(e);
             lock (this)
             {
                 if (InPaint)
@@ -324,7 +330,7 @@ namespace _700IQ
                         e.Graphics.RotateTransform(_CurrentRotate);
                     if (_CurrentZoom < 100)
                         e.Graphics.ScaleTransform(_CurrentZoom / 100.0f, _CurrentZoom / 100.0f);
-                    e.Graphics.DrawString(Text, Font, BackBrush, -tsize.Width / 2, -tsize.Height / 2);
+                    e.Graphics.DrawString(Text, Font, BackBrush, 0, 0, sf);
                     e.Graphics.Transform = new Matrix();//clear tranformation matrix
                 }
 
@@ -333,7 +339,7 @@ namespace _700IQ
                     e.Graphics.RotateTransform(_CurrentRotate);
                 if (_CurrentZoom < 100)
                     e.Graphics.ScaleTransform(_CurrentZoom / 100.0f, _CurrentZoom / 100.0f);
-                e.Graphics.DrawString(Text, Font, new SolidBrush(base.ForeColor), -tsize.Width / 2, -tsize.Height / 2);
+                e.Graphics.DrawString(Text, Font, new SolidBrush(base.ForeColor), 0, 0, sf);
                 //Our ForeColor does not return proper alpha (alpha=255), so use (correct) parent color 
             }
             else//_Letterwise=true

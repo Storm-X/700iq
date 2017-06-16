@@ -35,6 +35,7 @@ namespace _700IQ
         Table tbl;
         IPAddress server=null;
 
+
         Data.teams myTeam;
         //string kluch; //ключ игровой сессии
         //int uidKomand;//идентификатор команды
@@ -763,8 +764,12 @@ namespace _700IQ
                             Step2_finalise();
                             break;
                         case 0:
-                            pol.prBar.AutoReset = false;
-                            pol.prBar.Value = pol.prBar.Maximum;
+                            if (pol.prBar.AutoReset)
+                            {
+                                pol.prBar.AutoReset = false;
+                                pol.prBar.Value = pol.prBar.Maximum;
+                            }
+
                             break;
 
                     }
@@ -1196,7 +1201,7 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(1, steck.team);// вывод ответа первой команды
+                otvetStatic.answer(1,steck.team[steck.o1 - 1].answer, steck.team[steck.o1 - 1].correct);// вывод ответа первой команды
 
                 if (!steck.team[steck.o1-1].correct)//если ответ не верный
                 {
@@ -1248,7 +1253,7 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(2, steck.team);// вывод ответа второй команды
+                otvetStatic.answer(2, steck.team[steck.o2 - 1].answer, steck.team[steck.o2 - 1].correct);// вывод ответа второй команды
 
                 if (!steck.team[steck.o2-1].correct)//если ответ не верный
                 {
@@ -1300,7 +1305,7 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(3, steck.team);// вывод ответа третьей команды
+                otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.team[steck.o3 - 1].correct);// вывод ответа третьей команды
 
                 if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
                 {

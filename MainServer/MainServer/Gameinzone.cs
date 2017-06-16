@@ -99,7 +99,8 @@ namespace MainServer
 
         private void DeadLinetmr_Tick(object sender, EventArgs e)
         {
-            if (deadLine <= DateTime.Now) nextTakt();
+            if (deadLine <= DateTime.Now)
+                nextTakt();
         }
 
         public void setThemes(int[] themeID, string[] theme)                            //получение тем вопросов для строки
