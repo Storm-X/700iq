@@ -12,9 +12,9 @@ namespace _700IQ
         public byte iCon;               //номер Айкона
         public byte step;               //шаг в пределах айкона
         public byte Cell;               //Номер ячейки выпавшей на рулетке
-        public byte o1;                 //очередность ответов
-        public byte o2;                 //очередность ответов   
-        public byte o3;                 //очередность ответов
+        //public byte o1;                 //очередность ответов
+        //public byte o2;                 //очередность ответов   
+        //public byte o3;                 //очередность ответов
         public byte activeTable;        //номер активного стола
         public byte theme;              //тема вопроса
         public string quest;            //Текст вопроса      
@@ -26,6 +26,7 @@ namespace _700IQ
             public byte table;       //номер стола
             public int iQash;        //количество айкэш
             public int stavka;       //ставка команды
+            public byte answerOrder; //очередность ответа команды
             public string answer;    //ответ на вопрос
             public bool correct;     //правильность ответа       
           

@@ -1238,7 +1238,7 @@ namespace MainServer
                 {
                     themes = logsOfzones[i].gmLog.theme.ToString();
                     questions = logsOfzones[i].gmLog.quest.ToString();
-                    ocher = logsOfzones[i].gmLog.o1.ToString() + " " + logsOfzones[i].gmLog.o2.ToString() + " " + logsOfzones[i].gmLog.o3.ToString();
+                    //ocher = logsOfzones[i].gmLog.o1.ToString() + " " + logsOfzones[i].gmLog.o2.ToString() + " " + logsOfzones[i].gmLog.o3.ToString();
                     for (int j = 0; j < 3; j++)
                     {
                         info.Add("Название команды - " + logsOfzones[i].dataLog.team[j].name + Environment.NewLine + "Игровой стол - " + logsOfzones[i].dataLog.team[j].table + Environment.NewLine + "Ответ на вопрос - " + logsOfzones[i].gmLog.team[j].answer + Environment.NewLine + "Ставка команды - " + logsOfzones[i].gmLog.team[j].stavka + Environment.NewLine + "Баланс IQash - " + logsOfzones[i].gmLog.team[j].iQash);

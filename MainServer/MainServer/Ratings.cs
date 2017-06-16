@@ -84,7 +84,7 @@ namespace MainServer
                 
              }
 
-            for (int i = 0; i < gameLog.Count; i++)
+            /*for (int i = 0; i < gameLog.Count; i++)
             {
                 int o1 = gameLog[i].gmLog.o1;
                 int o2 = gameLog[i].gmLog.o2;
@@ -108,7 +108,7 @@ namespace MainServer
                         continue;
                     }
                 }
-            }
+            }*/
             double sumiQash = gameLog[gameLog.Count - 1].gmLog.team[0].iQash + gameLog[gameLog.Count - 1].gmLog.team[1].iQash + gameLog[gameLog.Count - 1].gmLog.team[2].iQash;
             double sumRating = gameLog[gameLog.Count - 1].dataLog.team[0].rating + gameLog[gameLog.Count - 1].dataLog.team[1].rating + gameLog[gameLog.Count - 1].dataLog.team[2].rating;
            /* Km[0] = 1;
