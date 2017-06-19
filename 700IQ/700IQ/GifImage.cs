@@ -66,7 +66,7 @@ namespace _700IQ
                 }
                 else
                 {
-                    currentFrame = frameCount;
+                    currentFrame = frameCount-1;
                     //currentFrame = 0;
                     //...or start over
                 }

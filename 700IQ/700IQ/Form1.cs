@@ -1200,7 +1200,7 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(1, steck.team);// вывод ответа первой команды
+                otvetStatic.answer(1, steck);// вывод ответа первой команды
                 var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
 
                 //if (!steck.team[steck.o1-1].correct)//если ответ не верный
@@ -1254,7 +1254,7 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(2, steck.team);// вывод ответа второй команды
+                otvetStatic.answer(2, steck);// вывод ответа второй команды
 
                 var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
                 //if (!steck.team[steck.o2-1].correct)//если ответ не верный
@@ -1308,7 +1308,7 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(3, steck.team);// вывод ответа третьей команды
+                otvetStatic.answer(3, steck);// вывод ответа третьей команды
 
                 var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
                 //if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
