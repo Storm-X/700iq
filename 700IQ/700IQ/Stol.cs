@@ -72,7 +72,6 @@ namespace _700IQ
                 {
 
                     Name = "iQash",
-                    Location = NewPoint(405, 1170),
                     BackColor = Color.Transparent,
                     Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
@@ -96,7 +95,6 @@ namespace _700IQ
                     Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
-                    Location = NewPoint(410, 105),
                 },
                 new CustomLabel()
                 {
@@ -110,7 +108,6 @@ namespace _700IQ
                     Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
-                    Location = NewPoint(2105, 105),
                 }
                 };
 
@@ -215,9 +212,9 @@ namespace _700IQ
             {
                 g.DrawImage(fish[mesto], fishPoint[i]);
                 teams[i].Text =(predUs.team[mesto].name.Length>10)? predUs.team[mesto].name.Replace(" ", Environment.NewLine): predUs.team[mesto].name;
+                teams[i].Location = new Point(fishPoint[i].X + fish[mesto].Height, fishPoint[i].Y);
                 iQash[i].Text = steck.team[mesto].iQash + " IQ";
-                iQash[i].Location = new Point(teams[i].Location.X + (teams[i].Width / 2)- iQash[i].Width/2, teams[i].Location.Y + teams[i].Height+10);
-                //teams[i].TextAlign = ContentAlignment.TopCenter;
+                iQash[i].Location = new Point(fishPoint[i].X+((fish[mesto].Height- iQash[i].Width)/2), fishPoint[i].Y+ fish[mesto].Height);
                 iQash[i].number = mesto;
                 mesto = (mesto >= 2) ? 0 : mesto += 1;
             }

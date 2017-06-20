@@ -444,8 +444,8 @@ namespace _700IQ
             {
                 SizeF W = g.MeasureString("W", Font);//single character dimensions
                 SizeF measured_size = g.MeasureString(Text, Font);
-                newSize = new Size(Convert.ToInt32(Math.Ceiling(measured_size.Width + Math.Abs(ShadowOffset.X) + W.Height * 0.5)),
-                    Convert.ToInt32(Math.Ceiling(measured_size.Height + Math.Abs(ShadowOffset.Y) + W.Height * 0.5)));
+                newSize = new Size(Convert.ToInt32(Math.Ceiling(measured_size.Width)),
+                    Convert.ToInt32(Math.Ceiling(measured_size.Height)));
 
                 //calculate size of each character (which is used in OnPaint)
                 //do it here once, and use it many times in OnPaint

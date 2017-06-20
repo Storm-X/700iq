@@ -613,8 +613,9 @@ namespace MainServer
                     for (int i = 0; i < 3; i++)
                     {
                         this.data.team[i].rating += rat[i];
-                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + "WHERE name=" + this.data.team[i].name;
+                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + " WHERE name=\"" + this.data.team[i].name+"\"";
                         MySqlCommand cm = new MySqlCommand(sql, mycon);
+                        cm.ExecuteNonQuery();
                     }
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 }
