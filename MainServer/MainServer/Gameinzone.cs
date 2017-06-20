@@ -232,8 +232,9 @@ namespace MainServer
                             //    udp.Send(bytes, bytes.Length, point);
                             ////}
                         }
-                        bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
+                        bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                         udp.Send(bytes, bytes.Length, point);
+                        //Send2All(bytes);
                     }
                     break;
                     #endregion

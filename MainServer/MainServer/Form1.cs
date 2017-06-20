@@ -77,8 +77,8 @@ namespace MainServer
         {
             if (DBLink.BackColor != Color.GreenYellow)
             {
-               // string myConnectionString = "Data Source=700iq.by; Database=iqseven_700iqGame; UserId=iqseven_700; Password=123*-+; Character Set=utf8;";
-                string myConnectionString = "Data Source=localhost; Database=700iq; UserId=root;Character Set=utf8;";
+                string myConnectionString = "Data Source=pmd.tgarant.by; Database=700iqby; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
+               // string myConnectionString = "Data Source=localhost; Database=700iq; UserId=root;Character Set=utf8;";
                 mycon = new MySqlConnection(myConnectionString);
                 conn = new SQLiteConnection("Data Source=casinoDB.db3; Version=3;");
                 try
