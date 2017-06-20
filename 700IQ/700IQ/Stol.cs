@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace _700IQ
 {
@@ -211,7 +212,7 @@ namespace _700IQ
             for (int i = 0; i < teams.Count(); i++)
             {
                 g.DrawImage(fish[mesto], fishPoint[i]);
-                teams[i].Text =(predUs.team[mesto].name.Length>10)? predUs.team[mesto].name.Replace(" ", Environment.NewLine): predUs.team[mesto].name;
+                teams[i].Text = string.Join(Environment.NewLine, Regex.Matches(predUs.team[mesto].name, @".{0,15}(?=\s+|$)|\S+", RegexOptions.Singleline).Cast<Match>().Select(m => m.Groups[0].Value.Trim()));
                 teams[i].Location = new Point(fishPoint[i].X + fish[mesto].Height, fishPoint[i].Y);
                 iQash[i].Text = steck.team[mesto].iQash + " IQ";
                 iQash[i].Location = new Point(fishPoint[i].X+((fish[mesto].Height- iQash[i].Width)/2), fishPoint[i].Y+ fish[mesto].Height);
@@ -278,6 +279,7 @@ namespace _700IQ
                     BackColor = Color.Transparent,
                     TextAlign = ContentAlignment.MiddleRight,
                 };
+                IQ700.Click += IQ700_Click;
                 //intel.BackgroundImage = bmp;
                 intel.Location = new Point(workForm.Width - NewSizeKv(100).Width - intel.Width, 3 + (NewSizeKv(100).Height - intel.Height)/2);
 
@@ -291,9 +293,16 @@ namespace _700IQ
                     Parent = workForm,
                     BackColor = Color.Transparent,
                 };
+
             }
             //}));
-        }     
+        }
+
+        private void IQ700_Click(object sender, EventArgs e)
+        {
+            workForm.Close();
+        }
+
         public void Rassadka(Game steck) //,  Form ff)//  заставка с инфо о рассадке команд
         {
             Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, workResolution);

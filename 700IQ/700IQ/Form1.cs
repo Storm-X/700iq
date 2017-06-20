@@ -1599,6 +1599,11 @@ namespace _700IQ
             //this.TopMost = true;
         }
 
+        private void GeneralForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
+        }
+
         private void GeneralForm_Shown(object sender, EventArgs e)
         {
             this.Text = "Интеллект-казино 700 IQ";

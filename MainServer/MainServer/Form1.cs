@@ -1233,15 +1233,18 @@ namespace MainServer
             for (int i = 0; i < logsOfzones.Count; i++)
             {
 
-
+               // var answTeam = gz.gm.team.OrderBy(x => x.answerOrder);
                 if (String.Compare(comboBox4.SelectedItem.ToString(), logsOfzones[i].gmLog.iCon.ToString()) == 0)
                 {
                     themes = logsOfzones[i].gmLog.theme.ToString();
                     questions = logsOfzones[i].gmLog.quest.ToString();
-                    //ocher = logsOfzones[i].gmLog.o1.ToString() + " " + logsOfzones[i].gmLog.o2.ToString() + " " + logsOfzones[i].gmLog.o3.ToString();
+                    //ocher = logsOfzones[i].gmLog.team[0].answerOrder+1.ToString() + " "+ logsOfzones[i].gmLog.team[1].answerOrder+1.ToString() + " " + logsOfzones[i].gmLog.team[2].answerOrder+1.ToString();
+                    // answTeam.ElementAt(0).table.ToString() + " " + answTeam.ElementAt(1).table.ToString() + " " + answTeam.ElementAt(2).table.ToString();
+                    
                     for (int j = 0; j < 3; j++)
                     {
-                        info.Add("Название команды - " + logsOfzones[i].dataLog.team[j].name + Environment.NewLine + "Игровой стол - " + logsOfzones[i].dataLog.team[j].table + Environment.NewLine + "Ответ на вопрос - " + logsOfzones[i].gmLog.team[j].answer + Environment.NewLine + "Ставка команды - " + logsOfzones[i].gmLog.team[j].stavka + Environment.NewLine + "Баланс IQash - " + logsOfzones[i].gmLog.team[j].iQash);
+                        int ansOrder = logsOfzones[i].gmLog.team[j].answerOrder + 1;
+                        info.Add("Название команды - " + logsOfzones[i].dataLog.team[j].name + Environment.NewLine + "Игровой стол - " + logsOfzones[i].dataLog.team[j].table + Environment.NewLine + "Очередность ответа - " + ansOrder + Environment.NewLine + "Ответ на вопрос - " + logsOfzones[i].gmLog.team[j].answer + Environment.NewLine + "Ставка команды - " + logsOfzones[i].gmLog.team[j].stavka + Environment.NewLine + "Баланс IQash - " + logsOfzones[i].gmLog.team[j].iQash);
                     }
 
                 }
@@ -1250,7 +1253,7 @@ namespace MainServer
             info = new List<string>(info.Distinct());
             if (info.Count == 3)
             {
-                richTextBox4.Text = String.Format("Тема вопроса: {1}{0}Текст вопроса: {2}{0}Очередность ответа: {3}{0}", Environment.NewLine, themes, questions, ocher);
+                richTextBox4.Text = String.Format("Тема вопроса: {1}{0}Текст вопроса: {2}{0}", Environment.NewLine, themes, questions);
                 richTextBox1.Text = info[0];
                 richTextBox2.Text = info[1];
                 richTextBox3.Text = info[2];
