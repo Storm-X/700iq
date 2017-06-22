@@ -912,7 +912,7 @@ namespace MainServer
                     MassGameZone[i].gs.stopButton.Click += stGame;
                 }
                 ListKomand.ReadOnly = true;
-               // f.Show();
+                f.Show();
                 ToJS();
             }
 
@@ -1276,7 +1276,7 @@ namespace MainServer
             f.FormBorderStyle = FormBorderStyle.None;
             f.FormClosing += F_FormClosing;
 
-           // ShowWindow(f.Handle, (int)Message.SW_SHOWMAXIMIZED);
+            ShowWindow(f.Handle, (int)Message.SW_SHOWMAXIMIZED);
             wb = new WebBrowser
             {
                 Size = new Size(f.Width, f.Height),
