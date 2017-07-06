@@ -164,10 +164,10 @@ namespace _700IQ
                     lastCommand = commamd;
                     if (!CrazyTimer) tm.Stop();   //тормозим таймер               
                                                   //if(!flag)   //был ли коректный ответ?
-                    {
+                    
                         flag = true;
                         onNewKom(commamd);  //передаем команду дальше     
-                    }
+                    
                     //else
                     tm.Start();
                 }

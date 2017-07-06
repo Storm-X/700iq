@@ -62,13 +62,12 @@ namespace MainServer
 
         #endregion
 
-        public GameinZone(RND Rn, SQLiteConnection Conn, MySqlConnection mycn, UdpClient udpserver, TextBox tx)
+        public GameinZone(RND Rn, SQLiteConnection Conn, MySqlConnection mycn, UdpClient udpserver)
         {
             rn = Rn;
             conn = Conn;
             mycon = mycn;
             udp = udpserver;
-            txb = tx;
         }
         public void startGame(bool vozobnov)
         {
@@ -85,9 +84,9 @@ namespace MainServer
             gm.theme = 0;
             gm.activeTable = 1;
             gm.quest = "";
-            gm.o1 = 1;
-            gm.o2 = 2;
-            gm.o3 = 3;
+            //gm.o1 = 1;
+            //gm.o2 = 2;
+            //gm.o3 = 3;
             #endregion
             deadLine = DateTime.Now.AddMinutes(3);
             tm.Tick += Tm_Tick;
@@ -99,7 +98,8 @@ namespace MainServer
 
         private void DeadLinetmr_Tick(object sender, EventArgs e)
         {
-            if (deadLine <= DateTime.Now) nextTakt();
+            if (deadLine <= DateTime.Now)
+                nextTakt();
         }
 
         public void setThemes(int[] themeID, string[] theme)                            //получение тем вопросов для строки
@@ -231,8 +231,9 @@ namespace MainServer
                             //    udp.Send(bytes, bytes.Length, point);
                             ////}
                         }
-                        bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
+                        bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                         udp.Send(bytes, bytes.Length, point);
+                        //Send2All(bytes);
                     }
                     break;
                     #endregion
@@ -367,6 +368,8 @@ namespace MainServer
         }
         void nextTakt()
         {
+            Game.Teames[] currTeam;
+
             if (gm.iCon > 12)
             {
                 gm.step = 10;
@@ -419,17 +422,19 @@ namespace MainServer
                             gm.team[i].correct = false;
                         }
 
-                        int[] st = { gm.team[0].stavka, gm.team[1].stavka, gm.team[2].stavka };
-                        int[] o = rul.ResponsePriority(gm.Cell, st);
+                        int[] st = gm.team.Select(x => x.stavka).ToArray();  //{ gm.team[0].stavka, gm.team[1].stavka, gm.team[2].stavka };
+                        byte[] bAnsOrder = rul.ResponsePriority(gm.Cell, st);
 
                         if (gm.Cell != 0)
                         {
-                            gm.o1 = (byte)o[0];
-                            gm.o2 = (byte)o[1];
-                            gm.o3 = (byte)o[2];
+                            //gm.o1 = bAnsOrder[0];
+                            //gm.o2 = bAnsOrder[1];
+                            //gm.o3 = bAnsOrder[2];
+                            for (byte i = 0; i < gm.team.Count(); i++)
+                                gm.team[bAnsOrder[i] - 1].answerOrder = i;
                         }
                         
-                        gm.activeTable = gm.o1;
+                        gm.activeTable = bAnsOrder[0];
 
                         #region получение вопроса
                         string temaID;
@@ -506,21 +511,25 @@ namespace MainServer
                         else
                         {
                             gm.step = 5;
-                            gm.team[gm.o1 - 1].correct = correct;
+                            currTeam = gm.team.OrderBy(x => x.answerOrder).ToArray();
+                            currTeam[0].correct = correct;
+                            //gm.team[gm.o1 - 1].correct = correct;
                             if (correct)
                             {
-                                //Takt = -1;
-                                gm.team[gm.o1 - 1].iQash += 4 * gm.team[gm.o1 - 1].stavka;
+                                ////Takt = -1;
+                                //gm.team[gm.o1 - 1].iQash += 4 * gm.team[gm.o1 - 1].stavka;
+                                currTeam[0].iQash += 4 * currTeam[0].stavka;
                                 //gm.iCon++;
                                 endOfIqon = true;
-                                for (int i = 0; i < 3; i++) ok[i] = false;
+                                //for (int i = 0; i < 3; i++) ok[i] = false;
+                                Array.Clear(ok, 0, ok.Length);
                             }
                             else//если ответ не верен запускаем таймер для приема ответа 2-ой команды
                             {
                                 tmOtvet.Stop();
                                 tmOtvet.Interval = 40000;
                                 tmOtvet.Start();
-                                gm.activeTable = gm.o2;
+                                gm.activeTable = currTeam[1].table; //gm.o2;
                             }
                             Takt++;
                             //log();
@@ -535,19 +544,23 @@ namespace MainServer
                     case 3://ответ второй команды 
 
                         gm.step = 6;
-                        gm.team[gm.o2 - 1].correct = correct;
+                        currTeam = gm.team.OrderBy(x => x.answerOrder).ToArray();
+                        currTeam[1].correct = correct;
+                        //gm.team[gm.o2 - 1].correct = correct;
 
                         if (correct)
                         {
                             //Takt = -1;
                             //gm.iCon++;
+                            currTeam[1].iQash += 2 * currTeam[1].stavka;
+                            //gm.team[gm.o2 - 1].iQash += 2 * gm.team[gm.o2 - 1].stavka;
                             endOfIqon = true;
-                            gm.team[gm.o2 - 1].iQash += 2 * gm.team[gm.o2 - 1].stavka;
-                            for (int i = 0; i < 3; i++) ok[i] = false;
+                            //for (int i = 0; i < 3; i++) ok[i] = false;
+                            Array.Clear(ok, 0, ok.Length);
                         }
                         else //если ответ не верен запускаем таймер для приема ответа 3-ой команды
                         {
-                            gm.activeTable = gm.o3;
+                            gm.activeTable = currTeam[2].table;
                             tmOtvet.Stop();
                             tmOtvet.Interval = 40000;
                             tmOtvet.Start();
@@ -560,14 +573,17 @@ namespace MainServer
                     #region 4 такт - обработка ответ третьей команды (если дойдет дело)
                     case 4://ответ третьей команды
                         gm.step = 7;
-                        gm.team[gm.o3 - 1].correct = correct;
+                        currTeam = gm.team.OrderBy(x => x.answerOrder).ToArray();
+                        currTeam[2].correct = correct;
+                        //gm.team[gm.o3 - 1].correct = correct;
                         if (correct)
-                        {
-                            gm.team[gm.o3 - 1].iQash += gm.team[gm.o3 - 1].stavka;
-                        }
+                            currTeam[2].iQash += currTeam[2].stavka;
+                            //gm.team[gm.o3 - 1].iQash += gm.team[gm.o3 - 1].stavka;
+
                         endOfIqon = true;
+                        Array.Clear(ok, 0, ok.Length);
                         //log();
-                     //   txb.Text += "ogg" + gm.step;
+                        //txb.Text += "ogg" + gm.step;
                         break;
                         #endregion
                 }
@@ -597,8 +613,9 @@ namespace MainServer
                     for (int i = 0; i < 3; i++)
                     {
                         this.data.team[i].rating += rat[i];
-                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + "WHERE name=" + this.data.team[i].name;
+                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + " WHERE name=\"" + this.data.team[i].name+"\"";
                         MySqlCommand cm = new MySqlCommand(sql, mycon);
+                        cm.ExecuteNonQuery();
                     }
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 }

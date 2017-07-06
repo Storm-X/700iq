@@ -54,7 +54,6 @@ namespace _700IQ
         public IPAddress IP = null;
         public static string infoOfserver;
         public CustomLabel iQash1, iQash2, iQash3;
-        public CustomLabel name1, name2, name3;
         private int currStep = 0;
 
         struct SendData //структурированные данные отправляемые серверу
@@ -187,22 +186,22 @@ namespace _700IQ
             Point pn = NewPoint(1060, 691);
             pn.X += delta < 0 ? delta : 0;
             bmp = Properties.Resources.rotor;
-            ExtendedPanel ePanel = new ExtendedPanel()
+            //ExtendedPanel ePanel = new ExtendedPanel()
+            //{
+            //    Parent = this,
+            //    Name = "oneuse",
+            //    Visible = true,
+            //    Location = pn,
+            //    BackColor = Color.Transparent,
+            //    Size = NewSizeKv(390),
+            //    Opacity = 30
+            //};
+            PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
             {
-                Parent = this,
+                Parent =this,
                 Name = "oneuse",
                 Visible = true,
                 Location = pn,
-                BackColor = Color.Transparent,
-                Size = NewSizeKv(390),
-                Opacity = 30
-            };
-            PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
-            {
-                Parent = ePanel,
-                Name = "oneuse",
-                Visible = true,
-                //Location = pn,
                 BackColor = Color.Transparent,
                 SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                 InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -228,6 +227,7 @@ namespace _700IQ
             ///Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
             ///Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+
 
         }
 
@@ -763,8 +763,12 @@ namespace _700IQ
                             Step2_finalise();
                             break;
                         case 0:
-                            pol.prBar.AutoReset = false;
-                            pol.prBar.Value = pol.prBar.Maximum;
+                            if (pol.prBar.AutoReset)
+                            {
+                                pol.prBar.AutoReset = false;
+                                pol.prBar.Value = pol.prBar.Maximum;
+                            }
+
                             break;
 
                     }
@@ -815,7 +819,7 @@ namespace _700IQ
             else
             {
                 RemoveTempControls();
-                tbl = new Table(predUs, steck, myTeam.table-1, this);
+                tbl = new Table(predUs, this);
                 if (steck.iCon > 12)
                 {
                     Step10();
@@ -1039,8 +1043,8 @@ namespace _700IQ
             {
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
-                stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
-                stShow = null;
+               stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
+               stShow = null;
             }
         }
         void Step3_1()  //показ вопроса, запуск рулетки
@@ -1073,8 +1077,6 @@ namespace _700IQ
             {*/
                 RemoveTempControls();
                 foreach (Control t in this.Controls.Find("iQash", true))
-                    this.Controls.Remove(t);
-                foreach (Control t in this.Controls.Find("names", true))
                     this.Controls.Remove(t);
                 this.Invalidate();
                 //Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
@@ -1198,9 +1200,11 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(1, steck.team[steck.o1 - 1].answer, steck.team[steck.o1-1].correct);// вывод ответа первой команды
+                otvetStatic.answer(1, steck);// вывод ответа первой команды
+                var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
 
-                if (!steck.team[steck.o1-1].correct)//если ответ не верный
+                //if (!steck.team[steck.o1-1].correct)//если ответ не верный
+                if (!answTeam.ElementAt(0).correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
@@ -1228,7 +1232,7 @@ namespace _700IQ
                     bIconFinalised = true;
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
-                    int stav = steck.team[steck.o1 - 1].stavka;
+                    int stav = answTeam.ElementAt(0).stavka;
                     stShow.inputStavki(stav, stav, stav, stav, this);
                     stShow = null;
                 }
@@ -1250,9 +1254,11 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(2, steck.team[steck.o2 - 1].answer, steck.team[steck.o2 - 1].correct);// вывод ответа второй команды
+                otvetStatic.answer(2, steck);// вывод ответа второй команды
 
-                if (!steck.team[steck.o2-1].correct)//если ответ не верный
+                var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
+                //if (!steck.team[steck.o2-1].correct)//если ответ не верный
+                if (!answTeam.ElementAt(1).correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
 
@@ -1281,7 +1287,7 @@ namespace _700IQ
                     bIconFinalised = true;
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
-                    int stav = steck.team[steck.o2 - 1].stavka;
+                    int stav = answTeam.ElementAt(1).stavka;
                     stShow.inputStavki(stav, stav, 0, 0, this);
                 }
             }
@@ -1302,9 +1308,11 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
-                otvetStatic.answer(3, steck.team[steck.o3 - 1].answer, steck.team[steck.o3 - 1].correct);// вывод ответа третьей команды
+                otvetStatic.answer(3, steck);// вывод ответа третьей команды
 
-                if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
+                var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
+                //if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
+                if (!answTeam.ElementAt(2).correct)//если ответ не верный
                 {
                     bIconFinalised = true;
                     CustomLabel stavki = new CustomLabel()
@@ -1339,7 +1347,7 @@ namespace _700IQ
                     bIconFinalised = true;
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
-                    int stav = steck.team[steck.o3 - 1].stavka;
+                    int stav = answTeam.ElementAt(2).stavka;
                     stShow.inputStavki(stav, 0, 0, 0, this);
                 }
             }
@@ -1589,6 +1597,11 @@ namespace _700IQ
             //this.Show();
             //this.Focus();
             //this.TopMost = true;
+        }
+
+        private void GeneralForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
         }
 
         private void GeneralForm_Shown(object sender, EventArgs e)

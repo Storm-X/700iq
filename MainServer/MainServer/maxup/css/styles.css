@@ -2,7 +2,7 @@ body
 {
 	margin: 0;
 	padding: 0;
-	background:url(background.jpg) no-repeat;
+	background-color: green;
 	font-family: "Lucida Grande", Verdana, sans-serif;
 	font-size: 100%;
 }

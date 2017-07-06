@@ -16,9 +16,9 @@ namespace MainServer
         public byte iCon;               //номер Айкона
         public byte step;               //шаг в пределах айкона
         public int Cell;                //Номер ячейки выпавшей на рулетке
-        public byte o1;                 //очередность ответов
-        public byte o2;                 //очередность ответов   
-        public byte o3;                 //очередность ответов
+        //public byte o1;                 //очередность ответов
+        //public byte o2;                 //очередность ответов   
+        //public byte o3;                 //очередность ответов
         public byte activeTable;        //номер активного стола
         public int idQuest;             //id вопроса
         public byte theme;              //тема вопроса
@@ -31,6 +31,7 @@ namespace MainServer
             public byte table;       //номер стола
             public int iQash;        //количество айкэш
             public int stavka;       //ставка команды
+            public byte answerOrder; //очередность ответа команды
             public string answer;    //ответ на вопрос                                        
             public bool correct;     //правильность ответа            
         }
@@ -108,10 +109,10 @@ namespace MainServer
     public class Ruletka
     {
        
-        public int[] ResponsePriority(int indexCell, int[] Rates)
+        public byte[] ResponsePriority(int indexCell, int[] Rates)
         {
-            int[] Roulet = { 0, 1, 3, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 3, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 1, 2, 3, 1, 3 };
-            int[] MaxSec = { 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 };
+            byte[] Roulet = { 0, 1, 3, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 3, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 1, 2, 3, 1, 3 };
+            byte[] MaxSec = { 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 };
 
             string Sector = (MaxSec[indexCell] == 1) ? "| M" : "| ";
             Sector += Roulet[indexCell] + " | " + Roulet[indexCell + 1] + " | " + Roulet[indexCell + 2] + " |";
@@ -121,7 +122,7 @@ namespace MainServer
                 Rates[Roulet[indexCell] - 1] += 1000 * (1 ^ MaxSec[indexCell++]) + 2;
                 Rates[Roulet[indexCell] - 1]++;
                 var dictRates = Enumerable.Range(0, Rates.Length).ToDictionary(x => ++x, x => Rates[x]).OrderByDescending(pair => pair.Value);
-                return dictRates.Select(pair => pair.Key).ToArray();
+                return dictRates.Select(pair => (byte)pair.Key).ToArray();
             }
             catch
             {

@@ -66,7 +66,7 @@ namespace _700IQ
                 }
                 else
                 {
-                    currentFrame = frameCount;
+                    currentFrame = frameCount-1;
                     //currentFrame = 0;
                     //...or start over
                 }
@@ -80,6 +80,12 @@ namespace _700IQ
             //find the frame
             return (Image)gifImage.Clone();
             //return a copy of it
+        }
+        public Image GetLastFrame()
+        {
+            gifImage.SelectActiveFrame(dimension, frameCount - 1);
+            //find the frame
+            return (Image)gifImage.Clone();
         }
     }
 }
