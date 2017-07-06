@@ -83,16 +83,6 @@ namespace _700IQ.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _12_50int3 {
-            get {
-                object obj = ResourceManager.GetObject("_12_50int3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap cup_1 {
             get {
                 object obj = ResourceManager.GetObject("cup_1", resourceCulture);
@@ -236,6 +226,16 @@ namespace _700IQ.Properties {
         internal static System.Drawing.Bitmap nz {
             get {
                 object obj = ResourceManager.GetObject("nz", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ok {
+            get {
+                object obj = ResourceManager.GetObject("ok", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

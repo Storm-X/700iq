@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.ComponentModel;
+using System.Drawing.Drawing2D;
 
 namespace _700IQ
 {
@@ -383,8 +384,8 @@ namespace _700IQ
         public delegate void PolosaEnd();
         public PolosaEnd onPolosaEnd;
         //Size resolution; // = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
-        PictureBox pcBox;
-        ProgressBar prBar;
+        PictureBoxWithInterpolationMode pcBox;
+        public CircularProgressBar prBar;
         //private Form fsv;
 
         public Label ff;
@@ -436,55 +437,46 @@ namespace _700IQ
                         Parent = workForm,
                     };
                     #endregion
-                    #region //описание кнопки ОК
-                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer"))
+                    prBar = new CircularProgressBar()
                     {
-                        pcBox = new PictureBox
-                        {
-                            Parent = ff,
-                            Visible = true,
-                            Location = NewPoint(350, 10),
-                            Size = NewSize(170, 170),
-                            SizeMode = PictureBoxSizeMode.Zoom,
-                            Image = Properties.Resources.Неактивная,
-                            //pcBox.BackColor = Color.Transparent;
-                        };
-                        pcBox.MouseDown += PcBox_MouseDown;
-                        pcBox.MouseUp += PcBox_MouseUp;
-                    }
-
-                    #endregion
-                    #region//описание полосы
-                    prBar = new ProgressBar
-                    {
+                        Location = NewRelPoint(350, 0),
+                        AutoResetColor = Color.FromArgb(200, 12, 163, 218),
                         Parent = ff,
-                        Location = NewPoint(10, 90),
+                        Size = NewSizeKv(200),
+                        Value = 0,
                         Visible = true,
-                        Size = NewSize(300, 35),
-                        Style = ProgressBarStyle.Continuous,
-                        Step = 1,
+                        Maximum = 360,
+                        Gradient=false,
+                        ProgressSize = NewWidth(15),
+                };
+                    pcBox = new PictureBoxWithInterpolationMode
+                    {
+                        Parent = prBar,
+                        Visible = true,
+                        Location = new Point(prBar.ProgressSize, prBar.ProgressSize),
+                        Size = new Size(prBar.Size.Width - NewWidth(15 * 2), prBar.Size.Width - NewWidth(15 * 2)),
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        SmoothingMode = SmoothingMode.AntiAlias,
+                        InterpolationMode = InterpolationMode.HighQualityBicubic,
+                        Image = Properties.Resources.ok,
                     };
-                    #endregion
-             
+                    pcBox.MouseDown += PcBox_MouseDown;
+                    pcBox.MouseUp += PcBox_MouseUp;
+
                 }
                 else
                 {
-        
                     ff.Visible = true;
                     ff.Text = txt;
-                    prBar.Value = 0;
-                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer")) pcBox.Visible = true;
-
+                    if ((txt != "Step4 - Zero") && (txt != "Step7 - NoAnswer")&& (txt != "синхр")) pcBox.Visible = true;
                 }
-
+                //prBar.BackgroundImage = ((Bitmap)workForm.BackgroundImage).Clone(new Rectangle(new Point(pn.X + prBar.Location.X, pn.Y + prBar.Location.Y), prBar.Size), PixelFormat.Format32bppArgb);
+                //pcBox.Visible = (txt == "синхр") ? false : true;
+                prBar.AutoReset = (t == 1) ? true : false;
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
                 tmBar.Start();
-
-
-
-
             }
         }
         //private void TmBar_Tick(object sender, EventArgs e)//изменение временной полосы
@@ -499,20 +491,23 @@ namespace _700IQ
             }
             else
             {
-                if (prBar.Value < 100) prBar.PerformStep(); // Value++;
+                if (prBar.Value < prBar.Maximum)
+                {
+                    //ff.Text = prBar.ProgressColor1.R + "  " + prBar.ProgressColor1.G;
+                    prBar.Value++; // Value++;
+                }
+
                 else
                 {
                     ((System.Timers.Timer)state).Stop();
                     ((System.Timers.Timer)state).Dispose();
-                    //tmBar.Stop();
-                    //tmBar.Dispose();
-                    ff.Visible = false;
+                    prBar.Value = 0;
                     pcBox.Visible = false;
+                    ff.Visible = false;
                     workForm.Invalidate();
-                    onPolosaEnd();
+                    onPolosaEnd?.Invoke();
                 }
             }
-
             //var reportProgress = new Action(() =>
             //{
             //    if (prBar.Value < 100) prBar.PerformStep(); // Value++;
@@ -534,13 +529,8 @@ namespace _700IQ
             var reportProgress = new Action(() =>
             {
                 pcBox.Image = Properties.Resources.Неактивная;
-                prBar.Value = 100;
-                //tmBar.Stop();
-                //tmBar.Dispose();
-                //ff.Dispose();
-                //pcBox.Dispose();
-                //workForm.Invalidate();
-                //onPolosaEnd();
+                ff.Visible = false;
+                prBar.Value = prBar.Maximum;
             });
             workForm.BeginInvoke(reportProgress);
         }
@@ -611,7 +601,7 @@ namespace _700IQ
         float koef;
         bool flag, flagStop;
         int tickNumber = 0, nStop = 100;
-        int offset=10;
+        int offset=5;
 
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
