@@ -1238,6 +1238,7 @@ namespace _700IQ
             //gifImage.ReverseAtEnd = false; //dont reverse at end
             gifTimer.Interval = 25;
             gifTimer.Start();
+
         }
         void gifTimer_Tick(object sender, EventArgs e)
         {

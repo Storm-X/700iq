@@ -24,6 +24,7 @@ namespace MainServer
         public MySqlConnection mycon;
         public MySqlCommand mycom;
         public SQLiteConnection conn;
+       // private FlashContent Content;
         GameinZone gz;
         SQLiteCommand cm;
         SQLiteDataReader rd;
@@ -77,7 +78,7 @@ namespace MainServer
         {
             if (DBLink.BackColor != Color.GreenYellow)
             {
-                string myConnectionString = "Data Source=pmd.tgarant.by; Database=700iqby; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
+                string myConnectionString = "Data Source=178.172.150.251; Port=27999; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
                // string myConnectionString = "Data Source=localhost; Database=700iq; UserId=root;Character Set=utf8;";
                 mycon = new MySqlConnection(myConnectionString);
                 conn = new SQLiteConnection("Data Source=casinoDB.db3; Version=3;");
@@ -218,7 +219,7 @@ namespace MainServer
                         SendLog log = new SendLog();    //структура для получения log данных
                         string json = dat.Rows[i][4].ToString();
                         log = JsonConvert.DeserializeObject<SendLog>(json);
-                        gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
+                        gz = new GameinZone(Rn, conn, mycon, Udp); //создаем экземпляр тройки
                         gz.usersid = log.usersid;               //список пользователей тройки
                         gz.setThemes(log.idTheme, log.Themes);  //список id тем и названий
                         gz.data = log.dataLog;                  //класс data
@@ -234,7 +235,7 @@ namespace MainServer
                     }
                     else
                     {
-                        gz = new GameinZone(Rn, conn, mycon, Udp, textBox3); //создаем экземпляр тройки
+                        gz = new GameinZone(Rn, conn, mycon, Udp); //создаем экземпляр тройки
                         MassGameZone.Add(gz);
                     }
                 }
@@ -251,7 +252,7 @@ namespace MainServer
             if (ButtonReg.BackColor != Color.GreenYellow)
             {
                 ListKomand.Visible = true;
-                LabelRegKom.Visible = true;
+
                 //ListKomand.ReadOnly = true;
                 //rgData.Set();           //создание таблицы для регистрации команд
                 //dt = rgData.ddt();
@@ -738,7 +739,7 @@ namespace MainServer
 
                     string userid = "";
                     troika++;
-                    GameinZone gz = new GameinZone(Rn, conn, mycon, Udp, textBox3);
+                    GameinZone gz = new GameinZone(Rn, conn, mycon, Udp);
 
                     for (int j = 0; j < 3; j++)
                     {
@@ -912,7 +913,7 @@ namespace MainServer
                     MassGameZone[i].gs.stopButton.Click += stGame;
                 }
                 ListKomand.ReadOnly = true;
-                f.Show();
+                button1.Enabled = true;
                 ToJS();
             }
 
@@ -968,7 +969,23 @@ namespace MainServer
         }
         private void button1_Click(object sender, EventArgs e)
         {
-
+            if (Screen.AllScreens.Count() > 1)
+            {
+                f.Refresh();
+                f.FormBorderStyle = FormBorderStyle.None;
+                f.Location = Screen.AllScreens[0].Bounds.Location;
+                f.Location.Offset(10, 10);
+                f.WindowState = FormWindowState.Maximized;
+                this.Location = Screen.AllScreens[1].Bounds.Location;
+                button1.Text = "Монитор подключен";
+                ToJS();
+                f.Show();
+            }
+            else
+            {
+                f.WindowState = FormWindowState.Normal;
+                f.Hide();
+            }
         }
         private void dataGridView2_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
@@ -1271,24 +1288,6 @@ namespace MainServer
             SW_SHOW = 0x0005,
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            f.FormBorderStyle = FormBorderStyle.None;
-            f.FormClosing += F_FormClosing;
-
-            ShowWindow(f.Handle, (int)Message.SW_SHOWMAXIMIZED);
-            wb = new WebBrowser
-            {
-                Size = new Size(f.Width, f.Height),
-                AllowWebBrowserDrop = false,
-                IsWebBrowserContextMenuEnabled = false,
-                WebBrowserShortcutsEnabled = false,
-                ObjectForScripting = this,
-            };
-            wb.Navigate(Application.StartupPath + @"\maxup\index.html");
-            f.Controls.Add(wb);
-        }
-
         private void F_FormClosing(object sender, FormClosingEventArgs e)
         {
             DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти из игры?", "Предупреждение!!!", MessageBoxButtons.YesNo);
@@ -1309,7 +1308,26 @@ namespace MainServer
                 }
             }
             string json = JsonConvert.SerializeObject(team);
-            wb.Document.InvokeScript("CreateListJson", new String[] { json });
+            if (wb != null) wb.Document.InvokeScript("CreateListJson", new String[] { json });
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+           
+                wb = new WebBrowser
+                {
+                    Parent = f,
+                    //Size = new Size(f.Width, f.Height),
+                    AllowWebBrowserDrop = false,
+                    IsWebBrowserContextMenuEnabled = false,
+                    WebBrowserShortcutsEnabled = false,
+                    ObjectForScripting = this,
+
+                    Dock = DockStyle.Fill,
+                };
+                wb.Navigate(Application.StartupPath + @"\maxup\index.html");
+            
+
         }
 
         //////////////////////////copy/////////////////////////////

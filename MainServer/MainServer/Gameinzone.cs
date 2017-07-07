@@ -62,13 +62,12 @@ namespace MainServer
 
         #endregion
 
-        public GameinZone(RND Rn, SQLiteConnection Conn, MySqlConnection mycn, UdpClient udpserver, TextBox tx)
+        public GameinZone(RND Rn, SQLiteConnection Conn, MySqlConnection mycn, UdpClient udpserver)
         {
             rn = Rn;
             conn = Conn;
             mycon = mycn;
             udp = udpserver;
-            txb = tx;
         }
         public void startGame(bool vozobnov)
         {
