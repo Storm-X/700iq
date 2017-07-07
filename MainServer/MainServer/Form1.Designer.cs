@@ -43,9 +43,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Anons = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.gameStopBut = new System.Windows.Forms.Button();
             this.infoGame = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -202,7 +199,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(27, 445);
+            this.button1.Location = new System.Drawing.Point(20, 447);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(58, 32);
@@ -210,32 +207,6 @@
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(27, 555);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(1275, 121);
-            this.textBox1.TabIndex = 15;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(106, 451);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(56, 20);
-            this.textBox2.TabIndex = 16;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(27, 688);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(1275, 62);
-            this.textBox3.TabIndex = 17;
             // 
             // gameStopBut
             // 
@@ -549,7 +520,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 429);
+            this.label2.Location = new System.Drawing.Point(845, 409);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(0, 17);
             this.label2.TabIndex = 8;
@@ -578,16 +549,18 @@
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(694, 429);
+            this.textBox6.Location = new System.Drawing.Point(694, 409);
+            this.textBox6.Multiline = true;
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(145, 23);
+            this.textBox6.Size = new System.Drawing.Size(145, 43);
             this.textBox6.TabIndex = 5;
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(47, 429);
+            this.textBox5.Location = new System.Drawing.Point(6, 409);
+            this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(641, 23);
+            this.textBox5.Size = new System.Drawing.Size(682, 40);
             this.textBox5.TabIndex = 4;
             // 
             // textBox4
@@ -631,7 +604,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1127, 393);
+            this.dataGridView1.Size = new System.Drawing.Size(1127, 373);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick_1);
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
@@ -797,14 +770,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1672, 750);
+            this.ClientSize = new System.Drawing.Size(1672, 568);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.LabelRegKom);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.gameStopBut);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Anons);
             this.Controls.Add(this.infoGame);
@@ -847,9 +817,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Anons;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button gameStopBut;
         private System.Windows.Forms.Label infoGame;
         private System.Windows.Forms.TabControl tabControl1;
