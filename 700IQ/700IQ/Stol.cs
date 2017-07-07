@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace _700IQ
 {
@@ -1226,7 +1227,6 @@ namespace _700IQ
             }
             indexToPaint = 0;
             gifTimer.Start();
-
         }
         void gifTimer_Tick(object sender, EventArgs e)
         {
