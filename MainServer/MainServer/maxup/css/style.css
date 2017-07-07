@@ -12,12 +12,8 @@ body
 {
 	margin: 0;
 	padding: 1%;
-	background:url(background.jpg) no-repeat center center fixed;
-      -webkit-background-size: cover;
-       -moz-background-size: cover;
-       -o-background-size: cover;
-       background-size: cover;
-
+	background:url(background.jpg) no-repeat;
+	background-size: cover;	
 	font-family: "Lucida Grande", Verdana, sans-serif;
 	font-size: 100%;
 }
