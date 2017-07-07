@@ -73,8 +73,7 @@ namespace _700IQ
                 {
 
                     Name = "iQash",
-                    Location = NewPoint(405, 1170),
-                    BackColor = Color.Red,
+                    BackColor = Color.Transparent,
                     Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -88,7 +87,7 @@ namespace _700IQ
                 new CustomLabel()
                 {
                     Name = "iQash",
-                    BackColor = Color.Red,
+                    BackColor = Color.Transparent,
                     Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -97,12 +96,11 @@ namespace _700IQ
                     Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
-                    Location = NewPoint(410, 105),
                 },
                 new CustomLabel()
                 {
                     Name = "iQash",
-                    BackColor = Color.Red,
+                    BackColor = Color.Transparent,
                     Font = new Font("Calibri", NewFontSize(30), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -111,7 +109,6 @@ namespace _700IQ
                     Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
-                    Location = NewPoint(2105, 105),
                 }
                 };
 
@@ -174,7 +171,7 @@ namespace _700IQ
                 {
                     Name = "iQash",
                     Location = NewPoint(420, 1170+teams[0].Height),//1365),
-                    BackColor = Color.Red,
+                    BackColor = Color.Transparent,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -187,7 +184,7 @@ namespace _700IQ
                 {
                     Name = "iQash",
                     Location = NewPoint(420, 105+teams[1].Height),
-                    BackColor = Color.Red,
+                    BackColor = Color.Transparent,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -200,7 +197,7 @@ namespace _700IQ
                 {
                     Name = "iQash",
                     Location = NewPoint(2115, 105+teams[2].Height),
-                    BackColor = Color.Red,
+                    BackColor = Color.Transparent,
                     Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -215,10 +212,10 @@ namespace _700IQ
             for (int i = 0; i < teams.Count(); i++)
             {
                 g.DrawImage(fish[mesto], fishPoint[i]);
-                teams[i].Text =(predUs.team[mesto].name.Length>10)? predUs.team[mesto].name.Replace(" ", Environment.NewLine): predUs.team[mesto].name;
+                teams[i].Text = string.Join(Environment.NewLine, Regex.Matches(predUs.team[mesto].name, @".{0,15}(?=\s+|$)|\S+", RegexOptions.Singleline).Cast<Match>().Select(m => m.Groups[0].Value.Trim()));
+                teams[i].Location = new Point(fishPoint[i].X + fish[mesto].Height, fishPoint[i].Y);
                 iQash[i].Text = steck.team[mesto].iQash + " IQ";
-                iQash[i].Location = new Point(teams[i].Location.X + (teams[i].Width / 2)- iQash[i].Width/2, teams[i].Location.Y + teams[i].Height+10);
-                //teams[i].TextAlign = ContentAlignment.TopCenter;
+                iQash[i].Location = new Point(fishPoint[i].X+((fish[mesto].Height- iQash[i].Width)/2), fishPoint[i].Y+ fish[mesto].Height);
                 iQash[i].number = mesto;
                 mesto = (mesto >= 2) ? 0 : mesto += 1;
             }
@@ -282,6 +279,7 @@ namespace _700IQ
                     BackColor = Color.Transparent,
                     TextAlign = ContentAlignment.MiddleRight,
                 };
+                IQ700.Click += IQ700_Click;
                 //intel.BackgroundImage = bmp;
                 intel.Location = new Point(workForm.Width - NewSizeKv(100).Width - intel.Width, 3 + (NewSizeKv(100).Height - intel.Height)/2);
 
@@ -295,9 +293,16 @@ namespace _700IQ
                     Parent = workForm,
                     BackColor = Color.Transparent,
                 };
+
             }
             //}));
-        }     
+        }
+
+        private void IQ700_Click(object sender, EventArgs e)
+        {
+            workForm.Close();
+        }
+
         public void Rassadka(Game steck) //,  Form ff)//  заставка с инфо о рассадке команд
         {
             Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, workResolution);
@@ -868,7 +873,7 @@ namespace _700IQ
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
                 Location = NewPoint(1250, 250 + dy),
-                BackgroundImage = im[answTeam.ElementAt(0).answerOrder],
+                BackgroundImage = (Image)Properties.Resources.ResourceManager.GetObject(String.Format("kom{0}", answTeam.ElementAt(0).table)),//im[answTeam.ElementAt(0).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
@@ -882,7 +887,7 @@ namespace _700IQ
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
                 Location = NewPoint(1250, 450 + dy),
-                BackgroundImage = im[answTeam.ElementAt(1).answerOrder],
+                BackgroundImage = (Image)Properties.Resources.ResourceManager.GetObject(String.Format("kom{0}", answTeam.ElementAt(1).table)),//im[answTeam.ElementAt(0).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
@@ -895,7 +900,7 @@ namespace _700IQ
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
                 Location = NewPoint(1250, 650 + dy),
-                BackgroundImage = im[answTeam.ElementAt(2).answerOrder],
+                BackgroundImage = (Image)Properties.Resources.ResourceManager.GetObject(String.Format("kom{0}", answTeam.ElementAt(2).table)),//im[answTeam.ElementAt(0).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
@@ -912,7 +917,7 @@ namespace _700IQ
                     Visible =  true,
                     Enabled = false,
                     BackColor = Color.Transparent,
-                    Image = Properties.Resources.крестик,
+                    //Image = Properties.Resources.крестик,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
@@ -928,7 +933,7 @@ namespace _700IQ
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
-                    Image = Properties.Resources.крестик,
+                    //Image = Properties.Resources.крестик,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
@@ -944,7 +949,7 @@ namespace _700IQ
                     Visible = true,
                     Enabled = false,
                     BackColor = Color.Transparent,
-                    Image = Properties.Resources.крестик,
+                    //Image = Properties.Resources.крестик,
                     Size = NewSizeKv(170),
                     Location = NewRelPoint(0, 0),
                     BackgroundImageLayout = ImageLayout.Zoom,
@@ -1169,7 +1174,7 @@ namespace _700IQ
             //}
         }*/
 
-        public void answer(int o, Game.Teames[] teams) //неправильный ответ
+        public void answer(int o, Game steck) //неправильный ответ
         {
             /* if (workForm.InvokeRequired)
              {
@@ -1180,16 +1185,14 @@ namespace _700IQ
              }
              else
              {*/
-            //Image im2 = Properties.Resources.галочка;
-            //Image im3 = Properties.Resources.крестик;
-            o--;
-            Image imCorrect = teams[o].correct ? Properties.Resources.галочка : Properties.Resources.крестик;
-            gifTimer.Interval = 25;
-            semafor(0);
-            //getArrayOfFrames(imCorrect);
-            gifImage = new GifImage(imCorrect);
+            gifImage = new GifImage(Properties.Resources.крестик);
             gifImage.ReverseAtEnd = false; //dont reverse at end
-
+            var answTeam = steck.team.OrderBy(x => x.answerOrder);
+            o--;
+            semafor(0);
+            gifTimer.Stop();
+            indexToPaint = 0;
+            //getArrayOfFrames(imCorrect);
             //switch (o)
             //    {
             //    case 0:
@@ -1217,15 +1220,23 @@ namespace _700IQ
             //foreach (Control t in workForm.Controls.Find("questControls", true)) t.Visible = true;
 
             //indexImage = --o;
-            for (int indexImage = 0; indexImage < o; indexImage++)
+            for (indexImage = 0; indexImage <= o; indexImage++)
             {
-                //pcResult[indexImage].Image = Properties.Resources.крестик;
-                //FrameDimension dimension = new FrameDimension(pcResult[indexImage].Image.FrameDimensionsList[0]);
-                pcResult[indexImage].Image = gifImage.GetLastFrame(); //SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
-                lbAnswer[indexImage].Text = teams[indexImage].answer;
+
+                Image imCorrect = answTeam.ElementAt(indexImage).correct ? Properties.Resources.галочка : Properties.Resources.крестик;
+                gifImage = new GifImage(imCorrect);
+                gifImage.ReverseAtEnd = false; //dont reverse at end
+                pcResult[indexImage].Image = (indexImage != o) ? gifImage.GetLastFrame() : gifImage.GetNextFrame(); //SelectActiveFrame(dimension, pcResult[indexImage].Image.GetFrameCount(dimension) - 1);
+                lbAnswer[indexImage].Text = answTeam.ElementAt(indexImage).answer;
                 lbAnswer[indexImage].Visible = true;
             }
-            indexToPaint = 0;
+            indexImage--;
+            //Image imCorrect = answTeam.ElementAt(indexImage).correct ? Properties.Resources.галочка : Properties.Resources.крестик;
+            //lbAnswer[indexImage].Text = answTeam.ElementAt(indexImage).answer;
+            //lbAnswer[indexImage].Visible = true;
+            //gifImage = new GifImage(imCorrect);
+            //gifImage.ReverseAtEnd = false; //dont reverse at end
+            gifTimer.Interval = 25;
             gifTimer.Start();
         }
         void gifTimer_Tick(object sender, EventArgs e)

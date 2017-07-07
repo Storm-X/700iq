@@ -83,12 +83,14 @@ namespace MainServer
                     }                  
                 
              }
-
-            /*for (int i = 0; i < gameLog.Count; i++)
+            var answTeam = gz.gm.team.OrderBy(x => x.answerOrder);
+            for (int i = 0; i < gameLog.Count; i++)
             {
-                int o1 = gameLog[i].gmLog.o1;
-                int o2 = gameLog[i].gmLog.o2;
-                int o3 = gameLog[i].gmLog.o3;
+                int o1 = answTeam.ElementAt(0).table;
+                int o2 = answTeam.ElementAt(1).table;
+                int o3 = answTeam.ElementAt(2).table;
+
+
 
                 if ((gameLog[i].gmLog.team[o1-1].correct)|| (gameLog[i].gmLog.team[o2-1].correct)||(gameLog[i].gmLog.team[o3-1].correct))
                 {
@@ -108,7 +110,7 @@ namespace MainServer
                         continue;
                     }
                 }
-            }*/
+            }
             double sumiQash = gameLog[gameLog.Count - 1].gmLog.team[0].iQash + gameLog[gameLog.Count - 1].gmLog.team[1].iQash + gameLog[gameLog.Count - 1].gmLog.team[2].iQash;
             double sumRating = gameLog[gameLog.Count - 1].dataLog.team[0].rating + gameLog[gameLog.Count - 1].dataLog.team[1].rating + gameLog[gameLog.Count - 1].dataLog.team[2].rating;
            /* Km[0] = 1;
