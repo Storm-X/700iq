@@ -34,6 +34,7 @@ namespace _700IQ
         Data predUs = new Data();
         Table tbl;
         IPAddress server=null;
+        bool startGame = true;
 
         Data.teams myTeam;
         //string kluch; //ключ игровой сессии
@@ -55,7 +56,6 @@ namespace _700IQ
         public static string infoOfserver;
         public CustomLabel iQash1, iQash2, iQash3;
         private int currStep = 0;
-
         struct SendData //структурированные данные отправляемые серверу
         {
             public int uid;         //игровая зона
@@ -84,6 +84,17 @@ namespace _700IQ
             }
         }
 
+        public Control FindFocusedControl(Control control)
+        {
+            var container = control as IContainerControl;
+            while (container != null)
+            {
+                control = container.ActiveControl;
+                container = control as IContainerControl;
+            }
+            return control;
+        }
+
         public GeneralForm()
         {
             InitializeComponent();
@@ -93,6 +104,7 @@ namespace _700IQ
             path = Path.GetDirectoryName(path);//возврат на директорию вверх
             path = path + "\\Resources\\Cursors\\";//директория с курсорами
             this.Cursor = SetCursor(path+ "Yellow_vopros1.ani");//установка курсора из файла
+            KeyPreview = true;
         }
 
         #region//процедуры инициализации
@@ -199,7 +211,7 @@ namespace _700IQ
             PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
             {
                 Parent =this,
-                Name = "oneuse",
+                Name = "Rotor",
                 Visible = true,
                 Location = pn,
                 BackColor = Color.Transparent,
@@ -209,7 +221,9 @@ namespace _700IQ
                 Image = bmp,
                 SizeMode = PictureBoxSizeMode.Zoom,
             };
+            pcBox.Focus();
             pcBox.Click += onClickMedal;
+            //pcBox.KeyDown += onClickMedal();
             //тест рулетки, ставок, темы
             /* 
             Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
@@ -245,6 +259,8 @@ namespace _700IQ
                         Ini1();
                         break;
                     case "False":
+                        Control login = this.Controls.Find("login", true).FirstOrDefault();
+                        login.Focus();
                         MessageBox.Show("Неверный логин или пароль!");
                         break;
                     case "IPtwo":
@@ -322,6 +338,7 @@ namespace _700IQ
                     this.Controls.Remove(t);
                     //t.Visible = false;
                 this.Invalidate();
+                this.Focus();
             }
         }
         void onClickMedal(object sender, EventArgs e)
@@ -348,6 +365,7 @@ namespace _700IQ
         {
             //int ctrCount = Controls.Count;
             //for (int i = 0; i <= ctrCount; i++) this.Controls.RemoveByKey("oneuse");    //очистка экрана
+            Controls.Remove(Controls.Find("Rotor", true).FirstOrDefault());
             RemoveTempControls();
 
             #region //описание графики экрана для            
@@ -414,12 +432,12 @@ namespace _700IQ
            
             pcBox.Click += Ini2;
             #endregion                     
-            logintb.KeyDown += logintb_KeyDown;
-            paroltb.KeyDown += logintb_KeyDown;
+ //           logintb.KeyDown += logintb_KeyDown;
+ //           paroltb.KeyDown += logintb_KeyDown;
             logintb.Focus();
           
         }
-        private void logintb_KeyDown(object sender, KeyEventArgs e) //Обработка нажатия клавиш в полях ввода
+ /*       private void logintb_KeyDown(object sender, KeyEventArgs e) //Обработка нажатия клавиш в полях ввода
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -429,7 +447,7 @@ namespace _700IQ
                     Ini2(sender, e);
             }
         }
-
+*/
         void Ini2(object sender, EventArgs e)//проверка на корректность ввода логина и пароля
         {
             /*List<Control> alltextbox = new List<Control>();
@@ -471,6 +489,7 @@ namespace _700IQ
             //int ctrCount = Controls.Count;
             //for (int i = 0; i <= ctrCount; i++) this.Controls.RemoveByKey("oneuse");//очистка экрана от временных элементов          
             RemoveTempControls();
+            startGame = false;
             predUs = JsonConvert.DeserializeObject<Data>(response);
             myTeam = predUs.team.FirstOrDefault(c => string.Equals(c.name, myTeam.name, StringComparison.OrdinalIgnoreCase));
             //kluch = myTeam.kod;
@@ -562,7 +581,7 @@ namespace _700IQ
             pol.AnyEventHarakiri();
             pol.onPolosaEnd += ini4;
             pol.polosa(11, NewPoint(1600, 1350), this, "ini3");
-           
+
         }      
         void ini4()//вывод спсок зарегистрированных команд
         {
@@ -574,7 +593,7 @@ namespace _700IQ
             //spisokOut(this, dt, predUs);    //обновление списка зарегистрировавшихся команд
         }
 
-    void ini5()//команды  игровой зоны 
+        void ini5()//команды  игровой зоны 
         {
             if (this.InvokeRequired)
             {
@@ -673,7 +692,7 @@ namespace _700IQ
             }
             //}));
         }
-            void ini6()//старт игры (видеоролик)
+        void ini6()//старт игры (видеоролик)
         {
             RemoveTempControls();
             this.BackgroundImage = Properties.Resources.GreenTable;
@@ -1599,9 +1618,27 @@ namespace _700IQ
             //this.TopMost = true;
         }
 
-        private void GeneralForm_KeyUp(object sender, KeyEventArgs e)
+        private void GeneralForm_KeyUp(object sender, KeyEventArgs e)//управление клавиатурой
         {
             if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (pol.ff != null && pol.ff.Visible && pol.Value > 0) { pol.Finish(); return; }//полоска
+                if (startGame)
+                {
+                    Control rotor = this.Controls.Find("Rotor", true).FirstOrDefault();//медаль
+                    if (rotor != null && rotor.Focused) { onClickMedal(sender, e); return; }
+                    Control login = this.Controls.Find("login", true).FirstOrDefault();//логин
+                    Control parol = this.Controls.Find("parol", true).FirstOrDefault();//пароль
+                    if (login != null && login.Focused) { parol.Focus(); return; }
+                    if (parol != null && parol.Focused) { Ini2(sender, e); return; }                  
+                }
+            }
+            if (st.stavkaRegion != null && st.stavkaRegion.Visible)//ставки + -
+            {
+                if (e.KeyCode == Keys.Up) st.Plus();
+                if (e.KeyCode == Keys.Down) st.Minus();
+            }
         }
 
         private void GeneralForm_Shown(object sender, EventArgs e)

@@ -400,6 +400,11 @@ namespace _700IQ
             InitBar(t, pn, txt);
        
         }
+        public int Value
+        {
+            get { return prBar.Value; }
+            set { prBar.Value = value; }
+        }
         public void AnyEventHarakiri()
         {
             if (this.onPolosaEnd == null) return;
@@ -462,7 +467,6 @@ namespace _700IQ
                     };
                     pcBox.MouseDown += PcBox_MouseDown;
                     pcBox.MouseUp += PcBox_MouseUp;
-
                 }
                 else
                 {
@@ -524,19 +528,26 @@ namespace _700IQ
             //});
             //workForm.BeginInvoke(reportProgress);
         }
+
+        public void Finish()
+        {
+            ff.Visible = false;
+            prBar.Value = prBar.Maximum;
+        }
         public void PcBox_MouseUp(object sender, MouseEventArgs e)//нажатие кнопки ОК
         {
             var reportProgress = new Action(() =>
             {
-                pcBox.Image = Properties.Resources.Неактивная;
-                ff.Visible = false;
-                prBar.Value = prBar.Maximum;
+                pcBox.Location = new Point(pcBox.Location.X - 2, pcBox.Location.Y - 2);
+                //pcBox.Image = Properties.Resources.Неактивная;
+                Finish();
             });
             workForm.BeginInvoke(reportProgress);
         }
         public void PcBox_MouseDown(object sender, MouseEventArgs e)//отображение нажатия кнопки
         {
-            pcBox.Image = Properties.Resources.Активная;
+            //pcBox.Image = Properties.Resources.Активная;
+            pcBox.Location = new Point(pcBox.Location.X + 2, pcBox.Location.Y + 2);
         }
         public void WorkForm_KeyUp(object sender, KeyEventArgs e)
         {

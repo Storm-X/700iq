@@ -1452,7 +1452,29 @@ namespace _700IQ
                 pol.polosa(56, NewPoint(1700, 1350), fsv, "Stavka");
             }
         }
+        public void Plus()
+        {
+            
+            lbPlus.Location = new Point(lbPlus.Location.X + 2, lbPlus.Location.Y + 2);
+            if (Convert.ToInt16(lbin.Text) < stMax)
+            {
+                lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) + stDelta);
+                lbin1.Text = Convert.ToString(Convert.ToInt32(lbin1.Text) + stDelta);
+            }
+            lbPlus.Location = new Point(lbPlus.Location.X - 2, lbPlus.Location.Y - 2);
+        }
 
+        public void Minus()
+        {
+
+            lbMines.Location = new Point(lbMines.Location.X + 2, lbMines.Location.Y + 2);
+            if (Convert.ToInt16(lbin.Text) > stMin)
+            {
+                lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) - stDelta);
+                lbin1.Text = Convert.ToString(Convert.ToInt32(lbin1.Text) - stDelta);
+            }
+            lbMines.Location = new Point(lbMines.Location.X - 2, lbMines.Location.Y - 2);
+        }
         private void lbSpinBtn_MouseDown(object sender, EventArgs e)
         {
             ((PictureBox)sender).Location = new Point(((PictureBox)sender).Location.X + 2, ((PictureBox)sender).Location.Y + 2);
