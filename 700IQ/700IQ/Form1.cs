@@ -171,8 +171,8 @@ namespace _700IQ
         }
         void IniScreen()//Инициализация начальной картинки и определение размеров экрана 
         {
-           
-            
+
+
 
             #region //описание графики начальной заставки
             this.Controls.Clear();                                      //очистка экрана
@@ -210,7 +210,7 @@ namespace _700IQ
             //};
             PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
             {
-                Parent =this,
+                Parent = this,
                 Name = "Rotor",
                 Visible = true,
                 Location = pn,
@@ -243,7 +243,24 @@ namespace _700IQ
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
 
 
+         /*   WebBrowser wb = new WebBrowser();
+            wb.Parent = this;
+
+
+
+             string page1 = @"<!DOCTYPE html>
+<html>
+<head><meta http-equiv=""X-UA-Compatible"" content=""IE=11""></head>
+<body> 
+  <video id=""video1"" autoplay="""" src=""C:\Users\User\Source\Repos\New700iq\700IQ\700IQ\Resources\dancing.mov"" loop="" class=""rotateOut"" style=""opacity: 1; filter: blur(0px); z - index: 2147483647; left: 110px; top: 195px; ""></video>
+</body>
+</html>";
+            wb.Width=1000;
+            wb.Height = 1000;
+
+            wb.Url =new Uri("https://jakearchibald.com/scratch/alphavid/");*/
         }
+
 
         private void dataReceive(string response)
         {
@@ -762,7 +779,6 @@ namespace _700IQ
         {
             if (StartStep != steck.step)
             {
-               
                 if (steck.step != currStep) //то завершить предыдущий шаг. Step7_finalise();
                 {
             

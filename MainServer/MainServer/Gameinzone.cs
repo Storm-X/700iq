@@ -25,7 +25,8 @@ namespace MainServer
         public string usersid;              //перечень id участников команд тройки для корректного подбора вопроса
         RND rn;                             //генератор случайных значений рулетки
         Ruletka rul = new Ruletka();        //класс рулетка для графического отображения
-
+        string[] clientAnswer = new string[3];
+        bool flajok;
         #endregion
         #region переменные для сетевого обмена данными
         SQLiteConnection conn;                      //связь с БД вопросов
@@ -53,7 +54,7 @@ namespace MainServer
         bool tmOtvetAktiv = false;
         public bool stopGm = false;
         public GameStatistic gs;
-        private DateTime deadLine;
+        private DateTime? deadLine = null;
         //public List<int> users = new List<int>();
 
         #endregion
@@ -75,6 +76,7 @@ namespace MainServer
             endOfIqon = false;
             Array.Clear(stavka, 0, stavka.Length);
             Array.Clear(ok, 0, ok.Length);
+            Array.Clear(clientAnswer, 0, clientAnswer.Length);
             //for (int i = 1; i < 3; i++) { stavka[i] = 0; ok[i] = false; }
 
             if (!vozobnov) gm.iCon = 1;
@@ -173,34 +175,24 @@ namespace MainServer
             {
                 #region обработка команд готов
                 case 1:
-                    if (!ok[table])
+
+                    if (gm.step < 3)
                     {
-                        if (Takt != 0) return;
                         ok[table] = true;
-                        tm.Interval = 40000;
-                        tm.Start();
-                        if (ok[0] & ok[1] & ok[2])
+                        if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                         {
-                            tm.Stop();
+                            Array.Clear(ok, 0, ok.Length);
                             nextTakt();
                         }
+                        else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
                     }
-                    else
-                    {
-                        if (ok[0] & ok[1] & ok[2] || Takt != 0)
+                    if (ok[0] & ok[1] & ok[2] || Takt != 0)
                         {
                             bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             udp.Send(bytes, bytes.Length, point);
                         }
-                        //else
-                        //{
-                        //    if (Takt != 0)
-                        //    {
-                        //        bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                        //        udp.Send(bytes, bytes.Length, point);
-                        //    }
-                        //}
-                    }
+                    
+
                     break;
                 #endregion
                 #region обработка ставок
@@ -369,7 +361,7 @@ namespace MainServer
         void nextTakt()
         {
             Game.Teames[] currTeam;
-
+            //deadLine = DateTime.Now.AddMinutes(3);
             if (gm.iCon > 12)
             {
                 gm.step = 10;
@@ -383,7 +375,7 @@ namespace MainServer
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд
                     case 0:
-
+                        deadLine = null;
                         gm.step = 2;
                         gm.Cell = rn.rnd();
                         gm.theme = (byte)((gm.Cell + 5) / 6);

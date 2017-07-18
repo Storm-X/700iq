@@ -220,6 +220,7 @@
     <Content Include="Resources\cup-1.png" />
     <Content Include="Resources\cup_2.png" />
     <Content Include="Resources\cup_3.png" />
+    <None Include="Resources\dancing.mov" />
     <Content Include="Resources\Down.png" />
     <Content Include="Resources\downarrow.png" />
     <None Include="Resources\scroll\uparrow.png" />
