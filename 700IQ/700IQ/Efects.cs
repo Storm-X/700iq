@@ -670,11 +670,16 @@ namespace _700IQ
             //SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
             //DoubleBuffered = true;
             this.enabled = true;
+            // string videoCel;
+            // String.Format("d:\visual\Рулетка\{0}.avi", cel)
 
-            video = new Video(@"d:\Programming\Project\Рулетка\02+звук.avi", false);
+            //video = new Video(String.Format(@"d:\visual\Рулетка\{0}.avi", cel), false);
+            video = new Video(String.Format(@"d:\visual\01.1.avi", cel), false);
+
             video.Owner = this;
-            //this.Size = rc.Size;
-            video.Size = this.Size;
+            this.Size = new Size(1030, 580);
+            video.Size = new Size(1030,580);
+
             video.Ending += Video_Ending;
             this.Visible = true;
             video.Play();
@@ -727,7 +732,7 @@ namespace _700IQ
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-            System.Drawing.Rectangle r = new Rectangle(70, -30, 610, 640); 
+            System.Drawing.Rectangle r = new Rectangle(277, 25, 548, 548); 
             e.Graphics.DrawEllipse(Pens.Transparent, r);//после нужного вам результата замените - Pens.Transparent
             gp.AddEllipse(r);
             Region = new System.Drawing.Region(gp);
@@ -746,6 +751,7 @@ namespace _700IQ
             {
                 tm?.Stop();
                 this.Visible = false;
+                video?.Dispose();
                 this.enabled = false;
             }
         }
