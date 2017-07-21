@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
+using Microsoft.DirectX;
+using Microsoft.DirectX.AudioVideoPlayback;
 
 namespace _700IQ
 {
@@ -581,7 +583,7 @@ namespace _700IQ
         }
 
     }
-    public class Rul : Label  //класс рулетка
+    public class Rul : Panel  //класс рулетка
     {
         #region //описание переменных
         public delegate void stopRul();
@@ -614,9 +616,12 @@ namespace _700IQ
         int tickNumber = 0, nStop = 100;
         int offset=5;
 
+        Video video;
+
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
+            this.Visible = false;
             z1 = new Rectangle(new Point(0, 0), fsv.NewSizeKv(35));
             z2 = new Rectangle(new Point(0, 0), fsv.NewSizeKv(35));
             point = new Point(0, 0);
@@ -631,18 +636,13 @@ namespace _700IQ
             tickNumber = 0; 
             this.fsv = fsv;
             tm = new System.Windows.Forms.Timer();
-            tm.Interval = 10;
+            tm.Interval = 1000;
             tm.Tick += new EventHandler(tm_Tick);
-            bmp = Properties.Resources.Ruletka;
-            g = Graphics.FromImage(bmp);
-            RouletteBall = Properties.Resources.ShadowBall;
+            //bmp = Properties.Resources.Ruletka;
+            //g = Graphics.FromImage(bmp);
+            //RouletteBall = Properties.Resources.ShadowBall;
             //RouletteBall = Image.FromFile(@"d:\Картинки\700IQ\ShadowBall.png");
 
-            koef = (float)(rc.Width) / bmp.Width;
-            centrx = 288 * koef;
-            centry = 291 * koef;
-            radius = 230 * koef;
-            offset = (int)(offset * koef);
             flag = false;
             //vi = 0.04f;
             //vi += 0.00004f + 0.00008f;
@@ -662,30 +662,76 @@ namespace _700IQ
             }
             else vi = (float)Math.Sqrt(vi * ((2 * rotation_count + 1.5f) * Math.PI + cel * 2 * Math.PI / 37f));
             // начало отсчета с 14 поля или 2,   зеро равно при n=14
-            tm.Start();
-            #region//описание свойств формы
-            this.Visible = true;
+
             this.Location = rc.Location;
-            this.BackgroundImage = bmp;
-            this.BackgroundImageLayout = ImageLayout.Zoom;
-            this.BackColor = Color.Transparent;
             this.Size = rc.Size;
             this.Parent = fsv;
-            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            DoubleBuffered = true;
+            //this.Paint += OnPaint;
+            //SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            //DoubleBuffered = true;
             this.enabled = true;
+
+            video = new Video(@"d:\Programming\Project\Рулетка\02+звук.avi", false);
+            video.Owner = this;
+            //this.Size = rc.Size;
+            video.Size = this.Size;
+            video.Ending += Video_Ending;
+            this.Visible = true;
+            video.Play();
+            tm.Start();
+            //tmrVideo.Enabled = true;
+            //btnPlayPause.Text = "Pause";
+
+            #region//описание свойств формы
+            //this.Visible = true;
+            //this.Location = rc.Location;
+            //this.BackgroundImage = bmp;
+            //this.BackgroundImageLayout = ImageLayout.Zoom;
+            //this.BackColor = Color.Transparent;
+            //this.Size = rc.Size;
+            //this.Parent = fsv;
+            //SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            //DoubleBuffered = true;
+            //this.enabled = true;
             this.BringToFront();
             #endregion
-            g.Dispose();
+            //g.Dispose();
+            this.Invalidate();
         }
 
-        protected override void OnPaint(PaintEventArgs pe)
+        private void Video_Ending(object sender, EventArgs e)
         {
-            pe.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            Task.Factory.StartNew(() =>
+            {
+                //System.Threading.Thread.Sleep(2000);
+
+                if (InvokeRequired)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        enabled = false;
+                        onStop?.Invoke(); 
+                    }));
+                }
+            });
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            /*pe.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             pe.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             //pe.Graphics.FillEllipse(Brushes.White, z2);
             base.OnPaint(pe);
-            pe.Graphics.DrawImage(RouletteBall, z2);
+            pe.Graphics.DrawImage(RouletteBall, z2);*/
+
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
+            System.Drawing.Rectangle r = new Rectangle(70, -30, 610, 640); 
+            e.Graphics.DrawEllipse(Pens.Transparent, r);//после нужного вам результата замените - Pens.Transparent
+            gp.AddEllipse(r);
+            Region = new System.Drawing.Region(gp);
+
         }
         public void close()
         {
@@ -738,7 +784,12 @@ namespace _700IQ
         }
         private void tm_Tick(object sender, EventArgs e)
         {
-            {
+            /*tickNumber++;
+            this.Location = new Point(655 + tickNumber*10, 107);
+            this.Refresh();
+            this.Invalidate();*/
+
+            /*{
                 tickNumber++;
                 if (!flagStop)
                 {
@@ -780,7 +831,7 @@ namespace _700IQ
                         onStop?.Invoke();
                     }
                 }
-            }
+            }*/
         }
     }
 }

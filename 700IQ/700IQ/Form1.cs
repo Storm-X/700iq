@@ -238,8 +238,8 @@ namespace _700IQ
            */
             #endregion
             ////для теста Рулетки на старте проги
-            ///Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            ///Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+           /* Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+            Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??*/
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
 
 
