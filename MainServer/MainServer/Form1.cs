@@ -973,10 +973,10 @@ namespace MainServer
             {
                 f.Refresh();
                 f.FormBorderStyle = FormBorderStyle.None;
-                f.Location = Screen.AllScreens[0].Bounds.Location;
+                f.Location = Screen.AllScreens[1].Bounds.Location;
                 f.Location.Offset(10, 10);
                 f.WindowState = FormWindowState.Maximized;
-                this.Location = Screen.AllScreens[1].Bounds.Location;
+                this.Location = Screen.AllScreens[0].Bounds.Location;
                 button1.Text = "Монитор подключен";
                 ToJS();
                 f.Show();
