@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using Microsoft.DirectX;
 using Microsoft.DirectX.AudioVideoPlayback;
+using System.Runtime.InteropServices;
 
 namespace _700IQ
 {
@@ -586,6 +587,7 @@ namespace _700IQ
     public class Rul : Panel  //класс рулетка
     {
         #region //описание переменных
+        Size resolution;
         public delegate void stopRul();
         public event stopRul onStop;
         public bool Enabled
@@ -618,10 +620,48 @@ namespace _700IQ
 
         Video video;
 
+        private enum Message : int
+        {
+            WM_SETREDRAW = 0x000B, // int 11
+            SW_SHOWMAXIMIZED = 0x0003,
+            SW_SHOW = 0x0005,
+        }
+        [DllImport("User32.dll")]
+        private extern static int SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        private static Size GetWorkingClientSize(Form form)
+        {
+            var original = form.WindowState;
+            try
+            {
+                BeginUpdate(form);
+
+                form.WindowState = FormWindowState.Maximized;
+                return new Size((int)(form.ClientSize.Height * 1.5625f), form.ClientSize.Height);
+            }
+            finally
+            {
+                form.WindowState = original;
+                EndUpdate(form);
+            }
+        }
+        public static void BeginUpdate(Control c)
+        {
+            SendMessage(c.Handle, (int)Message.WM_SETREDRAW, new IntPtr(0), IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Calls user32.dll SendMessage(handle, WM_SETREDRAW, 1, null) native function to enable painting
+        /// </summary>
+        /// <param name="c"></param>
+        public static void EndUpdate(Control c)
+        {
+            SendMessage(c.Handle, (int)Message.WM_SETREDRAW, new IntPtr(1), IntPtr.Zero);
+        }
         #endregion
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
             this.Visible = false;
+            resolution = GetWorkingClientSize(fsv);
             z1 = new Rectangle(new Point(0, 0), fsv.NewSizeKv(35));
             z2 = new Rectangle(new Point(0, 0), fsv.NewSizeKv(35));
             point = new Point(0, 0);
@@ -677,9 +717,11 @@ namespace _700IQ
             video = new Video(String.Format(@"d:\visual\01.1.avi", cel), false);
 
             video.Owner = this;
-            this.Size = new Size(1030, 580);
-            video.Size = new Size(1030,580);
+            this.Size = NewSizeKv(1500);
+            video.Size = NewSize(1525,860);
 
+           /* this.Size = NewSize(1230, 780);
+            video.Size = NewSize(1230,780);*/
 
             video.Ending += Video_Ending;
             this.Visible = true;
@@ -839,6 +881,16 @@ namespace _700IQ
                     }
                 }
             }*/
+        }
+        public Size NewSize(int x, int y)  //производит пересчет к новым размерам
+        {
+            return new Size(x * resolution.Width / 2500, y * resolution.Height / 1600);
+            //return new Size(x * this.Width / 2500, y * this.Height / 1600);
+        }
+        public Size NewSizeKv(int x)
+        {
+            return new Size(x * resolution.Height / 1600, x * resolution.Height / 1600);
+            //return new Size(x * this.Height / 1600, x * this.Height / 1600);
         }
     }
 }
