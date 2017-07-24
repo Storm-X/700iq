@@ -680,6 +680,7 @@ namespace _700IQ
             this.Size = new Size(1030, 580);
             video.Size = new Size(1030,580);
 
+
             video.Ending += Video_Ending;
             this.Visible = true;
             video.Play();
