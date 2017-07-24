@@ -831,9 +831,6 @@ namespace _700IQ
                         case 7:
                             Step7();
                             break;
-                            //default:
-                            //    NextStep();                                 
-                            //    break;
                     }
                     currStep = steck.step; //Вынести сюда
                 }

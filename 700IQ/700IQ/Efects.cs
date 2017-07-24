@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using Microsoft.DirectX;
 using Microsoft.DirectX.AudioVideoPlayback;
+using System.Runtime.InteropServices;
 
 namespace _700IQ
 {
@@ -775,6 +776,7 @@ namespace _700IQ
             {
                 tm?.Stop();
                 this.Visible = false;
+                video?.Dispose();
                 this.enabled = false;
             }
         }
