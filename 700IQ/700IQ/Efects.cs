@@ -387,7 +387,7 @@ namespace _700IQ
         public delegate void PolosaEnd();
         public PolosaEnd onPolosaEnd;
         //Size resolution; // = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
-        PictureBoxWithInterpolationMode pcBox;
+        public PictureBoxWithInterpolationMode pcBox;
         public CircularProgressBar prBar;
         //private Form fsv;
 
@@ -755,8 +755,11 @@ namespace _700IQ
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-
-            System.Drawing.Rectangle r = new Rectangle((int)((rc.X- (fsv.delta < 0 ? fsv.delta : 0)) * 0.644), (int)(rc.Y * 0.277), (int)(size.Width * 0.53), (int)(size.Width * 0.53));   
+            double koef1 = (double)292 / (double)rc.X;
+            double koef2 = (double)28 / (double)rc.Y;
+            double koef3 = (double)574 / (double)size.Width;
+            System.Drawing.Rectangle r = new Rectangle((int)((rc.X - (fsv.delta < 0 ? fsv.delta : 0)) * koef1), (int)(rc.Y * koef2), (int)(size.Width * koef3), (int)(size.Width * koef3));
+            //System.Drawing.Rectangle r = new Rectangle((int)((rc.X- (fsv.delta < 0 ? fsv.delta : 0)) * 0.644), (int)(rc.Y * 0.277), (int)(size.Width * 0.53), (int)(size.Width * 0.53));   
             //System.Drawing.Rectangle r = new Rectangle(292, 28, 574, 571);
             e.Graphics.DrawEllipse(Pens.Black, r);//после нужного вам результата замените - Pens.Transparent
             gp.AddEllipse(r);
