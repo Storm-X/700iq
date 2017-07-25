@@ -35,6 +35,7 @@ namespace _700IQ
         Table tbl;
         IPAddress server=null;
         bool startGame = true;
+        bool cursorsPathValid = false;
 
         Data.teams myTeam;
         //string kluch; //ключ игровой сессии
@@ -75,11 +76,12 @@ namespace _700IQ
             IntPtr hCursor = LoadCursorFromFile(FileName);
             if (!IntPtr.Zero.Equals(hCursor))
             {
+                cursorsPathValid = true;
                 return new Cursor(hCursor);
             }
             else
             {
-                MessageBox.Show("Ошибка загрузки курсора \n" + Marshal.GetLastWin32Error());
+                cursorsPathValid = false;
                 return this.Cursor;
             }
         }
@@ -101,9 +103,18 @@ namespace _700IQ
             //this.KeyDown += GeneralForm_KeyDown;
             //this.KeyPress += p.WorkForm_KeyDown;      
             path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
-            path = Path.GetDirectoryName(path);//возврат на директорию вверх
-            path = path + "\\Resources\\Cursors\\";//директория с курсорами
-            this.Cursor = SetCursor(path+ "Yellow_vopros1.ani");//установка курсора из файла
+            //path = Path.GetDirectoryName(path);//возврат на директорию вверх
+            //path = path + "\\Resources\\Cursors\\";//директория с курсорами
+            //MessageBox.Show(path);
+            path = path + "\\Cursors\\";
+            this.Cursor = SetCursor(path + "Yellow_vopros.ani");//установка курсора из файла
+            if (!cursorsPathValid)
+            {
+                path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+                path = path + "\\Debug\\Cursors\\";
+                this.Cursor = SetCursor(path + "Yellow_vopros.ani");//установка курсора из файла
+            }
+            if (!cursorsPathValid) MessageBox.Show("Ошибка загрузки курсора \n" + Marshal.GetLastWin32Error());
             KeyPreview = true;
         }
 
@@ -238,28 +249,11 @@ namespace _700IQ
            */
             #endregion
             ////для теста Рулетки на старте проги
-           // Rectangle kv = new Rectangle(NewPoint(440, 150), NewSize(1600,900));
+            //Rectangle kv = new Rectangle(NewPoint(330, 150), NewSize(1600,900));
             //g.DrawRectangle(Pens.Black, kv);
-           // Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+            //Ruletka.StartRul(36, kv, this, 3); // 2); //2 ячейка ??? надо ли??
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
 
-
-         /*   WebBrowser wb = new WebBrowser();
-            wb.Parent = this;
-
-
-
-             string page1 = @"<!DOCTYPE html>
-<html>
-<head><meta http-equiv=""X-UA-Compatible"" content=""IE=11""></head>
-<body> 
-  <video id=""video1"" autoplay="""" src=""C:\Users\User\Source\Repos\New700iq\700IQ\700IQ\Resources\dancing.mov"" loop="" class=""rotateOut"" style=""opacity: 1; filter: blur(0px); z - index: 2147483647; left: 110px; top: 195px; ""></video>
-</body>
-</html>";
-            wb.Width=1000;
-            wb.Height = 1000;
-
-            wb.Url =new Uri("https://jakearchibald.com/scratch/alphavid/");*/
         }
 
 
@@ -1634,7 +1628,7 @@ namespace _700IQ
 
         private void GeneralForm_KeyUp(object sender, KeyEventArgs e)//управление клавиатурой
         {
-            if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
+           // if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
             if (e.KeyCode == Keys.Enter)
             {
                 if (pol.ff != null &&pol.pcBox.Visible &&pol.ff.Visible && pol.Value > 0) { pol.Finish(); return; }//полоска

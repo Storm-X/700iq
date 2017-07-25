@@ -584,6 +584,7 @@ namespace _700IQ
         }
 
     }
+
     public class Rul : PictureBox  //класс рулетка
     {
         #region //описание переменных
@@ -622,6 +623,28 @@ namespace _700IQ
 
         #endregion
         public Size size;
+        public Video LoadVideo(int cell)
+        {
+            Video temp_video;
+            string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+            try
+            {
+                temp_video = new Video(path + String.Format("\\Video\\{0}.avi",cell + 1), false);
+            }
+            catch
+            {
+                try
+                {
+                    temp_video = new Video(path + String.Format("\\Debug\\Video\\{0}.avi", cell + 1), false);
+                }
+                catch
+                {
+                    MessageBox.Show("Ошибка загрузки видео \n" + Marshal.GetLastWin32Error());
+                    temp_video = null;
+                }
+            }
+            return temp_video;
+        }
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
             this.Visible = false;
@@ -652,7 +675,8 @@ namespace _700IQ
             //DoubleBuffered = true;
             this.enabled = true;
 
-            video = new Video(@"d:\Programming\Project\Рулетка\01.1.avi", false);
+            video = LoadVideo(cel);//new Video(@"d:\01.1.avi", false);
+
             //size = video.Size;
             //this.Size = size;
             video.Owner = this;
@@ -666,7 +690,7 @@ namespace _700IQ
             this.BringToFront();
             this.Refresh();
             //this.Invalidate();
-            video.Play();
+            if (video != null) video.Play();
             //tmrVideo.Enabled = true;
             //btnPlayPause.Text = "Pause";
 
@@ -755,11 +779,8 @@ namespace _700IQ
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-            double koef1 = (double)292 / (double)rc.X;
-            double koef2 = (double)28 / (double)rc.Y;
-            double koef3 = (double)574 / (double)size.Width;
-            System.Drawing.Rectangle r = new Rectangle((int)((rc.X - (fsv.delta < 0 ? fsv.delta : 0)) * koef1), (int)(rc.Y * koef2), (int)(size.Width * koef3), (int)(size.Width * koef3));
-            //System.Drawing.Rectangle r = new Rectangle((int)((rc.X- (fsv.delta < 0 ? fsv.delta : 0)) * 0.644), (int)(rc.Y * 0.277), (int)(size.Width * 0.53), (int)(size.Width * 0.53));   
+            //System.Drawing.Rectangle r = new Rectangle((int)((rc.X - (fsv.delta < 0 ? fsv.delta : 0)) * koef1), (int)(rc.Y * koef2), (int)(size.Width * 0.53), (int)(size.Width * 0.53));
+            System.Drawing.Rectangle r = new Rectangle((int)((size.Width*519/1920)), (int)(size.Width * 48/1920), (int)(size.Width * 1020/1920), (int)(size.Width * 1020/1920));   
             //System.Drawing.Rectangle r = new Rectangle(292, 28, 574, 571);
             e.Graphics.DrawEllipse(Pens.Black, r);//после нужного вам результата замените - Pens.Transparent
             gp.AddEllipse(r);

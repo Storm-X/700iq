@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Kursov\AppData\Local\Temp\vsF251.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Kursov\AppData\Local\Temp\vs4AE6.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Kursov\AppData\Local\Temp\vsF251.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Kursov\AppData\Local\Temp\vs4AE6.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\700iq.ico</ApplicationIcon>
@@ -253,6 +253,43 @@
     <Content Include="Resources\ThumbTop.png" />
     <Content Include="Resources\Up.png" />
     <Content Include="Resources\uparrow.png" />
+    <None Include="Resources\vid28.MTS" />
+    <None Include="Resources\vid29.MTS" />
+    <None Include="Resources\vid30.MTS" />
+    <None Include="Resources\vid31.MTS" />
+    <None Include="Resources\vid32.MTS" />
+    <None Include="Resources\vid33.MTS" />
+    <None Include="Resources\vid34.MTS" />
+    <None Include="Resources\vid35.MTS" />
+    <None Include="Resources\vid36.MTS" />
+    <None Include="Resources\vid0.MTS" />
+    <None Include="Resources\vid1.MTS" />
+    <None Include="Resources\vid2.MTS" />
+    <None Include="Resources\vid3.MTS" />
+    <None Include="Resources\vid4.MTS" />
+    <None Include="Resources\vid5.MTS" />
+    <None Include="Resources\vid6.MTS" />
+    <None Include="Resources\vid7.MTS" />
+    <None Include="Resources\vid8.MTS" />
+    <None Include="Resources\vid9.MTS" />
+    <None Include="Resources\vid10.MTS" />
+    <None Include="Resources\vid11.MTS" />
+    <None Include="Resources\vid12.MTS" />
+    <None Include="Resources\vid13.MTS" />
+    <None Include="Resources\vid14.MTS" />
+    <None Include="Resources\vid15.MTS" />
+    <None Include="Resources\vid16.MTS" />
+    <None Include="Resources\vid17.MTS" />
+    <None Include="Resources\vid18.MTS" />
+    <None Include="Resources\vid19.MTS" />
+    <None Include="Resources\vid20.MTS" />
+    <None Include="Resources\vid21.MTS" />
+    <None Include="Resources\vid22.MTS" />
+    <None Include="Resources\vid23.MTS" />
+    <None Include="Resources\vid24.MTS" />
+    <None Include="Resources\vid25.MTS" />
+    <None Include="Resources\vid26.MTS" />
+    <None Include="Resources\vid27.MTS" />
     <Content Include="Resources\yes.gif" />
     <Content Include="Resources\галочка.gif" />
     <Content Include="Resources\крестик.gif" />
