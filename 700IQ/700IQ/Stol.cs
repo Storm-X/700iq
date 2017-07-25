@@ -437,7 +437,7 @@ namespace _700IQ
 
                 //Rul Ruletka = new Rul();
                 workForm.Ruletka.AnyEventHarakiri();
-                workForm.Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1700, 210), NewSizeKv(900)), workForm, 3);
+                workForm.Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1320, 210), NewSize(1600, 900)), workForm, 3);//исправить
                 while (workForm.Ruletka.Enabled && !this.workForm.IsDisposed)
                     Application.DoEvents();
                 zagolovok.Dispose();
@@ -1387,9 +1387,9 @@ namespace _700IQ
                         BackgroundImageLayout = ImageLayout.Zoom,
                         Name = "oneuse",
                     };
-                  //  lbPlus.Click += LbPlus_Click;
-                   // lbPlus.MouseDown += lbSpinBtn_MouseDown;
-                    //lbPlus.MouseUp += lbSpinBtn_MouseUp;
+                    lbPlus.Click += LbPlus_Click;
+                    lbPlus.MouseDown += lbSpinBtn_MouseDown;
+                    lbPlus.MouseUp += lbSpinBtn_MouseUp;
 
                     lbMines = new PictureBox
                     {
@@ -1401,9 +1401,9 @@ namespace _700IQ
                         Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.55)),
                         Name = "oneuse"
                     };
-                    //lbMines.Click += LbMines_Click;
-                    //lbMines.MouseDown += lbSpinBtn_MouseDown;
-                    //lbMines.MouseUp += lbSpinBtn_MouseUp;
+                    lbMines.Click += LbMines_Click;
+                    lbMines.MouseDown += lbSpinBtn_MouseDown;
+                    lbMines.MouseUp += lbSpinBtn_MouseUp;
                     #endregion
 
                     #region //описание области ввода ставки
@@ -1475,7 +1475,7 @@ namespace _700IQ
             }
             lbMines.Location = new Point(lbMines.Location.X - 2, lbMines.Location.Y - 2);
         }
-        /*private void lbSpinBtn_MouseDown(object sender, EventArgs e)
+        private void lbSpinBtn_MouseDown(object sender, EventArgs e)
         {
             ((PictureBox)sender).Location = new Point(((PictureBox)sender).Location.X + 2, ((PictureBox)sender).Location.Y + 2);
         }
@@ -1498,7 +1498,7 @@ namespace _700IQ
                 lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) - stDelta);
                 lbin1.Text = Convert.ToString(Convert.ToInt32(lbin1.Text) - stDelta);
             }
-        }*/
+        }
         private void StavkaEndTime()
         {
             stDelta = 0;
