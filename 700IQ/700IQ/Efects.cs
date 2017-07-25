@@ -584,11 +584,12 @@ namespace _700IQ
         }
 
     }
-    public class Rul : Panel  //класс рулетка
+    public class Rul : PictureBox  //класс рулетка
     {
         #region //описание переменных
         public delegate void stopRul();
         public event stopRul onStop;
+        Rectangle rc;
         public bool Enabled
         {
             get { return enabled; }
@@ -619,28 +620,15 @@ namespace _700IQ
 
         Video video;
 
-
-
         #endregion
+        public Size size;
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
             this.Visible = false;
-           // z1 = new Rectangle(new Point(0, 0), fsv.NewSizeKv(35));
-           // z2 = new Rectangle(new Point(0, 0), fsv.NewSizeKv(35));
-            //point = new Point(0, 0);
-            //i = 0f;
-            //vr = 0f;
-            //stepi = 0.00002f;// ускорение
-            //vi = 2 * 0.00002f;// начальная скорость = 2 * ускорение
-            //ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
-            //stepr = 0.0001f;//шаг изменения радиуса
-
+            this.rc = rc;
             flagStop =false;
-            //tickNumber = 0; 
+            tickNumber = 0; 
             this.fsv = fsv;
-            tm = new System.Windows.Forms.Timer();
-            tm.Interval = 1000;
-            tm.Tick += new EventHandler(tm_Tick);
             //bmp = Properties.Resources.Ruletka;
             //g = Graphics.FromImage(bmp);
             //RouletteBall = Properties.Resources.ShadowBall;
@@ -657,53 +645,28 @@ namespace _700IQ
 
             //2*pi/37 - количество радиан в 1 ячейке
             // vi = (float)Math.Sqrt(0.00004f * (37 + (14 + cel) * 0.15708f));
-            // if (rotation_count == 0) {
-            //    tickNumber = 100;
-            //     radius = 110;
-            //     i = (float)((cel-12) * 2 * Math.PI / 37f);
-            //     vi = 0.0044f;
-            //  }
-            //  else vi = (float)Math.Sqrt(vi * ((2 * rotation_count + 1.5f) * Math.PI + cel * 2 * Math.PI / 37f));
-            // начало отсчета с 14 поля или 2,   зеро равно при n=14
-
+            this.Location = rc.Location;
             this.Parent = fsv;
-            this.Location = rc.Location;//переделать
-            this.Size = rc.Size;
-           /* PictureBox pbx = new PictureBox();
-            pbx.Parent = this;
-            pbx.Location = new Point(0, 0);
-            pbx.Dock = DockStyle.Fill;*/
-            //this.Size = rc.Size;
-            
             //this.Paint += OnPaint;
             //SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
             //DoubleBuffered = true;
-            //this.enabled = true;
-            // string videoCel;
-            // String.Format("d:\visual\Рулетка\{0}.avi", cel)
+            this.enabled = true;
 
-            //video = new Video(String.Format(@"d:\visual\Рулетка\{0}.avi", cel), false);
-          //  this.Size = NewSizeKv(1500);
-            video = new Video(String.Format(@"d:\visual\01.1.avi", cel), true);
-            var size = new Size();
-            size = this.Size;
+            video = new Video(@"d:\Programming\Project\Рулетка\01.1.avi", false);
+            //size = video.Size;
+            //this.Size = size;
             video.Owner = this;
+            this.Size = rc.Size;
+            double koeff = 1.78; // (double)Width / (double)Height;
+            size = new Size((int)(this.Height * koeff), this.Height);
             //this.Size = rc.Size;
-
-            /* this.Size = NewSize(1230, 780);*/
-            //video.Size = new Size(1030,730);
-
-            //this.Height = size.Height;
-            //this.Width = size.Width;
-            this.Visible = true;
+            video.Size = size;
             video.Ending += Video_Ending;
-            //this.Size = rc.Size;
+            this.Visible = true;
             this.BringToFront();
             this.Refresh();
+            //this.Invalidate();
             video.Play();
-            this.Refresh();
-            this.Invalidate();
-            //tm.Start();
             //tmrVideo.Enabled = true;
             //btnPlayPause.Text = "Pause";
 
@@ -740,23 +703,68 @@ namespace _700IQ
                 }
             });
         }
+        const int WM_KEYDOWN = 0x100;
+        const int WM_KEYUP = 0x101;
+        const int WM_SYSKEYDOWN = 0x104;
+        const int WM_MOUSEMOVE = 0x0200;
+        const int WM_LBUTTONDOWN = 0x201;
+        const int WM_LBUTTONUP = 0x202;
+        const int WM_LBUTTONDBLCLICK = 0x203;
+        const int VK_ESCAPE = 0x1b;
+        protected override void WndProc(ref Message m)
+        {
+            //We have to change the clientsize to make room for borders
+            //if not, the border is limited in how thick it is.
+            switch(m.Msg)
+            {
+                case WM_LBUTTONDBLCLICK:  //WM_MOUSE_DOUBLE_CLICK
+                    if(!video.Fullscreen)
+                        video.Fullscreen = true;  //!video.Fullscreen;
+                    break;
+                case WM_KEYUP:
+                    if (video.Fullscreen && (int)m.WParam == VK_ESCAPE)
+                        video.Fullscreen = false;
+                    break;
+                case WM_MOUSEMOVE:
+                    //int lParam = m.LParam.ToInt32();
+                    //mouseLoc.X = lParam & 0xFFFF;
+                    //mouseLoc.Y = (int)(lParam & 0xFFFF0000 >> 16);
+                    Point mouseLoc = new Point();
+                    mouseLoc.X = (Int16)m.LParam;
+                    mouseLoc.Y = (Int16)((int)m.LParam >> 16);
+                    if ((int)m.WParam == 0x001)
+                        this.Location.Offset(10, 10);
+                    break;
+
+                    //if (m.WParam == IntPtr.Zero)   {  }   else         {      }
+            }
+            /*if (m.Msg == 0x85) //WM_NCPAINT
+            {
+            }*/
+            base.WndProc(ref m);
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             /*pe.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             pe.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             //pe.Graphics.FillEllipse(Brushes.White, z2);
-           
+            base.OnPaint(pe);
             pe.Graphics.DrawImage(RouletteBall, z2);*/
 
-            /* e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-             System.Drawing.Rectangle r = new Rectangle(NewPoint(850, 150), NewSizeKv(1000)); // new Rectangle(277, 25, 548, 548); 
-             e.Graphics.DrawEllipse(Pens.Transparent, r);//после нужного вам результата замените - Pens.Transparent
-             gp.AddEllipse(r);
-             Region = new System.Drawing.Region(gp);*/
-            base.OnPaint(e);
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
+            double koef1 = (double)292 / (double)rc.X;
+            double koef2 = (double)28 / (double)rc.Y;
+            double koef3 = (double)574 / (double)size.Width;
+            System.Drawing.Rectangle r = new Rectangle((int)((rc.X - (fsv.delta < 0 ? fsv.delta : 0)) * koef1), (int)(rc.Y * koef2), (int)(size.Width * koef3), (int)(size.Width * koef3));
+            //System.Drawing.Rectangle r = new Rectangle((int)((rc.X- (fsv.delta < 0 ? fsv.delta : 0)) * 0.644), (int)(rc.Y * 0.277), (int)(size.Width * 0.53), (int)(size.Width * 0.53));   
+            //System.Drawing.Rectangle r = new Rectangle(292, 28, 574, 571);
+            e.Graphics.DrawEllipse(Pens.Black, r);//после нужного вам результата замените - Pens.Transparent
+            gp.AddEllipse(r);
+            Region = new System.Drawing.Region(gp);
+
         }
         public void close()
         {

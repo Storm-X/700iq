@@ -186,7 +186,7 @@ namespace _700IQ
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             delta = (maxClientSize.Width - resolution.Width) / 2;               //координата х для рисования          
             g.DrawImage(bmp, delta, 0, resolution.Width, resolution.Height); // рисуем картинку в масштабе
-          //  g.Dispose();
+            g.Dispose();
             this.BackgroundImage = bmpNew;
             bmp.Dispose();
             // bmpNew.Dispose();
@@ -238,10 +238,9 @@ namespace _700IQ
            */
             #endregion
             ////для теста Рулетки на старте проги
-            Rectangle kv = new Rectangle(NewPoint(850, 150),  NewSizeKv(1000));
-            g.DrawRectangle(Pens.Yellow, kv);
-            g.DrawEllipse(Pens.Red,kv);
-            Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+           // Rectangle kv = new Rectangle(NewPoint(440, 150), NewSize(1600,900));
+            //g.DrawRectangle(Pens.Black, kv);
+           // Ruletka.StartRul(0, kv, this, 3); // 2); //2 ячейка ??? надо ли??
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
 
 
@@ -1006,7 +1005,7 @@ namespace _700IQ
             {
                 tbl.TemaShow(steck, true);
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
-                Rectangle kv = new Rectangle(NewPoint(440, 150), NewSizeKv(900));
+                Rectangle kv = new Rectangle(NewPoint(410, 150), NewSize(1600, 900));
                 //Ruletka = new Rul();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step2_3;
@@ -1095,7 +1094,7 @@ namespace _700IQ
                 CreateAnswerTable();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
-                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1340, 150), NewSizeKv(900)), this, 1);
+                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1320, 150), NewSize(1600, 900)), this, 1);
             }          
         }
         private void CreateAnswerTable(bool withQuery=false)
@@ -1635,10 +1634,10 @@ namespace _700IQ
 
         private void GeneralForm_KeyUp(object sender, KeyEventArgs e)//управление клавиатурой
         {
-            //if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
+            if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
             if (e.KeyCode == Keys.Enter)
             {
-                if (pol.ff != null &&pol.pcBox.Visible && pol.ff.Visible && pol.Value > 0) { pol.Finish(); return; }//полоска
+                if (pol.ff != null &&pol.pcBox.Visible &&pol.ff.Visible && pol.Value > 0) { pol.Finish(); return; }//полоска
                 if (startGame)
                 {
                     Control rotor = this.Controls.Find("Rotor", true).FirstOrDefault();//медаль
