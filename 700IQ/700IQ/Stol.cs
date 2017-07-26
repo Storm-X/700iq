@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.Text.RegularExpressions;
+using Microsoft.DirectX;
+using Microsoft.DirectX.AudioVideoPlayback;
 
 namespace _700IQ
 {
@@ -688,6 +690,7 @@ namespace _700IQ
         int tableofkom;
         int step = 0;
         private bool IsDisposed = false;
+        Audio audio;
 
         struct SendData //структурированные данные отправляемые серверу
         {
@@ -1173,7 +1176,29 @@ namespace _700IQ
             //    arr[i] = new Bitmap(im);
             //}
         }*/
+        public Audio LoadAudio()
+        {
+            Audio temp_audio;
+            string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+            try
+            {
 
+                temp_audio = new Audio(path + "\\Audio\\fail.mp3", false);
+            }
+            catch
+            {
+                try
+                {
+                    temp_audio = new Audio(path + "\\Debug\\Audio\\fail.mp3", false);
+                }
+                catch
+                {
+                    MessageBox.Show("Ошибка загрузки звука \n" + Marshal.GetLastWin32Error());
+                    temp_audio = null;
+                }
+            }
+            return temp_audio;
+        }
         public void answer(int o, Game steck) //неправильный ответ
         {
             /* if (workForm.InvokeRequired)
@@ -1185,12 +1210,17 @@ namespace _700IQ
              }
              else
              {*/
+            audio = LoadAudio();
+           
             gifImage = new GifImage(Properties.Resources.крестик);
             gifImage.ReverseAtEnd = false; //dont reverse at end
             var answTeam = steck.team.OrderBy(x => x.answerOrder);
             o--;
+            if (!answTeam.ElementAt(o).correct)
+                audio.Play();
             semafor(0);
             gifTimer.Stop();
+           // audio.Stop();
             indexToPaint = 0;
             //getArrayOfFrames(imCorrect);
             //switch (o)
@@ -1216,7 +1246,7 @@ namespace _700IQ
             pc1.Visible = true;
             pc2.Visible = true;
             pc3.Visible = true;
-
+           
             //foreach (Control t in workForm.Controls.Find("questControls", true)) t.Visible = true;
 
             //indexImage = --o;
@@ -1239,6 +1269,8 @@ namespace _700IQ
             gifTimer.Interval = 25;
             gifTimer.Start();
 
+            
+
         }
         void gifTimer_Tick(object sender, EventArgs e)
         {
@@ -1256,6 +1288,7 @@ namespace _700IQ
                 //pc1rez.Image = 
                 indexToPaint++;
                 pcResult[indexImage].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
+           
                 //pcResult[indexImage].Visible = true;
 
             }
@@ -1317,7 +1350,7 @@ namespace _700IQ
             {
                 step = Curstep;
                 pol.AnyEventHarakiri();
-                pol.polosa(28, NewPoint(1700, 1350), ff, "CurStep = " + Curstep.ToString());
+                pol.polosa(46, NewPoint(1700, 1350), ff, "CurStep = " + Curstep.ToString());
                 pol.onPolosaEnd += sendOtvet;
             }
         }

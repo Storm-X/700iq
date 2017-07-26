@@ -29,6 +29,10 @@ namespace _700IQ
         private bool gradient = false;
         private bool autoReset = false;
         private bool defaul_color = true;
+        public int interval = 100;
+        int begin;
+        int interval_cels;
+        int beeps_count;
 
         #endregion
         #region Custom Properties
@@ -157,12 +161,20 @@ namespace _700IQ
             DoubleBuffered = true;
             this.SetStyle(System.Windows.Forms.ControlStyles.SupportsTransparentBackColor, true);
             this.BackColor = System.Drawing.Color.Transparent;
+
         }
 
         private void SetStandardSize()
         {
             int _Size = Math.Max(Width, Height);
             Size = new Size(_Size, _Size);
+        }
+        public void SetInterval(int t)
+        {
+            this.interval = t;
+            this.begin = _Maximum - 5000 / interval;
+            this.interval_cels = 1000 / interval;
+            this.beeps_count = 0;
         }
 
         public void Increment(int Val)
@@ -180,6 +192,11 @@ namespace _700IQ
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            /*
+            this.begin = _Maximum - 5000 / interval;
+            this.interval_cels = 1000 / interval;
+            this.beeps_count = 0;
+            */
             if (defaul_color) 
             {
                 //if (_Value <= _Maximum / 2) _ProgressColor1 = Color.FromArgb(150, _Value * 2 * 255 / _Maximum, 255, 0);
@@ -195,7 +212,10 @@ namespace _700IQ
                 {
                     graphics.SmoothingMode = SmoothingMode.AntiAlias;
                     graphics.Clear(this.BackColor);
-                    using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, this._ProgressColor1, (gradient) ? this._ProgressColor2 : this._ProgressColor1, LinearGradientMode.ForwardDiagonal))
+                    LinearGradientBrush brush;
+                    if (!autoReset) brush = new LinearGradientBrush(this.ClientRectangle, this._ProgressColor1, (gradient) ? this._ProgressColor2 : this._ProgressColor1, LinearGradientMode.ForwardDiagonal);
+                    else brush = new LinearGradientBrush(this.ClientRectangle, AutoResetColor, AutoResetColor, LinearGradientMode.ForwardDiagonal);
+                    using (brush)
                     {
                         using (Pen pen = new Pen(brush, progress_size))
                         {
@@ -211,8 +231,28 @@ namespace _700IQ
                                     pen.EndCap = LineCap.Flat;
                                     break;
                             }
-                            if (autoReset) graphics.DrawArc(new Pen(_AutoResetColor, progress_size), progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))), 120);
-                            else graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
+                            if (autoReset) graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))), 120);
+                           // else graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
+                            else
+                            {
+                                if (_Value >  begin)
+                                {
+                                    if ((_Value - begin) % interval_cels == 1)
+                                    {
+                                        Console.Beep(800, (beeps_count < 4) ? 250 : 1000 );
+                                        beeps_count++;
+                                        //if (_Value - begin % interval_cels > (interval_cels / 2))
+                                           // graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
+                                    }
+                                    //if (_Value % (_Maximum / 15) > (_Maximum / 30) ) graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
+                                    //if ((_Value % 30 == 1) && _Value < 300 ) Console.Beep(800,250);
+                                    //else if (_Value % 300 == 1) Console.Beep(800, 1000);
+
+                                    //else graphics.DrawArc(new Pen(Color.Transparent, progress_size), progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
+                                }
+                                 graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
+                            }
+
                         }
                     }
                     /*

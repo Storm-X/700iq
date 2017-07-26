@@ -141,8 +141,10 @@ namespace _700IQ
     }
     public class StavkiShow:resize
     {
+        
         class stakan:resize
         {
+            public Audio audio;
             public  delegate void StopST();
             public event StopST onStop;
             private FrameDimension dimension;
@@ -160,8 +162,32 @@ namespace _700IQ
             {
                 
             }
+            public Audio LoadAudio()
+            {
+                Audio temp_audio;
+                string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+                try
+                {
+
+                    temp_audio = new Audio(path + "\\Audio\\success.mp3", false);
+                }
+                catch
+                {
+                    try
+                    {
+                        temp_audio = new Audio(path + "\\Debug\\Audio\\success.mp3", false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Ошибка загрузки звука \n" + Marshal.GetLastWin32Error());
+                        temp_audio = null;
+                    }
+                }
+                return temp_audio;
+            }
             public void stak(int st1, Point point, GeneralForm fsv, int komanda)
             {
+                audio = LoadAudio();
                 this.komanda = komanda;
                 this.fsv = fsv;
                 workForm = fsv;
@@ -230,6 +256,7 @@ namespace _700IQ
                     timer.Interval = 15;
                     timer.Tick += new EventHandler(timer_Tick);
                     timer.Start();
+                    audio.Play();
                 }
             }
             void timer_Tick(object sender, EventArgs e)
@@ -238,6 +265,7 @@ namespace _700IQ
                 if (indexToPaint >= frameCount)
                 {
                     timer.Stop();
+                    audio.Stop();
                     onStop();
                 }
                 else
@@ -277,6 +305,8 @@ namespace _700IQ
         {
           
         }
+
+
         public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv)
         {
             //workForm = fsv;
@@ -440,9 +470,11 @@ namespace _700IQ
                     {
                         BackColor = Color.Transparent,
                         Location = pn,
-                        Size = NewSize(800, 200),
+                        Size = NewSize(800, 250),
+                        Font = new Font("Arial ", NewFontSize(1)),
                         Text = txt,
                         Parent = workForm,
+                        ForeColor = Color.Green,
                     };
                     #endregion
                     prBar = new CircularProgressBar()
@@ -454,15 +486,16 @@ namespace _700IQ
                         Value = 0,
                         Visible = true,
                         Maximum = 360,
-                        Gradient=false,
-                        ProgressSize = NewWidth(15),
+                        Gradient = false,
+                        ProgressSize = NewWidth(22),
+                        interval = t,
                 };
                     pcBox = new PictureBoxWithInterpolationMode
                     {
                         Parent = prBar,
                         Visible = true,
                         Location = new Point(prBar.ProgressSize, prBar.ProgressSize),
-                        Size = new Size(prBar.Size.Width - NewWidth(15 * 2), prBar.Size.Width - NewWidth(15 * 2)),
+                        Size = new Size(prBar.Size.Width - (prBar.ProgressSize * 2), prBar.Size.Width - (prBar.ProgressSize * 2)),
                         SizeMode = PictureBoxSizeMode.Zoom,
                         SmoothingMode = SmoothingMode.AntiAlias,
                         InterpolationMode = InterpolationMode.HighQualityBicubic,
@@ -479,6 +512,7 @@ namespace _700IQ
                 }
                 //prBar.BackgroundImage = ((Bitmap)workForm.BackgroundImage).Clone(new Rectangle(new Point(pn.X + prBar.Location.X, pn.Y + prBar.Location.Y), prBar.Size), PixelFormat.Format32bppArgb);
                 //pcBox.Visible = (txt == "синхр") ? false : true;
+                prBar.SetInterval(t);
                 prBar.AutoReset = (t == 1) ? true : false;
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
@@ -645,6 +679,7 @@ namespace _700IQ
             }
             return temp_video;
         }
+
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
             this.Visible = false;
