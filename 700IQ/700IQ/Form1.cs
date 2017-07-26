@@ -252,7 +252,10 @@ namespace _700IQ
             //Rectangle kv = new Rectangle(NewPoint(330, 150), NewSize(1600,900));
             //g.DrawRectangle(Pens.Black, kv);
             //Ruletka.StartRul(36, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+            //System.Media.SystemSounds.Question.Play();
+            //Console.Beep();
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+            //pol.prBar.AutoReset = true;
 
         }
 
