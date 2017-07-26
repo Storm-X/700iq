@@ -141,8 +141,10 @@ namespace _700IQ
     }
     public class StavkiShow:resize
     {
+        
         class stakan:resize
         {
+            public Audio audio;
             public  delegate void StopST();
             public event StopST onStop;
             private FrameDimension dimension;
@@ -160,8 +162,32 @@ namespace _700IQ
             {
                 
             }
+            public Audio LoadAudio()
+            {
+                Audio temp_audio;
+                string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+                try
+                {
+
+                    temp_audio = new Audio(path + "\\Audio\\success.mp3", false);
+                }
+                catch
+                {
+                    try
+                    {
+                        temp_audio = new Audio(path + "\\Debug\\Audio\\success.mp3", false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Ошибка загрузки звука \n" + Marshal.GetLastWin32Error());
+                        temp_audio = null;
+                    }
+                }
+                return temp_audio;
+            }
             public void stak(int st1, Point point, GeneralForm fsv, int komanda)
             {
+                audio = LoadAudio();
                 this.komanda = komanda;
                 this.fsv = fsv;
                 workForm = fsv;
@@ -230,6 +256,7 @@ namespace _700IQ
                     timer.Interval = 15;
                     timer.Tick += new EventHandler(timer_Tick);
                     timer.Start();
+                    audio.Play();
                 }
             }
             void timer_Tick(object sender, EventArgs e)
@@ -238,6 +265,7 @@ namespace _700IQ
                 if (indexToPaint >= frameCount)
                 {
                     timer.Stop();
+                    audio.Stop();
                     onStop();
                 }
                 else
@@ -277,6 +305,8 @@ namespace _700IQ
         {
           
         }
+
+
         public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv)
         {
             //workForm = fsv;
@@ -645,6 +675,7 @@ namespace _700IQ
             }
             return temp_video;
         }
+
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
             this.Visible = false;

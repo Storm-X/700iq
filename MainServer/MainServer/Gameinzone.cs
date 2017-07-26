@@ -178,19 +178,24 @@ namespace MainServer
 
                     if (gm.step < 3)
                     {
-                        ok[table] = true;
-                        if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
+                        if (Takt==0)
                         {
-                            Array.Clear(ok, 0, ok.Length);
-                            nextTakt();
+                            ok[table] = true;
+                            if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
+                            {
+                             //   Array.Clear(ok, 0, ok.Length);
+                                nextTakt();
+                            }
+                            else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
                         }
-                        else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
-                    }
-                    if (ok[0] & ok[1] & ok[2] || Takt != 0)
+                        if (ok[0] & ok[1] & ok[2] || Takt != 0)
                         {
                             bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             udp.Send(bytes, bytes.Length, point);
                         }
+
+                    }
+                        
                     
 
                     break;
@@ -375,12 +380,12 @@ namespace MainServer
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд
                     case 0:
+                        Takt++;
                         deadLine = null;
                         gm.step = 2;
                         gm.Cell = rn.rnd();
                         gm.theme = (byte)((gm.Cell + 5) / 6);
 
-                        Takt++;
                        // txb.Text += "ogg" + gm.step;
                         //tm.Start();
                         break;
