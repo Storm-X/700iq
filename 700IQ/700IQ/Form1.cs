@@ -17,6 +17,7 @@ using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Reflection;
 
 namespace _700IQ
 {
@@ -68,24 +69,6 @@ namespace _700IQ
         }
         #endregion
 
-        [DllImport("User32.dll", SetLastError = true)]
-        private static extern IntPtr LoadCursorFromFile(String str);
-
-        public Cursor SetCursor(string FileName)
-        {
-            IntPtr hCursor = LoadCursorFromFile(FileName);
-            if (!IntPtr.Zero.Equals(hCursor))
-            {
-                cursorsPathValid = true;
-                return new Cursor(hCursor);
-            }
-            else
-            {
-                cursorsPathValid = false;
-                return this.Cursor;
-            }
-        }
-
         public Control FindFocusedControl(Control control)
         {
             var container = control as IContainerControl;
@@ -102,19 +85,15 @@ namespace _700IQ
             InitializeComponent();
             //this.KeyDown += GeneralForm_KeyDown;
             //this.KeyPress += p.WorkForm_KeyDown;      
-            path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+            //path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
             //path = Path.GetDirectoryName(path);//возврат на директорию вверх
             //path = path + "\\Resources\\Cursors\\";//директория с курсорами
             //MessageBox.Show(path);
-            path = path + "\\Cursors\\";
-            this.Cursor = SetCursor(path + "Yellow_vopros.ani");//установка курсора из файла
-            if (!cursorsPathValid)
-            {
-                path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
-                path = path + "\\Debug\\Cursors\\";
-                this.Cursor = SetCursor(path + "Yellow_vopros.ani");//установка курсора из файла
-            }
-            if (!cursorsPathValid) MessageBox.Show("Ошибка загрузки курсора \n" + Marshal.GetLastWin32Error());
+            //path = Application.StartupPath + "\\Cursors\\";
+            //this.Cursor = SetCursor(path + "Yellow_vopros.ani");//установка курсора из файла
+            //if (!cursorsPathValid) MessageBox.Show("Ошибка загрузки курсора \n" + Marshal.GetLastWin32Error());
+            //IntPtr hCursor;
+            this.Cursor = AdvancedCursors.Create(Properties.Resources.Yellow_vopros);
             KeyPreview = true;
         }
 
@@ -414,7 +393,7 @@ namespace _700IQ
                 MaxLength = 12,
                 AcceptsReturn = false,
                 Parent = lb,
-                Cursor = SetCursor(path + "Text Select.ani"),//установка курсора из файла
+                Cursor = AdvancedCursors.Create(Properties.Resources.Text_Select), //SetCursor(path + "Text Select.ani"),//установка курсора из файла
         };
             TextBox paroltb = new TextBox
             {
@@ -429,8 +408,8 @@ namespace _700IQ
                 MaxLength = 12,
                 Name = "parol",
                 Parent = lb,
-                Cursor = SetCursor(path + "Text Select.ani"),//установка курсора из файла
-            };
+                Cursor = AdvancedCursors.Create(Properties.Resources.Text_Select), //SetCursor(path + "Text Select.ani"),//установка курсора из файла
+    };
             #endregion
             #region//описание кнопки ввода
             bmp = Properties.Resources.Активная;
