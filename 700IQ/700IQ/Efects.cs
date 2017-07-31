@@ -164,26 +164,16 @@ namespace _700IQ
             }
             public Audio LoadAudio()
             {
-                Audio temp_audio;
-                string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+                //Audio temp_audio;
                 try
                 {
-
-                    temp_audio = new Audio(path + "\\Audio\\success.mp3", false);
+                    return new Audio(Application.StartupPath + "\\Audio\\chips.mp3", false);
                 }
                 catch
                 {
-                    try
-                    {
-                        temp_audio = new Audio(path + "\\Debug\\Audio\\success.mp3", false);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Ошибка загрузки звука \n" + Marshal.GetLastWin32Error());
-                        temp_audio = null;
-                    }
+                    MessageBox.Show("Ошибка загрузки звука \n" + Marshal.GetLastWin32Error());
                 }
-                return temp_audio;
+                return null;
             }
             public void stak(int st1, Point point, GeneralForm fsv, int komanda)
             {
@@ -256,7 +246,6 @@ namespace _700IQ
                     timer.Interval = 15;
                     timer.Tick += new EventHandler(timer_Tick);
                     timer.Start();
-                    audio.Play();
                 }
             }
             void timer_Tick(object sender, EventArgs e)
@@ -265,11 +254,15 @@ namespace _700IQ
                 if (indexToPaint >= frameCount)
                 {
                     timer.Stop();
-                    audio.Stop();
+                    if (audio.Playing)
+                        audio.Stop();
                     onStop();
                 }
                 else
                 {
+                    if (audio.CurrentPosition > audio.Duration / 4)
+                        audio.Stop();
+                    audio.Play();
                     lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString();
                     img.SelectActiveFrame(dimension, indexToPaint);
                     pc.Image = new Bitmap(img);//arr[indexToPaint];
@@ -663,13 +656,13 @@ namespace _700IQ
             string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
             try
             {
-                temp_video = new Video(path + String.Format("\\Video\\{0}.avi",cell + 1), false);
+                temp_video = new Video(path + String.Format("\\Video\\{0}.mp4",cell + 1), false);
             }
             catch
             {
                 try
                 {
-                    temp_video = new Video(path + String.Format("\\Debug\\Video\\{0}.avi", cell + 1), false);
+                    temp_video = new Video(path + String.Format("\\Debug\\Video\\{0}.mp4", cell + 1), false);
                 }
                 catch
                 {
