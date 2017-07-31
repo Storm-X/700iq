@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\User\AppData\Local\Temp\vsE502.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Storm\AppData\Local\Temp\vs1890.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\User\AppData\Local\Temp\vsE502.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Storm\AppData\Local\Temp\vs1890.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\700iq.ico</ApplicationIcon>
@@ -70,6 +70,7 @@
     <Compile Include="..\..\MediaTransfer\MediaTransfer.cs">
       <Link>MediaTransfer.cs</Link>
     </Compile>
+    <Compile Include="AdvancedCursors.cs" />
     <Compile Include="CircularProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -152,8 +153,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Cursors\Orange.ani" />
+    <None Include="Resources\Cursors\Text Select.ani" />
     <None Include="Resources\Cursors\Yellow.ani" />
-    <None Include="Resources\Cursors\Yellow_1.ani" />
     <None Include="Resources\stol.png" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <None Include="Resources\ok.PNG" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Cursors\Yellow_vopros.ani" />
     <None Include="Resources\Активная.PNG" />
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +264,9 @@
     <Content Include="Resources\ок.gif" />
     <None Include="Resources\rotor700.gif" />
     <None Include="Resources\12_50int2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

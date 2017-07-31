@@ -381,6 +381,16 @@ namespace _700IQ.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Text_Select {
+            get {
+                object obj = ResourceManager.GetObject("Text_Select", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap ThumbBottom {
@@ -447,6 +457,16 @@ namespace _700IQ.Properties {
             get {
                 object obj = ResourceManager.GetObject("uparrow", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Yellow_vopros {
+            get {
+                object obj = ResourceManager.GetObject("Yellow_vopros", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

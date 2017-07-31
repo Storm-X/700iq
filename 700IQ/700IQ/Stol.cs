@@ -812,11 +812,10 @@ namespace _700IQ
                 int picWidth = 0;
                 #region //описание свитка с вопросом               
                 Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1190));
-            bgrdPic = new PictureBox()
-            {
-                Parent = workForm,
-                Size = NewSize(900, 1210),
-                BorderStyle = BorderStyle.Fixed3D,
+                bgrdPic = new PictureBox()
+                {
+                    Parent = workForm,
+                    Size = NewSize(900, 1210),
                     Location = NewPoint(100, 150),
                     Image = bmp,
                     BackColor = Color.Transparent
@@ -830,7 +829,7 @@ namespace _700IQ
                     Location = NewRelPoint(25, 200), //new Point(25, NewPoint(25, 200).Y),
                     BackColor = Color.Transparent,
                     SizeMode = PictureBoxSizeMode.Zoom,
-                    Image = (fileName == "") ? null : await ResultOfCycle(fileName)
+                    Image = (String.IsNullOrWhiteSpace(steckIn.media)) ? null : await ResultOfCycle(steckIn.media)
                 };
                 lb = new Label()
                 {
@@ -879,7 +878,7 @@ namespace _700IQ
                     BackColor = Color.LightGreen,
                     Location = NewRelPoint(140, 30), //NewPoint(165, 30),
                     Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
-                    Cursor = workForm.SetCursor(workForm.path + "Text Select.ani"),//установка курсора из файла
+                    Cursor = AdvancedCursors.Create(Properties.Resources.Text_Select), //установка курсора из файла
                 };
                 ochered(steckIn);
                 bgrdPic.BringToFront();
