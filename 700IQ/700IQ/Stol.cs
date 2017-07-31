@@ -28,6 +28,9 @@ namespace _700IQ
         Bitmap[] fish;
         CustomLabel[] teams;
         CustomLabel[] iQash;
+        bool flag = false;
+        ExtendedPanel panel = new ExtendedPanel();
+        PictureBox fishka;
         #endregion
 
         public Table(Data predus, GeneralForm fsv)
@@ -68,7 +71,7 @@ namespace _700IQ
             Bitmap bmp =(Bitmap) bmpStol.Clone();
             Graphics g = Graphics.FromImage(bmp);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            Point[] fishPoint = new Point[] { NewPoint(200, 1200), NewPoint(200, 150), NewPoint(1900, 150) };
+            Point[] fishPoint = new Point[] { NewPoint(200, 1350), NewPoint(200, 150), NewPoint(1900, 150) };
             int mesto = tableofkom;
             teams = new CustomLabel[] {
                 new CustomLabel()
@@ -81,7 +84,6 @@ namespace _700IQ
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.WhiteSmoke,
                     AutoSize=true,
-                    Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
 
@@ -178,7 +180,6 @@ namespace _700IQ
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.Gold,
-                    Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(3, 3),
                 },
@@ -221,7 +222,41 @@ namespace _700IQ
                 iQash[i].number = mesto;
                 mesto = (mesto >= 2) ? 0 : mesto += 1;
             }
-        
+
+            if (!flag)
+            {
+
+                panel.Parent = workForm;
+                panel.Size = NewSize(600, 220);
+                panel.Location = fishPoint[0];
+                panel.BackColor = Color.Transparent;
+                panel.Opacity = 1;
+                fishka = new PictureBox
+                {
+                    Parent = panel,
+                    Location = NewRelPoint(0, 0), 
+                    Size = NewSizeKv(170),
+                    Image = fish[mesto],
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BackColor = Color.Transparent
+                };
+
+                teams[0].Location = new Point(fishka.Location.X + fishka.Height, fishka.Location.Y);
+                iQash[0].Location = new Point(fishka.Location.X + ((fishka.Height - iQash[0].Width) / 2), fishka.Location.Y + fishka.Height);
+                panel.Controls.Add(teams[0]);
+                panel.Controls.Add(iQash[0]);
+                flag = true;
+            }else
+            {
+                panel.Controls.RemoveAt(2);
+                iQash[0].Location = new Point(fishka.Location.X + ((fishka.Height - iQash[0].Width) / 2), fishka.Location.Y + fishka.Height);
+                panel.Controls.Add(iQash[0]);
+
+            }
+           
+
+
+
 
             this.workForm.iQash1 = iQash[0];
             this.workForm.iQash2 = iQash[1];
@@ -692,6 +727,7 @@ namespace _700IQ
         private bool IsDisposed = false;
         Audio audio;
 
+
         struct SendData //структурированные данные отправляемые серверу
         {
             public int uid;
@@ -770,18 +806,22 @@ namespace _700IQ
         }
         public async Task svitok(Game steckIn, Data predUs)
         {
-                String fileName = "";
+            
+            
+            String fileName = "";
                 int picWidth = 0;
                 #region //описание свитка с вопросом               
                 Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1190));
-                bgrdPic = new PictureBox()
-                {
-                    Parent = workForm,
-                    Size = NewSize(900, 1210),
+            bgrdPic = new PictureBox()
+            {
+                Parent = workForm,
+                Size = NewSize(900, 1210),
+                BorderStyle = BorderStyle.Fixed3D,
                     Location = NewPoint(100, 150),
                     Image = bmp,
                     BackColor = Color.Transparent
                 };
+          
 
                 picBox1 = new PictureBox()
                 {
@@ -843,6 +883,7 @@ namespace _700IQ
                 };
                 ochered(steckIn);
                 bgrdPic.BringToFront();
+
         }
         public void SetFocus()
         {
@@ -1051,6 +1092,7 @@ namespace _700IQ
           //  tm.Start();
             tmSem.Interval = 300;
             tmSem.Tick += TmSem_Tick;
+
             //}
         }
         private void Tm_Tick(object sender, EventArgs e)

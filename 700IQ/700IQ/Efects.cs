@@ -185,7 +185,7 @@ namespace _700IQ
                 }
                 return temp_audio;
             }
-            public void stak(int st1, Point point, GeneralForm fsv, int komanda)
+            public void stak(int st1, Point point, GeneralForm fsv, int komanda,int number)
             {
                 audio = LoadAudio();
                 this.komanda = komanda;
@@ -195,7 +195,7 @@ namespace _700IQ
                 {
                     workForm.BeginInvoke((MethodInvoker)delegate
                     {
-                        stak(st1, point, fsv, komanda);
+                        stak(st1, point, fsv, komanda,number);
                     });
                 }
                 else
@@ -228,11 +228,15 @@ namespace _700IQ
                         Font = new Font("arial", 18),
                         TextAlign = ContentAlignment.TopCenter,
                     };
-                    if (komanda != 0 && komanda < 4) lb.Text = komanda + " команда";
+                    if (komanda != 0 && komanda < 4)
+                    {
+                        lb.Text = komanda + " команда";
+                    }
                     if (komanda > 5)
                     {
                         lbSt.Visible = false;
-                        lb.Text = "Выигрыш  составил "+ lb.Text  + " - " + komanda + " айкэш";
+                        
+                        lb.Text = "Выигрыш команды "+ fsv.predUs.team[number - 1].name + " составил " + komanda + " айкэш";
                         lb.Size = NewSize(600, 70);
                         lb.Font = new Font("arial", 15);
                     }
@@ -301,19 +305,21 @@ namespace _700IQ
         stakan st, st2, st3, st4;
         int distance;
         int size_stack;
+        int number;
         ~StavkiShow()
         {
           
         }
 
 
-        public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv)
+        public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv,int number)
         {
             //workForm = fsv;
             stav1 = st1;
             stav2 = st2;
             stav3 = st3;
             stav4 = st4;
+            this.number = number;
             //ff = v;
 
             if (stav1 == 0)
@@ -336,7 +342,7 @@ namespace _700IQ
             st.onStop += stavka2;
             int anons = stav1 + stav2 + stav3 + stav4;
             if (itsStavka) anons = 1;
-            st.stak(stav1/25,pn, workForm, anons);
+            st.stak(stav1/25,pn, workForm, anons,number);
         }
         void stavka2()
         {
@@ -357,7 +363,7 @@ namespace _700IQ
             }
             else pn.X += distance / 2;
 
-            st2.stak(stav2 / 25, pn, workForm, anons);
+            st2.stak(stav2 / 25, pn, workForm, anons,number);
         }
         void stavka3()
         {
@@ -376,7 +382,7 @@ namespace _700IQ
                 pn.X += distance;
             }
             else pn.X += distance / 2;
-            st3.stak(stav3 / 25, pn, workForm, anons);
+            st3.stak(stav3 / 25, pn, workForm, anons,number);
         }
         void stavka4()
         {
@@ -390,7 +396,7 @@ namespace _700IQ
             pn.X += size_stack;
             pn.X += distance / 2;
 
-            st4.stak(stav4 / 25, pn, workForm, 0);
+            st4.stak(stav4 / 25, pn, workForm, 0,number);
         }
         void endofStavka()
         {

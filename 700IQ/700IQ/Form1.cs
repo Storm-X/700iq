@@ -31,7 +31,7 @@ namespace _700IQ
         Polosa pol = new Polosa();
         public Game steck = new Game();
         AutoCompleteStringCollection teamLst;
-        Data predUs = new Data();
+        public Data predUs = new Data();
         Table tbl;
         IPAddress server=null;
         bool startGame = true;
@@ -1073,7 +1073,7 @@ namespace _700IQ
             {
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
-               stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
+               stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this,0);
                stShow = null;
             }
         }
@@ -1263,7 +1263,7 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(0).stavka;
-                    stShow.inputStavki(stav, stav, stav, stav, this);
+                    stShow.inputStavki(stav, stav, stav, stav, this, answTeam.ElementAt(0).table);
                     stShow = null;
                 }
             }
@@ -1318,7 +1318,7 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(1).stavka;
-                    stShow.inputStavki(stav, stav, 0, 0, this);
+                    stShow.inputStavki(stav, stav, 0, 0, this, answTeam.ElementAt(1).table);
                 }
             }
         }
@@ -1378,7 +1378,7 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(2).stavka;
-                    stShow.inputStavki(stav, 0, 0, 0, this);
+                    stShow.inputStavki(stav, 0, 0, 0, this, answTeam.ElementAt(2).table);
                 }
             }
         }
