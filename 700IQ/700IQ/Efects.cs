@@ -167,7 +167,7 @@ namespace _700IQ
                 //Audio temp_audio;
                 try
                 {
-                    return new Audio(Application.StartupPath + "\\Audio\\chips.mp3", false);
+                    return new Audio(Application.StartupPath + "\\Audio\\success.mp3", false);
                 }
                 catch
                 {
@@ -329,7 +329,7 @@ namespace _700IQ
                 pn = NewPoint(825, 400);
                 itsStavka = true;
             }
-            else  pn = NewPoint(1300, 850);
+            else  pn = NewPoint(1300, 700);
 
             st = new stakan();
             st.onStop += stavka2;
@@ -662,13 +662,13 @@ namespace _700IQ
             string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
             try
             {
-                temp_video = new Video(path + String.Format("\\Video\\{0}.mp4",cell + 1), false);
+                temp_video = new Video(path + String.Format("\\Video\\{0}.avi",cell + 1), false);
             }
             catch
             {
                 try
                 {
-                    temp_video = new Video(path + String.Format("\\Debug\\Video\\{0}.mp4", cell + 1), false);
+                    temp_video = new Video(path + String.Format("\\Debug\\Video\\{0}.avi", cell + 1), false);
                 }
                 catch
                 {

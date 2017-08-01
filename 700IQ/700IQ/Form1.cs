@@ -236,6 +236,8 @@ namespace _700IQ
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
             //pol.prBar.AutoReset = true;
 
+           
+
         }
 
 
@@ -1120,7 +1122,6 @@ namespace _700IQ
                     //otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
                     otvetStatic.SetFocus();
-
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         //Debug.WriteLine();
@@ -1219,6 +1220,7 @@ namespace _700IQ
 
                     otvetStatic.semafor(2);
                     otvetStatic.SetFocus();
+
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
