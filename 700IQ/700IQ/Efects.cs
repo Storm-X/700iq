@@ -653,7 +653,7 @@ namespace _700IQ
         public Video LoadVideo(int cell)
         {
             Video temp_video;
-            string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
+            string path = Application.StartupPath;//получение текущей папки
             try
             {
                 temp_video = new Video(path + String.Format("\\Video\\{0}.mp4",cell + 1), false);

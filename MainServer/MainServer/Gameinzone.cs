@@ -178,7 +178,7 @@ namespace MainServer
 
                     if (gm.step < 3)
                     {
-                        if (Takt==0)
+                        if (Takt == 0)
                         {
                             ok[table] = true;
                             if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
@@ -188,7 +188,7 @@ namespace MainServer
                             }
                             else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
                         }
-                        if (ok[0] & ok[1] & ok[2] || Takt != 0)
+                        else //if (ok[0] & ok[1] & ok[2] || Takt != 0)
                         {
                             bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             udp.Send(bytes, bytes.Length, point);
@@ -204,7 +204,12 @@ namespace MainServer
                 case 2:
                     if (gm.step == step)
                     {
-                        if (stavka[table] == 0)
+                        stavka[table] = stav;
+                        if (Takt == 1 && (Array.TrueForAll(stavka, value => value != 0) || deadLine <= DateTime.Now))
+                            nextTakt();
+                        else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(25);
+
+                        /*if (stavka[table] == 0)
                         {
                             stavka[table] = stav;
                             tm.Interval = 25000;
@@ -217,9 +222,6 @@ namespace MainServer
                             {
                                 tm.Stop();
                                 Tm_Tick(this, null);
-                                //tm.Stop();
-                                //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                                //udp.Send(bytes, bytes.Length, point);
                                 //nextTakt();
                             }
                             ////if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
@@ -227,7 +229,7 @@ namespace MainServer
                             //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             //    udp.Send(bytes, bytes.Length, point);
                             ////}
-                        }
+                        }*/
                         bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                         udp.Send(bytes, bytes.Length, point);
                         //Send2All(bytes);
