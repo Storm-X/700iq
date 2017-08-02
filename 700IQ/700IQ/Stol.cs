@@ -947,7 +947,7 @@ namespace _700IQ
         {
             int picWidth = 0;
             Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
-            bgrdPic.Location = NewPoint(100, 150);
+            bgrdPic.Location = NewPoint(60, 150);
             bgrdPic.Size = NewSize(900, 1170);
             bgrdPic.Image = bmp;
             picBox1.Size = NewSize(850, picWidth);

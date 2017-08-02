@@ -217,15 +217,13 @@ namespace _700IQ
             //тест рулетки, ставок, темы
             /* 
             Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            Ruletka.StartRul(0, kv, this, 2); // 2);
+            Ruletka.StartRul(0, kv, this, 2); // 2);*/
            
-             StavkiShow stShow = new StavkiShow();
-             tbl = new Table(this);
-             stShow.inputStavki(100, 200, 300, 0, this);
+        
 
-            tbl.TemaShow(true);
+            //tbl.TemaShow(true);
            // stShow.inputStavki(100, 200, 300, 0, this);
-           */
+           
             #endregion
             ////для теста Рулетки на старте проги
             //Rectangle kv = new Rectangle(NewPoint(330, 150), NewSize(1600,900));
@@ -236,7 +234,7 @@ namespace _700IQ
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
             //pol.prBar.AutoReset = true;
 
-           
+
 
         }
 
@@ -572,8 +570,11 @@ namespace _700IQ
                 ForeColor = Color.White
             };
             #endregion
-            
-
+            ////////////////////////////////////////////////////////////////////////////////////////////
+           // StavkiShow stShow = new StavkiShow();
+           // tbl = new Table(predUs, this);
+           // stShow.inputStavki(300, 300, 300, 100, this, 1);
+            /////////////////////////////////////////////////////////////////////////////////////////
             pol.AnyEventHarakiri();
             pol.onPolosaEnd += ini4;
             pol.polosa(11, NewPoint(1600, 1350), this, "ini3");

@@ -190,7 +190,7 @@ namespace _700IQ
                 }
                 else
                 {
-                    pc.Size = NewSize(150, 500);
+                    pc.Size = (number == 0) ? NewSize(150, 500) : NewSize(150, 380);//было 500
                     pc.Location = point;
                     pc.BackColor = Color.Transparent;
                     pc.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -210,7 +210,7 @@ namespace _700IQ
                     lbSt = new Label() //метка размера ставки
                     {
                         Parent = workForm,
-                        Location = new Point(point.X - 20, point.Y - 50),
+                        Location = new Point(point.X - 20, point.Y-40),
                         Size = NewSize(150, 50) + new Size(40, 0),
                         Name = "oneuse",
                         ForeColor = Color.Gold,
@@ -227,7 +227,7 @@ namespace _700IQ
                         lbSt.Visible = false;
                         
                         lb.Text = "Выигрыш команды "+ fsv.predUs.team[number - 1].name + " составил " + komanda + " айкэш";
-                        lb.Size = NewSize(600, 70);
+                        lb.Size = NewSize(700, 70);
                         lb.Font = new Font("arial", 15);
                     }
                     if (komanda == 0) lbSt.Visible = false;
@@ -271,9 +271,9 @@ namespace _700IQ
                     img.SelectActiveFrame(dimension, indexToPaint);
                     pc.Image = new Bitmap(img);//arr[indexToPaint];
 
-                    if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
-                    if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
-                    if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
                 }
             }
             public void del()
@@ -322,14 +322,14 @@ namespace _700IQ
             }
 
             size_stack = NewSize(150, 0).Width;
-            distance = NewSize(400, 0).Width / 2;
+            distance = NewSize(400, 0).Width /2;
 
             if (st4 == 0 && st3 != 0)
             {
                 pn = NewPoint(825, 400);
                 itsStavka = true;
             }
-            else  pn = NewPoint(1300, 700);
+            else  pn = NewPoint(1300, 760);
 
             st = new stakan();
             st.onStop += stavka2;
