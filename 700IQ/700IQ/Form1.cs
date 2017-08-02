@@ -226,9 +226,9 @@ namespace _700IQ
            
             #endregion
             ////для теста Рулетки на старте проги
-            //Rectangle kv = new Rectangle(NewPoint(330, 150), NewSize(1600,900));
+            //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
             //g.DrawRectangle(Pens.Black, kv);
-            //Ruletka.StartRul(36, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+           // Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
             //System.Media.SystemSounds.Question.Play();
             //Console.Beep();
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
@@ -984,7 +984,7 @@ namespace _700IQ
             {
                 tbl.TemaShow(steck, true);
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
-                Rectangle kv = new Rectangle(NewPoint(410, 150), NewSize(1600, 900));
+                Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600, 900));
                 //Ruletka = new Rul();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step2_3;
@@ -1073,7 +1073,7 @@ namespace _700IQ
                 CreateAnswerTable();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
-                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1320, 150), NewSize(1600, 900)), this, 1);
+                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1420, 150), NewSize(1600, 900)), this, 1);
             }          
         }
         private void CreateAnswerTable(bool withQuery=false)

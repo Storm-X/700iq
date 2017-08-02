@@ -167,7 +167,7 @@ namespace _700IQ
                 //Audio temp_audio;
                 try
                 {
-                    return new Audio(Application.StartupPath + "\\Audio\\success.mp3", false);
+                    return new Audio(Application.StartupPath + "\\Audio\\chips.mp3", false);
                 }
                 catch
                 {
@@ -662,13 +662,13 @@ namespace _700IQ
             string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
             try
             {
-                temp_video = new Video(path + String.Format("\\Video\\{0}.avi",cell + 1), false);
+                temp_video = new Video(Application.StartupPath + String.Format("\\Video\\{0}.mp4",cell + 1), false);
             }
             catch
             {
                 try
                 {
-                    temp_video = new Video(path + String.Format("\\Debug\\Video\\{0}.avi", cell + 1), false);
+                    temp_video = new Video(path + String.Format("\\Debug\\Video\\{0}.mp4", cell + 1), false);
                 }
                 catch
                 {
@@ -715,7 +715,7 @@ namespace _700IQ
             //this.Size = size;
             video.Owner = this;
             this.Size = rc.Size;
-            double koeff = 1.78; // (double)Width / (double)Height;
+            double koeff = 1.33; // (double)Width / (double)Height;
             size = new Size((int)(this.Height * koeff), this.Height);
             //this.Size = rc.Size;
             video.Size = size;
@@ -814,7 +814,7 @@ namespace _700IQ
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
             //System.Drawing.Rectangle r = new Rectangle((int)((rc.X - (fsv.delta < 0 ? fsv.delta : 0)) * koef1), (int)(rc.Y * koef2), (int)(size.Width * 0.53), (int)(size.Width * 0.53));
-            System.Drawing.Rectangle r = new Rectangle((int)((size.Width*519/1920)), (int)(size.Width * 48/1920), (int)(size.Width * 1020/1920), (int)(size.Width * 1020/1920));   
+            System.Drawing.Rectangle r = new Rectangle((int)((size.Width*101/768)), (int)(size.Height * 3/576), (int)(size.Width * 568/768), (int)(size.Width * 568/768));   
             //System.Drawing.Rectangle r = new Rectangle(292, 28, 574, 571);
             e.Graphics.DrawEllipse(Pens.Black, r);//после нужного вам результата замените - Pens.Transparent
             gp.AddEllipse(r);

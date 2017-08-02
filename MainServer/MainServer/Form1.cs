@@ -909,8 +909,9 @@ namespace MainServer
                 label3.Visible = true;
                 for (int i = 0; i < MassGameZone.Count; i++)
                 {
-                    MassGameZone[i].gs = new GameStatistic(MassGameZone[i].data.GameZone, (MassGameZone[i].gm.iCon).ToString(), 1400, 50 + (i * 35));
+                    MassGameZone[i].gs = new GameStatistic(MassGameZone[i].data.GameZone, (MassGameZone[i].gm.iCon).ToString(), label3.Location.X,150+ (i * 35));
                     MassGameZone[i].gs.stopButton.Click += stGame;
+                    
                 }
                 ListKomand.ReadOnly = true;
                 button1.Enabled = true;
