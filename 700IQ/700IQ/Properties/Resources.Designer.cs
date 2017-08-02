@@ -193,6 +193,16 @@ namespace _700IQ.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap igrStol {
+            get {
+                object obj = ResourceManager.GetObject("igrStol", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap kom1 {
             get {
                 object obj = ResourceManager.GetObject("kom1", resourceCulture);

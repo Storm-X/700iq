@@ -175,7 +175,7 @@ namespace _700IQ
                 }
                 return null;
             }
-            public void stak(int st1, Point point, GeneralForm fsv, int komanda)
+            public void stak(int st1, Point point, GeneralForm fsv, int komanda,int number)
             {
                 audio = LoadAudio();
                 this.komanda = komanda;
@@ -185,12 +185,12 @@ namespace _700IQ
                 {
                     workForm.BeginInvoke((MethodInvoker)delegate
                     {
-                        stak(st1, point, fsv, komanda);
+                        stak(st1, point, fsv, komanda,number);
                     });
                 }
                 else
                 {
-                    pc.Size = NewSize(150, 500);
+                    pc.Size = (number == 0) ? NewSize(150, 500) : NewSize(150, 380);//было 500
                     pc.Location = point;
                     pc.BackColor = Color.Transparent;
                     pc.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -210,7 +210,7 @@ namespace _700IQ
                     lbSt = new Label() //метка размера ставки
                     {
                         Parent = workForm,
-                        Location = new Point(point.X - 20, point.Y - 50),
+                        Location = new Point(point.X - 20, point.Y-40),
                         Size = NewSize(150, 50) + new Size(40, 0),
                         Name = "oneuse",
                         ForeColor = Color.Gold,
@@ -218,12 +218,16 @@ namespace _700IQ
                         Font = new Font("arial", 18),
                         TextAlign = ContentAlignment.TopCenter,
                     };
-                    if (komanda != 0 && komanda < 4) lb.Text = komanda + " команда";
+                    if (komanda != 0 && komanda < 4)
+                    {
+                        lb.Text = komanda + " команда";
+                    }
                     if (komanda > 5)
                     {
                         lbSt.Visible = false;
-                        lb.Text = "Выигрыш  составил "+ lb.Text  + " - " + komanda + " айкэш";
-                        lb.Size = NewSize(600, 70);
+                        
+                        lb.Text = "Выигрыш команды "+ fsv.predUs.team[number - 1].name + " составил " + komanda + " айкэш";
+                        lb.Size = NewSize(700, 70);
                         lb.Font = new Font("arial", 15);
                     }
                     if (komanda == 0) lbSt.Visible = false;
@@ -267,9 +271,9 @@ namespace _700IQ
                     img.SelectActiveFrame(dimension, indexToPaint);
                     pc.Image = new Bitmap(img);//arr[indexToPaint];
 
-                    if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
-                    if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
-                    if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
                 }
             }
             public void del()
@@ -294,19 +298,21 @@ namespace _700IQ
         stakan st, st2, st3, st4;
         int distance;
         int size_stack;
+        int number;
         ~StavkiShow()
         {
           
         }
 
 
-        public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv)
+        public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv,int number)
         {
             //workForm = fsv;
             stav1 = st1;
             stav2 = st2;
             stav3 = st3;
             stav4 = st4;
+            this.number = number;
             //ff = v;
 
             if (stav1 == 0)
@@ -316,20 +322,20 @@ namespace _700IQ
             }
 
             size_stack = NewSize(150, 0).Width;
-            distance = NewSize(400, 0).Width / 2;
+            distance = NewSize(400, 0).Width /2;
 
             if (st4 == 0 && st3 != 0)
             {
                 pn = NewPoint(825, 400);
                 itsStavka = true;
             }
-            else  pn = NewPoint(1300, 850);
+            else  pn = NewPoint(1300, 760);
 
             st = new stakan();
             st.onStop += stavka2;
             int anons = stav1 + stav2 + stav3 + stav4;
             if (itsStavka) anons = 1;
-            st.stak(stav1/25,pn, workForm, anons);
+            st.stak(stav1/25,pn, workForm, anons,number);
         }
         void stavka2()
         {
@@ -350,7 +356,7 @@ namespace _700IQ
             }
             else pn.X += distance / 2;
 
-            st2.stak(stav2 / 25, pn, workForm, anons);
+            st2.stak(stav2 / 25, pn, workForm, anons,number);
         }
         void stavka3()
         {
@@ -369,7 +375,7 @@ namespace _700IQ
                 pn.X += distance;
             }
             else pn.X += distance / 2;
-            st3.stak(stav3 / 25, pn, workForm, anons);
+            st3.stak(stav3 / 25, pn, workForm, anons,number);
         }
         void stavka4()
         {
@@ -383,7 +389,7 @@ namespace _700IQ
             pn.X += size_stack;
             pn.X += distance / 2;
 
-            st4.stak(stav4 / 25, pn, workForm, 0);
+            st4.stak(stav4 / 25, pn, workForm, 0,number);
         }
         void endofStavka()
         {
@@ -656,7 +662,7 @@ namespace _700IQ
             string path = Application.StartupPath;//получение текущей папки
             try
             {
-                temp_video = new Video(path + String.Format("\\Video\\{0}.mp4",cell + 1), false);
+                temp_video = new Video(Application.StartupPath + String.Format("\\Video\\{0}.mp4",cell + 1), false);
             }
             catch
             {
@@ -709,7 +715,7 @@ namespace _700IQ
             //this.Size = size;
             video.Owner = this;
             this.Size = rc.Size;
-            double koeff = 1.78; // (double)Width / (double)Height;
+            double koeff = 1.33; // (double)Width / (double)Height;
             size = new Size((int)(this.Height * koeff), this.Height);
             //this.Size = rc.Size;
             video.Size = size;
@@ -808,7 +814,7 @@ namespace _700IQ
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
             //System.Drawing.Rectangle r = new Rectangle((int)((rc.X - (fsv.delta < 0 ? fsv.delta : 0)) * koef1), (int)(rc.Y * koef2), (int)(size.Width * 0.53), (int)(size.Width * 0.53));
-            System.Drawing.Rectangle r = new Rectangle((int)((size.Width*519/1920)), (int)(size.Width * 48/1920), (int)(size.Width * 1020/1920), (int)(size.Width * 1020/1920));   
+            System.Drawing.Rectangle r = new Rectangle((int)((size.Width*101/768)), (int)(size.Height * 3/576), (int)(size.Width * 568/768), (int)(size.Width * 568/768));   
             //System.Drawing.Rectangle r = new Rectangle(292, 28, 574, 571);
             e.Graphics.DrawEllipse(Pens.Black, r);//после нужного вам результата замените - Pens.Transparent
             gp.AddEllipse(r);

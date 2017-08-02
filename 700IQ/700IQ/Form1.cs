@@ -32,7 +32,7 @@ namespace _700IQ
         Polosa pol = new Polosa();
         public Game steck = new Game();
         AutoCompleteStringCollection teamLst;
-        Data predUs = new Data();
+        public Data predUs = new Data();
         Table tbl;
         IPAddress server=null;
         bool startGame = true;
@@ -217,24 +217,24 @@ namespace _700IQ
             //тест рулетки, ставок, темы
             /* 
             Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            Ruletka.StartRul(0, kv, this, 2); // 2);
+            Ruletka.StartRul(0, kv, this, 2); // 2);*/
            
-             StavkiShow stShow = new StavkiShow();
-             tbl = new Table(this);
-             stShow.inputStavki(100, 200, 300, 0, this);
+        
 
-            tbl.TemaShow(true);
+            //tbl.TemaShow(true);
            // stShow.inputStavki(100, 200, 300, 0, this);
-           */
+           
             #endregion
             ////для теста Рулетки на старте проги
-            //Rectangle kv = new Rectangle(NewPoint(330, 150), NewSize(1600,900));
+            //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
             //g.DrawRectangle(Pens.Black, kv);
-            //Ruletka.StartRul(36, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+           // Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
             //System.Media.SystemSounds.Question.Play();
             //Console.Beep();
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
             //pol.prBar.AutoReset = true;
+
+
 
         }
 
@@ -570,8 +570,11 @@ namespace _700IQ
                 ForeColor = Color.White
             };
             #endregion
-            
-
+            ////////////////////////////////////////////////////////////////////////////////////////////
+           // StavkiShow stShow = new StavkiShow();
+           // tbl = new Table(predUs, this);
+           // stShow.inputStavki(300, 300, 300, 100, this, 1);
+            /////////////////////////////////////////////////////////////////////////////////////////
             pol.AnyEventHarakiri();
             pol.onPolosaEnd += ini4;
             pol.polosa(11, NewPoint(1600, 1350), this, "ini3");
@@ -981,7 +984,7 @@ namespace _700IQ
             {
                 tbl.TemaShow(steck, true);
                 //this.Controls["Iqon"].Text = steck.iCon + " айкон";
-                Rectangle kv = new Rectangle(NewPoint(410, 150), NewSize(1600, 900));
+                Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600, 900));
                 //Ruletka = new Rul();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step2_3;
@@ -1052,7 +1055,7 @@ namespace _700IQ
             {
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
-               stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this);
+               stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this,0);
                stShow = null;
             }
         }
@@ -1070,7 +1073,7 @@ namespace _700IQ
                 CreateAnswerTable();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
-                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1320, 150), NewSize(1600, 900)), this, 1);
+                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1420, 150), NewSize(1600, 900)), this, 1);
             }          
         }
         private void CreateAnswerTable(bool withQuery=false)
@@ -1120,7 +1123,6 @@ namespace _700IQ
                     //otvetStatic.semafor(0);
                     otvetStatic.semafor(1);
                     otvetStatic.SetFocus();
-
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         //Debug.WriteLine();
@@ -1220,6 +1222,7 @@ namespace _700IQ
                     otvetStatic.semafor(2);
                     otvetStatic.SetFocus();
 
+
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         otvetStatic.polosaStart(this, 5,pol);
@@ -1242,7 +1245,7 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(0).stavka;
-                    stShow.inputStavki(stav, stav, stav, stav, this);
+                    stShow.inputStavki(stav, stav, stav, stav, this, answTeam.ElementAt(0).table);
                     stShow = null;
                 }
             }
@@ -1297,7 +1300,7 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(1).stavka;
-                    stShow.inputStavki(stav, stav, 0, 0, this);
+                    stShow.inputStavki(stav, stav, 0, 0, this, answTeam.ElementAt(1).table);
                 }
             }
         }
@@ -1357,7 +1360,7 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(2).stavka;
-                    stShow.inputStavki(stav, 0, 0, 0, this);
+                    stShow.inputStavki(stav, 0, 0, 0, this, answTeam.ElementAt(2).table);
                 }
             }
         }

@@ -28,6 +28,10 @@ namespace _700IQ
         Bitmap[] fish;
         CustomLabel[] teams;
         CustomLabel[] iQash;
+        bool flag = false;
+        Label panel = new Label();
+        PictureBox fishka= new PictureBox();
+        PictureBox stol = new PictureBox();
         #endregion
 
         public Table(Data predus, GeneralForm fsv)
@@ -68,7 +72,7 @@ namespace _700IQ
             Bitmap bmp =(Bitmap) bmpStol.Clone();
             Graphics g = Graphics.FromImage(bmp);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            Point[] fishPoint = new Point[] { NewPoint(200, 1200), NewPoint(200, 150), NewPoint(1900, 150) };
+            Point[] fishPoint = new Point[] { NewPoint(200, 1350), NewPoint(200, 150), NewPoint(1900, 150) };
             int mesto = tableofkom;
             teams = new CustomLabel[] {
                 new CustomLabel()
@@ -81,7 +85,6 @@ namespace _700IQ
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.WhiteSmoke,
                     AutoSize=true,
-                    Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
 
@@ -178,7 +181,6 @@ namespace _700IQ
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.Gold,
-                    Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(3, 3),
                 },
@@ -213,7 +215,7 @@ namespace _700IQ
              mesto = tableofkom;
             for (int i = 0; i < teams.Count(); i++)
             {
-                g.DrawImage(fish[mesto], fishPoint[i]);
+                if(i!=0) g.DrawImage(fish[mesto], fishPoint[i]);
                 teams[i].Text = string.Join(Environment.NewLine, Regex.Matches(predUs.team[mesto].name, @".{0,15}(?=\s+|$)|\S+", RegexOptions.Singleline).Cast<Match>().Select(m => m.Groups[0].Value.Trim()));
                 teams[i].Location = new Point(fishPoint[i].X + fish[mesto].Height, fishPoint[i].Y);
                 iQash[i].Text = steck.team[mesto].iQash + " IQ";
@@ -221,7 +223,45 @@ namespace _700IQ
                 iQash[i].number = mesto;
                 mesto = (mesto >= 2) ? 0 : mesto += 1;
             }
-        
+
+            if (!flag)
+            {
+
+                stol.Parent = workForm;
+                stol.Image = Properties.Resources.igrStol;
+                stol.Size = NewSize(1200, 360);
+                stol.SizeMode = PictureBoxSizeMode.StretchImage;
+                stol.BackColor = Color.Transparent;
+                
+                stol.Location = new Point((workResolution.Width - stol.Width) / 2, workResolution.Height - stol.Height);
+
+                fishka.Parent = panel;
+                fishka.Location = NewRelPoint(0, 0);
+                fishka.Size = NewSizeKv(170);
+                fishka.Image = fish[mesto];
+                fishka.SizeMode = PictureBoxSizeMode.Zoom;
+
+                teams[0].Parent = panel;
+                iQash[0].Parent = panel;
+                teams[0].Location = new Point(fishka.Location.X + fishka.Height, fishka.Location.Y);
+                iQash[0].Location = new Point(fishka.Location.X + ((fishka.Height - iQash[0].Width) / 2), fishka.Location.Y + fishka.Height);
+                panel.Parent = stol;
+                panel.Size = new Size(fishka.Width+teams[0].Width, fishka.Height+iQash[0].Height);
+                panel.Location = new Point((stol.Width-panel.Width)/2,stol.Height-panel.Height);
+                panel.BackColor = Color.Transparent;
+                stol.BringToFront();
+                flag = true;
+            }else
+            {
+                panel.Controls.RemoveAt(2);
+                iQash[0].Location = new Point(fishka.Location.X + ((fishka.Height - iQash[0].Width) / 2), fishka.Location.Y + fishka.Height);
+                panel.Controls.Add(iQash[0]);
+
+            }
+           
+
+
+
 
             this.workForm.iQash1 = iQash[0];
             this.workForm.iQash2 = iQash[1];
@@ -691,6 +731,10 @@ namespace _700IQ
         int step = 0;
         private bool IsDisposed = false;
         Audio audio;
+        String quest;
+        String theme;
+        bool fullscreenFlag=false;
+
 
         struct SendData //структурированные данные отправляемые серверу
         {
@@ -770,24 +814,29 @@ namespace _700IQ
         }
         public async Task svitok(Game steckIn, Data predUs)
         {
-                //String fileName = steckIn.media;
-                int picWidth = 0;
+            
+            
+            String fileName = "";
+            int picWidth = 0;
                 #region //описание свитка с вопросом               
-                Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1190));
+                Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
                 bgrdPic = new PictureBox()
                 {
                     Parent = workForm,
-                    Size = NewSize(900, 1210),
-                    Location = NewPoint(100, 150),
+                    Size = NewSize(900, 1170),
+                    Location = NewPoint(60, 150),
+                    //BorderStyle =BorderStyle.Fixed3D,
                     Image = bmp,
                     BackColor = Color.Transparent
                 };
+          
 
                 picBox1 = new PictureBox()
                 {
                     Parent = bgrdPic,
                     Size = NewSize(850, picWidth),
                     Location = NewRelPoint(25, 200), //new Point(25, NewPoint(25, 200).Y),
+                    //BorderStyle = BorderStyle.Fixed3D,
                     BackColor = Color.Transparent,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     Image = (String.IsNullOrWhiteSpace(steckIn.media)) ? null : await ResultOfCycle(steckIn.media)
@@ -799,12 +848,14 @@ namespace _700IQ
                     Location = NewRelPoint(25, 200 + picWidth), //new Point(25, NewPoint(25, 200 + picWidth).Y),
                     //Image = bmp,
                     BackColor = Color.Transparent,
+                    //BorderStyle = BorderStyle.Fixed3D,
                     Text = steckIn.quest,
                     Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
                     TextAlign = ContentAlignment.MiddleCenter,
                     Padding = new Padding(20, 0, 20, 20),
                     //BorderStyle = BorderStyle.FixedSingle
                 };
+            quest = steckIn.quest;
                 //Parent = bgrdPic //////// Parent = lb
                 vpramka = new Label()
                 {
@@ -812,19 +863,23 @@ namespace _700IQ
                     Size = NewSize(850, 130),
                     Location = NewRelPoint(25, 70), //NewPoint(25, 70),
                     BackColor = Color.Transparent,
+                   // BorderStyle = BorderStyle.Fixed3D,
+
                     Font = new Font("Cambria", NewFontSize(25), FontStyle.Bold),
                     TextAlign = ContentAlignment.TopCenter,
                     Text = predUs.tema[steckIn.theme].theme,
                     //BorderStyle = BorderStyle.FixedSingle
                 };
-
+            theme = predUs.tema[steckIn.theme].theme;
                 #endregion
-                otv = new Label()
+            otv = new Label()
                 {
                     Parent = bgrdPic,
                     Size = NewSize(900, 300),
-                    Location = NewRelPoint(50, 1020), //NewPoint(50, 1020),
+                    Location = NewRelPoint(25, 1020), //NewPoint(50, 1020),
                     BackColor = Color.Transparent,
+                    //BorderStyle = BorderStyle.Fixed3D,
+
                     Text = "Ответ",
                     Font = new Font("Arial Black Italic", NewFontSize(20), FontStyle.Bold),
                     TextAlign = ContentAlignment.TopLeft,
@@ -835,6 +890,8 @@ namespace _700IQ
                     Parent = otv,
                     Size = NewSize(640, 190),
                     Multiline = false,
+                   // BorderStyle = BorderStyle.Fixed3D,
+
                     MaxLength = 33,
                     BackColor = Color.LightGreen,
                     Location = NewRelPoint(140, 30), //NewPoint(165, 30),
@@ -843,10 +900,77 @@ namespace _700IQ
                 };
                 ochered(steckIn);
                 bgrdPic.BringToFront();
+                txBox.Focus();
+                bgrdPic.DoubleClick += BgrdPic_DoubleClick;
+      
+                
+
         }
+
+        private void BgrdPic_DoubleClick(object sender, EventArgs e)
+        {
+            if (!fullscreenFlag) fullscreen();
+            else originSize();
+
+        }
+        public void fullscreen()
+        {
+            int delta = workForm.delta > 0 ? workForm.delta * 2 : 0;
+            Bitmap bmp = new Bitmap(Properties.Resources.Svitok, new Size(workResolution.Width- delta, workResolution.Height));//NewSize(2500, 1210));
+            bgrdPic.Location = NewPoint(0, 0);
+            bgrdPic.Size = new Size(workResolution.Width - delta, workResolution.Height);
+            bgrdPic.Image = bmp;
+
+            otv.Size = new Size(bgrdPic.Width - 35, 70);
+            otv.Location = new Point(otv.Location.X, bgrdPic.Height - (otv.Height + 50));
+
+            txBox.Size = new Size(otv.Width - 200, otv.Height);
+            txBox.Location = NewRelPoint(200, 25);//new Point(otv.Location.X+(otv.Width+15), bgrdPic.Height - (otv.Height + 10));
+
+            picBox1.Size = new Size(bgrdPic.Width - 35, picBox1.Height);
+            lb.Size = new Size(bgrdPic.Width - 35, bgrdPic.Height-vpramka.Height-otv.Height-100);
+            vpramka.Size = new Size(bgrdPic.Width - 35, vpramka.Height);
+
+            txBox.BringToFront();
+            lb.Font = new Font("Arial Black Italic", NewFontSize(26), FontStyle.Bold);
+            lb.Text = quest;
+            vpramka.Font = new Font("Cambria", NewFontSize(32), FontStyle.Bold);
+            vpramka.Text = theme;
+            workForm.Invalidate();
+            fullscreenFlag = true;
+            bgrdPic.BringToFront();
+            txBox.Focus();
+
+
+        } 
+        public void originSize()
+        {
+            int picWidth = 0;
+            Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
+            bgrdPic.Location = NewPoint(60, 150);
+            bgrdPic.Size = NewSize(900, 1170);
+            bgrdPic.Image = bmp;
+            picBox1.Size = NewSize(850, picWidth);
+            lb.Size = NewSize(850, 850 - picWidth);
+            vpramka.Size = NewSize(850, 130);
+            otv.Size = NewSize(900, 300);
+            txBox.Size = NewSize(640, 190);
+            otv.Location = NewRelPoint(25, 1020);
+            txBox.Location = NewRelPoint(140, 30);
+            lb.Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold);
+            lb.Text = quest;
+            vpramka.Font = new Font("Cambria", NewFontSize(25), FontStyle.Bold);
+            vpramka.Text = theme;
+            workForm.Invalidate();
+            bgrdPic.BringToFront();
+            txBox.Focus();
+            fullscreenFlag = false;
+        } 
+
         public void SetFocus()
         {
-            txBox.Focus();
+            originSize(); 
+            txBox.Focus();      
         }
         public void ochered(Game steckIn) //, Form fsv)//расчет очереди-----------------------------------
         {
@@ -1051,6 +1175,7 @@ namespace _700IQ
           //  tm.Start();
             tmSem.Interval = 300;
             tmSem.Tick += TmSem_Tick;
+
             //}
         }
         private void Tm_Tick(object sender, EventArgs e)
