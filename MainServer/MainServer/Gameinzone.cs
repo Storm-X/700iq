@@ -90,7 +90,7 @@ namespace MainServer
             //gm.o2 = 2;
             //gm.o3 = 3;
             #endregion
-            //deadLine = DateTime.Now.AddMinutes(3);
+            deadLine = DateTime.Now.AddMinutes(2);
             tm.Tick += Tm_Tick;
             tmOtvet.Tick += TmOtvet_Tick;
             //deadLinetmr.Tick += DeadLinetmr_Tick;
@@ -171,24 +171,24 @@ namespace MainServer
         public void Update(int step, int table, string otv, int stav, IPEndPoint point) //обнавление ставки и команды готов
         {
             endpoint[table] = point;
-            switch (step)
+            switch (gm.step)
             {
                 #region обработка команд готов
                 case 1:
 
-                    if (gm.step < 3)
+                    //if (gm.step < 3)
                     {
-                        if (Takt==0)
-                        {
+                        //if (Takt == 0)
+                        //{
                             ok[table] = true;
                             if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                             {
                              //   Array.Clear(ok, 0, ok.Length);
                                 nextTakt();
                             }
-                            else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
-                        }
-                        if (ok[0] & ok[1] & ok[2] || Takt != 0)
+                            //else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
+                        //}
+                        else //if (ok[0] & ok[1] & ok[2] || Takt != 0)
                         {
                             bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             udp.Send(bytes, bytes.Length, point);
@@ -202,9 +202,14 @@ namespace MainServer
                 #endregion
                 #region обработка ставок
                 case 2:
-                    if (gm.step == step)
+                    //if (gm.step == step)
                     {
-                        if (stavka[table] == 0)
+                        if(stavka[table] == 0) stavka[table] = stav;
+                        if (Takt == 1 && (Array.TrueForAll(stavka, value => value != 0) || deadLine <= DateTime.Now))
+                            nextTakt();
+                        //else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(25);
+
+                        /*if (stavka[table] == 0)
                         {
                             stavka[table] = stav;
                             tm.Interval = 25000;
@@ -217,9 +222,6 @@ namespace MainServer
                             {
                                 tm.Stop();
                                 Tm_Tick(this, null);
-                                //tm.Stop();
-                                //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                                //udp.Send(bytes, bytes.Length, point);
                                 //nextTakt();
                             }
                             ////if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
@@ -227,7 +229,7 @@ namespace MainServer
                             //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             //    udp.Send(bytes, bytes.Length, point);
                             ////}
-                        }
+                        }*/
                         bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                         udp.Send(bytes, bytes.Length, point);
                         //Send2All(bytes);
@@ -380,8 +382,9 @@ namespace MainServer
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд
                     case 0:
+                        deadLine = DateTime.Now.AddSeconds(40);
                         Takt++;
-                        deadLine = null;
+                        //deadLine = null;
                         gm.step = 2;
                         gm.Cell = rn.rnd();
                         gm.theme = (byte)((gm.Cell + 5) / 6);
@@ -393,7 +396,7 @@ namespace MainServer
                     #region  1 такт - обработка полученных ставок, определение очереди, получение вопроса
                     case 1:
 
-
+                        deadLine = DateTime.Now.AddSeconds(25);
                         gm.step = 3;
                         gm.Cell =  rn.rnd();
                         if (gm.Cell == 0) gm.Cell = 1;
@@ -620,6 +623,7 @@ namespace MainServer
                 gm.iCon++;
                 Array.Clear(stavka, 0, stavka.Length);
                 Array.Clear(ok, 0, ok.Length);
+                deadLine = DateTime.Now.AddSeconds(40);
                 Send2All("ogg");
             }
 

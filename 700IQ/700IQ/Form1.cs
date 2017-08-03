@@ -1613,7 +1613,7 @@ namespace _700IQ
 
         private void GeneralForm_KeyUp(object sender, KeyEventArgs e)//управление клавиатурой
         {
-           // if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
+           if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
             if (e.KeyCode == Keys.Enter)
             {
                 if (pol.ff != null &&pol.pcBox.Visible &&pol.ff.Visible && pol.Value > 0) { pol.Finish(); return; }//полоска
