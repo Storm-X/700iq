@@ -653,31 +653,11 @@ namespace _700IQ
         int offset=5;
 
         Video video;
+        
 
         #endregion
         public Size size;
-        public Video LoadVideo(int cell)
-        {
-            Video temp_video;
-            string path = Application.StartupPath;//получение текущей папки
-            try
-            {
-                temp_video = new Video(Application.StartupPath + String.Format("\\Video\\{0}.mp4",cell + 1), false);
-            }
-            catch
-            {
-                try
-                {
-                    temp_video = new Video(path + String.Format("\\Debug\\Video\\{0}.mp4", cell + 1), false);
-                }
-                catch
-                {
-                    MessageBox.Show("Ошибка загрузки видео \n" + Marshal.GetLastWin32Error());
-                    temp_video = null;
-                }
-            }
-            return temp_video;
-        }
+
 
         public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
         {
@@ -709,10 +689,21 @@ namespace _700IQ
             //DoubleBuffered = true;
             this.enabled = true;
 
-            video = LoadVideo(cel);//new Video(@"d:\01.1.avi", false);
 
-            //size = video.Size;
-            //this.Size = size;
+            
+            try
+            {
+                video = new Video(Application.StartupPath + String.Format("\\Video\\{0}.mp4", cel + 1), false);
+            }
+            catch
+            {
+            
+                MessageBox.Show("Ошибка загрузки видео \n" + Marshal.GetLastWin32Error());
+
+            }
+
+                //size = video.Size;
+                //this.Size = size;
             video.Owner = this;
             this.Size = rc.Size;
             double koeff = 1.33; // (double)Width / (double)Height;
@@ -834,7 +825,12 @@ namespace _700IQ
             {
                 tm?.Stop();
                 this.Visible = false;
-                video?.Dispose();
+                if (video != null)
+                {
+                    video.Stop();
+                    video.Dispose();
+                }
+                
                 this.enabled = false;
             }
         }
