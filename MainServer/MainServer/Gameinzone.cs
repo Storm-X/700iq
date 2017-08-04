@@ -174,6 +174,7 @@ namespace MainServer
             switch (gm.step)
             {
                 #region обработка команд готов
+                case 0:
                 case 1:
 
                     //if (gm.step < 3)
@@ -382,7 +383,7 @@ namespace MainServer
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд
                     case 0:
-                        deadLine = DateTime.Now.AddSeconds(40);
+                        deadLine = DateTime.Now.AddSeconds(70);
                         Takt++;
                         //deadLine = null;
                         gm.step = 2;
