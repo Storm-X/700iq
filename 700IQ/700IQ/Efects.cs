@@ -249,6 +249,7 @@ namespace _700IQ
                     stavka = st1;
                     timer.Interval = 15;
                     timer.Tick += new EventHandler(timer_Tick);
+                    audio.Play();
                     timer.Start();
                 }
             }
@@ -264,7 +265,7 @@ namespace _700IQ
                 }
                 else
                 {
-                    if (audio.CurrentPosition > audio.Duration / 4)
+                    if (audio.CurrentPosition >= audio.Duration)
                         audio.Stop();
                     audio.Play();
                     lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString();
