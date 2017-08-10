@@ -72,7 +72,7 @@ namespace MainServer
                                 string[] ssi = JsonConvert.DeserializeObject<string[]>(request.Substring(2));
                                 //  0            1            2            3        4           5           6            7            8             
                                 string strok = "SELECT teams.parol, teams.rating, teams.name,  teams.id, users.name, users.id, users.rating, users.surname, users.age " +
-                                   "FROM teams INNER JOIN users ON teams.id=users.team WHERE teams.name='" + ssi[0] + "' and teams.parol='" + ssi[1] + "'";
+                                   "FROM (teams INNER JOIN compositions ON teams.id=compositions.team_id ) INNER JOIN users ON compositions.user_id=users.id WHERE teams.name='" + ssi[0] + "' and teams.parol='" + ssi[1] + "'";
                                 // string teamlist = "SELECT teams.name FROM teams";
                                 //запрос данных из таблицы
                                 cm = new MySqlCommand(strok, mycon);
