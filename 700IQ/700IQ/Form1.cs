@@ -767,7 +767,7 @@ namespace _700IQ
                         case 7:
                         case 6:
                         case 5:
-                            if(steck.step < 5 && steck.step > 7)
+                            if(steck.step >= 5 && steck.step <= 7)
                                 Step5_7_finalise();
                             break;
                         case 4:

@@ -1335,14 +1335,24 @@ namespace _700IQ
              }
              else
              {*/
-            audio = LoadAudio();
+            //audio = LoadAudio();
            
             gifImage = new GifImage(Properties.Resources.крестик);
             gifImage.ReverseAtEnd = false; //dont reverse at end
             var answTeam = steck.team.OrderBy(x => x.answerOrder);
             o--;
-            if (!answTeam.ElementAt(o).correct)
+            try
+            {
+                if (!answTeam.ElementAt(o).correct)
+                    audio = new Audio(Application.StartupPath + "\\Audio\\fail.mp3", false);
+                else
+                    audio = new Audio(Application.StartupPath + "\\Audio\\wow.mp3", false);
                 audio.Play();
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка загрузки звука \n" + Marshal.GetLastWin32Error());
+            }
             semafor(0);
             gifTimer.Stop();
            // audio.Stop();
