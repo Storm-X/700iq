@@ -488,7 +488,7 @@ namespace _700IQ
                         Maximum = 360,
                         Gradient = false,
                         ProgressSize = NewWidth(22),
-                        interval = t,
+                        //interval = t,
                 };
                     pcBox = new PictureBoxWithInterpolationMode
                     {
@@ -514,6 +514,7 @@ namespace _700IQ
                 //pcBox.Visible = (txt == "синхр") ? false : true;
                 prBar.SetInterval(t);
                 prBar.AutoReset = (t == 1) ? true : false;
+                prBar.BeepTime = 5;
                 tmBar.Interval = t;
                 tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
@@ -647,15 +648,11 @@ namespace _700IQ
         float ifr = 0.03f;// при какой скороски начинает уменьшаться радиус
         float stepr = 0.0001f;//шаг изменения радиуса
         //float rotation_count = 5f;//количество полных оборотов рулетки (30сек.)
-
         float koef;
         bool flag, flagStop;
         int tickNumber = 0, nStop = 100;
         int offset=5;
-
         Video video;
-        
-
         #endregion
         public Size size;
 
@@ -667,10 +664,6 @@ namespace _700IQ
             flagStop =false;
             tickNumber = 0; 
             this.fsv = fsv;
-            //bmp = Properties.Resources.Ruletka;
-            //g = Graphics.FromImage(bmp);
-            //RouletteBall = Properties.Resources.ShadowBall;
-            //RouletteBall = Image.FromFile(@"d:\Картинки\700IQ\ShadowBall.png");
 
             flag = false;
             //vi = 0.04f;
@@ -685,22 +678,15 @@ namespace _700IQ
             // vi = (float)Math.Sqrt(0.00004f * (37 + (14 + cel) * 0.15708f));
             this.Location = rc.Location;
             this.Parent = fsv;
-            //this.Paint += OnPaint;
-            //SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            //DoubleBuffered = true;
             this.enabled = true;
 
-
-            
             try
             {
                 video = new Video(Application.StartupPath + String.Format("\\Video\\{0}.mp4", cel + 1), false);
             }
             catch
             {
-            
                 MessageBox.Show("Ошибка загрузки видео \n" + Marshal.GetLastWin32Error());
-
             }
 
                 //size = video.Size;
@@ -715,35 +701,52 @@ namespace _700IQ
             this.Visible = true;
             this.BringToFront();
             this.Refresh();
-            //this.Invalidate();
             if (video != null) video.Play();
-            //tmrVideo.Enabled = true;
-            //btnPlayPause.Text = "Pause";
 
             #region//описание свойств формы
-            //this.Visible = true;
-            //this.Location = rc.Location;
-            //this.BackgroundImage = bmp;
-            //this.BackgroundImageLayout = ImageLayout.Zoom;
-            //this.BackColor = Color.Transparent;
-            //this.Size = rc.Size;
-            //this.Parent = fsv;
-            //SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            //DoubleBuffered = true;
-            //this.enabled = true;
-            //this.BringToFront();
+            DoubleBuffered = true;
             #endregion
-            //g.Dispose();
-            //this.Invalidate();
+        }
+
+        //точка перемещения
+        Point DownPoint;
+        //нажата ли кнопка мыши
+        bool IsDragMode;
+        protected override void OnMouseDown(MouseEventArgs mEvent)
+        {
+            if (!video.Fullscreen)
+            {
+                DownPoint = mEvent.Location;
+                IsDragMode = true;
+            }
+            base.OnMouseDown(mEvent);
+        }
+
+        protected override void OnMouseUp(MouseEventArgs mEvent)
+        {
+            IsDragMode = false;
+            base.OnMouseUp(mEvent);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs mEvent)
+        {
+            //если кнопка мыши нажата
+            if (IsDragMode)
+            {
+                Point p = mEvent.Location;
+                //вычисляем разницу в координатах между положением курсора и "нулевой" точкой рулетки
+                Point dp = new Point(p.X - DownPoint.X, p.Y - DownPoint.Y);
+                Location = new Point(Location.X + dp.X, Location.Y + dp.Y);
+                this.Invalidate();
+            }
+            base.OnMouseMove(mEvent);
         }
 
         private void Video_Ending(object sender, EventArgs e)
         {
             Task.Factory.StartNew(() =>
             {
-                //System.Threading.Thread.Sleep(2000);
-
-                if (InvokeRequired)
+                 if (InvokeRequired)
                 {
                     this.Invoke(new Action(() =>
                     {
@@ -753,6 +756,7 @@ namespace _700IQ
                 }
             });
         }
+
         const int WM_KEYDOWN = 0x100;
         const int WM_KEYUP = 0x101;
         const int WM_SYSKEYDOWN = 0x104;
@@ -769,7 +773,7 @@ namespace _700IQ
             {
                 case WM_LBUTTONDBLCLICK:  //WM_MOUSE_DOUBLE_CLICK
                     if(!video.Fullscreen)
-                        video.Fullscreen = true;  //!video.Fullscreen;
+                        video.Fullscreen = true;
                     break;
                 case WM_KEYUP:
                     if (video.Fullscreen && (int)m.WParam == VK_ESCAPE)
@@ -779,11 +783,11 @@ namespace _700IQ
                     //int lParam = m.LParam.ToInt32();
                     //mouseLoc.X = lParam & 0xFFFF;
                     //mouseLoc.Y = (int)(lParam & 0xFFFF0000 >> 16);
-                    Point mouseLoc = new Point();
-                    mouseLoc.X = (Int16)m.LParam;
-                    mouseLoc.Y = (Int16)((int)m.LParam >> 16);
-                    if ((int)m.WParam == 0x001)
-                        this.Location.Offset(10, 10);
+                    //Point mouseLoc = new Point();
+                    //mouseLoc.X = (Int16)m.LParam;
+                    //mouseLoc.Y = (Int16)((int)m.LParam >> 16);
+                    //if ((int)m.WParam == 0x0001)
+                        //Location = new Point((mouseLoc.X - this.Location.X), (mouseLoc.Y - this.Location.Y));
                     break;
 
                     //if (m.WParam == IntPtr.Zero)   {  }   else         {      }
@@ -796,22 +800,13 @@ namespace _700IQ
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            /*pe.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            pe.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            //pe.Graphics.FillEllipse(Brushes.White, z2);
-            base.OnPaint(pe);
-            pe.Graphics.DrawImage(RouletteBall, z2);*/
-
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-            //System.Drawing.Rectangle r = new Rectangle((int)((rc.X - (fsv.delta < 0 ? fsv.delta : 0)) * koef1), (int)(rc.Y * koef2), (int)(size.Width * 0.53), (int)(size.Width * 0.53));
-            System.Drawing.Rectangle r = new Rectangle((int)((size.Width*101/768)), (int)(size.Height * 3/576), (int)(size.Width * 568/768), (int)(size.Width * 568/768));   
-            //System.Drawing.Rectangle r = new Rectangle(292, 28, 574, 571);
-            e.Graphics.DrawEllipse(Pens.Black, r);//после нужного вам результата замените - Pens.Transparent
+            System.Drawing.Rectangle r = new Rectangle((int)((size.Width*101/768)), (int)(size.Height * 3/576), (int)(size.Width * 568/768), (int)(size.Width * 568/768));
+            e.Graphics.DrawEllipse(Pens.Transparent, r);//после нужного вам результата замените - Pens.Transparent
             gp.AddEllipse(r);
             Region = new System.Drawing.Region(gp);
-
         }
         public void close()
         {

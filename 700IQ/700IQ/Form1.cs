@@ -228,7 +228,7 @@ namespace _700IQ
             ////для теста Рулетки на старте проги
             //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
             //g.DrawRectangle(Pens.Black, kv);
-           // Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+            //Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
             //System.Media.SystemSounds.Question.Play();
             //Console.Beep();
             //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
@@ -767,7 +767,7 @@ namespace _700IQ
                         case 7:
                         case 6:
                         case 5:
-                            if(steck.step >= 5 && steck.step <= 7)
+                            if(steck.step < 5 || steck.step > 7)
                                 Step5_7_finalise();
                             break;
                         case 4:
@@ -1121,8 +1121,8 @@ namespace _700IQ
                     //else
                     //    otvetStatic.ochered(steck); //.GetAwaiter().GetResult();
                     //otvetStatic.semafor(0);
-                    otvetStatic.semafor(1);
                     otvetStatic.SetFocus();
+                    otvetStatic.semafor(1);
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         //Debug.WriteLine();
@@ -1211,6 +1211,8 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
+                otvetStatic.SetFocus();
+                otvetStatic.CanResize = false;
                 otvetStatic.answer(1, steck);// вывод ответа первой команды
                 var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
 
@@ -1218,11 +1220,8 @@ namespace _700IQ
                 if (!answTeam.ElementAt(0).correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
-
                     otvetStatic.semafor(2);
-                    otvetStatic.SetFocus();
-
-
+                    otvetStatic.CanResize = true;
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
                         otvetStatic.polosaStart(this, 5,pol);
@@ -1266,6 +1265,8 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
+                otvetStatic.SetFocus();
+                otvetStatic.CanResize = false;
                 otvetStatic.answer(2, steck);// вывод ответа второй команды
 
                 var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
@@ -1273,9 +1274,8 @@ namespace _700IQ
                 if (!answTeam.ElementAt(1).correct)//если ответ не верный
                 {
                     // otvetStatic.mistake(1, steck.team[steck.o1 - 1].answer);//не правильный ответ первой команды в очереди
-
                     otvetStatic.semafor(3);
-                    otvetStatic.SetFocus();
+                    otvetStatic.CanResize = true;
 
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
@@ -1320,6 +1320,8 @@ namespace _700IQ
                 if (otvetStatic == null)
                     CreateAnswerTable(true);
                 //otvetStatic.semafor(0);
+                otvetStatic.SetFocus();
+                otvetStatic.CanResize = false;
                 otvetStatic.answer(3, steck);// вывод ответа третьей команды
 
                 var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();

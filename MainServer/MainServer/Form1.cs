@@ -1087,31 +1087,36 @@ namespace MainServer
             textBox5.Text = "";
             textBox6.Text = "";
             label2.Text = "";
-            dataGridView1.Enabled = true;
+            tbMediaFile.Text = "";
+            questEditorGrid.Enabled = true;
         }
+        private void tabControl1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Escape && tabControl1.SelectedTab.Name.Equals("questEditor"))
+                button3.PerformClick();
+        }
+
         private void button4_Click(object sender, EventArgs e)
         {
             string saveRequest;
-            if (label2.Text == "") saveRequest = "insert or replace into quests (themeID,text,answer) values(" + indexOfThemes + ", '" + Crypt.Encrypt(textBox5.Text, key) + "', '" + Crypt.Encrypt(textBox6.Text, key) + "')";
-            else saveRequest = "insert or replace into quests (ID,themeID,text,answer) values(" + label2.Text + "," + indexOfThemes + ", '" + Crypt.Encrypt(textBox5.Text, key) + "', '" + Crypt.Encrypt(textBox6.Text, key) + "')";
+            if (label2.Text == "") saveRequest = "insert or replace into quests (themeID,text,answer,media) values(" + indexOfThemes + ", '" + Crypt.Encrypt(textBox5.Text, key) + "', '" + Crypt.Encrypt(textBox6.Text, key) + "', '" + tbMediaFile.Text + "')";
+            else saveRequest = "insert or replace into quests (ID,themeID,text,answer,media) values(" + label2.Text + "," + indexOfThemes + ", '" + Crypt.Encrypt(textBox5.Text, key) + "', '" + Crypt.Encrypt(textBox6.Text, key) + "', '" + tbMediaFile.Text + "')";
             cm = new SQLiteCommand(saveRequest, conn);
             cm.ExecuteNonQuery();
             reloadDB();
         }
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        private void questEditorGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-        }
-        private void dataGridView1_CellMouseDoubleClick_1(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            textBox5.Text = dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells[1].Value.ToString();
-            textBox6.Text = dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells[2].Value.ToString();
-            label2.Text = dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells[0].Value.ToString();
+            textBox5.Text = questEditorGrid.Rows[questEditorGrid.CurrentRow.Index].Cells[1].Value.ToString();
+            textBox6.Text = questEditorGrid.Rows[questEditorGrid.CurrentRow.Index].Cells[2].Value.ToString();
+            label2.Text = questEditorGrid.Rows[questEditorGrid.CurrentRow.Index].Cells[0].Value.ToString();
+            tbMediaFile.Text = questEditorGrid.Rows[questEditorGrid.CurrentRow.Index].Cells["qeFileColumn"].Value.ToString();
             textBox5.Focus();
-            dataGridView1.Enabled = false;
+            questEditorGrid.Enabled = false;
         }
         private void button5_Click(object sender, EventArgs e)
         {
-            string saveRequest = "delete from quests where ID = " + dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells[0].Value.ToString();
+            string saveRequest = "delete from quests where ID = " + questEditorGrid.Rows[questEditorGrid.CurrentRow.Index].Cells[0].Value.ToString();
             cm = new SQLiteCommand(saveRequest, conn);
             cm.ExecuteNonQuery();
             reloadDB();
@@ -1150,7 +1155,7 @@ namespace MainServer
         }
         private void reloadDB()
         {
-            string question = "select quests.id,quests.text,quests.answer from themes inner join quests on themes.id=quests.themeID WHERE quests.themeID = ' " + (comboBox1.SelectedIndex + 1) + "'";
+            string question = "select quests.id,quests.text,quests.answer,quests.media from themes inner join quests on themes.id=quests.themeID WHERE quests.themeID = ' " + (comboBox1.SelectedIndex + 1) + "'";
             indexOfThemes = comboBox1.SelectedIndex + 1;
             cm = new SQLiteCommand(question, conn);
             rd = cm.ExecuteReader();
@@ -1169,11 +1174,12 @@ namespace MainServer
                 tableofQuestion.Rows[i][2] = answer[i];
             }
 
-            dataGridView1.DataSource = tableofQuestion;
-            dataGridView1.Enabled = true;
+            questEditorGrid.DataSource = tableofQuestion;
+            button3.PerformClick();
+            /*questEditorGrid.Enabled = true;
             textBox5.Text = "";
             textBox6.Text = "";
-            label2.Text = "";
+            label2.Text = "";*/
         }
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1458,7 +1464,17 @@ namespace MainServer
                                                     row[4] = info[4];
                                                     row[5] = info[5];
                                                     row[6] = dataZapros.otvet;
-                                                    if (String.Compare(row[5].ToString(), row[6].ToString(), true) == 0)
+                                                    string[] arrayOfAnswer = info[5].Split(';');
+                                                    bool check_answer = false;
+                                                    foreach (string answer in arrayOfAnswer)
+                                                    {
+                                                        if (String.Compare(answer, row[6].ToString(),true) == 0)
+                                                        {
+                                                            check_answer = true;
+                                                            break; 
+                                                        }         
+                                                    }
+                                                    if (check_answer)//if (String.Compare(row[5].ToString(), row[6].ToString(), true) == 0)
                                                     {
                                                         MassGameZone[dataZapros.uid - 1].checkOtvet(true);
                                                     }

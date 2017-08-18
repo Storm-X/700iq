@@ -71,8 +71,8 @@ namespace MainServer
                                 #region проверяем логин и пароль в БД
                                 string[] ssi = JsonConvert.DeserializeObject<string[]>(request.Substring(2));
                                 //  0            1            2            3        4           5           6            7            8             
-                                string strok = "SELECT teams.parol, teams.rating, teams.name,  teams.id, users.name, users.id, users.rating, users.surname, users.age " +
-                                   "FROM teams INNER JOIN users ON teams.id=users.team WHERE teams.name='" + ssi[0] + "' and teams.parol='" + ssi[1] + "'";
+                                string strok = "SELECT teams.team_password, teams.rating, teams.name,  teams.id, users.name, users.id, users.rating, users.surname, users.age " +
+                                   "FROM teams INNER JOIN users ON teams.id=users.team WHERE teams.name='" + ssi[0] + "' and teams.team_password='" + ssi[1] + "'";
                                 // string teamlist = "SELECT teams.name FROM teams";
                                 //запрос данных из таблицы
                                 cm = new MySqlCommand(strok, mycon);
