@@ -706,7 +706,7 @@ namespace _700IQ
         PictureBox pc1;
         PictureBox pc2;
         PictureBox pc3;
-        PictureBox picBox1, bgrdPic;
+        PictureBox picBox1, bgrdPic, bgrdPic2;
         Label lb, vpramka;
         Label lbst1;
         Label lbst2;
@@ -730,6 +730,7 @@ namespace _700IQ
         int tableofkom;
         int step = 0;
         private bool IsDisposed = false;
+        public bool CanResize = true;
         Audio audio;
         String quest;
         String theme;
@@ -775,7 +776,8 @@ namespace _700IQ
                     foreach (Label lb in lbAnswer) lb.Dispose();
                     //pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
                     lbst1.Dispose(); lbst2.Dispose(); lbst3.Dispose();
-                    bgrdPic.Dispose();
+                    //bgrdPic.Dispose();
+                    bgrdPic2.Dispose();
                 }
                 // освобождаем неуправляемые объекты
                 IsDisposed = true;
@@ -814,97 +816,128 @@ namespace _700IQ
         }
         public async Task svitok(Game steckIn, Data predUs)
         {
-            
-            
-            String fileName = "";
-            int picWidth = 0;
-                #region //описание свитка с вопросом               
-                Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
-                bgrdPic = new PictureBox()
-                {
-                    Parent = workForm,
-                    Size = NewSize(900, 1170),
-                    Location = NewPoint(60, 150),
-                    //BorderStyle =BorderStyle.Fixed3D,
-                    Image = bmp,
-                    BackColor = Color.Transparent
-                };
-          
 
-                picBox1 = new PictureBox()
-                {
-                    Parent = bgrdPic,
-                    Size = NewSize(850, picWidth),
-                    Location = NewRelPoint(25, 200), //new Point(25, NewPoint(25, 200).Y),
-                    //BorderStyle = BorderStyle.Fixed3D,
-                    BackColor = Color.Transparent,
-                    SizeMode = PictureBoxSizeMode.Zoom,
-                    Image = (String.IsNullOrWhiteSpace(steckIn.media)) ? null : await ResultOfCycle(steckIn.media)
-                };
-                lb = new Label()
-                {
-                    Parent = bgrdPic,
-                    Size = NewSize(850, 850 - picWidth),
-                    Location = NewRelPoint(25, 200 + picWidth), //new Point(25, NewPoint(25, 200 + picWidth).Y),
-                    //Image = bmp,
-                    BackColor = Color.Transparent,
-                    //BorderStyle = BorderStyle.Fixed3D,
-                    Text = steckIn.quest,
-                    Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    Padding = new Padding(20, 0, 20, 20),
-                    //BorderStyle = BorderStyle.FixedSingle
-                };
+
+            //String fileName = "";
+            Image imgQuest = (String.IsNullOrWhiteSpace(steckIn.media)) ? null : await ResultOfCycle(steckIn.media); // new Image();
+            int picWidth = 0; // Math.Min(600, Math.Max(600, imgQuest.Height));
+            #region //описание свитка с вопросом               
+            //Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
+            bgrdPic2 = new PictureBox()
+            {
+                Parent = workForm,
+                Size = NewSize(900, 1170),
+                Location = NewPoint(60, 150),
+                //BorderStyle = BorderStyle.Fixed3D,
+                Image = Properties.Resources.Svitok, //bmp,
+                BackColor = Color.Transparent,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                //Padding = new Padding(25)
+            };
+
+            bgrdPic = new PictureBox()
+            {
+                Parent = bgrdPic2,
+                Size = new Size(bgrdPic2.Size.Width-20,bgrdPic2.Height-20), // NewSize(900, 1170),
+                Location = new Point(10,10),
+                //BorderStyle = BorderStyle.Fixed3D,
+                //Image = bmp,
+                BackColor = Color.Transparent,
+                //Padding = new Padding(25)
+            };
+
+            vpramka = new Label()
+            {
+                Parent = bgrdPic,
+                Size = NewSize(850, 130),
+                Location = NewRelPoint(25, 70), //NewPoint(25, 70),
+                BackColor = Color.Transparent,
+                //BorderStyle = BorderStyle.Fixed3D,
+                Dock = DockStyle.Top,
+                Font = new Font("Cambria", NewFontSize(25), FontStyle.Bold),
+                TextAlign = ContentAlignment.TopCenter,
+                Text = predUs.tema[steckIn.theme].theme,
+                //Padding = new Padding(25)
+                //BorderStyle = BorderStyle.FixedSingle
+            };
+            vpramka.BringToFront();
+
+            picBox1 = new PictureBox()
+            {
+                Parent = bgrdPic,
+                Size = new Size(bgrdPic.Width, picWidth),
+                Location = NewRelPoint(25, vpramka.Height), // 200), //new Point(25, NewPoint(25, 200).Y),
+                //BorderStyle = BorderStyle.Fixed3D,
+                BackColor = Color.Transparent,
+                Dock = DockStyle.Fill,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Image = imgQuest //(String.IsNullOrWhiteSpace(steckIn.media)) ? null : await ResultOfCycle(steckIn.media)
+            };
+            //imgQuest.Dispose();
+            picBox1.BringToFront();
+            //picWidth = picBox1.Image.Height;
+            //picBox1.Height = picWidth;
+
+            lb = new Label()
+            {
+                Parent = bgrdPic,
+                Size = new Size(bgrdPic.Width, 0),
+                //Location = NewRelPoint(25, bgrdPic.Height), // 200 + picWidth), //new Point(25, NewPoint(25, 200 + picWidth).Y),
+                //Image = bmp,
+                Margin = new Padding(0, 3, 0, 3),
+                BackColor = Color.Transparent,
+                Dock = DockStyle.Bottom,
+                //BorderStyle = BorderStyle.Fixed3D,
+                Text = steckIn.quest,
+                Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter,
+                //Padding = new Padding(20, 0, 20, 20),
+            };
+            lb.SendToBack();
+            Size sz = new Size(lb.Width, Int32.MaxValue);
+            sz = TextRenderer.MeasureText(lb.Text, lb.Font, sz, TextFormatFlags.WordBreak);
+            lb.Height = sz.Height + lb.Margin.Vertical;
+
             quest = steckIn.quest;
-                //Parent = bgrdPic //////// Parent = lb
-                vpramka = new Label()
-                {
-                    Parent = bgrdPic,
-                    Size = NewSize(850, 130),
-                    Location = NewRelPoint(25, 70), //NewPoint(25, 70),
-                    BackColor = Color.Transparent,
-                   // BorderStyle = BorderStyle.Fixed3D,
-
-                    Font = new Font("Cambria", NewFontSize(25), FontStyle.Bold),
-                    TextAlign = ContentAlignment.TopCenter,
-                    Text = predUs.tema[steckIn.theme].theme,
-                    //BorderStyle = BorderStyle.FixedSingle
-                };
+            //Parent = bgrdPic //////// Parent = lb
             theme = predUs.tema[steckIn.theme].theme;
-                #endregion
+            #endregion
             otv = new Label()
-                {
-                    Parent = bgrdPic,
-                    Size = NewSize(900, 300),
-                    Location = NewRelPoint(25, 1020), //NewPoint(50, 1020),
-                    BackColor = Color.Transparent,
-                    //BorderStyle = BorderStyle.Fixed3D,
+            {
+                Parent = bgrdPic,
+                Size = NewSize(900, 150),
+                //Location = NewRelPoint(25, bgrdPic.Height), // 1020), //NewPoint(50, 1020),
+                BackColor = Color.Transparent,
+                //BorderStyle = BorderStyle.Fixed3D,
+                Dock = DockStyle.Bottom,
+                Text = "Ответ",
+                Font = new Font("Arial Black Italic", NewFontSize(20), FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleLeft,
+                //Padding = new Padding(0, 20, 20, 20),
+            };
+            txBox = new TextBox()
+            {
+                Parent = otv,
+                Size = NewSize(640, 150),
+                Multiline = false,
+                //BorderStyle = BorderStyle.Fixed3D,
 
-                    Text = "Ответ",
-                    Font = new Font("Arial Black Italic", NewFontSize(20), FontStyle.Bold),
-                    TextAlign = ContentAlignment.TopLeft,
-                    Padding = new Padding(0, 20, 20, 20),
-                };
-                txBox = new TextBox()
-                {
-                    Parent = otv,
-                    Size = NewSize(640, 190),
-                    Multiline = false,
-                   // BorderStyle = BorderStyle.Fixed3D,
+                MaxLength = 33,
+                BackColor = Color.LightGreen,
+                Location = NewRelPoint(140, 0), //NewPoint(165, 30),
+                Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
+                Cursor = AdvancedCursors.Create(Properties.Resources.Text_Select), //установка курсора из файла
+                Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right)
+            };
+            txBox.Location = new Point(txBox.Left, (otv.Height - txBox.Height) / 2);
+            ochered(steckIn);
+            otv.SendToBack();
+            txBox.Focus();
+            //bgrdPic.Padding = new Padding(25);
 
-                    MaxLength = 33,
-                    BackColor = Color.LightGreen,
-                    Location = NewRelPoint(140, 30), //NewPoint(165, 30),
-                    Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
-                    Cursor = AdvancedCursors.Create(Properties.Resources.Text_Select), //установка курсора из файла
-                };
-                ochered(steckIn);
-                bgrdPic.BringToFront();
-                txBox.Focus();
-                bgrdPic.DoubleClick += BgrdPic_DoubleClick;
-      
-                
-
+            bgrdPic2.BringToFront();
+            bgrdPic2.DoubleClick += BgrdPic_DoubleClick;
+            vpramka.DoubleClick += BgrdPic_DoubleClick;
         }
 
         private void BgrdPic_DoubleClick(object sender, EventArgs e)
@@ -915,57 +948,72 @@ namespace _700IQ
         }
         public void fullscreen()
         {
+            if (!CanResize)
+                return;
             int delta = workForm.delta > 0 ? workForm.delta * 2 : 0;
-            Bitmap bmp = new Bitmap(Properties.Resources.Svitok, new Size(workResolution.Width- delta, workResolution.Height));//NewSize(2500, 1210));
-            bgrdPic.Location = NewPoint(0, 0);
-            bgrdPic.Size = new Size(workResolution.Width - delta, workResolution.Height);
-            bgrdPic.Image = bmp;
+            //Bitmap bmp = new Bitmap(Properties.Resources.Svitok, new Size(workResolution.Width- delta, workResolution.Height));//NewSize(2500, 1210));
+            bgrdPic2.Location = NewPoint(0, 0);
+            bgrdPic2.Size = new Size(workResolution.Width - delta, workResolution.Height);
+            //bgrdPic2.Image = bmp;
+            bgrdPic.Width = bgrdPic2.Width - 20;
+            bgrdPic.Height = bgrdPic2.Height - 20;
 
-            otv.Size = new Size(bgrdPic.Width - 35, 70);
-            otv.Location = new Point(otv.Location.X, bgrdPic.Height - (otv.Height + 50));
+            //otv.Size = new Size(bgrdPic.Width - 35, 70);
+            //otv.Location = new Point(otv.Location.X, bgrdPic.Height - (otv.Height + 50));
 
-            txBox.Size = new Size(otv.Width - 200, otv.Height);
-            txBox.Location = NewRelPoint(200, 25);//new Point(otv.Location.X+(otv.Width+15), bgrdPic.Height - (otv.Height + 10));
+            //txBox.Size = new Size(otv.Width - 200, otv.Height);
+            //txBox.Location = NewRelPoint(200, 25);//new Point(otv.Location.X+(otv.Width+15), bgrdPic.Height - (otv.Height + 10));
 
-            picBox1.Size = new Size(bgrdPic.Width - 35, picBox1.Height);
-            lb.Size = new Size(bgrdPic.Width - 35, bgrdPic.Height-vpramka.Height-otv.Height-100);
-            vpramka.Size = new Size(bgrdPic.Width - 35, vpramka.Height);
+            //picBox1.Size = new Size(bgrdPic.Width - 35, picBox1.Height + 70);
+            //lb.Size = new Size(bgrdPic.Width - 35, bgrdPic.Height-vpramka.Height-otv.Height-100);
+            //vpramka.Size = new Size(bgrdPic.Width - 35, vpramka.Height);
 
-            txBox.BringToFront();
+            //txBox.BringToFront();
             lb.Font = new Font("Arial Black Italic", NewFontSize(26), FontStyle.Bold);
-            lb.Text = quest;
+            //lb.Text = quest;
             vpramka.Font = new Font("Cambria", NewFontSize(32), FontStyle.Bold);
-            vpramka.Text = theme;
+            //vpramka.Text = theme;
+
             workForm.Invalidate();
+
+            Size sz = new Size(lb.Width, Int32.MaxValue);
+            sz = TextRenderer.MeasureText(lb.Text, lb.Font, sz, TextFormatFlags.WordBreak);
+            lb.Height = sz.Height + lb.Margin.Vertical;
+
             fullscreenFlag = true;
-            bgrdPic.BringToFront();
+            bgrdPic2.BringToFront();
             txBox.Focus();
-
-
         } 
         public void originSize()
         {
-            int picWidth = 0;
-            Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
-            bgrdPic.Location = NewPoint(60, 150);
-            bgrdPic.Size = NewSize(900, 1170);
-            bgrdPic.Image = bmp;
-            picBox1.Size = NewSize(850, picWidth);
+            //int picWidth = 600;
+            //Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
+            bgrdPic2.Location = NewPoint(60, 150);
+            bgrdPic2.Size = NewSize(900, 1170);
+            //bgrdPic2.Image = bmp;
+            bgrdPic.Width = bgrdPic2.Width - 20;
+            bgrdPic.Height = bgrdPic2.Height - 20;
+            /*picBox1.Size = NewSize(850, picWidth);
             lb.Size = NewSize(850, 850 - picWidth);
             vpramka.Size = NewSize(850, 130);
-            otv.Size = NewSize(900, 300);
-            txBox.Size = NewSize(640, 190);
+            otv.Size = NewSize(900, 150);
+            txBox.Size = NewSize(640, 150);
             otv.Location = NewRelPoint(25, 1020);
-            txBox.Location = NewRelPoint(140, 30);
+            txBox.Location = NewRelPoint(140, 30);*/
             lb.Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold);
-            lb.Text = quest;
+            //lb.Text = quest;
             vpramka.Font = new Font("Cambria", NewFontSize(25), FontStyle.Bold);
-            vpramka.Text = theme;
+            //vpramka.Text = theme;
             workForm.Invalidate();
-            bgrdPic.BringToFront();
+
+            Size sz = new Size(lb.Width, Int32.MaxValue);
+            sz = TextRenderer.MeasureText(lb.Text, lb.Font, sz, TextFormatFlags.WordBreak);
+            lb.Height = sz.Height + lb.Margin.Vertical;
+
+            bgrdPic2.BringToFront();
             txBox.Focus();
             fullscreenFlag = false;
-        } 
+        }
 
         public void SetFocus()
         {
@@ -1463,7 +1511,7 @@ namespace _700IQ
 
         public void close()//удаление всех элементов с поля ответ
         {
-            /*if (workForm.InvokeRequired)
+            if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
@@ -1471,13 +1519,13 @@ namespace _700IQ
                 });
             }
             else
-            {*/
-            //gifTimer.Stop();
-            //tmSem.Stop();
+            {
+                //gifTimer.Stop();
+                //tmSem.Stop();
+                this.Dispose();
                 workForm.Invalidate();
                 workForm.Refresh();
-                this.Dispose();
-            //}
+            }
         }
         public void polosaStart(GeneralForm ff, int Curstep,Polosa pol)//старт временной полосы?походу больше не нужен
         {

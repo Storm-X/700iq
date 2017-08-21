@@ -23,6 +23,7 @@ namespace MainServer
         public int idQuest;             //id вопроса
         public byte theme;              //тема вопроса
         public string quest;            //Текст вопроса  
+        public string media;            //Медиаданные
         public Teames[] team = new Teames[3];
         public class Teames
         {

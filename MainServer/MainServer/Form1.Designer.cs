@@ -33,6 +33,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.lot = new System.Windows.Forms.Button();
             this.DBLink = new System.Windows.Forms.Button();
@@ -62,7 +64,8 @@
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.questEditor = new System.Windows.Forms.TabPage();
+            this.tbMediaFile = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
@@ -72,11 +75,8 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.questEditorGrid = new System.Windows.Forms.DataGridView();
+            this.gameStatistics = new System.Windows.Forms.TabPage();
             this.richTextBox4 = new System.Windows.Forms.RichTextBox();
             this.richTextBox3 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
@@ -89,15 +89,19 @@
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.qeFileColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.Home.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ListKomand)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ListGames)).BeginInit();
             this.Control.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.tabPage2.SuspendLayout();
+            this.questEditor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.questEditorGrid)).BeginInit();
+            this.gameStatistics.SuspendLayout();
             this.SuspendLayout();
             // 
             // lot
@@ -237,8 +241,8 @@
             // 
             this.tabControl1.Controls.Add(this.Home);
             this.tabControl1.Controls.Add(this.Control);
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.questEditor);
+            this.tabControl1.Controls.Add(this.gameStatistics);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl1.ItemSize = new System.Drawing.Size(256, 28);
             this.tabControl1.Location = new System.Drawing.Point(167, 59);
@@ -246,6 +250,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1035, 543);
             this.tabControl1.TabIndex = 19;
+            this.tabControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyUp);
             // 
             // Home
             // 
@@ -254,7 +259,7 @@
             this.Home.Location = new System.Drawing.Point(4, 32);
             this.Home.Name = "Home";
             this.Home.Padding = new System.Windows.Forms.Padding(3);
-            this.Home.Size = new System.Drawing.Size(968, 455);
+            this.Home.Size = new System.Drawing.Size(1027, 507);
             this.Home.TabIndex = 0;
             this.Home.Text = "Зарегистрировавшиеся команды";
             this.Home.UseVisualStyleBackColor = true;
@@ -292,7 +297,7 @@
             this.ListKomand.RowHeadersVisible = false;
             this.ListKomand.RowTemplate.Height = 24;
             this.ListKomand.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ListKomand.Size = new System.Drawing.Size(962, 449);
+            this.ListKomand.Size = new System.Drawing.Size(1021, 501);
             this.ListKomand.TabIndex = 4;
             this.ListKomand.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ListKomand_CellContentClick);
             this.ListKomand.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick);
@@ -347,7 +352,7 @@
             this.ListGames.RowTemplate.DividerHeight = 3;
             this.ListGames.RowTemplate.Height = 24;
             this.ListGames.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ListGames.Size = new System.Drawing.Size(962, 449);
+            this.ListGames.Size = new System.Drawing.Size(1021, 501);
             this.ListGames.TabIndex = 11;
             this.ListGames.Visible = false;
             this.ListGames.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ListGames_CellMouseDoubleClick);
@@ -412,7 +417,7 @@
             this.Control.Location = new System.Drawing.Point(4, 32);
             this.Control.Name = "Control";
             this.Control.Padding = new System.Windows.Forms.Padding(3);
-            this.Control.Size = new System.Drawing.Size(968, 455);
+            this.Control.Size = new System.Drawing.Size(1027, 507);
             this.Control.TabIndex = 1;
             this.Control.Text = "Контроль ответов";
             this.Control.UseVisualStyleBackColor = true;
@@ -441,7 +446,7 @@
             this.dataGridView2.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dataGridView2.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(962, 449);
+            this.dataGridView2.Size = new System.Drawing.Size(1021, 501);
             this.dataGridView2.TabIndex = 10;
             this.dataGridView2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellClick);
             this.dataGridView2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellValueChanged);
@@ -487,25 +492,33 @@
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
             // 
-            // tabPage1
+            // questEditor
             // 
-            this.tabPage1.Controls.Add(this.button5);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.button4);
-            this.tabPage1.Controls.Add(this.button3);
-            this.tabPage1.Controls.Add(this.textBox6);
-            this.tabPage1.Controls.Add(this.textBox5);
-            this.tabPage1.Controls.Add(this.textBox4);
-            this.tabPage1.Controls.Add(this.button2);
-            this.tabPage1.Controls.Add(this.comboBox1);
-            this.tabPage1.Controls.Add(this.dataGridView1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 32);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(989, 507);
-            this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "Редактор вопросов";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.questEditor.Controls.Add(this.tbMediaFile);
+            this.questEditor.Controls.Add(this.button5);
+            this.questEditor.Controls.Add(this.label2);
+            this.questEditor.Controls.Add(this.button4);
+            this.questEditor.Controls.Add(this.button3);
+            this.questEditor.Controls.Add(this.textBox6);
+            this.questEditor.Controls.Add(this.textBox5);
+            this.questEditor.Controls.Add(this.textBox4);
+            this.questEditor.Controls.Add(this.button2);
+            this.questEditor.Controls.Add(this.comboBox1);
+            this.questEditor.Controls.Add(this.questEditorGrid);
+            this.questEditor.Location = new System.Drawing.Point(4, 32);
+            this.questEditor.Name = "questEditor";
+            this.questEditor.Padding = new System.Windows.Forms.Padding(3);
+            this.questEditor.Size = new System.Drawing.Size(1027, 507);
+            this.questEditor.TabIndex = 2;
+            this.questEditor.Text = "Редактор вопросов";
+            this.questEditor.UseVisualStyleBackColor = true;
+            // 
+            // tbMediaFile
+            // 
+            this.tbMediaFile.Location = new System.Drawing.Point(774, 428);
+            this.tbMediaFile.Name = "tbMediaFile";
+            this.tbMediaFile.Size = new System.Drawing.Size(145, 23);
+            this.tbMediaFile.TabIndex = 10;
             // 
             // button5
             // 
@@ -527,9 +540,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(774, 446);
+            this.button4.Location = new System.Drawing.Point(926, 428);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(95, 23);
+            this.button4.Size = new System.Drawing.Size(95, 30);
             this.button4.TabIndex = 7;
             this.button4.Text = "Сохранить";
             this.button4.UseVisualStyleBackColor = true;
@@ -539,9 +552,9 @@
             // 
             this.button3.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button3.Location = new System.Drawing.Point(878, 446);
+            this.button3.Location = new System.Drawing.Point(926, 457);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(87, 23);
+            this.button3.Size = new System.Drawing.Size(95, 30);
             this.button3.TabIndex = 6;
             this.button3.Text = "Очистить";
             this.button3.UseVisualStyleBackColor = true;
@@ -590,71 +603,47 @@
             this.comboBox1.TabIndex = 1;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // dataGridView1
+            // questEditorGrid
             // 
-            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.questEditorGrid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.questEditorGrid.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.questEditorGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.questEditorGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column3,
-            this.Column4});
-            this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 30);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(968, 393);
-            this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick_1);
-            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+            this.Column4,
+            this.qeFileColumn});
+            this.questEditorGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.questEditorGrid.Location = new System.Drawing.Point(0, 30);
+            this.questEditorGrid.MultiSelect = false;
+            this.questEditorGrid.Name = "questEditorGrid";
+            this.questEditorGrid.RowHeadersVisible = false;
+            this.questEditorGrid.RowHeadersWidth = 25;
+            this.questEditorGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.questEditorGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.questEditorGrid.Size = new System.Drawing.Size(1021, 393);
+            this.questEditorGrid.TabIndex = 0;
+            this.questEditorGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.questEditorGrid_CellMouseDoubleClick);
             // 
-            // Column1
+            // gameStatistics
             // 
-            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Column1.DataPropertyName = "ID";
-            this.Column1.HeaderText = "ID";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 50;
-            // 
-            // Column3
-            // 
-            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Column3.DataPropertyName = "text";
-            this.Column3.HeaderText = "Текст вопроса";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            this.Column3.Width = 700;
-            // 
-            // Column4
-            // 
-            this.Column4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Column4.DataPropertyName = "answer";
-            this.Column4.HeaderText = "Ответ";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            this.Column4.Width = 170;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.richTextBox4);
-            this.tabPage2.Controls.Add(this.richTextBox3);
-            this.tabPage2.Controls.Add(this.richTextBox2);
-            this.tabPage2.Controls.Add(this.richTextBox1);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.comboBox4);
-            this.tabPage2.Controls.Add(this.comboBox3);
-            this.tabPage2.Controls.Add(this.comboBox2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 32);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1027, 507);
-            this.tabPage2.TabIndex = 3;
-            this.tabPage2.Text = "Игровая статистика";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.gameStatistics.Controls.Add(this.richTextBox4);
+            this.gameStatistics.Controls.Add(this.richTextBox3);
+            this.gameStatistics.Controls.Add(this.richTextBox2);
+            this.gameStatistics.Controls.Add(this.richTextBox1);
+            this.gameStatistics.Controls.Add(this.label6);
+            this.gameStatistics.Controls.Add(this.label5);
+            this.gameStatistics.Controls.Add(this.label4);
+            this.gameStatistics.Controls.Add(this.comboBox4);
+            this.gameStatistics.Controls.Add(this.comboBox3);
+            this.gameStatistics.Controls.Add(this.comboBox2);
+            this.gameStatistics.Location = new System.Drawing.Point(4, 32);
+            this.gameStatistics.Name = "gameStatistics";
+            this.gameStatistics.Padding = new System.Windows.Forms.Padding(3);
+            this.gameStatistics.Size = new System.Drawing.Size(1027, 507);
+            this.gameStatistics.TabIndex = 3;
+            this.gameStatistics.Text = "Игровая статистика";
+            this.gameStatistics.UseVisualStyleBackColor = true;
             // 
             // richTextBox4
             // 
@@ -756,6 +745,46 @@
             this.label3.Text = "Игровая зона          Номер iCon         Остановить тройку";
             this.label3.Visible = false;
             // 
+            // Column1
+            // 
+            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Column1.DataPropertyName = "ID";
+            this.Column1.HeaderText = "ID";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Visible = false;
+            this.Column1.Width = 35;
+            // 
+            // Column3
+            // 
+            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Column3.DataPropertyName = "text";
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column3.DefaultCellStyle = dataGridViewCellStyle6;
+            this.Column3.HeaderText = "Текст вопроса";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            this.Column3.Width = 700;
+            // 
+            // Column4
+            // 
+            this.Column4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Column4.DataPropertyName = "answer";
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column4.DefaultCellStyle = dataGridViewCellStyle7;
+            this.Column4.HeaderText = "Ответ";
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Width = 170;
+            // 
+            // qeFileColumn
+            // 
+            this.qeFileColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.qeFileColumn.DataPropertyName = "media";
+            this.qeFileColumn.HeaderText = "Файл";
+            this.qeFileColumn.Name = "qeFileColumn";
+            this.qeFileColumn.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -786,11 +815,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.ListGames)).EndInit();
             this.Control.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.questEditor.ResumeLayout(false);
+            this.questEditor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.questEditorGrid)).EndInit();
+            this.gameStatistics.ResumeLayout(false);
+            this.gameStatistics.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -821,8 +850,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn place;
         private System.Windows.Forms.DataGridViewTextBoxColumn date;
         private System.Windows.Forms.DataGridView ListKomand;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.TabPage questEditor;
+        private System.Windows.Forms.DataGridView questEditorGrid;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Button button2;
@@ -832,7 +861,7 @@
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage gameStatistics;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.ComboBox comboBox4;
@@ -850,9 +879,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.TextBox tbMediaFile;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn qeFileColumn;
     }
 }
 

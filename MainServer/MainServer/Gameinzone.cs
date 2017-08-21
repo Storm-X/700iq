@@ -196,9 +196,7 @@ namespace MainServer
                         }
 
                     }
-                        
-                    
-
+                                                               
                     break;
                 #endregion
                 #region обработка ставок
@@ -476,20 +474,18 @@ namespace MainServer
                                                                                  }*/
                                                                              ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
 
-                        string zaprocVoprosa = "select quests.text, answer, media " +
-                                                "from quests where id =" + questID;
-
+                        string zaprocVoprosa = "select quests.text, answer, IFNULL(media,'') " +
+                                               "from quests where id =" + "292"; // questID;
 
                         cml = new SQLiteCommand(zaprocVoprosa, conn);
-
                         SQLiteDataReader reader = cml.ExecuteReader();
-
                         if (reader.HasRows)
                         {
                             reader.Read();
                             gm.quest = Crypt.Decrypt(reader.GetString(0), key);
                             if (!reader.IsDBNull(1)) answerQ = Crypt.Decrypt(reader.GetString(1), key);
                             gm.idQuest = questID;//надо ли его посылать??
+                            gm.media = reader.GetString(2);
                         }
                         #endregion
                         Takt++;

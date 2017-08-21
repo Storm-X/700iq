@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace _700IQ
@@ -29,10 +30,12 @@ namespace _700IQ
         private bool gradient = false;
         private bool autoReset = false;
         private bool defaul_color = true;
-        public int interval = 100;
-        int begin;
-        int interval_cels;
-        int beeps_count;
+        private int _Interval = 100;
+        private int _LastBeep;
+        private int _BeepTime;
+        //int begin;
+        //int interval_cels;
+        //int beeps_count;
 
         #endregion
         #region Custom Properties
@@ -42,21 +45,40 @@ namespace _700IQ
             get { return _Value; }
             set
             {
-                if (value >= _Maximum)
-                    value = (autoReset) ? 0 : _Maximum;
                 _Value = value;
+                if (value >= _Maximum)
+                {
+                    _Value = (autoReset) ? 0 : _Maximum;
+                    _LastBeep = _BeepTime;
+                }
+                else
+                    CheckToBeeps();
                 Invalidate();
             }
         }
-
+        public int BeepTime
+        {
+            get { return _LastBeep; }
+            set { _BeepTime = value;
+                  _LastBeep = value; }
+        }
+        private void CheckToBeeps()
+        {
+            int timeLeft = Convert.ToInt32((_Maximum - _Value) * _Interval / 1000);
+            if (timeLeft < _LastBeep && !autoReset)
+            {
+                _LastBeep = timeLeft;
+                new Thread(() => {
+                    Console.Beep(800, _LastBeep != 0 ? 250 : 1000);
+                }).Start();
+            }
+        }
         public int Maximum
         {
             get { return _Maximum; }
             set
             {
-                if (value < 1)
-                    value = 1;
-                _Maximum = value;
+                _Maximum = value < 1 ? 1 : value;
                 Invalidate();
             }
         }
@@ -161,7 +183,7 @@ namespace _700IQ
             DoubleBuffered = true;
             this.SetStyle(System.Windows.Forms.ControlStyles.SupportsTransparentBackColor, true);
             this.BackColor = System.Drawing.Color.Transparent;
-
+            BeepTime = 5;
         }
 
         private void SetStandardSize()
@@ -171,10 +193,10 @@ namespace _700IQ
         }
         public void SetInterval(int t)
         {
-            this.interval = t;
-            this.begin = _Maximum - 5000 / interval;
-            this.interval_cels = 1000 / interval;
-            this.beeps_count = 0;
+            _Interval = t;
+            //this.begin = _Maximum - 5000 / interval;
+            //this.interval_cels = 1000 / interval;
+            //this.beeps_count = 0;
         }
 
         public void Increment(int Val)
@@ -235,6 +257,9 @@ namespace _700IQ
                            // else graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
                             else
                             {
+
+
+                                /*
                                 if (_Value >  begin)
                                 {
                                     if ((_Value - begin) % interval_cels == 1)
@@ -250,6 +275,8 @@ namespace _700IQ
 
                                     //else graphics.DrawArc(new Pen(Color.Transparent, progress_size), progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
                                 }
+                                */
+
                                  graphics.DrawArc(pen, progress_size / 2 + 1, progress_size / 2 + 1, (this.Width - progress_size) - 2, (this.Height - progress_size) - 2, -90, (int)Math.Round((double)((360.0 / ((double)this._Maximum)) * (this._Maximum - this._Value))));
                             }
 
