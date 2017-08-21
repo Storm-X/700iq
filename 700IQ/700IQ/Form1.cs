@@ -38,7 +38,7 @@ namespace _700IQ
         bool startGame = true;
         bool cursorsPathValid = false;
 
-        Data.teams myTeam;
+        public Data.teams myTeam;
         //string kluch; //ключ игровой сессии
         //int uidKomand;//идентификатор команды
         //int tableOfKom;//стол команды
@@ -889,7 +889,7 @@ namespace _700IQ
                 CustomLabel lbStart = new CustomLabel()
                 {
                     Name = "oneuse",
-                    Location = NewPoint(1650, 1200),
+                    Location = NewPoint(1650, 1150),
                     Size = NewSize(950, 100),
                     Text = TextLabel,
                     SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,

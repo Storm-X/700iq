@@ -158,6 +158,7 @@ namespace _700IQ
             int stavka;
             int komanda;
             GeneralForm fsv;
+            int number;
             ~stakan()
             {
                 
@@ -227,8 +228,10 @@ namespace _700IQ
                         lbSt.Visible = false;
                         
                         lb.Text = "Выигрыш команды "+ fsv.predUs.team[number - 1].name + " составил " + komanda + " айкэш";
-                        lb.Size = NewSize(700, 70);
+                        this.number = number;
+                        lb.Size = new Size(700, 70);
                         lb.Font = new Font("arial", 15);
+                        if (fsv.predUs.team[this.number - 1].name == fsv.myTeam.name) this.fsv.iQash1.Text = this.fsv.steck.team[this.fsv.iQash1.number].iQash.ToString() + " IQ";
                     }
                     if (komanda == 0) lbSt.Visible = false;
                     img = Properties.Resources._12_50int2;
@@ -272,9 +275,12 @@ namespace _700IQ
                     img.SelectActiveFrame(dimension, indexToPaint);
                     pc.Image = new Bitmap(img);//arr[indexToPaint];
 
-                   if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka  - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
                    if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
                    if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+
+                    //if ((komanda > 5) && (fsv.predUs.team[this.number - 1].name == fsv.predUs.team[0].name)) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash - 25 * stavka + Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+
                 }
             }
             public void del()
