@@ -492,6 +492,7 @@ namespace MainServer
                         //log();
                        // txb.Text += "ogg" + gm.step;
                         tmOtvet.Interval = 90000; //запускае таймер с ожиданием ответа 1 команды
+                        deadLine = DateTime.Now.AddSeconds(100);
                         tmOtvet.Start();
                         correct = false;
                         break;
@@ -525,6 +526,7 @@ namespace MainServer
                             {
                                 tmOtvet.Stop();
                                 tmOtvet.Interval = 40000;
+                                deadLine = DateTime.Now.AddSeconds(50);
                                 tmOtvet.Start();
                                 gm.activeTable = currTeam[1].table; //gm.o2;
                             }
@@ -560,6 +562,7 @@ namespace MainServer
                             gm.activeTable = currTeam[2].table;
                             tmOtvet.Stop();
                             tmOtvet.Interval = 40000;
+                            deadLine = DateTime.Now.AddSeconds(50);
                             tmOtvet.Start();
                         }
                         Takt++;

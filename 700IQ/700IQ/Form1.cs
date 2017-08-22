@@ -56,6 +56,7 @@ namespace _700IQ
         private static IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
         public IPAddress IP = null;
         public static string infoOfserver;
+        public static string themes;
         public CustomLabel iQash1, iQash2, iQash3;
         private int currStep = 0;
         struct SendData //структурированные данные отправляемые серверу
@@ -731,6 +732,7 @@ namespace _700IQ
                     //ini6();
                     steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
                     infoOfserver = "Игровой стол " + myTeam.table + "\n" + "Игровая зона " + predUs.GameZone + "\n" + "Игровой сервер " + IP.ToString() + "\n";
+                    themes ="1. " + predUs.tema[1].theme + "\n" +"2. "  + predUs.tema[2].theme + "\n" + "3. " + predUs.tema[3].theme + "\n" + "4. " + predUs.tema[4].theme + "\n" + "5. " + predUs.tema[5].theme + "\n" + "6. " + predUs.tema[6].theme;
                     Step1();
                     break;
                 #endregion
