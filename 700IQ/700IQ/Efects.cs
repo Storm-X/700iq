@@ -228,10 +228,10 @@ namespace _700IQ
                         lbSt.Visible = false;
                         
                         lb.Text = "Выигрыш команды "+ fsv.predUs.team[number - 1].name + " составил " + komanda + " айкэш";
-                        lb.Size = NewSize(700, 70);
+                        this.number = number;
+                        lb.Size = new Size(700, 70);
                         lb.Font = new Font("arial", 15);
-                        fsv.predUs.team[number - 1].iQash += komanda;
-                        this.fsv.iQash1.Text = fsv.predUs.team[number - 1].iQash.ToString() + " IQ";
+                        if (fsv.predUs.team[this.number - 1].name == fsv.myTeam.name) this.fsv.iQash1.Text = this.fsv.steck.team[this.fsv.iQash1.number].iQash.ToString() + " IQ";
 
                     }
                     if (komanda == 0) lbSt.Visible = false;
