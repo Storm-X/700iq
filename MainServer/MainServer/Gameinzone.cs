@@ -475,7 +475,7 @@ namespace MainServer
                                                                              ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
 
                         string zaprocVoprosa = "select quests.text, answer, IFNULL(media,'') " +
-                                               "from quests where id =" + questID;
+                                               "from quests where id =" +  questID;
 
                         cml = new SQLiteCommand(zaprocVoprosa, conn);
                         SQLiteDataReader reader = cml.ExecuteReader();
