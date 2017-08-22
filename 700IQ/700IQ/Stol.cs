@@ -916,7 +916,7 @@ namespace _700IQ
                 //Image = bmp,
                 Margin = new Padding(0, 3, 0, 3),
                 BackColor = Color.Transparent,
-                Dock = DockStyle.Bottom,
+                //Dock = DockStyle.Bottom,
                 //BorderStyle = BorderStyle.Fixed3D,
                 Text = steckIn.quest,
                 Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
@@ -927,6 +927,7 @@ namespace _700IQ
             Size sz = new Size(lb.Width, Int32.MaxValue);
             sz = TextRenderer.MeasureText(lb.Text, lb.Font, sz, TextFormatFlags.WordBreak);
             lb.Height = sz.Height + lb.Margin.Vertical;
+            lb.Dock = imgQuest == null ? DockStyle.Fill : DockStyle.Bottom;
 
             quest = steckIn.quest;
             //Parent = bgrdPic //////// Parent = lb
