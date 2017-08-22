@@ -16,6 +16,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using Microsoft.DirectX;
 using Microsoft.DirectX.AudioVideoPlayback;
+using System.ComponentModel;
 
 namespace _700IQ
 {
@@ -33,6 +34,7 @@ namespace _700IQ
         PictureBox fishka= new PictureBox();
         PictureBox stol = new PictureBox();
         #endregion
+
 
         public Table(Data predus, GeneralForm fsv)
         {
@@ -295,8 +297,36 @@ namespace _700IQ
                     BackColor = Color.Transparent,
                     //TextAlign = ContentAlignment.MiddleRight,
                 };
+
+                Label themes = new Label()
+                {
+                    //Location = NewPoint(2200, 1550),
+                    Text = "Показать темы",
+                    AutoSize = true,
+                    Font = new Font("Cambria ", NewFontSize(12)),
+                    ForeColor = Color.Gold,
+                    Parent = workForm,
+                    BackColor = Color.Transparent,
+                    //TextAlign = ContentAlignment.MiddleRight,
+                };
+
+                ToolTip toolTip1 = new ToolTip();
+
+                // Set up the delays for the ToolTip.
+                toolTip1.AutoPopDelay = 2000;
+                toolTip1.InitialDelay = 1000;
+                toolTip1.ReshowDelay = 500;
+                // Force the ToolTip text to be displayed whether or not the form is active.
+                toolTip1.ShowAlways = true;
+
+                // Set up the ToolTip text for the Button and Checkbox.
+                toolTip1.SetToolTip(themes, GeneralForm.themes);
+
+                    
+
                 //serv.Location = new Point(workForm.Width - serv.Width - 3, workForm.Height - 3 - serv.Height);
                 serv.Location = new Point(3, workForm.Height - 3 - serv.Height);
+                themes.Location = new Point(workForm.Width - 3 - themes.Width, workForm.Height - 3 - themes.Height);
 
                 PictureBoxWithInterpolationMode IQ700 = new PictureBoxWithInterpolationMode()
                 {
