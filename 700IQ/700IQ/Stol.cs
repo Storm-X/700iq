@@ -1349,7 +1349,7 @@ namespace _700IQ
             //    arr[i] = new Bitmap(im);
             //}
         }*/
-        public Audio LoadAudio()
+    /*    public Audio LoadAudio()
         {
             Audio temp_audio;
             string path = System.IO.Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
@@ -1371,7 +1371,7 @@ namespace _700IQ
                 }
             }
             return temp_audio;
-        }
+        }*/
         public void answer(int o, Game steck) //неправильный ответ
         {
             /* if (workForm.InvokeRequired)
@@ -1392,10 +1392,29 @@ namespace _700IQ
             try
             {
                 if (!answTeam.ElementAt(o).correct)
+                {
+                    if (audio != null)
+                    {
+                        audio.Stop();
+                        audio.Dispose();
+                    }
                     audio = new Audio(Application.StartupPath + "\\Audio\\fail.mp3", false);
+                }
+                    
                 else
-                    audio = new Audio(Application.StartupPath + "\\Audio\\wow.mp3", false);
-                audio.Play();
+                {
+                    {
+                        if (audio != null)
+                        {
+                            audio.Stop();
+                            audio.Dispose();
+                        }
+                        audio = new Audio(Application.StartupPath + "\\Audio\\wow.mp3", false);
+                    }
+
+                 }
+           
+                    audio.Play();
             }
             catch
             {
@@ -1464,14 +1483,15 @@ namespace _700IQ
                 gifTimer.Stop();
                 //ImageAnimator.StopAnimate(this.pc1rez.Image, null);
                 //Bitmap bt = new Bitmap(pc1.BackgroundImage);
-                //pc1rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230); 
+                //pc1rez.Image = MakeImage(NewSizeKv(170), arr[frameCount - 1], bt, 230);
+          
             }
             else
             {
                 //pc1rez.Image = 
                 indexToPaint++;
                 pcResult[indexImage].Image = gifImage.GetNextFrame(); //arr[indexToPaint];
-           
+                
                 //pcResult[indexImage].Visible = true;
 
             }
@@ -1522,6 +1542,12 @@ namespace _700IQ
             {
                 //gifTimer.Stop();
                 //tmSem.Stop();
+                if (audio != null)
+                {
+                    audio.Stop();
+                    audio?.Dispose();
+                }
+                
                 this.Dispose();
                 workForm.Invalidate();
                 workForm.Refresh();

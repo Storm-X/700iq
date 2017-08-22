@@ -229,6 +229,9 @@ namespace _700IQ
                         lb.Text = "Выигрыш команды "+ fsv.predUs.team[number - 1].name + " составил " + komanda + " айкэш";
                         lb.Size = NewSize(700, 70);
                         lb.Font = new Font("arial", 15);
+                        fsv.predUs.team[number - 1].iQash += komanda;
+                        this.fsv.iQash1.Text = fsv.predUs.team[number - 1].iQash.ToString() + " IQ";
+
                     }
                     if (komanda == 0) lbSt.Visible = false;
                     img = Properties.Resources._12_50int2;
@@ -259,14 +262,22 @@ namespace _700IQ
                 if (indexToPaint >= frameCount)
                 {
                     timer.Stop();
-                    if (audio.Playing)
+                    if (audio!=null)
+                    {
                         audio.Stop();
+                        audio?.Dispose();
+
+                    }
+
                     onStop();
                 }
                 else
                 {
                     if (audio.CurrentPosition >= audio.Duration)
-                        audio.Stop();
+                    {
+                        audio.Stop();    
+                    }
+              
                     audio.Play();
                     lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString();
                     img.SelectActiveFrame(dimension, indexToPaint);
