@@ -902,6 +902,8 @@ namespace MainServer
                 dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
                 dataGridView2.RowsDefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 dataGridView2.AllowUserToResizeRows = true;
+                dataGridView2.Columns[7].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dataGridView2.Columns[8].SortMode = DataGridViewColumnSortMode.NotSortable;
                 gameStopBut.Enabled = true;
                 gameStopBut.Text = "Игра идет";
                 ListKomand.ReadOnly = false;
@@ -1027,7 +1029,7 @@ namespace MainServer
             try
             {
                 var grid = sender as DataGridView;
-                if (e.ColumnIndex == 7)
+                if (e.ColumnIndex == 7 && e.RowIndex > -1)
                 {
                     if ((grid[7, e.RowIndex].Value == System.DBNull.Value) || (grid[7, e.RowIndex].Value == "Неправильно"))
                     {
@@ -1042,7 +1044,7 @@ namespace MainServer
                         return;
                     }
                 }
-                if (e.ColumnIndex == 8)
+                if (e.ColumnIndex == 8 && e.RowIndex > -1)
                 {
                     bool flag;
 

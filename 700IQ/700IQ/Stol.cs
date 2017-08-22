@@ -899,7 +899,7 @@ namespace _700IQ
                 Location = NewRelPoint(25, vpramka.Height), // 200), //new Point(25, NewPoint(25, 200).Y),
                 //BorderStyle = BorderStyle.Fixed3D,
                 BackColor = Color.Transparent,
-                Dock = DockStyle.Fill,
+                Dock = imgQuest == null ? DockStyle.Top : DockStyle.Fill,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 Image = imgQuest //(String.IsNullOrWhiteSpace(steckIn.media)) ? null : await ResultOfCycle(steckIn.media)
             };
@@ -916,7 +916,7 @@ namespace _700IQ
                 //Image = bmp,
                 Margin = new Padding(0, 3, 0, 3),
                 BackColor = Color.Transparent,
-                //Dock = DockStyle.Bottom,
+                Dock = DockStyle.Bottom,
                 //BorderStyle = BorderStyle.Fixed3D,
                 Text = steckIn.quest,
                 Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
