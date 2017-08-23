@@ -115,6 +115,8 @@ namespace MainServer
             byte[] Roulet = { 0, 1, 3, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 3, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 1, 2, 3, 1, 3 };
             byte[] MaxSec = { 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 };
 
+            if (indexCell == 0)
+                indexCell++;
             string Sector = (MaxSec[indexCell] == 1) ? "| M" : "| ";
             Sector += Roulet[indexCell] + " | " + Roulet[indexCell + 1] + " | " + Roulet[indexCell + 2] + " |";
             //Console.WriteLine("Выбранный сектор на рулетке имеет следующий вид: {0}", Sector);

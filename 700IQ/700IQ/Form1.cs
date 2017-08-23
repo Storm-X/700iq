@@ -814,6 +814,7 @@ namespace _700IQ
                             break;
                     }
                     currStep = steck.step; //Вынести сюда
+                    Debug.WriteLine("Step{0} - IConFinalised={1}",currStep, bIconFinalised);
                 }
                 StartStep = 0;
             }
@@ -876,6 +877,7 @@ namespace _700IQ
             }
             else
             {
+                Debug.WriteLine("Step1_3, I'm here!");
                 if (steck.iCon > 12)
                 {
                     Step10();
@@ -1176,8 +1178,7 @@ namespace _700IQ
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
-                        pol.polosa(14, NewPoint(1600, 1350), this, "Step4 - Zero");
-                    
+                    pol.polosa(14, NewPoint(1600, 1350), this, "Step4 - Zero");
                 }
             }
         }
@@ -1247,7 +1248,7 @@ namespace _700IQ
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(0).stavka;
                     stShow.inputStavki(stav, stav, stav, stav, this, answTeam.ElementAt(0).table);
-                    stShow = null;
+                    //stShow.Dispose();
                 }
             }
         }
@@ -1287,7 +1288,6 @@ namespace _700IQ
                     else
                     {
                         //если не мой ответ, то ждем следующей команды сервера
-
                         SendData sd = new SendData();
                         sd.kluch = myTeam.kod;   //kluch;
                         sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
@@ -1303,6 +1303,7 @@ namespace _700IQ
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(1).stavka;
                     stShow.inputStavki(stav, stav, 0, 0, this, answTeam.ElementAt(1).table);
+                    //stShow.Dispose();
                 }
             }
         }
@@ -1328,9 +1329,9 @@ namespace _700IQ
 
                 var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
                 //if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
+                bIconFinalised = true;
                 if (!answTeam.ElementAt(2).correct)//если ответ не верный
                 {
-                    bIconFinalised = true;
                     CustomLabel stavki = new CustomLabel()
                     {
                         Name = "oneuse",
@@ -1360,11 +1361,11 @@ namespace _700IQ
                 }
                 else
                 {
-                    bIconFinalised = true;
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(2).stavka;
                     stShow.inputStavki(stav, 0, 0, 0, this, answTeam.ElementAt(2).table);
+                    //stShow.Dispose();
                 }
             }
         }
@@ -1387,6 +1388,7 @@ namespace _700IQ
 
         private void Step9()//  окончание айкона
         {
+            RemoveTempControls();
             if (this.InvokeRequired)
             {
                 this.BeginInvoke((MethodInvoker)delegate
@@ -1396,9 +1398,9 @@ namespace _700IQ
             }
             else
             {
-                bIconFinalised = false;
+                Debug.WriteLine("Step9, IConFinalised={0}", bIconFinalised);
                 this.Controls["Iqon"]?.Dispose(); // Text = "";
-                this.Controls["oneuse"]?.Dispose(); // Text = "";
+                //this.Controls["oneuse"]?.Dispose(); // Text = "";
                 Step5_7_finalise();
                 //otvetStatic?.close();
                 //Ruletka?.close();
@@ -1414,6 +1416,7 @@ namespace _700IQ
                     sd.step = 1;
                     cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
                     //    Step1_3();
+                    bIconFinalised = false;
                 }
             }
         }
