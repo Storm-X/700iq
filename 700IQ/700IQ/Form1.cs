@@ -792,7 +792,7 @@ namespace _700IQ
                     switch (steck.step)
                     {
                         case 1:
-                            Step1_3();
+                            if(!bIconFinalised) Step1_3();
                             break;
                         case 2:
                             Step2();
