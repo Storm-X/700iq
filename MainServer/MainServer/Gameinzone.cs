@@ -424,14 +424,11 @@ namespace MainServer
                         int[] st = gm.team.Select(x => x.stavka).ToArray();  //{ gm.team[0].stavka, gm.team[1].stavka, gm.team[2].stavka };
                         byte[] bAnsOrder = rul.ResponsePriority(gm.Cell, st);
 
-                        if (gm.Cell != 0)
-                        {
-                            //gm.o1 = bAnsOrder[0];
-                            //gm.o2 = bAnsOrder[1];
-                            //gm.o3 = bAnsOrder[2];
+                        //if (gm.Cell != 0)
+                        //{
                             for (byte i = 0; i < gm.team.Count(); i++)
                                 gm.team[bAnsOrder[i] - 1].answerOrder = i;
-                        }
+                        //}
                         
                         gm.activeTable = bAnsOrder[0];
 
@@ -591,7 +588,7 @@ namespace MainServer
 
             //Отправим сообщение всем столам данной игровой тройки
 
-            if (gm.Cell != 0)
+            //if (gm.Cell != 0)
             {
                 Send2All("ogg");
             }
@@ -629,10 +626,10 @@ namespace MainServer
             }
 
 
-            if (gm.Cell == 0)
+            /*if (gm.Cell == 0)
             {
                 Send2All("ogg");
-            }
+            }*/
 
         }
         private void Send2All(string command)

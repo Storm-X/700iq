@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
+using Microsoft.DirectX.AudioVideoPlayback;
 
 namespace _700IQ
 {
@@ -1145,8 +1146,16 @@ namespace _700IQ
                 }
                 else
                 {
-                  
-                        bIconFinalised = true;
+                    new Thread(() => {
+                        try
+                        {
+                            Audio audio = new Audio(Application.StartupPath + "\\Audio\\Money Money Money.mp3", false);
+                            audio.Play();
+                        }
+                        catch { }
+                    }).Start();
+
+                    bIconFinalised = true;
                         Graphics g = this.CreateGraphics();
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
@@ -1154,7 +1163,7 @@ namespace _700IQ
                     {
                         Name = "oneuse",
                         Location = NewPoint(1400, 1200),
-                        Text = "ЗЕРРО, Господа!\nВаши ставки сгорели!",
+                        Text = "ЗЕРО, Господа!\nВаши ставки сгорели!",
                         BackColor = Color.Transparent,
                         ForeColor = Color.White,
                         //TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit,
