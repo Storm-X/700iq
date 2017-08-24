@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
+using Microsoft.DirectX.AudioVideoPlayback;
 
 namespace _700IQ
 {
@@ -184,7 +185,6 @@ namespace _700IQ
             #endregion
 
 
-            axWindowsMediaPlayer1.Visible = false;
             #region //описание кнопки входа
             Point pn = NewPoint(1060, 691);
             pn.X += delta < 0 ? delta : 0;
@@ -694,11 +694,6 @@ namespace _700IQ
         {
             RemoveTempControls();
             this.BackgroundImage = Properties.Resources.GreenTable;
-            //axWindowsMediaPlayer1.Size = new Size(resolution.Width, resolution.Height);
-            //axWindowsMediaPlayer1.Location = (new Point(0, 0));
-            //axWindowsMediaPlayer1.Visible = true;
-            //axWindowsMediaPlayer1.URL = "D:\\3D_mesh\\материалы\\video giraf.mp4";
-         //   NextStep();
         }
         #endregion
 
@@ -814,6 +809,7 @@ namespace _700IQ
                             break;
                     }
                     currStep = steck.step; //Вынести сюда
+                    Debug.WriteLine("Step{0} - IConFinalised={1}",currStep, bIconFinalised);
                 }
                 StartStep = 0;
             }
@@ -876,6 +872,7 @@ namespace _700IQ
             }
             else
             {
+                Debug.WriteLine("Step1_3, I'm here!");
                 if (steck.iCon > 12)
                 {
                     Step10();
@@ -1143,8 +1140,24 @@ namespace _700IQ
                 }
                 else
                 {
-                  
-                        bIconFinalised = true;
+                    new Thread(() => {
+                        try
+                        {
+                            Audio audio = new Audio(Application.StartupPath + "\\Audio\\Money Money Money.mp3", false);
+                            audio.Play();
+                            Debug.WriteLine("Zero! Playing Audio from stream...");
+                            while (audio.CurrentPosition < audio.Duration)
+                                Thread.Sleep(1000);
+                            audio.Stop();
+                            audio.Dispose();
+                            Debug.WriteLine("Zero! Audio stoped. Stream terminated...");
+                        }
+                        catch {
+                            Debug.WriteLine("Zero! Audio exception catched...");
+                        }
+                    }).Start();
+
+                    bIconFinalised = true;
                         Graphics g = this.CreateGraphics();
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
@@ -1152,7 +1165,7 @@ namespace _700IQ
                     {
                         Name = "oneuse",
                         Location = NewPoint(1400, 1200),
-                        Text = "ЗЕРРО, Господа!\nВаши ставки сгорели!",
+                        Text = "ЗЕРО, Господа!\nВаши ставки сгорели!",
                         BackColor = Color.Transparent,
                         ForeColor = Color.White,
                         //TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit,
@@ -1176,8 +1189,8 @@ namespace _700IQ
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
-                        pol.polosa(14, NewPoint(1600, 1350), this, "Step4 - Zero");
-                    
+                    pol.polosa(14, NewPoint(1600, 1350), this, "Step4 - Zero");
+                    Debug.WriteLine("Zero! Step4 Finished.");
                 }
             }
         }
@@ -1247,7 +1260,7 @@ namespace _700IQ
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(0).stavka;
                     stShow.inputStavki(stav, stav, stav, stav, this, answTeam.ElementAt(0).table);
-                    stShow = null;
+                    //stShow.Dispose();
                 }
             }
         }
@@ -1287,7 +1300,6 @@ namespace _700IQ
                     else
                     {
                         //если не мой ответ, то ждем следующей команды сервера
-
                         SendData sd = new SendData();
                         sd.kluch = myTeam.kod;   //kluch;
                         sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
@@ -1303,6 +1315,7 @@ namespace _700IQ
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(1).stavka;
                     stShow.inputStavki(stav, stav, 0, 0, this, answTeam.ElementAt(1).table);
+                    //stShow.Dispose();
                 }
             }
         }
@@ -1328,9 +1341,9 @@ namespace _700IQ
 
                 var answTeam = steck.team.OrderBy(x => x.answerOrder).ToArray();
                 //if (!steck.team[steck.o3 - 1].correct)//если ответ не верный
+                bIconFinalised = true;
                 if (!answTeam.ElementAt(2).correct)//если ответ не верный
                 {
-                    bIconFinalised = true;
                     CustomLabel stavki = new CustomLabel()
                     {
                         Name = "oneuse",
@@ -1360,11 +1373,11 @@ namespace _700IQ
                 }
                 else
                 {
-                    bIconFinalised = true;
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(2).stavka;
                     stShow.inputStavki(stav, 0, 0, 0, this, answTeam.ElementAt(2).table);
+                    //stShow.Dispose();
                 }
             }
         }
@@ -1387,6 +1400,7 @@ namespace _700IQ
 
         private void Step9()//  окончание айкона
         {
+            RemoveTempControls();
             if (this.InvokeRequired)
             {
                 this.BeginInvoke((MethodInvoker)delegate
@@ -1396,9 +1410,9 @@ namespace _700IQ
             }
             else
             {
-                bIconFinalised = false;
+                Debug.WriteLine("Step9, IConFinalised={0}", bIconFinalised);
                 this.Controls["Iqon"]?.Dispose(); // Text = "";
-                this.Controls["oneuse"]?.Dispose(); // Text = "";
+                //this.Controls["oneuse"]?.Dispose(); // Text = "";
                 Step5_7_finalise();
                 //otvetStatic?.close();
                 //Ruletka?.close();
@@ -1414,6 +1428,7 @@ namespace _700IQ
                     sd.step = 1;
                     cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
                     //    Step1_3();
+                    bIconFinalised = false;
                 }
             }
         }
@@ -1433,14 +1448,6 @@ namespace _700IQ
             }
         }
         #endregion
-
-        private void axWindowsMediaPlayer1_PlayStateChange(object sender, AxWMPLib._WMPOCXEvents_PlayStateChangeEvent e)
-        {
-            if (e.newState == 8)
-            {            
-                this.axWindowsMediaPlayer1.Dispose(); // закрываем сам плеер, чтобы все ресурсы освободились                                   
-            }
-        }
 
         #region // регион вспомогательных процедур и функций     
         public Point NewPoint(int x, int y)     //производит пересчет к новым координатам

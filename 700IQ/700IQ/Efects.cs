@@ -319,8 +319,6 @@ namespace _700IQ
         {
           
         }
-
-
         public void inputStavki(int st1, int st2, int st3, int st4, GeneralForm fsv,int number)
         {
             //workForm = fsv;

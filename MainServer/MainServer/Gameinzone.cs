@@ -185,7 +185,7 @@ namespace MainServer
                             if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                             {
                                 nextTakt();
-                                Array.Clear(ok, 0, ok.Length);
+                               // Array.Clear(ok, 0, ok.Length);
                         }
                         //else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
                         //}
@@ -397,8 +397,8 @@ namespace MainServer
 
                         deadLine = DateTime.Now.AddSeconds(25);
                         gm.step = 3;
-                        gm.Cell =  rn.rnd();
-                        if (gm.Cell == 0) gm.Cell = 1;
+                        gm.Cell = 0; // rn.rnd();
+                        //if (gm.Cell == 0) gm.Cell = 1;
                         /* if (gm.Cell == 0)
                          {
                              gm.step = 2;
@@ -424,14 +424,11 @@ namespace MainServer
                         int[] st = gm.team.Select(x => x.stavka).ToArray();  //{ gm.team[0].stavka, gm.team[1].stavka, gm.team[2].stavka };
                         byte[] bAnsOrder = rul.ResponsePriority(gm.Cell, st);
 
-                        if (gm.Cell != 0)
-                        {
-                            //gm.o1 = bAnsOrder[0];
-                            //gm.o2 = bAnsOrder[1];
-                            //gm.o3 = bAnsOrder[2];
+                        //if (gm.Cell != 0)
+                        //{
                             for (byte i = 0; i < gm.team.Count(); i++)
                                 gm.team[bAnsOrder[i] - 1].answerOrder = i;
-                        }
+                        //}
                         
                         gm.activeTable = bAnsOrder[0];
 
@@ -591,7 +588,7 @@ namespace MainServer
 
             //Отправим сообщение всем столам данной игровой тройки
 
-            if (gm.Cell != 0)
+            //if (gm.Cell != 0)
             {
                 Send2All("ogg");
             }
@@ -599,8 +596,7 @@ namespace MainServer
             if (endOfIqon)
             {
                 endOfIqon = false;
-                gm.step = 1;
-                Takt = 0;
+                //gm.step = 7;
                 if (gm.iCon >= 12)
                 {
                     gm.Cell = rn.rnd();
@@ -620,18 +616,20 @@ namespace MainServer
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 }
                 log();
-                gm.iCon++;
                 Array.Clear(stavka, 0, stavka.Length);
                 Array.Clear(ok, 0, ok.Length);
                 deadLine = DateTime.Now.AddSeconds(40);
                 Send2All("ogg");
+                gm.iCon++;
+                gm.step = 1;
+                Takt = 0;
             }
 
 
-            if (gm.Cell == 0)
+            /*if (gm.Cell == 0)
             {
                 Send2All("ogg");
-            }
+            }*/
 
         }
         private void Send2All(string command)
