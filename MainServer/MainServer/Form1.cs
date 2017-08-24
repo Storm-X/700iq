@@ -1339,6 +1339,11 @@ namespace MainServer
 
         }
 
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
         //////////////////////////copy/////////////////////////////
         private async void Zapros()//получениеи обработка  запросов от команд
         {
