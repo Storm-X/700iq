@@ -1145,8 +1145,16 @@ namespace _700IQ
                         {
                             Audio audio = new Audio(Application.StartupPath + "\\Audio\\Money Money Money.mp3", false);
                             audio.Play();
+                            Debug.WriteLine("Zero! Playing Audio from stream...");
+                            while (audio.CurrentPosition < audio.Duration)
+                                Thread.Sleep(1000);
+                            audio.Stop();
+                            audio.Dispose();
+                            Debug.WriteLine("Zero! Audio stoped. Stream terminated...");
                         }
-                        catch { }
+                        catch {
+                            Debug.WriteLine("Zero! Audio exception catched...");
+                        }
                     }).Start();
 
                     bIconFinalised = true;
@@ -1182,6 +1190,7 @@ namespace _700IQ
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
                     pol.polosa(14, NewPoint(1600, 1350), this, "Step4 - Zero");
+                    Debug.WriteLine("Zero! Step4 Finished.");
                 }
             }
         }
