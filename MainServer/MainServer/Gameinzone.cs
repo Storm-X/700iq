@@ -397,7 +397,7 @@ namespace MainServer
 
                         deadLine = DateTime.Now.AddSeconds(25);
                         gm.step = 3;
-                        gm.Cell = 0; // rn.rnd();
+                        gm.Cell = rn.rnd();
                         //if (gm.Cell == 0) gm.Cell = 1;
                         /* if (gm.Cell == 0)
                          {
