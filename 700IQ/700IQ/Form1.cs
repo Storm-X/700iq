@@ -185,7 +185,6 @@ namespace _700IQ
             #endregion
 
 
-            axWindowsMediaPlayer1.Visible = false;
             #region //описание кнопки входа
             Point pn = NewPoint(1060, 691);
             pn.X += delta < 0 ? delta : 0;
@@ -695,11 +694,6 @@ namespace _700IQ
         {
             RemoveTempControls();
             this.BackgroundImage = Properties.Resources.GreenTable;
-            //axWindowsMediaPlayer1.Size = new Size(resolution.Width, resolution.Height);
-            //axWindowsMediaPlayer1.Location = (new Point(0, 0));
-            //axWindowsMediaPlayer1.Visible = true;
-            //axWindowsMediaPlayer1.URL = "D:\\3D_mesh\\материалы\\video giraf.mp4";
-         //   NextStep();
         }
         #endregion
 
@@ -1454,14 +1448,6 @@ namespace _700IQ
             }
         }
         #endregion
-
-        private void axWindowsMediaPlayer1_PlayStateChange(object sender, AxWMPLib._WMPOCXEvents_PlayStateChangeEvent e)
-        {
-            if (e.newState == 8)
-            {            
-                this.axWindowsMediaPlayer1.Dispose(); // закрываем сам плеер, чтобы все ресурсы освободились                                   
-            }
-        }
 
         #region // регион вспомогательных процедур и функций     
         public Point NewPoint(int x, int y)     //производит пересчет к новым координатам
