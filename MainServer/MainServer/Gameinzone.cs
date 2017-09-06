@@ -185,7 +185,7 @@ namespace MainServer
                             if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                             {
                                 nextTakt();
-                                //Array.Clear(ok, 0, ok.Length);
+                                Array.Clear(ok, 0, ok.Length);
                         }
                         //else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
                         //}
