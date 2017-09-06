@@ -17,6 +17,7 @@ namespace MainServer
         public Panel Container;
         public Label iCon;
         public Button stopButton;
+        public Button restartIcon;
         private Timer tmr;
         public GameStatistic(int zoneName,string iqon,int x,int y)
         {
@@ -51,6 +52,14 @@ namespace MainServer
                     Tag = zoneName
                 };
 
+                restartIcon = new Button
+               {
+                  Parent = Container,
+                  Text = "Рестарт айкона",
+                  Size = new Size(70, 40),
+                  Location = new Point(280, 5),
+                  Tag = zoneName
+               };
         }
     }
 }
