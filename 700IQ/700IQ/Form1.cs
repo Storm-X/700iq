@@ -331,7 +331,8 @@ namespace _700IQ
             {
                 foreach (Control t in this.Controls.Find("oneuse", true))
                     this.Controls.Remove(t);
-                    //t.Visible = false;
+           
+                //t.Visible = false;
                 this.Invalidate();
                 this.Focus();
             }
@@ -740,6 +741,11 @@ namespace _700IQ
                     else
                         cn.ClearLastCommand();              
                     break;
+                case "rgg":
+                    steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
+                    RemoveAll();
+                    cn.ClearLastCommand();
+                    break;
                 #region case owt - ожидание
                 case "oww":
                     //steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
@@ -752,6 +758,33 @@ namespace _700IQ
                     break;
             }
         }
+        public void RemoveAll()
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    RemoveAll();
+                });
+            }
+            else
+            {
+                Ruletka.AnyEventHarakiri();
+                pol.AnyEventHarakiri();
+
+                pol.Finish();
+                // otvetStatic.polosaStart(this, steck.step, pol);
+                pol.prBar.Value = 0;
+
+                Step4_finalise();
+                Step5_7_finalise();
+                this.Controls["Iqon"]?.Dispose();
+                RemoveTempControls();
+                this.Invalidate();
+                Step1_3();
+            }
+        }
+
         private void CheckSteck() //потактовая обработка шага инстукции
         {
             if (StartStep != steck.step)
@@ -1096,7 +1129,7 @@ namespace _700IQ
 
                 this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
                 otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
-                otvetStatic.svitok(steck, predUs).GetAwaiter().GetResult();
+            otvetStatic.svitok(steck, predUs); //.GetAwaiter().GetResult();
                // if(withQuery)
                  //   otvetStatic.ochered(steck).GetAwaiter().GetResult();
                 //g.Dispose();

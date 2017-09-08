@@ -790,24 +790,24 @@ namespace _700IQ
             {
                 if (disposing)
                 {
-                    tmSem.Dispose();
-                    gifTimer.Dispose();
+                    tmSem?.Dispose();
+                    gifTimer?.Dispose();
                     //this.DisposeSequence(pcResult);
                     // Освобождаем управляемые ресурсы
                     foreach (object o in this.pcResult.OfType<IDisposable>())
                     {
                         if (o is IDisposable)
-                            ((IDisposable)o).Dispose();
+                            ((IDisposable)o)?.Dispose();
                     }
                     Array.Clear(pcResult, 0, pcResult.Length);
-
-                    pc1.Dispose(); pc2.Dispose(); pc3.Dispose();
+                     bgrdPic2?.Dispose(); //bgrdPic vpramka picBox1 lb otv txBox;
+                     pc1?.Dispose(); pc2?.Dispose(); pc3?.Dispose();
                     //lb1.Dispose(); lb2.Dispose(); lb3.Dispose();
-                    foreach (Label lb in lbAnswer) lb.Dispose();
+                    foreach (Label lb in lbAnswer) lb?.Dispose();
                     //pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
-                    lbst1.Dispose(); lbst2.Dispose(); lbst3.Dispose();
+                    lbst1?.Dispose(); lbst2?.Dispose(); lbst3?.Dispose();
                     //bgrdPic.Dispose();
-                    bgrdPic2.Dispose();
+                    bgrdPic2?.Dispose();
                 }
                 // освобождаем неуправляемые объекты
                 IsDisposed = true;
@@ -831,7 +831,7 @@ namespace _700IQ
             //this.fsv = fsv;
             gifTimer.Tick += gifTimer_Tick;
         }
-        private async Task<Image> ResultOfCycle(string fileName)
+        private Image ResultOfCycle(string fileName) //async Task<Image> ResultOfCycle(string fileName)
         {
             MediaReceiver mReceiver = new MediaReceiver(workForm.IP, 8080);
             byte[] filecontent = mReceiver.GetMedia(fileName);
@@ -844,12 +844,12 @@ namespace _700IQ
                 return Image.FromStream(ms, true);
             }
         }
-        public async Task svitok(Game steckIn, Data predUs)
+        public void svitok(Game steckIn, Data predUs)
         {
 
 
             //String fileName = "";
-            Image imgQuest = (String.IsNullOrWhiteSpace(steckIn.media)) ? null : await ResultOfCycle(steckIn.media); // new Image();
+            Image imgQuest = (String.IsNullOrWhiteSpace(steckIn.media)) ? null : ResultOfCycle(steckIn.media); //await ResultOfCycle(steckIn.media); // new Image();
             int picWidth = 0; // Math.Min(600, Math.Max(600, imgQuest.Height));
             #region //описание свитка с вопросом               
             //Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
@@ -859,6 +859,7 @@ namespace _700IQ
                 Size = NewSize(900, 1170),
                 Location = NewPoint(60, 150),
                 //BorderStyle = BorderStyle.Fixed3D,
+                Name = "del",
                 Image = Properties.Resources.Svitok, //bmp,
                 BackColor = Color.Transparent,
                 SizeMode = PictureBoxSizeMode.StretchImage,
@@ -870,6 +871,7 @@ namespace _700IQ
                 Parent = bgrdPic2,
                 Size = new Size(bgrdPic2.Size.Width-20,bgrdPic2.Height-20), // NewSize(900, 1170),
                 Location = new Point(10,10),
+                Name = "del",
                 //BorderStyle = BorderStyle.Fixed3D,
                 //Image = bmp,
                 BackColor = Color.Transparent,
@@ -880,6 +882,7 @@ namespace _700IQ
             {
                 Parent = bgrdPic,
                 Size = NewSize(850, 130),
+                Name = "del",
                 Location = NewRelPoint(25, 70), //NewPoint(25, 70),
                 BackColor = Color.Transparent,
                 //BorderStyle = BorderStyle.Fixed3D,
@@ -897,7 +900,8 @@ namespace _700IQ
                 Parent = bgrdPic,
                 Size = new Size(bgrdPic.Width, picWidth),
                 Location = NewRelPoint(25, vpramka.Height), // 200), //new Point(25, NewPoint(25, 200).Y),
-                //BorderStyle = BorderStyle.Fixed3D,
+                                                            //BorderStyle = BorderStyle.Fixed3D,
+                Name = "del",
                 BackColor = Color.Transparent,
                 Dock = imgQuest == null ? DockStyle.Top : DockStyle.Fill,
                 SizeMode = PictureBoxSizeMode.Zoom,
@@ -917,6 +921,7 @@ namespace _700IQ
                 Margin = new Padding(0, 3, 0, 3),
                 BackColor = Color.Transparent,
                 Dock = DockStyle.Bottom,
+                Name = "del",
                 //BorderStyle = BorderStyle.Fixed3D,
                 Text = steckIn.quest,
                 Font = new Font("Arial Black Italic", NewFontSize(18), FontStyle.Bold),
@@ -938,6 +943,7 @@ namespace _700IQ
                 Parent = bgrdPic,
                 Size = NewSize(900, 150),
                 //Location = NewRelPoint(25, bgrdPic.Height), // 1020), //NewPoint(50, 1020),
+                Name="del",
                 BackColor = Color.Transparent,
                 //BorderStyle = BorderStyle.Fixed3D,
                 Dock = DockStyle.Bottom,
@@ -952,7 +958,7 @@ namespace _700IQ
                 Size = NewSize(640, 150),
                 Multiline = false,
                 //BorderStyle = BorderStyle.Fixed3D,
-
+                Name = "del",
                 MaxLength = 33,
                 BackColor = Color.LightGreen,
                 Location = NewRelPoint(140, 0), //NewPoint(165, 30),

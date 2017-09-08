@@ -913,13 +913,20 @@ namespace MainServer
                 {
                     MassGameZone[i].gs = new GameStatistic(MassGameZone[i].data.GameZone, (MassGameZone[i].gm.iCon).ToString(), label3.Location.X,150+ (i * 35));
                     MassGameZone[i].gs.stopButton.Click += stGame;
-                    
+                    MassGameZone[i].gs.restartIcon.Click += RestartIcon_Click;
                 }
                 ListKomand.ReadOnly = true;
                 button1.Enabled = true;
                 ToJS();
             }
 
+        }
+
+        private void RestartIcon_Click(object sender, EventArgs e)
+        {
+            Button btnPressed = (Button)sender;
+            int i = Convert.ToInt32(btnPressed.Tag) - 1;
+            MassGameZone[i].RestartIqon();
         }
 
         private void stGame(object sender, EventArgs e)
