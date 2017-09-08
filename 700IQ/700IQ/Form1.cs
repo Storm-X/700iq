@@ -1075,32 +1075,32 @@ namespace _700IQ
                 Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1420, 150), NewSize(1600, 900)), this, 1);
             }          
         }
-        private void CreateAnswerTable(bool withQuery=false)
+        private void CreateAnswerTable(bool withQuery = false)
         {
-           /* if (this.InvokeRequired)
-            {
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    CreateAnswerTable();
-                });
-            }
-            else
-            {*/
-                RemoveTempControls();
-                foreach (Control t in this.Controls.Find("iQash", true))
-                    this.Controls.Remove(t);
-                this.Invalidate();
-                //Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
-                //Graphics g = Graphics.FromImage(bmp);
-                //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            /* if (this.InvokeRequired)
+             {
+                 this.BeginInvoke((MethodInvoker)delegate
+                 {
+                     CreateAnswerTable();
+                 });
+             }
+             else
+             {*/
+            RemoveTempControls();
+            foreach (Control t in this.Controls.Find("iQash", true))
+                this.Controls.Remove(t);
+            this.Invalidate();
+            //Bitmap bmp = new Bitmap(Properties.Resources.GreenTable, resolution);
+            //Graphics g = Graphics.FromImage(bmp);
+            //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-                this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
-                otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
-                otvetStatic.svitok(steck, predUs).GetAwaiter().GetResult();
-               // if(withQuery)
-                 //   otvetStatic.ochered(steck).GetAwaiter().GetResult();
-                //g.Dispose();
-           // }
+            this.BackgroundImage = new Bitmap(Properties.Resources.GreenTable, resolution);
+            otvetStatic = new Otvet(cn, predUs, myTeam.table - 1, this);
+            otvetStatic.svitok(steck, predUs); //.GetAwaiter().GetResult();
+            // if(withQuery)
+            //   otvetStatic.ochered(steck).GetAwaiter().GetResult();
+            //g.Dispose();
+            // }
         }
         private void Step4()    //показ очереди и передача хода первой команде
         {

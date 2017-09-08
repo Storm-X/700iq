@@ -831,7 +831,7 @@ namespace _700IQ
             //this.fsv = fsv;
             gifTimer.Tick += gifTimer_Tick;
         }
-        private async Task<Image> ResultOfCycle(string fileName)
+        private Image ResultOfCycle(string fileName) // async Task<Image> ResultOfCycle(string fileName)
         {
             MediaReceiver mReceiver = new MediaReceiver(workForm.IP, 8080);
             byte[] filecontent = mReceiver.GetMedia(fileName);
@@ -844,12 +844,12 @@ namespace _700IQ
                 return Image.FromStream(ms, true);
             }
         }
-        public async Task svitok(Game steckIn, Data predUs)
+        public void svitok(Game steckIn, Data predUs) //async Task svitok(Game steckIn, Data predUs)
         {
 
 
             //String fileName = "";
-            Image imgQuest = (String.IsNullOrWhiteSpace(steckIn.media)) ? null : await ResultOfCycle(steckIn.media); // new Image();
+            Image imgQuest = (String.IsNullOrWhiteSpace(steckIn.media)) ? null : ResultOfCycle(steckIn.media); //await ResultOfCycle(steckIn.media); // new Image();
             int picWidth = 0; // Math.Min(600, Math.Max(600, imgQuest.Height));
             #region //описание свитка с вопросом               
             //Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
