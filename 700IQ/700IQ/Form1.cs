@@ -740,6 +740,10 @@ namespace _700IQ
                     else
                         cn.ClearLastCommand();              
                     break;
+                case "rgg":
+                        RemoveAll();
+                        cn.ClearLastCommand();
+                    break;
                 #region case owt - ожидание
                 case "oww":
                     //steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
@@ -751,6 +755,20 @@ namespace _700IQ
                     IniScreen();
                     break;
             }
+        }
+        public void RemoveAll()
+        {
+            Ruletka.AnyEventHarakiri();
+            pol.Finish();
+            if (otvetStatic!=null) otvetStatic.polosaStart(this, steck.step, pol);
+            pol.prBar.Value = 0;
+            pol.AnyEventHarakiri();
+            otvetStatic?.close();
+            RemoveTempControls();
+            Step5_7_finalise();
+            Step1_3();
+            
+
         }
         private void CheckSteck() //потактовая обработка шага инстукции
         {
