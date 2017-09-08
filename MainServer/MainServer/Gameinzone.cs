@@ -180,7 +180,8 @@ namespace MainServer
                     {
                         //if (Takt == 0)
                         //{
-                            ok[table] = otv.Contains("gotov");
+                        //ok[table] = true;
+                        if (otv == "gotov") ok[table] = true;
                             if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                             {
                                 nextTakt();
@@ -633,6 +634,26 @@ namespace MainServer
             {
                 Send2All("ogg");
             }*/
+
+        }
+        public void RestartIqon()
+        {
+            tmOtvet.Stop();
+            Array.Clear(stavka, 0, stavka.Length);
+            Array.Clear(ok, 0, ok.Length);
+            deadLine = DateTime.Now.AddSeconds(40);
+            if (Takt<=2 && Takt >= 4)
+            {
+                for(int i=0;i<3;i++){
+                    gm.team[i].iQash += gm.team[i].stavka;
+                }
+               
+            }
+            gm.step = 1;
+            Send2All("rgg");
+            //gm.step = 0;
+            Takt = 0;
+            //Send2All("ogg");
 
         }
         private void Send2All(string command)

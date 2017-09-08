@@ -193,6 +193,7 @@ namespace _700IQ
         }
         public void SetInterval(int t)
         {
+            this._Value = 0;
             _Interval = t;
             //this.begin = _Maximum - 5000 / interval;
             //this.interval_cels = 1000 / interval;
