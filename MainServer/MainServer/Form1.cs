@@ -33,7 +33,7 @@ namespace MainServer
         List<SendLog> logsOfzones = new List<SendLog>();
         public DataTable dt, dtVoprosCheck;
         public RegData rgData = new RegData();
-        ResiveData dataZapros = new ResiveData();
+       // ResiveData dataZapros = new ResiveData();
         Registration reg;
         int indexOfThemes;
         string[] text1;
@@ -1410,13 +1410,13 @@ namespace MainServer
                                     case "zst":
                                         if (rgData.gameStart)
                                         {
-
-                                            dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
-                                            if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table))
+                                            ResiveData dataZapros1 = new ResiveData();
+                                            dataZapros1 = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
+                                            if (MassGameZone.Count >= dataZapros1.uid && MassGameZone[dataZapros1.uid - 1].verify(dataZapros1.kluch, dataZapros1.table))
                                             {
-                                                if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена
+                                                if (!MassGameZone[dataZapros1.uid - 1].stopGm)//если игровая зона не приостановлена
                                                 {
-                                                    gm = MassGameZone[dataZapros.uid - 1].startGM();
+                                                    gm = MassGameZone[dataZapros1.uid - 1].startGM();
                                                     bytes = Encoding.UTF8.GetBytes("ost" + gm);
                                                     Udp.Send(bytes, bytes.Length, endpoint);
                                                    /// textBox3.Text += "ost";
@@ -1430,13 +1430,13 @@ namespace MainServer
                                     case "zgg":
                                         try
                                         {
-
-                                            dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
-                                            if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table))
+                                        ResiveData dataZapros2 = new ResiveData();
+                                        dataZapros2 = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
+                                            if (MassGameZone.Count >= dataZapros2.uid && MassGameZone[dataZapros2.uid - 1].verify(dataZapros2.kluch, dataZapros2.table))
                                             {
-                                                if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена
+                                                if (!MassGameZone[dataZapros2.uid - 1].stopGm)//если игровая зона не приостановлена
                                                 {
-                                                    MassGameZone[dataZapros.uid - 1].Update(dataZapros.step, dataZapros.table, dataZapros.otvet, dataZapros.stavka, endpoint);
+                                                    MassGameZone[dataZapros2.uid - 1].Update(dataZapros2.step, dataZapros2.table, dataZapros2.otvet, dataZapros2.stavka, endpoint);
                                                 }
                                             }
                                             ToJS();
@@ -1447,13 +1447,13 @@ namespace MainServer
                                         }
                                         break;
                                     case "zww":
-
-                                        dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
-                                        if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table))
+                                    ResiveData dataZapros3 = new ResiveData();
+                                    dataZapros3 = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
+                                        if (MassGameZone.Count >= dataZapros3.uid && MassGameZone[dataZapros3.uid - 1].verify(dataZapros3.kluch, dataZapros3.table))
                                         {
-                                            if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена
+                                            if (!MassGameZone[dataZapros3.uid - 1].stopGm)//если игровая зона не приостановлена
                                             {
-                                                MassGameZone[dataZapros.uid - 1].wait(dataZapros.step, dataZapros.table, endpoint);
+                                                MassGameZone[dataZapros3.uid - 1].wait(dataZapros3.step, dataZapros3.table, endpoint);
                                             }
                                         }
                                         break;
@@ -1461,7 +1461,8 @@ namespace MainServer
                                     #region ogg- обработка ответа команды
                                     case "ogg":
                                         Application.DoEvents();//////////////////////////////////////////////////////////////////////////////////????????????????????????????????
-                                        dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
+                                       ResiveData dataZapros = new ResiveData();
+                                       dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
                                         if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table)) //проверяем ключ сессии
                                         {
                                             if (!MassGameZone[dataZapros.uid - 1].stopGm)//если игровая зона не приостановлена

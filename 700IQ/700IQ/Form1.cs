@@ -758,16 +758,26 @@ namespace _700IQ
         }
         public void RemoveAll()
         {
-            Ruletka.AnyEventHarakiri();
-            pol.Finish();
-            if (otvetStatic!=null) otvetStatic.polosaStart(this, steck.step, pol);
-            pol.prBar.Value = 0;
-            pol.AnyEventHarakiri();
-            otvetStatic?.close();
-            RemoveTempControls();
-            Step5_7_finalise();
-            Step1_3();
-            
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    RemoveAll();
+                });
+            }
+            else
+            {
+                Ruletka.AnyEventHarakiri();
+                Step5_7_finalise();
+                pol.Finish();
+               // if (otvetStatic != null) otvetStatic.polosaStart(this, steck.step, pol);
+                pol.prBar.Value = 0;
+                pol.AnyEventHarakiri();
+                otvetStatic?.close();
+                RemoveTempControls();
+                
+                //Step1_3();
+            }  
 
         }
         private void CheckSteck() //потактовая обработка шага инстукции

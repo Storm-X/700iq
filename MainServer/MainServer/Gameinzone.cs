@@ -176,7 +176,7 @@ namespace MainServer
                 #region обработка команд готов
                 case 0:
                 case 1:
-                    if (gm.step == step)
+                    if (gm.step < 2)
                     {
                         //if (Takt == 0)
                         //{
@@ -642,7 +642,7 @@ namespace MainServer
             Array.Clear(stavka, 0, stavka.Length);
             Array.Clear(ok, 0, ok.Length);
             deadLine = DateTime.Now.AddSeconds(40);
-            if (Takt<=2 && Takt >= 4)
+            if (Takt>=2 && Takt <= 4)
             {
                 for(int i=0;i<3;i++){
                     gm.team[i].iQash += gm.team[i].stavka;
