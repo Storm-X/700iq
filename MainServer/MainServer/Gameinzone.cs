@@ -181,12 +181,12 @@ namespace MainServer
                     {
                         //if (Takt == 0)
                         //{
-                            ok[table] = true;
+                            ok[table] = otv.Contains("gotov");
                             if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                             {
                                 nextTakt();
                                 Array.Clear(ok, 0, ok.Length);
-                        }
+                            }
                         //else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
                         //}
                         else //if (ok[0] & ok[1] & ok[2] || Takt != 0)
