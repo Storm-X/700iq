@@ -176,8 +176,7 @@ namespace MainServer
                 #region обработка команд готов
                 case 0:
                 case 1:
-
-                    //if (gm.step < 3)
+                    if (gm.step == step)
                     {
                         //if (Takt == 0)
                         //{
@@ -194,14 +193,12 @@ namespace MainServer
                             bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                             udp.Send(bytes, bytes.Length, point);
                         }
-
                     }
-                                                               
                     break;
                 #endregion
                 #region обработка ставок
                 case 2:
-                    //if (gm.step == step)
+                    if (gm.step == step)
                     {
                         if(stavka[table] == 0) stavka[table] = stav;
                         if (Takt == 1 && (Array.TrueForAll(stavka, value => value != 0) || deadLine <= DateTime.Now))
@@ -233,6 +230,10 @@ namespace MainServer
                         udp.Send(bytes, bytes.Length, point);
                         //Send2All(bytes);
                     }
+                    break;
+                default:
+                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                    udp.Send(bytes, bytes.Length, point);
                     break;
                     #endregion
             }
