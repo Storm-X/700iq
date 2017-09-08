@@ -187,7 +187,7 @@ namespace MainServer
                             {
                                 nextTakt();
                                 Array.Clear(ok, 0, ok.Length);
-                        }
+                            }
                         //else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
                         //}
                         else //if (ok[0] & ok[1] & ok[2] || Takt != 0)
@@ -440,7 +440,8 @@ namespace MainServer
 
                         string zaprosSpiskaVoprosov = " select quests.id " +
                                      "from quests left join i_see on quests.id = i_see.quest_id " +
-                                     "where(i_see.id is null or user_id not in (" + usersid + ")) and quests.themeId in (" + temaID + ")";
+                                     "where(i_see.id is null or user_id not in (" + usersid + ")) and quests.themeId in (" + temaID + 
+                                     ") GROUP BY quests.id ORDER BY quests.id LIMIT 10";
 
                         SQLiteCommand cml = new SQLiteCommand(zaprosSpiskaVoprosov, conn);
                         DataTable dtVopros = new DataTable();
@@ -450,8 +451,9 @@ namespace MainServer
                         {
                             dtVopros.Load(sqr);
                         }
-                        questID = (dtVopros.Rows.Count * rn.rnd()) / 37;//определяем случайно id вопроса из списка в таблице dtVopros
-                        questID = Convert.ToInt32(dtVopros.Rows[questID][0]);//questID - id случайного вопроса
+                        //questID = (dtVopros.Rows.Count * rn.rnd()) / 37;//определяем случайно id вопроса из списка в таблице dtVopros
+                        //questID = Convert.ToInt32(dtVopros.Rows[questID][0]);//questID - id случайного вопроса
+                        questID = Convert.ToInt32(dtVopros.Rows[0][0]); //Id первого незасвеченного вопроса
                                                                              ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                              /*    string listOfQuestions = "select quests.text from quests";
                                                                                  SQLiteCommand cm = new SQLiteCommand(listOfQuestions, conn);
@@ -489,7 +491,7 @@ namespace MainServer
                         Takt++;
                         //log();
                        // txb.Text += "ogg" + gm.step;
-                        tmOtvet.Interval = 90000; //запускае таймер с ожиданием ответа 1 команды
+                        tmOtvet.Interval = 90000; //запускаем таймер с ожиданием ответа 1 команды
                         deadLine = DateTime.Now.AddSeconds(100);
                         tmOtvet.Start();
                         correct = false;
