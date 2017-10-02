@@ -56,6 +56,8 @@ namespace _700IQ
         private System.Windows.Forms.Timer gifTimer= new System.Windows.Forms.Timer();
         private static IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
         public IPAddress IP = null;
+        public string lg = "";
+        public string ps = "";
         public static string infoOfserver;
         public static string themes;
         public CustomLabel iQash1, iQash2, iQash3;
@@ -186,57 +188,81 @@ namespace _700IQ
 
 
             #region //описание кнопки входа
-            Point pn = NewPoint(1060, 691);
-            pn.X += delta < 0 ? delta : 0;
-            bmp = Properties.Resources.rotor;
-            //ExtendedPanel ePanel = new ExtendedPanel()
-            //{
-            //    Parent = this,
-            //    Name = "oneuse",
-            //    Visible = true,
-            //    Location = pn,
-            //    BackColor = Color.Transparent,
-            //    Size = NewSizeKv(390),
-            //    Opacity = 30
-            //};
-            PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            String[] arguments = Environment.GetCommandLineArgs();
+           /* int i = 0;
+            foreach (String st in arguments)
             {
-                Parent = this,
-                Name = "Rotor",
-                Visible = true,
-                Location = pn,
-                BackColor = Color.Transparent,
-                SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
-                InterpolationMode = InterpolationMode.HighQualityBicubic,
-                Size = NewSizeKv(390),
-                Image = bmp,
-                SizeMode = PictureBoxSizeMode.Zoom,
-            };
-            pcBox.Focus();
-            pcBox.Click += onClickMedal;
-            //pcBox.KeyDown += onClickMedal();
-            //тест рулетки, ставок, темы
-            /* 
-            Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-            Ruletka.StartRul(0, kv, this, 2); // 2);*/
-           
-        
+                MessageBox.Show(i + ": " + st);
+            }*/
 
-            //tbl.TemaShow(true);
-           // stShow.inputStavki(100, 200, 300, 0, this);
-           
-            #endregion
-            ////для теста Рулетки на старте проги
-            //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
-            //g.DrawRectangle(Pens.Black, kv);
-            //Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
-            //System.Media.SystemSounds.Question.Play();
-            //Console.Beep();
-            //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
-            //pol.prBar.AutoReset = true;
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if (arguments.Length == 1)
+            {
+                Point pn = NewPoint(1060, 691);
+                pn.X += delta < 0 ? delta : 0;
+                bmp = Properties.Resources.rotor;
+                //ExtendedPanel ePanel = new ExtendedPanel()
+                //{
+                //    Parent = this,
+                //    Name = "oneuse",
+                //    Visible = true,
+                //    Location = pn,
+                //    BackColor = Color.Transparent,
+                //    Size = NewSizeKv(390),
+                //    Opacity = 30
+                //};
+                PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
+                {
+                    Parent = this,
+                    Name = "Rotor",
+                    Visible = true,
+                    Location = pn,
+                    BackColor = Color.Transparent,
+                    SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                    InterpolationMode = InterpolationMode.HighQualityBicubic,
+                    Size = NewSizeKv(390),
+                    Image = bmp,
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                };
+                pcBox.Focus();
+                pcBox.Click += onClickMedal;
+                //pcBox.KeyDown += onClickMedal();
+                //тест рулетки, ставок, темы
+                /* 
+                Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+                Ruletka.StartRul(0, kv, this, 2); // 2);*/
 
 
 
+                //tbl.TemaShow(true);
+                // stShow.inputStavki(100, 200, 300, 0, this);
+
+                #endregion
+                ////для теста Рулетки на старте проги
+                //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
+                //g.DrawRectangle(Pens.Black, kv);
+                //Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+                //System.Media.SystemSounds.Question.Play();
+                //Console.Beep();
+                //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+                //pol.prBar.AutoReset = true;
+
+
+            }
+            else
+            {
+                myTeam = new Data.teams();
+                myTeam.name = arguments[1];
+                server = ServerSearch();
+                Connection cnn = new Connection(server);
+                lg = arguments[1];
+                ps = arguments[2];
+                string[] info = { arguments[1], getSHAHash(arguments[2])};
+                cnn.onDataReceive += dataReceive;
+                cnn.Send("rg" + JsonConvert.SerializeObject(info));
+            }
         }
 
 
@@ -348,7 +374,9 @@ namespace _700IQ
                     Connection connect = new Connection(server);
                     connect.onDataReceive += dataReceive;
                     connect.Send("tm");
-                }
+
+            }
+                   
                 else
                 {
                    // Ini1();
@@ -468,9 +496,12 @@ namespace _700IQ
                     myTeam = new Data.teams();
                     myTeam.name = login.Text;
                     Connection cnn = new Connection(server);
+                    lg = login.Text;
+                    ps = parol.Text;
                     string[] info = { login.Text, getSHAHash(parol.Text) };
                     cnn.onDataReceive += dataReceive;
                     cnn.Send("rg" + JsonConvert.SerializeObject(info));
+
                 }
                 else
                 {
@@ -701,13 +732,13 @@ namespace _700IQ
         {
             Debug.WriteLine(komanda);
             switch (komanda?.Substring(0, 3))
-            {            
+            {
                 #region case +sp - список зарегистрировавшихся команд
                 case "+sp":
                     dt = JsonConvert.DeserializeObject<DataTable>(komanda.Substring(3));
                     pdg.spisokOut(this, dt, predUs);
                     break;
-                    //case osp -тройка 
+                //case osp -тройка 
                 case "osp": //окончание получения списка и получение данных по тройкам
                     //cn.stop();
                     predUs = JsonConvert.DeserializeObject<Data>(komanda.Substring(3));
@@ -717,7 +748,7 @@ namespace _700IQ
                     sendD.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                     sendD.kluch = myTeam.kod;   //predUs.team[tableOfKom].kod;
                     sendD.uid = predUs.GameZone;
-                    cn.start("zst" + JsonConvert.SerializeObject(sendD),3000);//запрос на начало игры
+                    cn.start("zst" + JsonConvert.SerializeObject(sendD), 3000);//запрос на начало игры
                     break;
                 #endregion
                 #region case ost - команда старт игровой зоны
@@ -727,20 +758,24 @@ namespace _700IQ
                     //ini6();
                     steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
                     infoOfserver = "Игровой стол " + myTeam.table + "\n" + "Игровая зона " + predUs.GameZone + "\n" + "Игровой сервер " + IP.ToString() + "\n";
-                    themes ="1. " + predUs.tema[1].theme + "\n" +"2. "  + predUs.tema[2].theme + "\n" + "3. " + predUs.tema[3].theme + "\n" + "4. " + predUs.tema[4].theme + "\n" + "5. " + predUs.tema[5].theme + "\n" + "6. " + predUs.tema[6].theme;
+                    themes = "1. " + predUs.tema[1].theme + "\n" + "2. " + predUs.tema[2].theme + "\n" + "3. " + predUs.tema[3].theme + "\n" + "4. " + predUs.tema[4].theme + "\n" + "5. " + predUs.tema[5].theme + "\n" + "6. " + predUs.tema[6].theme;
                     Step1();
                     break;
                 #endregion
-                case "ogg":              
+                case "ogg":
                     steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
                     if (!bIconFinalised)
                         //if (myTeam.Resumption) myTeam.Resumption = false;
                         //else
-                            CheckSteck();
+                        CheckSteck();
                     else
-                        cn.ClearLastCommand();              
+                        cn.ClearLastCommand();
                     break;
                 case "rgg":
+                        ProcessStartInfo startInfo = new ProcessStartInfo("700IQ.exe");
+                        startInfo.Arguments = lg+" "+ps;
+                        Process.Start(startInfo);
+                        Application.Exit();
                         RemoveAll();
                         cn.ClearLastCommand();
                     break;
@@ -1625,9 +1660,9 @@ namespace _700IQ
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти из игры?", "Предупреждение!!!", MessageBoxButtons.YesNo);
+           /* DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти из игры?", "Предупреждение!!!", MessageBoxButtons.YesNo);
             if (result == DialogResult.No) e.Cancel = true;
-            else
+            else*/
                 Ruletka?.close();
         }
 
