@@ -58,6 +58,7 @@ namespace _700IQ
         public IPAddress IP = null;
         public string lg = "";
         public string ps = "";
+        String[] arguments;
         public static string infoOfserver;
         public static string themes;
         public CustomLabel iQash1, iQash2, iQash3;
@@ -190,7 +191,7 @@ namespace _700IQ
             #region //описание кнопки входа
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            String[] arguments = Environment.GetCommandLineArgs();
+            arguments = Environment.GetCommandLineArgs();
            /* int i = 0;
             foreach (String st in arguments)
             {
@@ -198,8 +199,8 @@ namespace _700IQ
             }*/
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            if (arguments.Length == 1)
-            {
+           // if (arguments.Length == 1)
+           //  {
                 Point pn = NewPoint(1060, 691);
                 pn.X += delta < 0 ? delta : 0;
                 bmp = Properties.Resources.rotor;
@@ -228,6 +229,8 @@ namespace _700IQ
                 };
                 pcBox.Focus();
                 pcBox.Click += onClickMedal;
+                if (arguments.Length > 1)
+                    onClickMedal(pcBox, null);
                 //pcBox.KeyDown += onClickMedal();
                 //тест рулетки, ставок, темы
                 /* 
@@ -236,33 +239,40 @@ namespace _700IQ
 
 
 
-                //tbl.TemaShow(true);
-                // stShow.inputStavki(100, 200, 300, 0, this);
+                    //tbl.TemaShow(true);
+                    // stShow.inputStavki(100, 200, 300, 0, this);
 
-                #endregion
-                ////для теста Рулетки на старте проги
-                //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
-                //g.DrawRectangle(Pens.Black, kv);
-                //Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
-                //System.Media.SystemSounds.Question.Play();
-                //Console.Beep();
-                //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
-                //pol.prBar.AutoReset = true;
+                    #endregion
+                    ////для теста Рулетки на старте проги
+                    //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
+                    //g.DrawRectangle(Pens.Black, kv);
+                    //Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+                    //System.Media.SystemSounds.Question.Play();
+                    //Console.Beep();
+                    //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+                    //pol.prBar.AutoReset = true;
 
 
-            }
-            else
+           // }
+           /* else
             {
-                myTeam = new Data.teams();
-                myTeam.name = arguments[1];
-                server = ServerSearch();
-                Connection cnn = new Connection(server);
-                lg = arguments[1];
-                ps = arguments[2];
-                string[] info = { arguments[1], getSHAHash(arguments[2])};
-                cnn.onDataReceive += dataReceive;
-                cnn.Send("rg" + JsonConvert.SerializeObject(info));
-            }
+                try
+                {
+                    server = ServerSearch();
+                    Ini1();
+                    Control btnLogin = this.Controls.Find("btnLogin", true).FirstOrDefault();
+                    Control login = this.Controls.Find("login", true).FirstOrDefault();
+                    Control parol = this.Controls.Find("parol", true).FirstOrDefault();
+                    login.Text = arguments[1];
+                    parol.Text = arguments[2];
+                    Ini2(btnLogin, null);
+
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show("Фиаско штурвалу");
+                }      
+            }*/
         }
 
 
@@ -279,7 +289,7 @@ namespace _700IQ
                         teamLst = JsonConvert.DeserializeObject<AutoCompleteStringCollection>(response.Substring(5));
                         Ini1();
                         break;
-                    case "False":
+                    case "False": 
                         Control login = this.Controls.Find("login", true).FirstOrDefault();
                         login.Focus();
                         MessageBox.Show("Неверный логин или пароль!");
@@ -374,9 +384,7 @@ namespace _700IQ
                     Connection connect = new Connection(server);
                     connect.onDataReceive += dataReceive;
                     connect.Send("tm");
-
-            }
-                   
+            }    
                 else
                 {
                    // Ini1();
@@ -388,6 +396,7 @@ namespace _700IQ
         {
             //int ctrCount = Controls.Count;
             //for (int i = 0; i <= ctrCount; i++) this.Controls.RemoveByKey("oneuse");    //очистка экрана
+            
             Controls.Remove(Controls.Find("Rotor", true).FirstOrDefault());
             RemoveTempControls();
 
@@ -418,6 +427,7 @@ namespace _700IQ
                 AutoCompleteCustomSource = teamLst,
                 BorderStyle = BorderStyle.None,
                 Font = new Font("Cambria", NewFontSize(20)),
+                Text = (arguments.Length > 1) ? arguments[1] : "",
                 TextAlign = HorizontalAlignment.Left,
                 MaxLength = 12,
                 AcceptsReturn = false,
@@ -433,6 +443,7 @@ namespace _700IQ
                 BorderStyle=BorderStyle.None,
                 Font = new Font("Cambria", NewFontSize(20)),             
                 TextAlign = HorizontalAlignment.Left,
+                Text= (arguments.Length > 1) ? arguments[2] : "",
                 PasswordChar = '*',
                 MaxLength = 12,
                 Name = "parol",
@@ -449,14 +460,16 @@ namespace _700IQ
                 BackColor = Color.Transparent,
                 Size = NewSize(200, 200),
                 Image = bmp,
+                Name = "btnLogin",
                 SizeMode = PictureBoxSizeMode.Zoom,
             };
 
-           
             pcBox.Click += Ini2;
-            #endregion                     
- //           logintb.KeyDown += logintb_KeyDown;
- //           paroltb.KeyDown += logintb_KeyDown;
+            if (arguments.Length > 1)
+                Ini2(pcBox, null);
+            #endregion
+            //           logintb.KeyDown += logintb_KeyDown;
+            //           paroltb.KeyDown += logintb_KeyDown;
             logintb.Focus();
           
         }
@@ -773,7 +786,8 @@ namespace _700IQ
                     break;
                 case "rgg":
                         ProcessStartInfo startInfo = new ProcessStartInfo("700IQ.exe");
-                        startInfo.Arguments = lg+" "+ps;
+                        string quote = "\"";
+                        startInfo.Arguments = quote + lg+ quote + " "+ quote + ps + quote;
                         Process.Start(startInfo);
                         Application.Exit();
                         RemoveAll();
