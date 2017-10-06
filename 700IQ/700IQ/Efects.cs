@@ -665,18 +665,20 @@ namespace _700IQ
         bool flag, flagStop;
         int tickNumber = 0, nStop = 100;
         int offset=5;
+        int waitSecondOnEnd;
         Video video;
         #endregion
         public Size size;
 
 
-        public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int rotation_count=5)
+        public void StartRul(int cel, Rectangle rc, GeneralForm fsv, int waitSecondOnEnd=0)
         {
             this.Visible = false;
             this.rc = rc;
             flagStop =false;
             tickNumber = 0; 
             this.fsv = fsv;
+            this.waitSecondOnEnd = waitSecondOnEnd;
 
             flag = false;
             //vi = 0.04f;
@@ -759,14 +761,15 @@ namespace _700IQ
         {
             Task.Factory.StartNew(() =>
             {
-                 if (InvokeRequired)
-                {
-                    this.Invoke(new Action(() =>
-                    {
+               //  if (InvokeRequired)
+                //{
+                  //  this.Invoke(new Action(() =>
+                    //{
+                        System.Threading.Thread.Sleep(waitSecondOnEnd * 1000);
                         enabled = false;
                         onStop?.Invoke(); 
-                    }));
-                }
+                    //}));
+                //}
             });
         }
 

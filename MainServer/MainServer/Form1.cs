@@ -78,8 +78,8 @@ namespace MainServer
         {
             if (DBLink.BackColor != Color.GreenYellow)
             {
-                //string myConnectionString = "Data Source=178.172.150.251; Port=27999; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
-                string myConnectionString = "Data Source=10.253.254.249;Port=3306; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI;Character Set=utf8;";
+                string myConnectionString = "Data Source=178.172.150.251; Port=27999; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
+                //string myConnectionString = "Data Source=10.253.254.249;Port=3306; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI;Character Set=utf8;";
                 mycon = new MySqlConnection(myConnectionString);
                 conn = new SQLiteConnection("Data Source=casinoDB.db3; Version=3;");
                 try
@@ -798,10 +798,10 @@ namespace MainServer
 
                     #region задаем темы вопросов для тройки
                     string zaprosTemy = "select themes.id as id, theme, required " +
-                                  "from quests left join i_see on quests.id = i_see.quest_id inner join themes on quests.themeid = themes.id " +
-                                  "where i_see.id is null or user_id not in (" + userid + ") " +
+                                  "from quests left join i_see on (quests.id = i_see.quest_id and i_see.user_id in (" + userid + ")) inner join themes on quests.themeid = themes.id " +
+                                  "where i_see.id is null " +
                                   "group by quests.themeid " +
-                                  "having count(quests.themeid) > 10";
+                                  "having count(quests.themeid) > 2";
 
                     SQLiteCommand cml = new SQLiteCommand(zaprosTemy, conn);
                     DataTable dtVopros = new DataTable();
@@ -1478,12 +1478,12 @@ namespace MainServer
                                                     row[3] = info[3];
                                                     row[4] = info[4];
                                                     row[5] = info[5];
-                                                    row[6] = dataZapros.otvet;
+                                                    row[6] = dataZapros.otvet.Trim();
                                                     string[] arrayOfAnswer = info[5].Split(';');
                                                     bool check_answer = false;
                                                     foreach (string answer in arrayOfAnswer)
                                                     {
-                                                        if (String.Compare(answer, row[6].ToString(),true) == 0)
+                                                        if (String.Compare(answer.Trim(), row[6].ToString(),true) == 0)
                                                         {
                                                             check_answer = true;
                                                             break; 

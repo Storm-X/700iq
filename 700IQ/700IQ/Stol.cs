@@ -509,7 +509,7 @@ namespace _700IQ
 
                 //Rul Ruletka = new Rul();
                 workForm.Ruletka.AnyEventHarakiri();
-                workForm.Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1320, 210), NewSize(1600, 900)), workForm, 3);//исправить
+                workForm.Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1320, 210), NewSize(1600, 900)), workForm, 1);//исправить
                 while (workForm.Ruletka.Enabled && !this.workForm.IsDisposed)
                     Application.DoEvents();
                 zagolovok.Dispose();

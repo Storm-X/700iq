@@ -1057,7 +1057,7 @@ namespace _700IQ
                 //Ruletka = new Rul();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step2_3;
-                Ruletka.StartRul(steck.Cell, kv, this, 2);
+                Ruletka.StartRul(steck.Cell, kv, this, 3);
                 this.Invalidate();
             }
         }
@@ -1142,7 +1142,7 @@ namespace _700IQ
                 CreateAnswerTable();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
-                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1420, 150), NewSize(1600, 900)), this, 1);
+                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1420, 150), NewSize(1600, 900)), this, 10);
             }          
         }
         private void CreateAnswerTable(bool withQuery = false)

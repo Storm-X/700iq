@@ -327,7 +327,7 @@ namespace MainServer
                 return false;//сообщаем, что не нужно отправлять ответ модератору
             }
 
-            gm.team[table].answer = otv; //запоминаем ответ
+            gm.team[table].answer = otv.Trim(); //запоминаем ответ
             return true;//сообщаем, что надо проверить ответ
         }
         public void checkOtvet(bool right)
@@ -385,12 +385,37 @@ namespace MainServer
                     case 0:
                         deadLine = DateTime.Now.AddSeconds(70);
                         Takt++;
-                        //deadLine = null;
+                        string strZapros;
+                        SQLiteCommand cmdl;
+                        int questsCount = 0;
                         gm.step = 2;
-                        gm.Cell = rn.rnd();
-                        gm.theme = (byte)((gm.Cell + 5) / 6);
-
-                       // txb.Text += "ogg" + gm.step;
+                        //deadLine = null;
+                        do
+                        {
+                            gm.Cell = rn.rnd();
+                            gm.theme = (byte)((gm.Cell + 5) / 6);
+                            if (gm.theme != 0)
+                            {
+                                //Проверим, сколько в выбранной теме осталось "незасвеченных" вопросов для данной игровой тройки
+                                //и при отсутствии таковых сменим тему на ту, в которой такие вопросы остались.
+                                strZapros = "select count(quests.id) as qCount " +
+                                             "from quests left join i_see on (quests.id = i_see.quest_id and i_see.user_id in (" + usersid + ")) " +
+                                             "where i_see.id is null and quests.themeId = " + themeID[gm.theme].ToString();
+                                cmdl = new SQLiteCommand(strZapros, conn);
+                                try
+                                {
+                                    questsCount = Convert.ToInt32(cmdl.ExecuteScalar());
+                                    if (questsCount < 3) MessageBox.Show("Количество 'незасвеченных' вопросов в теме \"" + theme[gm.theme] + "\" - " + questsCount +
+                                        " шт. " + Environment.NewLine + (questsCount == 0 ? "Будет произведена замена темы!" : "Добавьте в тему несколько новых вопросов!"), 
+                                        "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                }
+                                catch (SQLiteException ex)
+                                {
+                                    Console.WriteLine(ex.Message);
+                                }
+                            }
+                        } while (questsCount == 0 && gm.theme != 0);
+                        // txb.Text += "ogg" + gm.step;
                         //tm.Start();
                         break;
                     #endregion
@@ -439,10 +464,10 @@ namespace MainServer
                         if (gm.theme != 0) temaID = themeID[gm.theme].ToString();
                         else temaID = tema; //если тема кот в мешке, то выбираем все темы
 
-                        string zaprosSpiskaVoprosov = " select quests.id " +
-                                     "from quests left join i_see on quests.id = i_see.quest_id " +
-                                     "where(i_see.id is null or user_id not in (" + usersid + ")) and quests.themeId in (" + temaID + 
-                                     ") GROUP BY quests.id ORDER BY quests.id LIMIT 10";
+                        string zaprosSpiskaVoprosov = "select quests.id " +
+                                     "from quests left join i_see on (quests.id = i_see.quest_id and i_see.user_id in (" + usersid + ")) " +
+                                     "where i_see.id is null and quests.themeId in (" + temaID + ") " +
+                                     "GROUP BY quests.id ORDER BY quests.id LIMIT 10";
 
                         SQLiteCommand cml = new SQLiteCommand(zaprosSpiskaVoprosov, conn);
                         DataTable dtVopros = new DataTable();
