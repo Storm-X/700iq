@@ -71,7 +71,7 @@ namespace MainServer
                                 #region проверяем логин и пароль в БД
                                 string[] ssi = JsonConvert.DeserializeObject<string[]>(request.Substring(2));
                                 //  0            1            2            3        4           5           6            7            8             
-                                string strok = "SELECT teams.team_password, teams.rating, teams.name,  teams.id, users.name, users.id, users.rating, users.surname, users.age " +
+                                string strok = "SELECT teams.team_password, teams.rating, teams.name,  teams.id, users.name, users.id, users.rating, users.surname, users.age, teams.city " +
                                    "FROM (teams INNER JOIN compositions ON teams.id=compositions.team_id ) INNER JOIN users ON compositions.user_id=users.id WHERE teams.name='" + ssi[0] + "' and teams.team_password='" + ssi[1] + "'";
                                 // string teamlist = "SELECT teams.name FROM teams";
                                 //запрос данных из таблицы
@@ -95,7 +95,7 @@ namespace MainServer
                                 #endregion
                                 if (dat.Rows.Count > 0) //если есть данные , то проверяем в таблице зарегистрированных команд
                                 {
-                                    if (requestTable.Rows.Count > 0)
+                                    if ((requestTable.Rows.Count > 0) || (dat.Rows[0].ItemArray[9].ToString() == "0"))
                                     {
                                         DataRow[] datRowN = ddt.Select("Name='" + ssi[0] + "'");
                                     string kluch = dat.Rows[0][2].ToString() + ddt.Rows.Count + DateTime.Now.ToString("hh:mm:ss:fff");
