@@ -43,7 +43,7 @@ namespace MainServer
         RND Rn;
         public List<GameinZone> MassGameZone = new List<GameinZone>();
         Dictionary<int, IPEndPoint> dic = new Dictionary<int, IPEndPoint>();
-        public string tur = "1/4 финала";
+        public string tur = "Благотворительная игра";
         public string adressGame;
         int troika = 0;                     //номер тройки
         int NumRegKomand = 0;
@@ -138,7 +138,7 @@ namespace MainServer
         {
             if (GameButton.BackColor != Color.GreenYellow)
             {
-                MySqlCommand cm = new MySqlCommand("SELECT tournaments.id, tournaments.name , city.name, number_game, date, place FROM tournaments INNER JOIN city ON tournaments.city=city.id", mycon);
+                MySqlCommand cm = new MySqlCommand("SELECT tournaments.id, tournaments.name , city.name, number_game, date, place, time FROM tournaments INNER JOIN city ON tournaments.city=city.id", mycon);
                 DataTable dat = new DataTable();
 
                 using (MySqlDataReader tur = cm.ExecuteReader())
@@ -173,7 +173,13 @@ namespace MainServer
             data.idGame = Convert.ToInt32(ListGames.CurrentRow.Cells[0].Value);       //  id игры
             data.NameGame = ListGames.CurrentRow.Cells[1].Value.ToString();         //название игры
             data.Tur = tur;                                                         //тур
-            data.startTime = Convert.ToDateTime(ListGames.CurrentRow.Cells[4].Value);//дата и время игры
+            DateTime date_begin = new DateTime();
+            date_begin = Convert.ToDateTime(ListGames.CurrentRow.Cells[4].Value.ToString());
+            DateTime time_begin = new DateTime();
+            time_begin = Convert.ToDateTime(ListGames.CurrentRow.Cells[6].Value.ToString());
+            date_begin = date_begin.AddHours(time_begin.Hour);
+            date_begin = date_begin.AddMinutes(time_begin.Minute);
+            data.startTime = date_begin;//дата и время игры
 
             infoGame.Text = data.NameGame + " г. " + ListGames.CurrentRow.Cells[2].Value + " " + ListGames.CurrentRow.Cells[3].Value;
             adressGame = ListGames.CurrentRow.Cells[5].Value.ToString();
