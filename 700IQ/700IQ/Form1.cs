@@ -380,21 +380,14 @@ namespace _700IQ
         void onClickMedal(object sender, EventArgs e)
         {
             if (server == null)
-            {
                 server = ServerSearch();
-            }
             
-                if ((teamLst == null)&&(server!=null))
-                {
-                    Connection connect = new Connection(server);
-                    connect.onDataReceive += dataReceive;
-                    connect.Send("tm");
+            if ((teamLst == null)&&(server!=null))
+            {
+                Connection connect = new Connection(server);
+                connect.onDataReceive += dataReceive;
+                connect.Send("tm");
             }    
-                else
-                {
-                   // Ini1();
-                }
-            
         }
 
         void Ini1()//ввод логина и пароля
