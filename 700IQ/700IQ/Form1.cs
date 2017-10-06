@@ -294,6 +294,11 @@ namespace _700IQ
                         login.Focus();
                         MessageBox.Show("Неверный логин или пароль!");
                         break;
+                    case "noReg":
+                        login = this.Controls.Find("login", true).FirstOrDefault();
+                        login.Focus();
+                        MessageBox.Show("Ваша команда не зарегистрирована на данный турнир!");
+                        break;
                     case "IPtwo":
                         MessageBox.Show("Повторный IP-адресс");
                         break;

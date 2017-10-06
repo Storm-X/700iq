@@ -78,8 +78,8 @@ namespace MainServer
         {
             if (DBLink.BackColor != Color.GreenYellow)
             {
-                //string myConnectionString = "Data Source=178.172.150.251; Port=27999; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
-                string myConnectionString = "Data Source=10.253.254.249;Port=3306; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI;Character Set=utf8;";
+                string myConnectionString = "Data Source=178.172.150.251; Port=27999; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
+                //string myConnectionString = "Data Source=10.253.254.249;Port=3306; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI;Character Set=utf8;";
                 mycon = new MySqlConnection(myConnectionString);
                 conn = new SQLiteConnection("Data Source=casinoDB.db3; Version=3;");
                 try

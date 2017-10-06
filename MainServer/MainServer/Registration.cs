@@ -83,9 +83,21 @@ namespace MainServer
                                     if (rd.HasRows) dat.Load(rd);
                                 }
                                 #endregion
+                                #region проверяем зарегистрирована ли команда на турнир
+                                DataTable requestTable = new DataTable();
+                                if (dat.Rows.Count > 0)
+                                {
+                                    string query = "SELECT * FROM (teams INNER JOIN requests ON teams.id=requests.team_id) WHERE teams.id='" + dat.Rows[0].ItemArray[3] + "' AND requests.tournament_id = '" + data.idGame + "' AND requests.state = '1'";
+                                    cm = new MySqlCommand(query, mycon);
+                                    rd = cm.ExecuteReader();
+                                    requestTable.Load(rd);
+                                }
+                                #endregion
                                 if (dat.Rows.Count > 0) //если есть данные , то проверяем в таблице зарегистрированных команд
                                 {
-                                    DataRow[] datRowN = ddt.Select("Name='" + ssi[0] + "'");
+                                    if (requestTable.Rows.Count > 0)
+                                    {
+                                        DataRow[] datRowN = ddt.Select("Name='" + ssi[0] + "'");
                                     string kluch = dat.Rows[0][2].ToString() + ddt.Rows.Count + DateTime.Now.ToString("hh:mm:ss:fff");
                                     #region если игра началась и команда играла, то заменяем ключ и берем значение data
                            
@@ -155,11 +167,16 @@ namespace MainServer
                                     }
                                     #endregion
                                 }
-                                else //пароль или логин не верен!!!!!!!!!!!!!
+                                    else // команда не зарегалась на турнир
+                                    {
+                                    str = "noReg";
+                                        //ServerResponseBytes = Encoding.UTF8.GetBytes(str);
+                                        //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
+                                    }
+                                }
+                                else //пароль или логин не верен!!!!!!!!!!!!! 
                                 {
                                     str = "False";
-                                    //ServerResponseBytes = Encoding.UTF8.GetBytes(str);
-                                    //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
                                 }
                                 //удаляем ссылки на mySQL
                                 cm.Dispose();
