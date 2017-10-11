@@ -88,6 +88,7 @@ namespace _700IQ
         public GeneralForm()
         {
             InitializeComponent();
+            MessageBox.Show(Convert.ToDouble(Application.ProductVersion.Replace(".", "")).ToString());
             //this.KeyDown += GeneralForm_KeyDown;
             //this.KeyPress += p.WorkForm_KeyDown;      
             //path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
