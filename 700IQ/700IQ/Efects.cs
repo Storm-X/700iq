@@ -446,6 +446,24 @@ namespace _700IQ
             InitBar(t, pn, txt);
        
         }
+        public void polosaUpdate(PictureBoxWithInterpolationMode pic)
+        {
+           
+            prBar = new CircularProgressBar()
+            {
+                Location = NewRelPoint(350, 0),
+                AutoResetColor = Color.FromArgb(200, 12, 163, 218),
+                Parent = pic,
+                Size = NewSizeKv(800),
+                Value = 0,
+                Visible = true,
+                Gradient = false,
+                ProgressColor1 = Color.Gold,
+               // ProgressSize = new Size(50,50),
+               
+            };
+
+        }
         public int Value
         {
             get { return prBar.Value; }

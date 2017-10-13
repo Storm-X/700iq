@@ -33,6 +33,7 @@ namespace _700IQ
         private int _Interval = 100;
         private int _LastBeep;
         private int _BeepTime;
+        private bool ShowText = false;
         //int begin;
         //int interval_cels;
         //int beeps_count;
@@ -53,6 +54,15 @@ namespace _700IQ
                 }
                 else
                     CheckToBeeps();
+                Invalidate();
+            }
+        }
+        public bool showText
+        {
+            get { return ShowText; }
+            set
+            {
+                ShowText = value;
                 Invalidate();
             }
         }
@@ -182,7 +192,8 @@ namespace _700IQ
             MinimumSize = new Size(100, 100);
             DoubleBuffered = true;
             this.SetStyle(System.Windows.Forms.ControlStyles.SupportsTransparentBackColor, true);
-            this.BackColor = System.Drawing.Color.Transparent;
+             this.BackColor = System.Drawing.Color.Transparent;
+
             BeepTime = 5;
         }
 
@@ -288,8 +299,12 @@ namespace _700IQ
                     {
                         graphics.FillEllipse(brush2, progress_size + 2, progress_size + 2, (this.Width - (progress_size + 2) * 2), (this.Height - (progress_size + 2) * 2));
                     }*/
-                    //SizeF MS = graphics.MeasureString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font);
-                    //graphics.DrawString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font, Brushes.White, Convert.ToInt32(Width / 2 - MS.Width / 2), Convert.ToInt32(Height / 2 - MS.Height / 2));
+                    if (this.ShowText)
+                    {
+                       
+                        SizeF MS = graphics.MeasureString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)), Font);
+                        graphics.DrawString(Convert.ToString(Convert.ToInt32((100 / _Maximum) * _Value)+"%"), Font, Brushes.Gold, Convert.ToInt32((Width / 2 - MS.Width / 2)-10), Convert.ToInt32(Height / 2 - MS.Height / 2));
+                    }
                     e.Graphics.DrawImage(bitmap, 0, 0);
                     graphics.Dispose();
                     bitmap.Dispose();

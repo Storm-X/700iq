@@ -33,6 +33,7 @@ namespace _700IQ
         Polosa pol = new Polosa();
         public Game steck = new Game();
         AutoCompleteStringCollection teamLst;
+        string quote = "\"";
         public Data predUs = new Data();
         Table tbl;
         IPAddress server=null;
@@ -63,6 +64,7 @@ namespace _700IQ
         public static string themes;
         public CustomLabel iQash1, iQash2, iQash3;
         private int currStep = 0;
+        PictureBoxWithInterpolationMode pcBox;
         struct SendData //структурированные данные отправляемые серверу
         {
             public int uid;         //игровая зона
@@ -88,7 +90,7 @@ namespace _700IQ
         public GeneralForm()
         {
             InitializeComponent();
-            MessageBox.Show(Convert.ToDouble(Application.ProductVersion.Replace(".", "")).ToString());
+           // MessageBox.Show(Convert.ToDouble(Application.ProductVersion.Replace(".", "")).ToString());
             //this.KeyDown += GeneralForm_KeyDown;
             //this.KeyPress += p.WorkForm_KeyDown;      
             //path = Path.GetDirectoryName(Application.StartupPath);//получение текущей папки
@@ -205,17 +207,17 @@ namespace _700IQ
                 Point pn = NewPoint(1060, 691);
                 pn.X += delta < 0 ? delta : 0;
                 bmp = Properties.Resources.rotor;
-                //ExtendedPanel ePanel = new ExtendedPanel()
-                //{
-                //    Parent = this,
-                //    Name = "oneuse",
-                //    Visible = true,
-                //    Location = pn,
-                //    BackColor = Color.Transparent,
-                //    Size = NewSizeKv(390),
-                //    Opacity = 30
-                //};
-                PictureBoxWithInterpolationMode pcBox = new PictureBoxWithInterpolationMode()
+            //ExtendedPanel ePanel = new ExtendedPanel()
+            //{
+            //    Parent = this,
+            //    Name = "oneuse",
+            //    Visible = true,
+            //    Location = pn,
+            //    BackColor = Color.Transparent,
+            //    Size = NewSizeKv(390),
+            //    Opacity = 30
+            //};
+                 pcBox = new PictureBoxWithInterpolationMode()
                 {
                     Parent = this,
                     Name = "Rotor",
@@ -276,6 +278,44 @@ namespace _700IQ
             }*/
         }
 
+        public void loadFromFTP()
+        {
+            string fileName = "700iq_setup.exe";
+            WebClient myWebClient = new WebClient();
+            try
+            {
+                pol.AnyEventHarakiri();
+                pol.polosaUpdate(pcBox);
+                pcBox.Image=null;
+                Point pn = NewRelPoint(-5, -5);
+                pol.prBar.Location = pn;
+                pol.prBar.showText = true;
+                pol.prBar.Size = NewSizeKv(395);
+                pol.prBar.Font = new Font("Arial ", NewFontSize(36));
+                pol.prBar.ForeColor = Color.Gold;
+                myWebClient.DownloadProgressChanged += (s, e) =>
+                {
+                    
+                    pol.prBar.Value = e.ProgressPercentage;
+                    
+                };
+                myWebClient.DownloadFileCompleted += (s, e) =>
+                {
+                    pol.prBar.Visible = false;
+                    Process.Start("700iq_setup.exe");
+                    Application.Exit();
+            
+                }; 
+
+                 myWebClient.DownloadFileAsync(new Uri("http://www.700iq.by/700iq_setup.exe"), fileName);           
+            }
+            catch {
+                MessageBox.Show("Ошибка при скачивании файла! Пожалуйста повторите процедуру обновления.");
+                Application.Exit();
+            }
+
+        }
+
 
         private void dataReceive(string response)
         {
@@ -285,6 +325,18 @@ namespace _700IQ
                 {
                     case "regOk":
                         ini3(response.Substring(5));
+                        break;
+                    case "oldvr":
+                        DialogResult dialogResult = MessageBox.Show("Ваша версия клиента устарела, пожалуйста обновите приложение! Выполнить обновление сейчас?", " Обновление ", MessageBoxButtons.YesNo);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            loadFromFTP();
+                        }
+                        else if (dialogResult == DialogResult.No)
+                        {
+                            Application.Exit();
+                        }
+                        
                         break;
                     case "Teams":
                         teamLst = JsonConvert.DeserializeObject<AutoCompleteStringCollection>(response.Substring(5));
@@ -387,7 +439,7 @@ namespace _700IQ
             {
                 Connection connect = new Connection(server);
                 connect.onDataReceive += dataReceive;
-                connect.Send("tm");
+                connect.Send("tm" + Application.ProductVersion.Replace(".", "").ToString());
             }    
         }
 
@@ -500,6 +552,7 @@ namespace _700IQ
                     else loginOK = false;
             }*/
             Control login = this.Controls.Find("login", true).FirstOrDefault();
+           
             Control parol = this.Controls.Find("parol", true).FirstOrDefault();
             if (login!= null && parol!=null)
             {
@@ -785,7 +838,7 @@ namespace _700IQ
                     break;
                 case "rgg":
                         ProcessStartInfo startInfo = new ProcessStartInfo("700IQ.exe");
-                        string quote = "\"";
+                        
                         startInfo.Arguments = quote + lg+ quote + " "+ quote + ps + quote;
                         Process.Start(startInfo);
                         Application.Exit();
