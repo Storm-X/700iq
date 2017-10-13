@@ -49,6 +49,15 @@ namespace MainServer
                             //await networkStream.WriteAsync(ServerResponseBytes, 0, ServerResponseBytes.Length);
                             break;
                         case "tm":
+                            /////////////////////////////////////////////
+                            double clientVersion = Convert.ToDouble(request.Substring(2, request.Length-2));
+                            double serverVersion = Convert.ToDouble(Application.ProductVersion.Replace(".", ""));
+                            if (clientVersion!=serverVersion)
+                            {
+                                str = "oldvr";
+                                break;
+                            }
+                            ///////////////////////////////////////////
                             string teamname = "SELECT name FROM teams ORDER BY name";
                             cm = new MySqlCommand(teamname, mycon);
                             rd = cm.ExecuteReader();
@@ -68,6 +77,7 @@ namespace MainServer
                             //если сообщение от клиента на регистрацию и она возможна, то ..
                             if (team.getReg())
                             {
+
                                 #region проверяем логин и пароль в БД
                                 string[] ssi = JsonConvert.DeserializeObject<string[]>(request.Substring(2));
                                 //  0            1            2            3        4           5           6            7            8             
