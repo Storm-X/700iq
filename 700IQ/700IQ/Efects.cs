@@ -119,7 +119,7 @@ namespace _700IQ
             if (tikStep == 20)
             {
                 tmi.Dispose();
-                onStop();
+                onStop?.Invoke();
             }
         }
     }
@@ -270,7 +270,7 @@ namespace _700IQ
 
                     }
 
-                    onStop();
+                    onStop?.Invoke();
                 }
                 else
                 {

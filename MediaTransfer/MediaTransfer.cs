@@ -120,6 +120,13 @@ public class MediaServer
 
 public class MediaReceiver
 {
+    public delegate void transferComplete();
+    public event transferComplete onTransferComplete;
+    public delegate void transferError();
+    public event transferError onTransferError;
+    public delegate void transferProgress();
+    public event transferProgress ontransferProgress;
+
     private EndPoint senderRemote;
     private Socket server;
     private string FileName;
@@ -129,7 +136,7 @@ public class MediaReceiver
     private Boolean[] checkBlocks;
     private String currStatus;
     public String CurrentStatus { get { return currStatus; } }
-    private Boolean transferComplete;
+    private Boolean fTransferComplete;
     //public ProgressBar transferProgressBar;
     private System.Timers.Timer TimeOutChecker;
 
@@ -143,12 +150,12 @@ public class MediaReceiver
     }
     private void InitializeComponent()
     {
-        TimeOutChecker = new System.Timers.Timer(300);
+        TimeOutChecker = new System.Timers.Timer(3000);
         TimeOutChecker.Elapsed += OnTimedEvent;
         TimeOutChecker.AutoReset = false;
         fileContents = new byte[0];
         checkBlocks = new Boolean[0];
-        transferComplete = false;
+        fTransferComplete = false;
     }
     private void OnSend(IAsyncResult ar)
     {
@@ -163,7 +170,8 @@ public class MediaReceiver
         catch (Exception ex)
         {
             TimeOutChecker.Stop();
-            transferComplete = true;
+            onTransferError?.Invoke();
+            fTransferComplete = true;
             Debug.WriteLine("FileTransferClient: Oops... " + ex.Message);
         }
     }
@@ -209,7 +217,7 @@ public class MediaReceiver
     }
     public byte[] GetMedia(string FileName)
     {
-        transferComplete = false;
+        fTransferComplete = false;
         this.FileName = FileName;
         try
         {
@@ -228,13 +236,14 @@ public class MediaReceiver
         {
             Debug.WriteLine("FileTransferClient: " + ex.Message);
         }
-        while (!transferComplete);
+        while (!fTransferComplete);
+        onTransferComplete?.Invoke();
         return fileContents;
     }
     private void OnTimedEvent(Object source, ElapsedEventArgs e)
     {
         if (CheckFile())
-            transferComplete = true;
+            fTransferComplete = true;
     }
     private Boolean CheckFile()
     {
