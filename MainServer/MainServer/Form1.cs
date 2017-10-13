@@ -553,7 +553,7 @@ namespace MainServer
             }
 
             dt.DefaultView.Sort = "zona ASC";
-            ListKomand.DataSource = dt;
+            //ListKomand.DataSource = dt;
 
             int numKom = dt.Rows.Count; //количество команд
             int komNextTur = numKom % 3; //команды перешедшие в следующий тур без игры    
@@ -650,23 +650,6 @@ namespace MainServer
                 lot.BackColor = Color.GreenYellow;
                 lot.Text = "Жеребьевка закончена";
 
-                //сортируем зарегистрировавшиеся команды по рейтингу
-                for (int i = 0; i < dt.Rows.Count - 1; i++)
-                {
-                    object min;
-                    for (int j = 0; j < dt.Rows.Count - 1; j++)
-                    {
-                        if (Convert.ToInt32(dt.Rows[j][4]) < Convert.ToInt32(dt.Rows[j + 1][4]))
-                        {
-                            for (int x = 0; x < dt.Columns.Count; x++)
-                            {
-                                min = dt.Rows[j + 1][x];
-                                dt.Rows[j + 1][x] = dt.Rows[j][x];
-                                dt.Rows[j][x] = min;
-                            }
-                        }
-                    }
-                }
                 int iBotsCount = (3 - dt.Rows.Count % 3) % 3;
                 for (int i = 0; i < iBotsCount; i++)
                 {
@@ -679,27 +662,64 @@ namespace MainServer
                     dt.Rows.Add(dtrow);
                 }
 
-                dt.DefaultView.Sort = "Zone ASC";
-                ListKomand.DataSource = dt;
-
                 int numKom = dt.Rows.Count; //количество команд
                 int komNextTur = numKom % 3; //команды перешедшие в следующий тур без игры    
                 int numZon = numKom / 3;//количество игровых зон
 
-                for (int i = 0; i < 3; i++)  //проставляем командам их игровые зоны и столы
-                    for (int j = 0; j < numZon; j++)
+                if (MessageBox.Show("Выполнить автоматическую жеребьевку по рейтингу команд?", "Способ жеребьевки", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                {
+                    //сортируем зарегистрировавшиеся команды по рейтингу
+                    //for (int i = 0; i < dt.Rows.Count - 1; i++)
+                    //{
+                    //    object min;
+                    //    for (int j = 0; j < dt.Rows.Count - 1; j++)
+                    //    {
+                    //        if (Convert.ToInt32(dt.Rows[j][4]) < Convert.ToInt32(dt.Rows[j + 1][4]))
+                    //        {
+                    //            for (int x = 0; x < dt.Columns.Count; x++)
+                    //            {
+                    //                min = dt.Rows[j + 1][x];
+                    //                dt.Rows[j + 1][x] = dt.Rows[j][x];
+                    //                dt.Rows[j][x] = min;
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    //Есть способ намного проще ;)
+                    //dt.DefaultView.Sort = "Rating DESC";
+                    //dt = dt.DefaultView.ToTable();
+                    //Ну или вот так:
+                    dt = dt.Select("", "Rating DESC").CopyToDataTable(); // OrderByDescending(x => x["Rating"]).CopyToDataTable();
+                    //проставляем командам их игровые зоны и столы
+                    dt.Select().ToList<DataRow>().ForEach(dtRows =>
                     {
+                        int index = dt.Rows.IndexOf(dtRows);
+                        dtRows["Zone"] = index % numZon + 1;
+                        dtRows["Table"] = index / numZon + 1;
+                    });
+                    /*for (int i = 0; i < 3; i++)  //проставляем командам их игровые зоны и столы
+                        for (int j = 0; j < numZon; j++)
+                        {
+                            dt.Rows[j + numZon * i + komNextTur][0] = j + 1;  //присваиваем номер игровой зоны команде
+                                                                              //  dt.Rows[j + numZon * i + komNextTur][6] = i+1;  //присваиваем номер стола команде
+                        }*/
+                }
+                else
+                    dt.Select().ToList<DataRow>().ForEach(dtRows =>
+                    {
+                        int index = dt.Rows.IndexOf(dtRows);
+                        dtRows["Zone"] = index / 3 + 1;
+                        dtRows["Table"] = index % 3 + 1;
+                    });
 
-                        dt.Rows[j + numZon * i + komNextTur][0] = j + 1;  //присваиваем номер игровой зоны команде
-                                                                          //  dt.Rows[j + numZon * i + komNextTur][6] = i+1;  //присваиваем номер стола команде
-                    }
+                dt.DefaultView.Sort = "Zone ASC, Table ASC";
 
-                ListKomand.DataSource = dt;//раскрашиваем в таблице тройки разным цветом
-                for (int i = 0; i < numKom / 3; i += 2)
-                    for (int j = 0; j < 3; j++)
-                        ListKomand.Rows[i * 3 + j + komNextTur].DefaultCellStyle.BackColor = Color.GreenYellow;
-                for (int i = 0; i < komNextTur; i++)
-                    ListKomand.Rows[i].DefaultCellStyle.BackColor = Color.SkyBlue;
+                //ListKomand.DataSource = dt;//раскрашиваем в таблице тройки разным цветом
+                //for (int i = 0; i < numKom / 3; i += 2)
+                //    for (int j = 0; j < 3; j++)
+                //        ListKomand.Rows[i * 3 + j + komNextTur].DefaultCellStyle.BackColor = Color.GreenYellow;
+                //for (int i = 0; i < komNextTur; i++)
+                //    ListKomand.Rows[i].DefaultCellStyle.BackColor = Color.SkyBlue;
                 Anons.Enabled = true;
             }
             else
@@ -709,8 +729,13 @@ namespace MainServer
                 {
                     lot.BackColor = DefaultBackColor;
                     lot.Text = "Жеребьевка";
+                    Anons.Enabled = false;
+                    //foreach (DataRow dtRows in dt.Rows)
+                    dt.Select().ToList<DataRow>().ForEach(dtRows => { dtRows["Zone"] = DBNull.Value; dtRows["Table"] = DBNull.Value; });
+                    dt.DefaultView.Sort = "";
                 }
             }
+            ListKomand.DataSource = dt;
         }
         private void Anons_Click(object sender, EventArgs e)                //7 кнопка - оповещение команд (рассылка установочных данных)             
         {
@@ -1047,7 +1072,7 @@ namespace MainServer
                     if ((grid[7, e.RowIndex].Value == System.DBNull.Value) || (grid[7, e.RowIndex].Value == "Неправильно"))
                     {
                         grid[7, e.RowIndex].Value = "Правильно";
-                        grid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Green;
+                        grid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.GreenYellow;
                         return;
                     }
                     if (grid[7, e.RowIndex].Value == "Правильно")
@@ -1352,9 +1377,89 @@ namespace MainServer
 
         }
 
-        private void label7_Click(object sender, EventArgs e)
+        //========================================================================================
+        //Ручная жеребьевка игровых троек
+        //========================================================================================
+        private Rectangle dragBoxFromMouseDown;
+        private int rowIndexFromMouseDown;
+        private int rowIndexOfItemUnderMouseToDrop;
+        private void ListKomand_MouseMove(object sender, MouseEventArgs e)
         {
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+            {
+                // If the mouse moves outside the rectangle, start the drag.
+                if (dragBoxFromMouseDown != Rectangle.Empty &&
+                    !dragBoxFromMouseDown.Contains(e.X, e.Y))
+                {
 
+                    // Proceed with the drag and drop, passing in the list item.                    
+                    DragDropEffects dropEffect = ListKomand.DoDragDrop(
+                    ListKomand.Rows[rowIndexFromMouseDown],
+                    DragDropEffects.Move);
+                }
+            }
+        }
+
+        private void ListKomand_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Get the index of the item the mouse is below.
+            rowIndexFromMouseDown = ListKomand.HitTest(e.X, e.Y).RowIndex;
+            if (rowIndexFromMouseDown != -1)
+            {
+                // Remember the point where the mouse down occurred. 
+                // The DragSize indicates the size that the mouse can move 
+                // before a drag event should be started.                
+                Size dragSize = SystemInformation.DragSize;
+
+                // Create a rectangle using the DragSize, with the mouse position being
+                // at the center of the rectangle.
+                dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2),
+                                                               e.Y - (dragSize.Height / 2)),
+                                    dragSize);
+            }
+            else
+                // Reset the rectangle if the mouse is not over an item in the ListBox.
+                dragBoxFromMouseDown = Rectangle.Empty;
+        }
+
+        private void ListKomand_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void ListKomand_DragDrop(object sender, DragEventArgs e)
+        {
+            //Расположение мыши мы получаем относительно экрана, 
+            //поэтому преобразуем их в координаты клиента.
+            Point clientPoint = ListKomand.PointToClient(new Point(e.X, e.Y));
+
+            //Получим индекс строки, над которой находится курсор мыши
+            rowIndexOfItemUnderMouseToDrop =
+                ListKomand.HitTest(clientPoint.X, clientPoint.Y).RowIndex;
+
+            //Если текущая операция - перетаскивание, вставляем перетягиваемую строку 
+            //в указанную пользователем позицию и удаляем исходную
+            if (e.Effect == DragDropEffects.Move && rowIndexOfItemUnderMouseToDrop > -1)
+            {
+                DataGridViewRow rowToMove = e.Data.GetData(
+                    typeof(DataGridViewRow)) as DataGridViewRow;
+                DataRow oldrow = ((DataRowView)rowToMove.DataBoundItem).Row;
+                //Клонируем перетаскиваемую строку
+                DataRow newrow = dt.NewRow();
+                newrow.ItemArray = oldrow.ItemArray;
+                dt.Rows.Remove(oldrow);
+                dt.Rows.InsertAt(newrow, rowIndexOfItemUnderMouseToDrop);
+                ListKomand.Rows[rowIndexOfItemUnderMouseToDrop].Selected = true;
+            }
+        }
+
+        private void ListKomand_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.RowIndex < ListKomand.RowCount)
+            {
+                //if (ListKomand.Rows[e.RowIndex].Cells[10].Value.ToString() == "1")
+                    ((DataGridView)sender).Rows[e.RowIndex].DefaultCellStyle.BackColor = ((e.RowIndex / 3) % 2) == 0 ? Color.GreenYellow : Color.SkyBlue;
+            }
         }
 
         //////////////////////////copy/////////////////////////////
@@ -1518,9 +1623,6 @@ namespace MainServer
                                     //    textBox3.Text += txt.Substring(3);
                                         break;
                                 }
-                              
-
-
                             }
                         }
                     

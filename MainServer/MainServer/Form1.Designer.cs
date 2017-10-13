@@ -266,6 +266,7 @@
             // 
             // ListKomand
             // 
+            this.ListKomand.AllowDrop = true;
             this.ListKomand.AllowUserToAddRows = false;
             this.ListKomand.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.ListKomand.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
@@ -293,16 +294,23 @@
             this.ListKomand.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListKomand.Location = new System.Drawing.Point(3, 3);
             this.ListKomand.Margin = new System.Windows.Forms.Padding(2);
+            this.ListKomand.MultiSelect = false;
             this.ListKomand.Name = "ListKomand";
             this.ListKomand.RowHeadersVisible = false;
             this.ListKomand.RowTemplate.Height = 24;
             this.ListKomand.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ListKomand.Size = new System.Drawing.Size(1021, 501);
             this.ListKomand.TabIndex = 4;
+            this.ListKomand.VirtualMode = true;
             this.ListKomand.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ListKomand_CellContentClick);
             this.ListKomand.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick);
+            this.ListKomand.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.ListKomand_RowPrePaint);
             this.ListKomand.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.ListKomand_UserDeletingRow);
+            this.ListKomand.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListKomand_DragDrop);
+            this.ListKomand.DragOver += new System.Windows.Forms.DragEventHandler(this.ListKomand_DragOver);
             this.ListKomand.Leave += new System.EventHandler(this.ListKomand_Leave);
+            this.ListKomand.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ListKomand_MouseDown);
+            this.ListKomand.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ListKomand_MouseMove);
             // 
             // ListGames
             // 

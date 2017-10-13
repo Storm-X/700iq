@@ -186,6 +186,7 @@ public class MediaReceiver
             }
             MD5 md5Hash = MD5.Create();
             //int blockSize = msgReceived.dataBlock.Length; // client.ReceiveBufferSize;
+            checkBlocks[msgReceived.blockNum] = false;
             byte[] data = new byte[msgReceived.dataBlock.Length];
             //data.Take(packetSize).ToArray().CopyTo(fileContents, i * blockSize);
             if (!HashesEqual(md5Hash.ComputeHash(msgReceived.dataBlock), msgReceived.blockHash))
