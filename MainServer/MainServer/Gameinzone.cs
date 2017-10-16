@@ -293,7 +293,7 @@ namespace MainServer
         }
         public bool getOtvet(int table, string otv, byte step, IPEndPoint point)         //получение ответа команды
         {
-            if (gm.step < 4 && gm.step > 6)
+            if (gm.step < 4 || gm.step > 6)  //???????????????????????????????????????????????????????????????????????????????
                 return false;
             switch (step)
             {
@@ -313,6 +313,8 @@ namespace MainServer
                     bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
                     break;
+                default:
+                    return false;
             }
             if (gm.activeTable != table + 1) return false;//если ответ не от активного стола -игнор
             if (gm.team[table].answer != "") return false;//если ответ уже есть, то - игнор
@@ -383,8 +385,9 @@ namespace MainServer
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд
                     case 0:
+                        Array.Clear(ok, 0, ok.Length);
                         deadLine = DateTime.Now.AddSeconds(70);
-                        Takt++;
+                        Takt=1;
                         string strZapros;
                         SQLiteCommand cmdl;
                         int questsCount = 0;
@@ -421,7 +424,7 @@ namespace MainServer
                     #endregion
                     #region  1 такт - обработка полученных ставок, определение очереди, получение вопроса
                     case 1:
-
+                        Array.Clear(ok, 0, ok.Length);
                         deadLine = DateTime.Now.AddSeconds(25);
                         gm.step = 3;
                         gm.Cell = rn.rnd();
@@ -514,7 +517,7 @@ namespace MainServer
                             gm.media = reader.GetString(2);
                         }
                         #endregion
-                        Takt++;
+                        Takt=2;
                         //log();
                        // txb.Text += "ogg" + gm.step;
                         tmOtvet.Interval = 90000; //запускаем таймер с ожиданием ответа 1 команды
@@ -556,7 +559,7 @@ namespace MainServer
                                 tmOtvet.Start();
                                 gm.activeTable = currTeam[1].table; //gm.o2;
                             }
-                            Takt++;
+                            Takt=3;
                             //log();
                           //  txb.Text += "ogg" + gm.step;
 
@@ -591,7 +594,7 @@ namespace MainServer
                             deadLine = DateTime.Now.AddSeconds(50);
                             tmOtvet.Start();
                         }
-                        Takt++;
+                        Takt=4;
                         //log();
                      //   txb.Text += "ogg" + gm.step;
                         break;
@@ -626,7 +629,15 @@ namespace MainServer
             {
                 endOfIqon = false;
                 //gm.step = 7;
-                if (gm.iCon >= 12)
+                log();
+                Array.Clear(stavka, 0, stavka.Length);
+                Array.Clear(ok, 0, ok.Length);
+                deadLine = DateTime.Now.AddSeconds(40);
+                Send2All("ogg");
+                gm.iCon++;
+                gm.step = 1;
+                Takt = 0;
+                if (gm.iCon > 12)
                 {
                     gm.Cell = rn.rnd();
                     gm.quest = "";
@@ -643,15 +654,8 @@ namespace MainServer
                         cm.ExecuteNonQuery();
                     }
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    log();
                 }
-                log();
-                Array.Clear(stavka, 0, stavka.Length);
-                Array.Clear(ok, 0, ok.Length);
-                deadLine = DateTime.Now.AddSeconds(40);
-                Send2All("ogg");
-                gm.iCon++;
-                gm.step = 1;
-                Takt = 0;
             }
 
 

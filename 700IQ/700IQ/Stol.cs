@@ -1778,7 +1778,7 @@ namespace _700IQ
             // lbMines.Dispose();
             // lbPlus.Dispose();
             // lbText.Dispose();         
-            onStavka(Convert.ToInt32(lbin.Text));
+            onStavka?.Invoke(Convert.ToInt32(lbin.Text));
             stavkaRegion.Visible=false;
             //  lbin.Dispose();
             workForm.Invalidate();

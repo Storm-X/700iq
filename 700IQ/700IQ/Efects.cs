@@ -331,7 +331,7 @@ namespace _700IQ
 
             if (stav1 == 0)
             {
-                onStShow();
+                onStShow?.Invoke();
                 return;
             }
 
@@ -420,7 +420,7 @@ namespace _700IQ
             if (st2!=null) st2.del();
             if (st3!=null) st3.del();
             if (st4!=null) st4.del();
-            onStShow();          
+            onStShow?.Invoke();          
         }
     }
     public class Polosa:resize//Полоса ожидания
