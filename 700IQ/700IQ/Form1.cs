@@ -1209,7 +1209,7 @@ namespace _700IQ
                 CreateAnswerTable();
                 Ruletka.AnyEventHarakiri();
                 Ruletka.onStop += Step4; //остановка рулетки отрисовка очереди
-                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1420, 150), NewSize(1600, 900)), this, Math.Max(10, steck.quest.Length / 25));
+                Ruletka.StartRul(steck.Cell, new Rectangle(NewPoint(1420, 150), NewSize(1600, 900)), this, steck.Cell == 0 ? 0 : Math.Max(10, steck.quest.Length / 25));
             }          
         }
         private void CreateAnswerTable(bool withQuery = false)
