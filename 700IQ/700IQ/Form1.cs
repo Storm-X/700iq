@@ -1322,7 +1322,7 @@ namespace _700IQ
                         sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                         sd.uid = predUs.GameZone;
                         sd.otvet = "";
-                        cn.SendUDP("ogg" + JsonConvert.SerializeObject(sd));
+                        cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
