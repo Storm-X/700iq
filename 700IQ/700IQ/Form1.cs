@@ -280,7 +280,7 @@ namespace _700IQ
 
         public void loadFromFTP()
         {
-            string fileName = "700iq_setup.exe";
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "700iq_setupLite.exe");
             WebClient myWebClient = new WebClient();
             try
             {
@@ -302,12 +302,20 @@ namespace _700IQ
                 myWebClient.DownloadFileCompleted += (s, e) =>
                 {
                     pol.prBar.Visible = false;
-                    Process.Start("700iq_setup.exe");
+                    try
+                    {                    
+                        Process.Start(fileName);
+                    }
+                    catch 
+                    {
+                        MessageBox.Show("Ошибка установки");
+                    }
+                    
                     Application.Exit();
             
                 }; 
 
-                 myWebClient.DownloadFileAsync(new Uri("http://www.700iq.by/700iq_setup.exe"), fileName);           
+                 myWebClient.DownloadFileAsync(new Uri("http://www.700iq.by/700iq_setupLite.exe"), fileName);           
             }
             catch {
                 MessageBox.Show("Ошибка при скачивании файла! Пожалуйста повторите процедуру обновления.");

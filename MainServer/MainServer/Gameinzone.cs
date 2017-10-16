@@ -526,7 +526,9 @@ namespace MainServer
                     #region 2 такт - обработка ответа первой команды
                 
                     case 2://ответ первой команды
-                        if (gm.Cell == 0)
+
+
+                            if (gm.Cell == 0)
                         {
                             tmOtvet.Stop();
                             endOfIqon = true;
