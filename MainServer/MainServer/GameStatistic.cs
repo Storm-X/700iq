@@ -18,6 +18,7 @@ namespace MainServer
         public Label iCon;
         public Button stopButton;
         public Button restartIcon;
+        public Button turboButton;
         private Timer tmr;
         public GameStatistic(int zoneName,string iqon,int x,int y)
         {
@@ -51,15 +52,23 @@ namespace MainServer
                     Location = new Point(205,5),
                     Tag = zoneName
                 };
-
                 restartIcon = new Button
-               {
-                  Parent = Container,
-                  Text = "Рестарт айкона",
-                  Size = new Size(70, 40),
-                  Location = new Point(280, 5),
-                  Tag = zoneName
-               };
+                {
+                    Parent = Container,
+                    Text = "Рестарт айкона",
+                    Size = new Size(70, 40),
+                    Location = new Point(280, 5),
+                    Tag = zoneName
+                };
+                turboButton = new Button
+                {
+                    Parent = Container,
+                    Text = "Турбо!",
+                    Size = new Size(70, 20),
+                    Location = new Point(355, 5),
+                    Tag = zoneName
+                };
+
         }
     }
 }
