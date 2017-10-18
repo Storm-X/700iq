@@ -261,10 +261,6 @@ namespace _700IQ
 
             }
            
-
-
-
-
             this.workForm.iQash1 = iQash[0];
             this.workForm.iQash2 = iQash[1];
             this.workForm.iQash3 = iQash[2];
@@ -736,11 +732,12 @@ namespace _700IQ
         PictureBox pc1;
         PictureBox pc2;
         PictureBox pc3;
+        public int[] maxSec = { 4, 9, 14, 22, 27, 33 };
         PictureBox picBox1, bgrdPic, bgrdPic2;
         Label lb, vpramka;
-        Label lbst1;
-        Label lbst2;
-        Label lbst3;
+        Label  lbst1;
+        Label  lbst2;
+        Label  lbst3;
         TextBox txBox;
         Label otv;
         GifImage gifImage;
@@ -1071,6 +1068,8 @@ namespace _700IQ
             var answTeam = steckIn.team.OrderBy(x => x.answerOrder);
             //byte[] answOrder = answTeam.Select(x => x.answerOrder).ToArray();
 
+
+
             #region//описание фишек с номерами команд
             pc1 = new PictureBoxWithInterpolationMode()
             {
@@ -1078,9 +1077,10 @@ namespace _700IQ
                 Visible = false,
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
-                Location = NewPoint(1250, 250 + dy),
+                Location = NewPoint(1120, 250 + dy),
                 BackgroundImage = (Image)Properties.Resources.ResourceManager.GetObject(String.Format("kom{0}", answTeam.ElementAt(0).table)),//im[answTeam.ElementAt(0).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
+                
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
                 InterpolationMode = InterpolationMode.NearestNeighbor,
@@ -1092,9 +1092,10 @@ namespace _700IQ
                 Visible = false,
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
-                Location = NewPoint(1250, 450 + dy),
+                Location = NewPoint(1120, 460 + dy),
                 BackgroundImage = (Image)Properties.Resources.ResourceManager.GetObject(String.Format("kom{0}", answTeam.ElementAt(1).table)),//im[answTeam.ElementAt(0).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
+               
                 SizeMode = PictureBoxSizeMode.Zoom,
                 SmoothingMode = SmoothingMode.AntiAlias,
                 InterpolationMode = InterpolationMode.NearestNeighbor
@@ -1105,7 +1106,8 @@ namespace _700IQ
                 Visible = false,
                 BackColor = Color.Transparent,
                 Size = NewSizeKv(170),
-                Location = NewPoint(1250, 650 + dy),
+                Location = NewPoint(1120, 670 + dy),
+                
                 BackgroundImage = (Image)Properties.Resources.ResourceManager.GetObject(String.Format("kom{0}", answTeam.ElementAt(2).table)),//im[answTeam.ElementAt(0).answerOrder],
                 BackgroundImageLayout = ImageLayout.Zoom,
                 SizeMode = PictureBoxSizeMode.Zoom,
@@ -1167,45 +1169,52 @@ namespace _700IQ
 
             #endregion
             #region//описание полей со ставками команд
+            int Cell = Array.IndexOf(maxSec, steckIn.Cell);
             lbst1 = new Label()
             {
-                Parent = workForm,
-                Visible = false,
-                Name = "questControls",
-                BackColor = Color.Transparent,
-                Size = NewSize(95, 120),
-                Location = NewPoint(1400, 275 + dy),
-                Font = new Font("times new roman", NewFontSize(17)),
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.Yellow,
-                Text = answTeam.ElementAt(0).stavka.ToString() + "\n IQ",
+                    Parent = workForm,
+                    Visible = false,
+                    Name = "questControls",
+                    BackColor = Color.Transparent,
+                    Size = NewSize(520, 40),
+                    Font = new Font("times new roman", NewFontSize(15)),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    ForeColor = Color.Yellow,
+                    Text = Cell==-1?"Порядок рулетки. Ставка - "+ answTeam.ElementAt(0).stavka.ToString() + " IQ":
+                                    "Игр. max. ставка -" + answTeam.ElementAt(0).stavka.ToString() + " IQ",
             };
+            lbst1.Location = new Point((pc1.Location.X + pc1.Width / 2) - lbst1.Width / 2,pc1.Location.Y+pc1.Height-5);
+
             lbst2 = new Label()
             {
                 Parent = workForm,
                 Visible = false,
                 Name = "questControls",
                 BackColor = Color.Transparent,
-                Size = NewSize(95, 120),
-                Location = NewPoint(1400, 470 + dy),
-                Font = new Font("times new roman", NewFontSize(16)),
+                Size = NewSize(520, 40),
+                Font = new Font("times new roman", NewFontSize(15)),
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = Color.Yellow,
-                Text = answTeam.ElementAt(1).stavka.ToString() + "\n IQ",
+                Text = answTeam.ElementAt(1).stavka == answTeam.ElementAt(2).stavka ?
+                                        "Ставка - " + answTeam.ElementAt(1).stavka.ToString() + " IQ" :
+                                        "Игр. max. ставка " + answTeam.ElementAt(1).table.ToString() + " и " + answTeam.ElementAt(2).table.ToString() + " ст. - " + answTeam.ElementAt(1).stavka.ToString() + " IQ",
             };
+            lbst2.Location = new Point((pc2.Location.X + pc2.Width / 2) - lbst2.Width / 2, pc2.Location.Y + pc2.Height - 5);
+
             lbst3 = new Label()
             {
-                Parent = workForm,
-                Visible = false,
-                Name = "questControls",
-                BackColor = Color.Transparent,
-                Size = NewSize(95, 120),
-                Location = NewPoint(1400, 680 + dy),
-                Font = new Font("Times New Roman", NewFontSize(16)),
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.Yellow,
-                Text = answTeam.ElementAt(2).stavka.ToString() + "\n IQ",
+                    Parent = workForm,
+                    Visible = false,
+                    Name = "questControls",
+                    BackColor = Color.Transparent,
+                    Size = NewSize(520, 40),
+                    Location = NewPoint(920, 775 + dy),
+                    Font = new Font("Times New Roman", NewFontSize(15)),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    ForeColor = Color.Yellow,
+                    Text = "Ставка - " + answTeam.ElementAt(2).stavka.ToString() + " IQ",
             };
+            lbst3.Location = new Point((pc3.Location.X + pc3.Width / 2) - lbst3.Width / 2, pc3.Location.Y + pc3.Height - 5);
             #endregion
             #region//описание полей с ответами команд
             lbAnswer = new Label[]
@@ -1254,8 +1263,6 @@ namespace _700IQ
           //  tm.Start();
             tmSem.Interval = 300;
             tmSem.Tick += TmSem_Tick;
-
-            //}
         }
         private void Tm_Tick(object sender, EventArgs e)
         {
@@ -1264,15 +1271,15 @@ namespace _700IQ
             {
                 case 1:
                     pc1.Visible = true;
-                    lbst1.Visible = true;
+                   // lbst1.Visible = true;
                     break;
                 case 2:
                     pc2.Visible = true;
-                    lbst2.Visible = true;
+                   // lbst2.Visible = true;
                     break;
                 case 3:
                     pc3.Visible = true; tm.Dispose();
-                    lbst3.Visible = true;
+                   // lbst3.Visible = true;
                     break;
             }
             //if (tick == 1) pc1.Visible = true;
@@ -1315,9 +1322,10 @@ namespace _700IQ
         }
         void semStart()//мигание отвечающей команды
         {
-         //   string ss;
-         //   foreach (var sss in ((System.Reflection.TypeInfo)(this.GetType())).DeclaredMembers)
-         //       ss = sss.Name.ToString();
+    
+            lbst1.Visible = true;
+            lbst2.Visible = true;
+            lbst3.Visible = true;
 
             switch (semaforN)
             {

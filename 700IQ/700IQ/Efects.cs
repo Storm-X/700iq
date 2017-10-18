@@ -306,6 +306,7 @@ namespace _700IQ
         PictureBox pc2 = new PictureBox();
         PictureBox pc3 = new PictureBox();
         PictureBox pc4 = new PictureBox();
+        
         //Form ff = new Form();
         int stav1, stav2, stav3, stav4;
         Point pn = new Point();
@@ -335,7 +336,7 @@ namespace _700IQ
                 return;
             }
 
-            size_stack = NewSize(150, 0).Width;
+            size_stack = NewSize(130, 0).Width;
             distance = NewSize(400, 0).Width /2;
 
             if (st4 == 0 && st3 != 0)
@@ -343,7 +344,7 @@ namespace _700IQ
                 pn = NewPoint(825, 400);
                 itsStavka = true;
             }
-            else  pn = NewPoint(1300, 760);
+            else  pn = NewPoint(1300, 770);
 
             st = new stakan();
             st.onStop += stavka2;

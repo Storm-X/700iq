@@ -112,7 +112,7 @@ namespace _700IQ
         /// </summary>
         private IPAddress ServerSearch()
         {
-            IPAddress[] IPs = new IPAddress[5];
+            IPAddress[] IPs = new IPAddress[20];
             /*IPs[0] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server1", "127.0.0.1"));
             IPs[1] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server2", "127.0.0.1"));
             IPs[2] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server3", "127.0.0.1"));
@@ -234,48 +234,51 @@ namespace _700IQ
                 pcBox.Click += onClickMedal;
                 if (arguments.Length > 1)
                     onClickMedal(pcBox, null);
-                //pcBox.KeyDown += onClickMedal();
-                //тест рулетки, ставок, темы
-                /* 
-                Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
-                Ruletka.StartRul(0, kv, this, 2); // 2);*/
+            //pcBox.KeyDown += onClickMedal();
+            //тест рулетки, ставок, темы
+            /* 
+            Rectangle kv = new Rectangle(NewPoint(800, 150), NewSizeKv(900));
+            Ruletka.StartRul(0, kv, this, 2); // 2);*/
 
 
 
-                    //tbl.TemaShow(true);
-                    // stShow.inputStavki(100, 200, 300, 0, this);
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            //StavkiShow stShow = new StavkiShow();
+            //tbl = new Table(predUs, this);
+            //stShow.inputStavki(300, 300, 300, 0, this, 1);
+            /////////////////////////////////////////////////////////////////////////////////////////
 
-                    #endregion
-                    ////для теста Рулетки на старте проги
-                    //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
-                    //g.DrawRectangle(Pens.Black, kv);
-                    //Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
-                    //System.Media.SystemSounds.Question.Play();
-                    //Console.Beep();
-                    //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
-                    //pol.prBar.AutoReset = true;
+            #endregion
+            ////для теста Рулетки на старте проги
+            //Rectangle kv = new Rectangle(NewPoint(660, 150), NewSize(1600,900));
+            //g.DrawRectangle(Pens.Black, kv);
+            //Ruletka.StartRul(5, kv, this, 3); // 2); //2 ячейка ??? надо ли??
+            //System.Media.SystemSounds.Question.Play();
+            //Console.Beep();
+            //pol.polosa(40, NewPoint(1600, 1350), this, "ini3");
+            //pol.prBar.AutoReset = true;
 
 
-           // }
-           /* else
-            {
-                try
-                {
-                    server = ServerSearch();
-                    Ini1();
-                    Control btnLogin = this.Controls.Find("btnLogin", true).FirstOrDefault();
-                    Control login = this.Controls.Find("login", true).FirstOrDefault();
-                    Control parol = this.Controls.Find("parol", true).FirstOrDefault();
-                    login.Text = arguments[1];
-                    parol.Text = arguments[2];
-                    Ini2(btnLogin, null);
+            // }
+            /* else
+             {
+                 try
+                 {
+                     server = ServerSearch();
+                     Ini1();
+                     Control btnLogin = this.Controls.Find("btnLogin", true).FirstOrDefault();
+                     Control login = this.Controls.Find("login", true).FirstOrDefault();
+                     Control parol = this.Controls.Find("parol", true).FirstOrDefault();
+                     login.Text = arguments[1];
+                     parol.Text = arguments[2];
+                     Ini2(btnLogin, null);
 
-                }
-                catch (Exception error)
-                {
-                    MessageBox.Show("Фиаско штурвалу");
-                }      
-            }*/
+                 }
+                 catch (Exception error)
+                 {
+                     MessageBox.Show("Фиаско штурвалу");
+                 }      
+             }*/
         }
 
         public void loadFromFTP()
@@ -675,11 +678,7 @@ namespace _700IQ
                 ForeColor = Color.White
             };
             #endregion
-            ////////////////////////////////////////////////////////////////////////////////////////////
-           // StavkiShow stShow = new StavkiShow();
-           // tbl = new Table(predUs, this);
-           // stShow.inputStavki(300, 300, 300, 100, this, 1);
-            /////////////////////////////////////////////////////////////////////////////////////////
+         
             pol.AnyEventHarakiri();
             pol.onPolosaEnd += ini4;
             pol.polosa(11, NewPoint(1600, 1350), this, "ini3");
