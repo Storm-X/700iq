@@ -1254,16 +1254,11 @@ namespace _700IQ
                 {
                     if (otvetStatic == null)
                         CreateAnswerTable(true);
-                    //else
-                    //    otvetStatic.ochered(steck); //.GetAwaiter().GetResult();
-                    //otvetStatic.semafor(0);
                     otvetStatic.SetFocus();
                     otvetStatic.semafor(1);
                     if (steck.activeTable == myTeam.table)//если ответ моей команды, то запускаем таймер
                     {
-                        //Debug.WriteLine();
                         otvetStatic.polosaStart(this, 4,pol);
-                        //otvetStatic.onSendOtvet += NextStep;
                     }
                     else //если не мой ответ, то ждем следующей команды сервера
                     {
@@ -1321,8 +1316,9 @@ namespace _700IQ
                         sd.kluch = myTeam.kod;   //kluch;
                         sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                         sd.uid = predUs.GameZone;
+                        sd.step = 3;
                         sd.otvet = "";
-                        cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
+                        cn.SendUDP("zgg" + JsonConvert.SerializeObject(sd));
                     //  Polosa pol = new Polosa();
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
@@ -1562,8 +1558,8 @@ namespace _700IQ
                     sd.kluch = myTeam.kod;   //kluch;
                     sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
                     sd.uid = predUs.GameZone;
-                    sd.step = 1;
-                    cn.SendUDP("zww" + JsonConvert.SerializeObject(sd));
+                    sd.step = 0;
+                    cn.SendUDP("zgg" + JsonConvert.SerializeObject(sd));
                     //    Step1_3();
                     bIconFinalised = false;
                 }
@@ -1581,7 +1577,7 @@ namespace _700IQ
             else
             {
                 bIconFinalised = true;
-                tbl.EndOfGame(steck);//описать финальную заставку 
+                tbl.EndOfGame(steck); //описать финальную заставку 
             }
         }
         #endregion

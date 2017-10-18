@@ -472,7 +472,7 @@ namespace _700IQ
             string lbText = "";
 
             //var teamPos = steck.team.OrderByDescending(c => c.iQash);                         //Список команд, отсортированный по результату
-            int[] o = ResponsePriority(steck.Cell, steck.team.Select(x => x.iQash << 2).ToArray());
+            int[] o = ResponsePriority(steck.Cell == 0 ? 1 : steck.Cell, steck.team.Select(x => x.iQash << 2).ToArray());
             var cntEqualTeamsGrp = steck.team.GroupBy(x => x.iQash);                            //Группировка по результату
             int cntEqualTeams = steck.team.Select(x => x.iQash).Distinct().Count();             //Подсчет количества различных результатов у команд
             workForm.BackgroundImage = bmp;
@@ -1600,7 +1600,7 @@ namespace _700IQ
             SendData snd = new SendData();
             snd.otvet = txBox.Text;
             snd.uid = predUs.GameZone;
-            snd.step =(byte) step;
+            snd.step =(byte)step;
             snd.table = (byte)tableofkom;
             snd.kluch = predUs.team[tableofkom].kod;
             

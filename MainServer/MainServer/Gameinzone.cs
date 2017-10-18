@@ -144,8 +144,10 @@ namespace MainServer
             switch (step)
             {
                 case 1:
-                    gm.step = 1;
-                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                    //gm.step = 1;
+                    //if (Takt == 2)
+                        //nextTakt();
+                    bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
                     break;
                 case 4:
@@ -168,7 +170,7 @@ namespace MainServer
                     break;
             }
         }
-        public void Update(int step, int table, string otv, int stav, IPEndPoint point) //обнавление ставки и команды готов
+        public void Update(int step, int table, string otv, int stav, IPEndPoint point) //обновление ставки и команды готов
         {
             endpoint[table] = point;
             switch (gm.step)
@@ -178,17 +180,14 @@ namespace MainServer
                 case 1:
                     if (gm.step < 2)
                     {
-                        //if (Takt == 0)
-                        //{
-                        //ok[table] = true;
+                        if (otv == null)
+                            otv = "";
                         ok[table] = otv.Equals("gotov", StringComparison.OrdinalIgnoreCase);
                         if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                         {
                             nextTakt();
                             Array.Clear(ok, 0, ok.Length);
                         }
-                        //else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(40);
-                        //}
                         else //if (ok[0] & ok[1] & ok[2] || Takt != 0)
                         {
                             bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
@@ -204,40 +203,26 @@ namespace MainServer
                         if(stavka[table] == 0) stavka[table] = stav;
                         if (Takt == 1 && (Array.TrueForAll(stavka, value => value != 0) || deadLine <= DateTime.Now))
                             nextTakt();
-                        //else if (deadLine == null) deadLine = DateTime.Now.AddSeconds(25);
-
-                        /*if (stavka[table] == 0)
-                        {
-                            stavka[table] = stav;
-                            tm.Interval = 25000;
-                            if (!tm.Enabled)
-                                tm.Start();
-                        }
-                        else
-                        {
-                            if (Array.TrueForAll(stavka, value => value != 0) && tm.Enabled) //if((stavka[0] & stavka[1] & stavka[2]) != 0)
-                            {
-                                tm.Stop();
-                                Tm_Tick(this, null);
-                                //nextTakt();
-                            }
-                            ////if (stavka[0] != 0 && stavka[1] != 0 && stavka[2] != 0)
-                            ////{
-                            //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                            //    udp.Send(bytes, bytes.Length, point);
-                            ////}
-                        }*/
                         bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                         udp.Send(bytes, bytes.Length, point);
-                        //Send2All(bytes);
                     }
                     break;
+                case 3:
+                    if (gm.step == step)
+                    {
+                        if (Takt == 2 || deadLine <= DateTime.Now)
+                        {
+                            tmOtvet.Stop();
+                            nextTakt();
+                        }
+                    }
+                        break;
                 default:
-                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                    udp.Send(bytes, bytes.Length, point);
                     break;
                     #endregion
             }
+            bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+            udp.Send(bytes, bytes.Length, point);
         }
         public string startGM()
         {
@@ -259,7 +244,6 @@ namespace MainServer
             sLog.Themes = theme;
             sLog.usersid = usersid;
             //sLog.gmLog.iCon--; //Записываем в базу данные не на начало следующего айкона, а на конец текущего.
-
 
             string sql = " insert into logs (gameid, zone, iqon_num, command) value (" + data.idGame + ", " + data.GameZone + ", " +
                 sLog.gmLog.iCon + ",'" + JsonConvert.SerializeObject(sLog) + "')";
@@ -427,7 +411,7 @@ namespace MainServer
                         Array.Clear(ok, 0, ok.Length);
                         deadLine = DateTime.Now.AddSeconds(25);
                         gm.step = 3;
-                        gm.Cell = rn.rnd();
+                        gm.Cell = 0; //rn.rnd();
                         //if (gm.Cell == 0) gm.Cell = 1;
                         /* if (gm.Cell == 0)
                          {
@@ -622,10 +606,8 @@ namespace MainServer
 
             //Отправим сообщение всем столам данной игровой тройки
 
-            //if (gm.Cell != 0)
-            {
+            if (gm.Cell != 0)
                 Send2All("ogg");
-            }
 
             if (endOfIqon)
             {
@@ -635,10 +617,13 @@ namespace MainServer
                 Array.Clear(stavka, 0, stavka.Length);
                 Array.Clear(ok, 0, ok.Length);
                 deadLine = DateTime.Now.AddSeconds(40);
-                Send2All("ogg");
+
                 gm.iCon++;
                 gm.step = 1;
                 Takt = 0;
+
+                Send2All("ogg");
+
                 if (gm.iCon > 12)
                 {
                     gm.Cell = rn.rnd();
@@ -660,11 +645,8 @@ namespace MainServer
                 }
             }
 
-
-            /*if (gm.Cell == 0)
-            {
-                Send2All("ogg");
-            }*/
+            //if (gm.Cell == 0)
+              //  Send2All("ogg");
 
         }
         public void RestartIqon()
@@ -685,8 +667,13 @@ namespace MainServer
             //gm.step = 0;
             Takt = 0;
             //Send2All("ogg");
-
         }
+
+        internal void TurboIt()
+        {
+            this.deadLine = DateTime.Now;
+        }
+
         private void Send2All(string command)
         {
             bytes = Encoding.UTF8.GetBytes(command + JsonConvert.SerializeObject(gm));

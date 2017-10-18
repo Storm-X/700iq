@@ -945,12 +945,20 @@ namespace MainServer
                     MassGameZone[i].gs = new GameStatistic(MassGameZone[i].data.GameZone, (MassGameZone[i].gm.iCon).ToString(), label3.Location.X,150+ (i * 35));
                     MassGameZone[i].gs.stopButton.Click += stGame;
                     MassGameZone[i].gs.restartIcon.Click += RestartIcon_Click;
+                    MassGameZone[i].gs.turboButton.Click += TurboButton_Click;
                 }
                 ListKomand.ReadOnly = true;
                 button1.Enabled = true;
                 ToJS();
             }
 
+        }
+
+        private void TurboButton_Click(object sender, EventArgs e)
+        {
+            Button btnPressed = (Button)sender;
+            int i = Convert.ToInt32(btnPressed.Tag) - 1;
+            MassGameZone[i].TurboIt();
         }
 
         private void RestartIcon_Click(object sender, EventArgs e)
@@ -1571,7 +1579,7 @@ namespace MainServer
                                     #endregion
                                     #region ogg- обработка ответа команды
                                     case "ogg":
-                                        Application.DoEvents();//////////////////////////////////////////////////////////////////////////////////????????????????????????????????
+                                       Application.DoEvents();//////////////////////////////////////////////////////////////////////////////////????????????????????????????????
                                        ResiveData dataZapros = new ResiveData();
                                        dataZapros = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
                                         if (MassGameZone.Count >= dataZapros.uid && MassGameZone[dataZapros.uid - 1].verify(dataZapros.kluch, dataZapros.table)) //проверяем ключ сессии
