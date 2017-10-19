@@ -1537,11 +1537,11 @@ namespace _700IQ
             }
             else
             {
-                //otvetStatic?.close();
-                //otvetStatic = null;
+                otvetStatic?.close();
+                otvetStatic = null;
                 //Найдем случайные дубли свитков и грохнем их тоже
-                foreach (Control t in this.Controls.Find("Svitok", true))
-                    this.Controls.Remove(t);
+                //foreach (Control t in this.Controls.Find("Svitok", true))
+                //    this.Controls.Remove(t);
                 this.Invalidate();
             }
         }

@@ -787,6 +787,8 @@ namespace _700IQ
             {
                 if (disposing)
                 {
+                    if (bgrdPic2.Parent != null)
+                        bgrdPic2.Parent.Controls.Remove(bgrdPic2);
                     tmSem.Dispose();
                     gifTimer.Dispose();
                     //this.DisposeSequence(pcResult);
