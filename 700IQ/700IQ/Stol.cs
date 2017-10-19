@@ -800,10 +800,14 @@ namespace _700IQ
 
                     pc1.Dispose(); pc2.Dispose(); pc3.Dispose();
                     //lb1.Dispose(); lb2.Dispose(); lb3.Dispose();
-                    foreach (Label lb in lbAnswer) lb.Dispose();
+                    foreach (Label lb in lbAnswer)
+                        lb.Dispose();
+                    foreach (PictureBox pb in pcResult)
+                        pb.Dispose();
                     //pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
                     lbst1.Dispose(); lbst2.Dispose(); lbst3.Dispose();
-                    //bgrdPic.Dispose();
+                    picBox1.Dispose();
+                    bgrdPic.Dispose();
                     bgrdPic2.Dispose();
                 }
                 // освобождаем неуправляемые объекты
@@ -852,6 +856,7 @@ namespace _700IQ
             //Bitmap bmp = new Bitmap(Properties.Resources.Svitok, NewSize(900, 1150));
             bgrdPic2 = new PictureBox()
             {
+                Name = "Svitok",
                 Parent = workForm,
                 Size = NewSize(900, 1170),
                 Location = NewPoint(60, 150),

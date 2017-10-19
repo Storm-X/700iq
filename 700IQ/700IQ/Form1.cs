@@ -849,8 +849,8 @@ namespace _700IQ
                         startInfo.Arguments = quote + lg+ quote + " "+ quote + ps + quote;
                         Process.Start(startInfo);
                         Application.Exit();
-                        RemoveAll();
-                        cn.ClearLastCommand();
+                        //RemoveAll();
+                        //cn.ClearLastCommand();
                     break;
                 #region case owt - ожидание
                 case "oww":
@@ -1322,6 +1322,7 @@ namespace _700IQ
                     pol.AnyEventHarakiri();
                     pol.onPolosaEnd += Step9;
                     pol.polosa(14, NewPoint(1600, 1350), this, "Step4 - Zero");
+                    //Step5_7_finalise();
                     Debug.WriteLine("Zero! Step4 Finished.");
                 }
             }
@@ -1524,8 +1525,11 @@ namespace _700IQ
             }
             else
             {
-                otvetStatic?.close();
-                otvetStatic = null;
+                //otvetStatic?.close();
+                //otvetStatic = null;
+                //Найдем случайные дубли свитков и грохнем их тоже
+                foreach (Control t in this.Controls.Find("Svitok", true))
+                    this.Controls.Remove(t);
                 this.Invalidate();
             }
         }
@@ -1545,10 +1549,8 @@ namespace _700IQ
                 Debug.WriteLine("Step9, IConFinalised={0}", bIconFinalised);
                 this.Controls["Iqon"]?.Dispose(); // Text = "";
                 //this.Controls["oneuse"]?.Dispose(); // Text = "";
+                Step4_finalise();
                 Step5_7_finalise();
-                //otvetStatic?.close();
-                //Ruletka?.close();
-                //this.Invalidate();
                 if (steck.iCon > 12)
                     Step10();
                 else
