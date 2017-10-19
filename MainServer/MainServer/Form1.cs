@@ -113,6 +113,9 @@ namespace MainServer
                     List<string> tour = new List<string>(tournaments.AsEnumerable().Select(r => r.Field<string>("Name")).ToArray());
                     comboBox3.DataSource = tour;
 
+                    mServer = new MediaServer();
+                    mServer.Start();
+
                 }
                 catch (InvalidCastException j)
                 {
@@ -913,9 +916,6 @@ namespace MainServer
                 rgData.canReg = true;
                 start.BackColor = Color.GreenYellow;
                 start.Text = "Поехали";
-
-                mServer = new MediaServer();
-                mServer.Start();
 
                 //for (int i = 0; i < troika - 1; i++)
                 for (int i = 0; i < troika; i++)
