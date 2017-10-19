@@ -281,12 +281,13 @@ namespace _700IQ
              }*/
         }
 
-        public void loadFromFTP()
+        public async void loadFromFTP()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "700iq_setupLite.exe");
-            WebClient myWebClient = new WebClient();
             try
             {
+                
+                MediaReceiver mReceiver = new MediaReceiver(this.IP, 8080);
                 pol.AnyEventHarakiri();
                 pol.polosaUpdate(pcBox);
                 pcBox.Image=null;
@@ -296,29 +297,40 @@ namespace _700IQ
                 pol.prBar.Size = NewSizeKv(395);
                 pol.prBar.Font = new Font("Arial ", NewFontSize(36));
                 pol.prBar.ForeColor = Color.Gold;
-                myWebClient.DownloadProgressChanged += (s, e) =>
+                mReceiver.ontransferProgress += () =>
                 {
-                    
-                    pol.prBar.Value = e.ProgressPercentage;
-                    
+                    pol.prBar.Value = (int)((double)mReceiver.Number /  (double)mReceiver.blockCount * 100) ;
                 };
-                myWebClient.DownloadFileCompleted += (s, e) =>
+                mReceiver.onTransferComplete += () =>
                 {
-                    pol.prBar.Visible = false;
-                    try
-                    {                    
-                        Process.Start(fileName);
-                    }
-                    catch 
+                    if (this.InvokeRequired)
                     {
-                        MessageBox.Show("Ошибка установки");
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            pol.prBar.Visible = false;
+                            try
+                            {
+                                ProcessStartInfo processInfo = new ProcessStartInfo();
+                                processInfo.Verb = "runas";
+                                processInfo.FileName = fileName;
+                                Process.Start(processInfo);
+                            }
+                            catch(Exception ex)
+                            {
+                                MessageBox.Show("Ошибка установки - " + ex.Message);
+                            }
+                            Application.Exit();
+                        });
                     }
-                    
-                    Application.Exit();
-            
-                }; 
+                };
+                await Task.Run(() =>
 
-                 myWebClient.DownloadFileAsync(new Uri("http://www.700iq.by/700iq_setupLite.exe"), fileName);           
+                {
+                    byte[] filecontent = new byte[0];
+                    mReceiver.GetMedia("700iq_setupLite.exe", ref filecontent, true);  
+                });
+
+
             }
             catch {
                 MessageBox.Show("Ошибка при скачивании файла! Пожалуйста повторите процедуру обновления.");

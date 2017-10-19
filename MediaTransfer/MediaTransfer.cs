@@ -14,6 +14,7 @@ using System.Collections.Generic;
 public class MediaServer
 {
     public int Port { get; set; }
+    
     Socket client;
     private byte[] byteData = new byte[65500];
 
@@ -126,7 +127,14 @@ public class MediaReceiver
     public event transferError onTransferError;
     public delegate void transferProgress();
     public event transferProgress ontransferProgress;
+   
+    private int blocksCount;
+    public int blockCount
+    {
+        get {return blocksCount;}
+    }
 
+    private bool createFile;
     private EndPoint senderRemote;
     private Socket server;
     private string FileName;
@@ -137,8 +145,13 @@ public class MediaReceiver
     private String currStatus;
     public String CurrentStatus { get { return currStatus; } }
     private Boolean fTransferComplete;
-    //public ProgressBar transferProgressBar;
+   // public ProgressBar transferProgressBar;
     private System.Timers.Timer TimeOutChecker;
+    private int number;
+    public int Number
+    {
+        get { return number; }
+    }
 
     public MediaReceiver(IPAddress ipAddress, int Port)
     {
@@ -184,11 +197,12 @@ public class MediaReceiver
             server.EndReceive(ar);
             //Преобразование массива байтов, полученных от пользователя в удобную для нас форму объекта данных
             DataInfo msgReceived = new DataInfo(byteData);
-            int blocksCount = (int)Math.Ceiling((float)msgReceived.filesize / (float)maxBufferSize); // blockSize);
+            blocksCount = (int)Math.Ceiling((float)msgReceived.filesize / (float)maxBufferSize); // blockSize);
             if (msgReceived.blockNum == 0)
             {
                 currStatus = string.Format("----Информация о файле получена! Размер файла: {0} байт", msgReceived.filesize);
-                fileContents = new byte[msgReceived.filesize];
+                Array.Resize(ref fileContents, msgReceived.filesize);
+                //fileContents = new byte[msgReceived.filesize];
                 checkBlocks = new Boolean[blocksCount];
                 //transferProgressBar.BeginInvoke(new Action(() => transferProgressBar.Maximum = blocksCount));
             }
@@ -204,6 +218,8 @@ public class MediaReceiver
                 msgReceived.dataBlock.CopyTo(fileContents, maxBufferSize * msgReceived.blockNum);
                 checkBlocks[msgReceived.blockNum] = true;
             }
+            number = msgReceived.blockNum;
+            ontransferProgress?.Invoke();
             //transferProgressBar.BeginInvoke(new Action(() => transferProgressBar.PerformStep()));
             server.BeginReceiveFrom(byteData, 0, byteData.Length, SocketFlags.None, ref senderRemote, new AsyncCallback(OnReceive), null);
             TimeOutChecker.Start();
@@ -215,10 +231,12 @@ public class MediaReceiver
             Debug.WriteLine("FileTransferClient: " + ex.Message);
         }
     }
-    public byte[] GetMedia(string FileName)
+    public void GetMedia(string FileName, ref byte[] fContainer, bool createFile)
     {
+        fileContents = fContainer;
         fTransferComplete = false;
         this.FileName = FileName;
+        this.createFile = createFile;
         try
         {
             TimeOutChecker.Stop();
@@ -238,7 +256,7 @@ public class MediaReceiver
         }
         while (!fTransferComplete);
         onTransferComplete?.Invoke();
-        return fileContents;
+        return; // fileContents;
     }
     private void OnTimedEvent(Object source, ElapsedEventArgs e)
     {
@@ -259,11 +277,11 @@ public class MediaReceiver
             msgToSend.filename = this.FileName;
             msgToSend.blockNum = i;
             byte[] byteData = msgToSend.ToByte();
-            server.BeginSendTo(byteData, 0, byteData.Length,
-                SocketFlags.None, senderRemote, new AsyncCallback(OnSend), null);
-            //Пока создавать файл рановато, ждем пока не получим все блоки в целости и сохранности
+            server.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, senderRemote, new AsyncCallback(OnSend), null);
+            //Пока создавать файл рановато, ждем пока не получим все блоки в целости и сохранности          
             return false;
         }
+        if (createFile) File.WriteAllBytes(FileName, fileContents);
         //string fileName = System.IO.Path.GetTempFileName() + this.FileName; //msgReceived.filename;
         //File.WriteAllBytes(fileName, fileContents);
         //transferProgressBar.BeginInvoke(new Action(() => transferProgressBar.Value = 0));

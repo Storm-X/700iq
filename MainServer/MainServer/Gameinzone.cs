@@ -629,8 +629,16 @@ namespace MainServer
                     gm.Cell = rn.rnd();
                     gm.quest = "";
                     gm.theme = 0;
+                   
                     //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
                     var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
+                    for(int i = 0; i < 3; i++) {
+                        gm.team[i].answerOrder = (byte)mesta[i];//???
+                        gm.team[i].answer = "";
+                        gm.team[i].correct = false;
+                        gm.team[i].stavka = 0;
+                    }
+
                     Ratings rating = new Ratings(this, mycon, mesta);
                     var rat = rating.getRatings();
                     for (int i = 0; i < 3; i++)
