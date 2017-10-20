@@ -1540,8 +1540,8 @@ namespace _700IQ
                 otvetStatic?.close();
                 otvetStatic = null;
                 //Найдем случайные дубли свитков и грохнем их тоже
-                //foreach (Control t in this.Controls.Find("Svitok", true))
-                //    this.Controls.Remove(t);
+                foreach (Control t in this.Controls.Find("Svitok", true))
+                    this.Controls.Remove(t);
                 this.Invalidate();
             }
         }
@@ -1770,7 +1770,15 @@ namespace _700IQ
 
         private void GeneralForm_KeyUp(object sender, KeyEventArgs e)//управление клавиатурой
         {
-           if (e.KeyCode == Keys.F5) cn.ClearLastCommand();
+            if (e.KeyCode == Keys.F5)
+                cn.ClearLastCommand();
+            if (e.KeyCode == Keys.F6)
+            {
+                foreach (Control t in this.Controls.Find("Svitok", true))
+                    this.Controls.Remove(t);
+                this.Invalidate();
+            }
+
             if (e.KeyCode == Keys.Enter)
             {
                 if (pol.ff != null &&pol.pcBox.Visible &&pol.ff.Visible && pol.Value > 0) { pol.Finish(); return; }//полоска

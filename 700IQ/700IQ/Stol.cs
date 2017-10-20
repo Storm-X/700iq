@@ -785,10 +785,10 @@ namespace _700IQ
         {
             if (!IsDisposed)
             {
+                if (bgrdPic2.Parent != null)
+                    bgrdPic2.Parent.Controls.Remove(bgrdPic2);
                 if (disposing)
                 {
-                    if (bgrdPic2.Parent != null)
-                        bgrdPic2.Parent.Controls.Remove(bgrdPic2);
                     tmSem.Dispose();
                     gifTimer.Dispose();
                     //this.DisposeSequence(pcResult);
@@ -804,8 +804,6 @@ namespace _700IQ
                     //lb1.Dispose(); lb2.Dispose(); lb3.Dispose();
                     foreach (Label lb in lbAnswer)
                         lb.Dispose();
-                    foreach (PictureBox pb in pcResult)
-                        pb.Dispose();
                     //pc1rez.Dispose(); pc2rez.Dispose(); pc3rez.Dispose();
                     lbst1.Dispose(); lbst2.Dispose(); lbst3.Dispose();
                     picBox1.Dispose();
@@ -838,7 +836,7 @@ namespace _700IQ
         {
             MediaReceiver mReceiver = new MediaReceiver(workForm.IP, 8080);
             byte[] filecontent = new byte[0];
-            mReceiver.GetMedia(fileName, ref filecontent, false);
+            mReceiver.GetMedia(fileName, ref filecontent);
             if (filecontent.Length == 0)
                 return null;
             else

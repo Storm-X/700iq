@@ -198,10 +198,11 @@ public class MediaReceiver
             //Преобразование массива байтов, полученных от пользователя в удобную для нас форму объекта данных
             DataInfo msgReceived = new DataInfo(byteData);
             blocksCount = (int)Math.Ceiling((float)msgReceived.filesize / (float)maxBufferSize); // blockSize);
+            if(fileContents.Length == 0)
+                Array.Resize(ref fileContents, msgReceived.filesize);
             if (msgReceived.blockNum == 0)
             {
                 currStatus = string.Format("----Информация о файле получена! Размер файла: {0} байт", msgReceived.filesize);
-                Array.Resize(ref fileContents, msgReceived.filesize);
                 //fileContents = new byte[msgReceived.filesize];
                 checkBlocks = new Boolean[blocksCount];
                 //transferProgressBar.BeginInvoke(new Action(() => transferProgressBar.Maximum = blocksCount));
@@ -231,9 +232,9 @@ public class MediaReceiver
             Debug.WriteLine("FileTransferClient: " + ex.Message);
         }
     }
-    public void GetMedia(string FileName, ref byte[] fContainer, bool createFile)
+    public void GetMedia(string FileName,ref byte[] fContainer, bool createFile = false)
     {
-        fileContents = fContainer;
+        //fileContents = fContainer;
         fTransferComplete = false;
         this.FileName = FileName;
         this.createFile = createFile;
@@ -255,6 +256,10 @@ public class MediaReceiver
             Debug.WriteLine("FileTransferClient: " + ex.Message);
         }
         while (!fTransferComplete);
+        //if (!createFile)
+        //Array.Resize(ref fContainer, fileContents.Length);
+        fContainer = fileContents;
+        //Array.Copy(fileContents, fContainer, fileContents.Length);
         onTransferComplete?.Invoke();
         return; // fileContents;
     }

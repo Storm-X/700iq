@@ -144,10 +144,10 @@ namespace MainServer
             switch (step)
             {
                 case 1:
-                    //gm.step = 1;
+                    gm.step = 1;
                     //if (Takt == 2)
                         //nextTakt();
-                    bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
+                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
                     break;
                 case 4:
@@ -173,7 +173,7 @@ namespace MainServer
         public void Update(int step, int table, string otv, int stav, IPEndPoint point) //обновление ставки и команды готов
         {
             endpoint[table] = point;
-            switch (gm.step)
+            switch (step)
             {
                 #region обработка команд готов
                 case 0:
@@ -203,8 +203,11 @@ namespace MainServer
                         if(stavka[table] == 0) stavka[table] = stav;
                         if (Takt == 1 && (Array.TrueForAll(stavka, value => value != 0) || deadLine <= DateTime.Now))
                             nextTakt();
-                        bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                        udp.Send(bytes, bytes.Length, point);
+                        else
+                        {
+                            bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                            udp.Send(bytes, bytes.Length, point);
+                        }
                     }
                     break;
                 case 3:
@@ -215,14 +218,19 @@ namespace MainServer
                             tmOtvet.Stop();
                             nextTakt();
                         }
+                        else
+                        {
+                            bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                            udp.Send(bytes, bytes.Length, point);
+                        }
                     }
-                        break;
+                    break;
                 default:
                     break;
                     #endregion
             }
-            bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-            udp.Send(bytes, bytes.Length, point);
+            //bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+            //udp.Send(bytes, bytes.Length, point);
         }
         public string startGM()
         {
@@ -277,7 +285,7 @@ namespace MainServer
         }
         public bool getOtvet(int table, string otv, byte step, IPEndPoint point)         //получение ответа команды
         {
-            if (gm.step < 4 || gm.step > 6)  //???????????????????????????????????????????????????????????????????????????????
+            if (gm.step < 3 || gm.step > 6)  //???????????????????????????????????????????????????????????????????????????????
                 return false;
             switch (step)
             {
@@ -369,7 +377,7 @@ namespace MainServer
                 {
                     #region 0 такт - определение темы вопроса. Ожидание ставок от команд
                     case 0:
-                        Array.Clear(ok, 0, ok.Length);
+                        //Array.Clear(ok, 0, ok.Length);
                         deadLine = DateTime.Now.AddSeconds(70);
                         Takt=1;
                         string strZapros;
@@ -408,10 +416,10 @@ namespace MainServer
                     #endregion
                     #region  1 такт - обработка полученных ставок, определение очереди, получение вопроса
                     case 1:
-                        Array.Clear(ok, 0, ok.Length);
-                        deadLine = DateTime.Now.AddSeconds(25);
+                        //Array.Clear(ok, 0, ok.Length);
+                        //deadLine = DateTime.Now.AddSeconds(25);
                         gm.step = 3;
-                        gm.Cell = 0; //rn.rnd();
+                        gm.Cell = rn.rnd();
                         //if (gm.Cell == 0) gm.Cell = 1;
                         /* if (gm.Cell == 0)
                          {
@@ -505,7 +513,7 @@ namespace MainServer
                         //log();
                        // txb.Text += "ogg" + gm.step;
                         tmOtvet.Interval = 90000; //запускаем таймер с ожиданием ответа 1 команды
-                        deadLine = DateTime.Now.AddSeconds(100);
+                        deadLine = DateTime.Now.AddSeconds(90);
                         tmOtvet.Start();
                         correct = false;
                         break;
@@ -515,9 +523,10 @@ namespace MainServer
                     case 2://ответ первой команды
 
 
-                            if (gm.Cell == 0)
+                        if (gm.Cell == 0)
                         {
                             tmOtvet.Stop();
+                            gm.step = 0;
                             endOfIqon = true;
                            // Array.Clear(ok, 0, ok.Length);
                         }
@@ -606,9 +615,11 @@ namespace MainServer
 
             //Отправим сообщение всем столам данной игровой тройки
 
-            if (gm.Cell != 0)
+            if (gm.step != 0)
+            {
+                //if (gm.Cell != 0)
                 Send2All("ogg");
-
+            }
             if (endOfIqon)
             {
                 endOfIqon = false;
@@ -616,12 +627,13 @@ namespace MainServer
                 log();
                 Array.Clear(stavka, 0, stavka.Length);
                 Array.Clear(ok, 0, ok.Length);
-                deadLine = DateTime.Now.AddSeconds(40);
+                deadLine = DateTime.Now.AddSeconds(150);
 
                 gm.iCon++;
                 gm.step = 1;
                 Takt = 0;
 
+                System.Threading.Thread.Sleep(7000);
                 Send2All("ogg");
 
                 if (gm.iCon > 12)
@@ -633,10 +645,10 @@ namespace MainServer
                     //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
                     var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
                     for(int i = 0; i < 3; i++) {
-                        gm.team[i].answerOrder = (byte)mesta[i];//???
-                        gm.team[i].answer = "";
-                        gm.team[i].correct = false;
-                        gm.team[i].stavka = 0;
+                        gm.team[mesta[i]-1].answerOrder = (byte)i;//???
+                        gm.team[mesta[i]-1].answer = "";
+                        gm.team[mesta[i]-1].correct = false;
+                        gm.team[mesta[i]-1].stavka = 0;
                     }
 
                     Ratings rating = new Ratings(this, mycon, mesta);
