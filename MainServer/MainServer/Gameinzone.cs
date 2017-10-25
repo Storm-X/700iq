@@ -645,7 +645,7 @@ namespace MainServer
                     //////////////////////////////////////Перерасчет рейтинга на конец игры////////////////////////////////////////////////////////////
                     var mesta = ResponsePriority(gm.Cell, gm.team.Select(x => x.iQash << 2).ToArray());
                     for(int i = 0; i < 3; i++) {
-                        gm.team[mesta[i]-1].answerOrder = (byte)i;//???
+                        gm.team[mesta[i]-1].answerOrder = (byte)i;
                         gm.team[mesta[i]-1].answer = "";
                         gm.team[mesta[i]-1].correct = false;
                         gm.team[mesta[i]-1].stavka = 0;
