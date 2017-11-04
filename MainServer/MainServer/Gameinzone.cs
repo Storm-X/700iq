@@ -653,20 +653,31 @@ namespace MainServer
 
                     Ratings rating = new Ratings(this, mycon, mesta);
                     var rat = rating.getRatings();
+                    Array.Sort(rat);
+                    Array.Reverse(rat);
                     for (int i = 0; i < 3; i++)
                     {
-                        this.data.team[i].rating += rat[i];
-                        string sql = "UPDATE teams SET rating=" + this.data.team[i].rating + " WHERE name=\"" + this.data.team[i].name+"\"";
-                        MySqlCommand cm = new MySqlCommand(sql, mycon);
-                        cm.ExecuteNonQuery();
+                        foreach (teams.members member in this.data.team[mesta[i] - 1].member)
+                        {
+                            if (member != null)
+                            {
+                                member.rait += rat[i];
+                                string sql = "UPDATE users SET rating=" + member.rait + " WHERE id=\"" + member.id + "\"";
+                                MySqlCommand cm = new MySqlCommand(sql, mycon);
+                                cm.ExecuteNonQuery();
+
+                            }
+                        }
+                        WebBrowser webBrowser = new WebBrowser();
+                        webBrowser.Navigate("700iq.by/calc_rating");
                     }
-                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    log();
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        log();
                 }
             }
 
             //if (gm.Cell == 0)
-              //  Send2All("ogg");
+            //Send2All("ogg");
 
         }
         public void RestartIqon()
