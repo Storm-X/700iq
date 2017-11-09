@@ -10,6 +10,7 @@ using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace MainServer
 {
@@ -504,6 +505,7 @@ namespace MainServer
                         {
                             reader.Read();
                             gm.quest = Crypt.Decrypt(reader.GetString(0), key);
+                            gm.rightAnswer = Crypt.Decrypt(reader.GetString(1), key);
                             if (!reader.IsDBNull(1)) answerQ = Crypt.Decrypt(reader.GetString(1), key);
                             gm.idQuest = questID;//надо ли его посылать??
                             gm.media = reader.GetString(2);
@@ -662,6 +664,43 @@ namespace MainServer
                     }
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     log();
+
+                    string logs = "select * from logs where gameid = " + data.idGame + " AND zone = " + data.GameZone;
+                    MySqlCommand cm1 = new MySqlCommand(logs, mycon);
+                    MySqlDataReader rd = cm1.ExecuteReader();
+                    DataTable dat = new DataTable();
+                    using (rd)  //если есть данные, то записываем в таблицу dat
+                    {
+                        if (rd.HasRows)
+                            dat.Load(rd);
+                    }
+
+                    var loggs = dat.AsEnumerable().Select(r => r.Field<string>("command")).ToArray();
+                    SendLog [] jsonobj = new SendLog[loggs.Length];
+                    for (int i = 0; i < loggs.Length; i++)
+                    {
+                        jsonobj[i] = JsonConvert.DeserializeObject<SendLog>(loggs[i]);
+                     
+                    }
+                    Questions qt = new Questions();
+                    
+                    for (int i = 0; i < loggs.Length-1; i++)
+                    {
+                        qt.quest[i] = jsonobj[i].gmLog.quest;
+                        qt.answer[i] = jsonobj[i].gmLog.rightAnswer;
+                    }
+                    string str = JsonConvert.SerializeObject(qt);
+                    bytes = Encoding.UTF8.GetBytes("lst" + JsonConvert.SerializeObject(qt));
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (endpoint[i] is IPEndPoint)
+                            udp.Send(bytes, bytes.Length, endpoint[i]);
+                    }
+
+
+
+
+
                 }
             }
 

@@ -50,6 +50,7 @@ namespace _700IQ
         public Size resolution; //System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size;
         public int delta;
         public string path;
+        public Questions qt;
         ////////////////////////
         int StartStep = -1;
         ///////////////////////
@@ -857,12 +858,15 @@ namespace _700IQ
                     break;
                 case "rgg":
                         ProcessStartInfo startInfo = new ProcessStartInfo("700IQ.exe");
-                        
                         startInfo.Arguments = quote + lg+ quote + " "+ quote + ps + quote;
                         Process.Start(startInfo);
                         Application.Exit();
                         //RemoveAll();
                         //cn.ClearLastCommand();
+                    break;
+                case "lst":
+                    qt = new Questions();
+                    qt = JsonConvert.DeserializeObject<Questions>(komanda.Substring(3));
                     break;
                 #region case owt - ожидание
                 case "oww":

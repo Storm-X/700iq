@@ -9,7 +9,12 @@ using System.Net;
 
 namespace MainServer
 {
-    
+    public class Questions
+    {
+        public string [] quest = new string[12];
+        public string [] answer = new string[12];
+    }
+
     public class Game
     {
         public byte zoneUID;            //Индентификатор игровой зоны
@@ -23,6 +28,7 @@ namespace MainServer
         public int idQuest;             //id вопроса
         public byte theme;              //тема вопроса
         public string quest;            //Текст вопроса  
+        public string rightAnswer;      // Ответ на вопрос
         public string media;            //Медиаданные
         public Teames[] team = new Teames[3];
         public class Teames

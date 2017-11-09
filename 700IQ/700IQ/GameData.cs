@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace _700IQ
 {
+    public class Questions
+    {
+        public string[] quest = new string[12];
+        public string[] answer = new string[12];
+    }
     public class  Game
     {
         public byte zoneUID;            //Индентификатор игровой зоны

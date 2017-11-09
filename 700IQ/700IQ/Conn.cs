@@ -23,6 +23,7 @@ namespace _700IQ
         //IPEndPoint endPoint;
         //int port;
         string nextKom, oldKom, multiKom, lastCommand;
+        bool noOst = false;
         bool flag;
         private bool CrazyTimer = false;
         //System.Windows.Forms.Timer tm = new System.Windows.Forms.Timer();
@@ -153,25 +154,56 @@ namespace _700IQ
         }
         void getkomback(string commamd) //получаем ответ от сервера и проверяем на корректность
         {
-            //проверяем ответ сервера 
 
-            //if (oldKom.Substring(1, 2) == nextKom.Substring(1, 2))
-            //if (oldKom.Substring(1, 2) == commamd.Substring(1, 2) || commamd == "error")
             lock (locker)
             {
-                if (lastCommand != commamd)
+
+
+                switch (commamd?.Substring(0, 3))
                 {
-                    lastCommand = commamd;
-                    if (!CrazyTimer) tm.Stop();   //тормозим таймер               
-                                                  //if(!flag)   //был ли коректный ответ?
-                    
-                        flag = true;
-                        onNewKom(commamd);  //передаем команду дальше     
-                    
-                    //else
-                    tm.Start();
+                    case "ost":
+                        if (!noOst)
+                        {
+                            noOst = true;
+                            onNewKom(commamd);
+                        }
+                        break;
+
+                    case "+sp":
+                        if (lastCommand != commamd)
+                        {
+                            lastCommand = commamd;
+                            if (!CrazyTimer)
+                                tm.Stop();
+                            flag = true;
+                            onNewKom(commamd);  //передаем команду дальше     
+                            tm.Start();
+                        }
+                        break;
+                    default:
+                        onNewKom(commamd);
+                        break;
                 }
             }
+            /*  //проверяем ответ сервера 
+
+              //if (oldKom.Substring(1, 2) == nextKom.Substring(1, 2))
+              //if (oldKom.Substring(1, 2) == commamd.Substring(1, 2) || commamd == "error")
+              lock (locker)
+              {
+                  if (lastCommand != commamd)
+                  {
+                      lastCommand = commamd;
+                      if (!CrazyTimer) tm.Stop();   //тормозим таймер               
+                                                    //if(!flag)   //был ли коректный ответ?
+
+                          flag = true;
+                          onNewKom(commamd);  //передаем команду дальше     
+
+                      //else
+                      tm.Start();
+                  }
+              }*/
         }
         private void callback(Object source, ElapsedEventArgs e)   //обрабатываем срабатывание таймера повторно отправляем запрос
         {
