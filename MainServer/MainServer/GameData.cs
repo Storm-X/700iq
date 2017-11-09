@@ -79,7 +79,8 @@ namespace MainServer
         {
             public byte themeId;
             public string theme;
- //           public string themeColor;
+            public string description;
+            //           public string themeColor;
         }        
     }
     public struct ResiveData //структурированные данные получаемые сервером

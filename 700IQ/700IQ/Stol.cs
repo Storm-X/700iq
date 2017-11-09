@@ -33,6 +33,7 @@ namespace _700IQ
         Label panel = new Label();
         PictureBox fishka= new PictureBox();
         PictureBox stol = new PictureBox();
+        string description;
         #endregion
 
 
@@ -423,15 +424,18 @@ namespace _700IQ
             };
             SolidBrush sBrash = new SolidBrush(Color.Orange);
             string[] tmcolor = { "Black", "Red", "Orange", "Yellow", "Green", "Blue", "Purple" };
+         
             for (int i = 1; i < 7; i++)
             {
                 sBrash.Color = Color.FromName(tmcolor[i]);
-                rec.Location = NewPoint(400, 400 + i * 100);
-                rect.Location = new Point(NewPoint(400, 400 + i * 100).X + 3, NewPoint(400, 400 + i * 100).Y + 3);//NewPoint(403, 403 + i * 100);
+                rec.Location = NewPoint(400, 150 + i * 150);
+                rect.Location = new Point(NewPoint(400, 150 + i * 150).X + 3, NewPoint(400, 150 + i * 150).Y + 3);//NewPoint(403, 403 + i * 100);
                 g.FillRectangle(Brushes.Black, rect);
                 g.FillRectangle(sBrash, rec);
-                g.DrawString(predUs.tema[i].theme, new Font("Buxton Sketch", NewFontSize(30)), Brushes.Black, new Point(NewPoint(500, 390 + i * 100).X + 3, NewPoint(500, 390 + i * 100).Y + 3));//NewPoint(503, 393 + i * 100)
-                g.DrawString(predUs.tema[i].theme, new Font("Buxton Sketch", NewFontSize(30)), sBrash, NewPoint(500, 390 + i * 100));
+                description = (predUs.tema[i].description != "") ? "(" + predUs.tema[i].description + ")" :" ";
+                g.DrawString(predUs.tema[i].theme, new Font("Buxton Sketch", NewFontSize(30)), Brushes.Black, new Point(NewPoint(500, 150 + i * 150).X + 3, NewPoint(500, 150 + i * 150).Y + 3));//NewPoint(503, 393 + i * 100)
+                g.DrawString(description, new Font("Buxton Sketch", NewFontSize(15)), sBrash, new Point(NewPoint(500, 220 + i * 150).X + 3, NewPoint(500, 220 + i * 150).Y + 3)); //NewPoint(503, 393 + i * 100)
+                g.DrawString(predUs.tema[i].theme, new Font("Buxton Sketch", NewFontSize(30)), sBrash, NewPoint(500, 150 + i * 150));
             }
             workForm.BackgroundImage = bmp;
             g.Dispose();

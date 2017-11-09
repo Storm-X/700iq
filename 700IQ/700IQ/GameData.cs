@@ -53,6 +53,7 @@ namespace _700IQ
         {
             public byte themeId;
             public string theme;
+            public string description;
  //           public byte themeColor;
         }
         public class teams

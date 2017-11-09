@@ -22,9 +22,9 @@ namespace _700IQ
         //UdpClient sender = new UdpClient();
         //IPEndPoint endPoint;
         //int port;
-        string nextKom, oldKom, multiKom, lastCommand;
-        bool noOst = false;
+        string nextKom, oldKom, multiKom, lastCommand = "";
         bool flag;
+        bool noOst = false;
         private bool CrazyTimer = false;
         //System.Windows.Forms.Timer tm = new System.Windows.Forms.Timer();
         //System.Windows.Forms.Timer mtm = new System.Windows.Forms.Timer();
@@ -154,11 +154,8 @@ namespace _700IQ
         }
         void getkomback(string commamd) //получаем ответ от сервера и проверяем на корректность
         {
-
-            lock (locker)
+            lock (locker)//новый вариант
             {
-
-
                 switch (commamd?.Substring(0, 3))
                 {
                     case "ost":
@@ -185,25 +182,20 @@ namespace _700IQ
                         break;
                 }
             }
-            /*  //проверяем ответ сервера 
 
-              //if (oldKom.Substring(1, 2) == nextKom.Substring(1, 2))
-              //if (oldKom.Substring(1, 2) == commamd.Substring(1, 2) || commamd == "error")
-              lock (locker)
-              {
-                  if (lastCommand != commamd)
-                  {
-                      lastCommand = commamd;
-                      if (!CrazyTimer) tm.Stop();   //тормозим таймер               
-                                                    //if(!flag)   //был ли коректный ответ?
-
-                          flag = true;
-                          onNewKom(commamd);  //передаем команду дальше     
-
-                      //else
-                      tm.Start();
-                  }
-              }*/
+            /*lock (locker)    Старый вариант тоже впринципе почти норм.
+            {
+                if (lastCommand != commamd)
+                {
+                    lastCommand = commamd;
+                    if (!CrazyTimer) tm.Stop();   //тормозим таймер               
+                                                  //if(!flag)   //был ли коректный ответ?
+                    flag = true;
+                    onNewKom(commamd);  //передаем команду дальше     
+                    //else
+                    tm.Start();
+                }
+            }*/
         }
         private void callback(Object source, ElapsedEventArgs e)   //обрабатываем срабатывание таймера повторно отправляем запрос
         {

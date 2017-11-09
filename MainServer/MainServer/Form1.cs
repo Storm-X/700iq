@@ -831,7 +831,7 @@ namespace MainServer
 
 
                     #region задаем темы вопросов для тройки
-                    string zaprosTemy = "select themes.id as id, theme, required " +
+                    string zaprosTemy = "select themes.id as id, theme, description, required " +
                                   "from quests left join i_see on (quests.id = i_see.quest_id and i_see.user_id in (" + userid + ")) inner join themes on quests.themeid = themes.id " +
                                   "where i_see.id is null " +
                                   "group by quests.themeid " +
@@ -855,10 +855,11 @@ namespace MainServer
                     while (themesfortroika.Rows.Count < 6)
                     {
                         rowin = (dtVopros.Rows.Count * Rn.rnd()) / 37;
-                        int test = Convert.ToInt32(dtVopros.Rows[rowin][2]);
+                        ////////////////////////////////////////////////////////////////////////
                         try
                         {
-                            if (!Convert.ToBoolean(dtVopros.Rows[rowin][2])) themesfortroika.ImportRow(dtVopros.Rows[rowin]);
+                            int test = Convert.ToInt32(dtVopros.Rows[rowin][3]);
+                            if (!Convert.ToBoolean(dtVopros.Rows[rowin][3])) themesfortroika.ImportRow(dtVopros.Rows[rowin]);
                         }
                         catch (Exception ex)
                         {
@@ -869,20 +870,25 @@ namespace MainServer
 
                     string[] theme = new string[7];
                     int[] themeId = new int[7];
+                    string[] description = new string[7];
 
                     theme[0] = "Кот в мешке";
                     themeId[0] = 0;
+                    description[0] = "Случайная тема";
                     gz.data.tema[0] = new Data.Temy();
                     gz.data.tema[0].theme = theme[0];
                     gz.data.tema[0].themeId = (byte)themeId[0];
+                    gz.data.tema[0].description = description[0];
                     for (int t = 1; t < 7; t++)
                     {
 
                         theme[t] = themesfortroika.Rows[t - 1][1].ToString();
                         themeId[t] = Convert.ToInt16(themesfortroika.Rows[t - 1][0]);
+                        description[t] = themesfortroika.Rows[t - 1][2].ToString();
                         gz.data.tema[t] = new Data.Temy();
                         gz.data.tema[t].theme = theme[t];
                         gz.data.tema[t].themeId = (byte)themeId[t];
+                        gz.data.tema[t].description = description[t];
                     }
                     //int[] themeID = themesfortroika.AsEnumerable().Select(r => r.Field<Int32>("id")).ToArray();
                     gz.setThemes(themeId, theme);
