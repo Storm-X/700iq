@@ -803,6 +803,7 @@ namespace MainServer
                             gz.gm.team[j].iQash = (Convert.ToInt32(ListKomand.Rows[index].Cells[5].Value));
                         //gz.gm.team[j].iQash = (ListKomand.Rows[index].Cells[5].Value != DBNull.Value) ? (Convert.ToInt32(ListKomand.Rows[index].Cells[5].Value)) : 700;
                         gz.data.team[j].iQash = gz.gm.team[j].iQash;
+                        gz.gm.team[j].stavka = 25;  //Минимальная ставка по-умолчанию
                         gz.data.team[j].name = ListKomand.Rows[index].Cells[2].Value.ToString();//Name
                         gz.data.team[j].kod = ListKomand.Rows[index].Cells[3].Value.ToString();
                         if (DBNull.Value != ListKomand.Rows[index].Cells[1].Value)
@@ -1561,7 +1562,7 @@ namespace MainServer
                                             {
                                                 if (!MassGameZone[dataZapros2.uid - 1].stopGm)//если игровая зона не приостановлена
                                                 {
-                                                    MassGameZone[dataZapros2.uid - 1].Update(dataZapros2.step, dataZapros2.table, dataZapros2.otvet, dataZapros2.stavka, endpoint);
+                                                    MassGameZone[dataZapros2.uid - 1].Update(dataZapros2.step, dataZapros2.table, dataZapros2.otvet ?? "", dataZapros2.stavka, endpoint);
                                                 }
                                             }
                                             ToJS();
@@ -1571,7 +1572,9 @@ namespace MainServer
                                             MessageBox.Show(e.Message, "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                         }
                                         break;
-                                    case "zww":
+                                #endregion
+                                #region zww- обработка ожидания
+                                case "zww":
                                     ResiveData dataZapros3 = new ResiveData();
                                     dataZapros3 = JsonConvert.DeserializeObject<ResiveData>(txt.Substring(3));
                                         if (MassGameZone.Count >= dataZapros3.uid && MassGameZone[dataZapros3.uid - 1].verify(dataZapros3.kluch, dataZapros3.table))

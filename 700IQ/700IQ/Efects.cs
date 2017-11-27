@@ -436,7 +436,7 @@ namespace _700IQ
         //private Form fsv;
 
         public Label ff;
-        System.Timers.Timer tmBar = new System.Timers.Timer();
+        System.Timers.Timer tmBar; // = new System.Timers.Timer();
         #endregion
         public void polosa(int t, Point pn, GeneralForm fsv, string txt = "")
         {
@@ -481,8 +481,14 @@ namespace _700IQ
 
         private void InitBar(int t, Point pn, string txt)
         {
-            //fsv.Invoke(new MethodInvoker(() =>
-            //{
+            if (tmBar != null)
+                tmBar.Enabled = false;
+            else
+            {
+                tmBar = new System.Timers.Timer();
+                tmBar.Elapsed += TmBar_Tick;
+            }
+
             if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
@@ -492,8 +498,6 @@ namespace _700IQ
             }
             else
             {
-                tmBar = new System.Timers.Timer();
-
                 if (ff == null)
                 {
                     #region //описание области вывода полосы
@@ -548,7 +552,6 @@ namespace _700IQ
                 prBar.AutoReset = (t == 1) ? true : false;
                 prBar.BeepTime = 5;
                 tmBar.Interval = t;
-                tmBar.Elapsed += TmBar_Tick;
                 tmBar.AutoReset = true;
                 tmBar.Start();
             }
@@ -573,13 +576,9 @@ namespace _700IQ
 
                 else
                 {
-                    ((System.Timers.Timer)state).Stop();
-                    ((System.Timers.Timer)state).Dispose();
-                    prBar.Value = 0;
-                    pcBox.Visible = false;
-                    ff.Visible = false;
-                    workForm.Invalidate();
-                    onPolosaEnd?.Invoke();
+                    //((System.Timers.Timer)state).Stop();
+                    //((System.Timers.Timer)state).Dispose();
+                    Finish();
                 }
             }
             //var reportProgress = new Action(() =>
@@ -601,11 +600,18 @@ namespace _700IQ
 
         public void Finish()
         {
+            tmBar.Enabled = false;
+            //prBar.Value = prBar.Maximum;
+
+            prBar.Value = 0;
+            pcBox.Visible = false;
             ff.Visible = false;
-            prBar.Value = prBar.Maximum;
+            workForm.Invalidate();
+            onPolosaEnd?.Invoke();
         }
         public void PcBox_MouseUp(object sender, MouseEventArgs e)//нажатие кнопки ОК
         {
+            tmBar.Enabled = false;
             var reportProgress = new Action(() =>
             {
                 pcBox.Location = new Point(pcBox.Location.X - 2, pcBox.Location.Y - 2);

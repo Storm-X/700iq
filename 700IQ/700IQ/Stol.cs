@@ -88,6 +88,7 @@ namespace _700IQ
                     InterpolationMode = InterpolationMode.HighQualityBicubic,
                     ForeColor = Color.WhiteSmoke,
                     AutoSize=true,
+                    Parent = this.workForm,
                     ShadowColor = Color.Black,
                     ShadowOffset = new Point(5, 5),
 
@@ -254,7 +255,8 @@ namespace _700IQ
                 panel.BackColor = Color.Transparent;
                 stol.BringToFront();
                 flag = true;
-            }else
+            }
+            else
             {
                 panel.Controls.RemoveAt(2);
                 iQash[0].Location = new Point(fishka.Location.X + ((fishka.Height - iQash[0].Width) / 2), fishka.Location.Y + fishka.Height);
@@ -549,7 +551,7 @@ namespace _700IQ
                 {
                     Parent = workForm,
                     Name = "oneuse",
-                    Location = NewPoint(825, 1060),
+                    Location = NewPoint(825, 1100),
                     Size = NewSize(850, 100),
                     BackColor = Color.White,
                     Image = Properties.Resources.paper,
@@ -561,7 +563,7 @@ namespace _700IQ
                 {
                     Parent = workForm,
                     Name = "oneuse",
-                    Location = new Point(NewPoint(825, 1060).X - 3, NewPoint(825, 1060).Y - 3),//NewPoint(847, 1057),
+                    Location = new Point(NewPoint(825, 1100).X - 3, NewPoint(825, 1100).Y - 3),//NewPoint(847, 1057),
                     Size = new Size(NewSize(850, 100).Width + 6, NewSize(850, 100).Height + 6),//NewSize(806, 106),
                     BackColor = tema ? Color.Gray : Color.FromName(tmcolor[steck.theme]),
                 };
@@ -1634,11 +1636,13 @@ namespace _700IQ
     public class GetStavka : resize //Вывод темы и прием ставок команд
     {
         #region //данные
-        public delegate void temaFinish(int st);
+        public delegate void temaFinish(int st, bool isFinal);
         public temaFinish onStavka;
-        Label lbin,lbin1; // = new Label();
+        Label lbin;
+        Label[] lbin1;
         PictureBox lbPlus; // = new Panel();
         PictureBox lbMines; // = new Panel();
+        public PictureBox stavkaPanel;
         public PictureBox stavkaRegion;
         Label lbText;
         Label ff = new Label();
@@ -1646,35 +1650,48 @@ namespace _700IQ
         int stDelta = 25;
         #endregion
         
-        public void stavka(int minSt, int MaxSt, GeneralForm fsv,Polosa pol)
+        public void stavka(int minSt, int MaxSt, GeneralForm fsv, Polosa pol)
         {
             workForm = fsv;
             //Bitmap bit = new Bitmap(Properties.Resources.SpinEdit_color);
-
             if (workForm.InvokeRequired)
             {
                 workForm.BeginInvoke((MethodInvoker)delegate
                 {
-                    stavka(minSt, MaxSt, fsv,pol);
+                    stavka(minSt, MaxSt, fsv, pol);
                 });
             }
             else
             {
-                if (stavkaRegion == null)
+                stMin = minSt;
+                stMax = MaxSt;
+                stDelta = 25;
+                int myTable = workForm.myTeam.table - 1;
+                if (stavkaPanel == null)
                 {
+                    stavkaPanel = new PictureBox
+                    {
+                        //BackgroundImage = Properties.Resources.SpinEdit_color, // bit;
+                        BackgroundImageLayout = ImageLayout.Zoom,
+                        Parent = workForm,
+                        //BorderStyle = BorderStyle.Fixed3D,
+                        Location = NewPoint(300, 300),
+                        Size = NewSize(1900, 749),
+                        BackColor = Color.Transparent
+                    };
+
                     stavkaRegion = new PictureBox
                     {
                         BackgroundImage = Properties.Resources.SpinEdit_color, // bit;
                         BackgroundImageLayout = ImageLayout.Zoom,
-                        Parent = workForm,
-                        Location = NewPoint(1800, 940),
+                        Parent = stavkaPanel,
+                        //BorderStyle = BorderStyle.Fixed3D,
                         Size = NewSize(585, 249),
                         BackColor = Color.Transparent
                     };
-
+                    stavkaRegion.Location = new Point(stavkaPanel.Width / 2 - stavkaRegion.Width / 2, stavkaPanel.Height - stavkaRegion.Height);
 
                     #region//описание кнопок увеличение и уменьшение ставок
-                    stMin = minSt; stMax = MaxSt;
                     lbPlus = new PictureBox
                     {
                         BackgroundImage = Properties.Resources.Up,
@@ -1691,10 +1708,11 @@ namespace _700IQ
                     lbMines = new PictureBox
                     {
                         Parent = stavkaRegion,
-                        BackgroundImage = Properties.Resources.Down,
+                        BackgroundImage = Properties.Resources.DownGray,
                         Size = new Size((int)(stavkaRegion.Width * 0.22), (int)(stavkaRegion.Height * 0.305)),
                         BackgroundImageLayout = ImageLayout.Zoom,
                         Visible = true,
+                        Enabled = false,
                         Location = new Point((int)(stavkaRegion.Width * 0.72), (int)(stavkaRegion.Height * 0.55)),
                         Name = "oneuse"
                     };
@@ -1717,60 +1735,139 @@ namespace _700IQ
                         TextAlign = ContentAlignment.TopCenter,
                         Name = "oneuse"
                     };
-
-                    lbin1 = new Label
+                   
+                    lbin1 = new Label[]
                     {
-                        Text = Convert.ToString(minSt),
-                        Parent = lbin,
-                        Location = NewRelPoint(-5, -5),// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
-                        Visible = true,
-                        Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
-                        ForeColor = Color.Gold,
-                        Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
-                        TextAlign = ContentAlignment.TopCenter,
-                        BackColor = Color.Transparent,
-                        Name = "oneuse"
+                        new Label()
+                        {
+                            Text = Convert.ToString(workForm.steck.team[myTable++%3].stavka),
+                            Parent = lbin,
+                            Location = NewRelPoint(-5, -5),// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
+                            Visible = true,
+                            Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
+                            ForeColor = Color.Gold,
+                            Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
+                            TextAlign = ContentAlignment.TopCenter,
+                            BackColor = Color.Transparent,
+                            Name = "oneuse"
+                        },
+                        new Label()
+                        {
+                            Text = Convert.ToString(workForm.steck.team[myTable++%3].stavka),
+                            Parent = stavkaPanel,
+                           // Location = NewRelPoint(145, 65),// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
+                            Visible = true,
+                           // BorderStyle = BorderStyle.Fixed3D,
+                            Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
+                            ForeColor = Color.Gold,
+                            Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
+                            TextAlign = ContentAlignment.TopCenter,
+                            BackColor = Color.Transparent,
+                            Name = "oneuse"
+                        },
+                        new Label()
+                        {
+                            Text = Convert.ToString(workForm.steck.team[myTable++%3].stavka),
+                            Parent = stavkaPanel,
+                            Visible = true,
+                            //BorderStyle = BorderStyle.Fixed3D,
+                            Font = new Font("Arial Black Italic", (int)(stavkaRegion.Height * 0.5)),
+                            ForeColor = Color.Gold,
+                            Size = new Size((int)(stavkaRegion.Width * 0.68), (int)(stavkaRegion.Height * 0.8)),
+                            TextAlign = ContentAlignment.TopCenter,
+                            BackColor = Color.Transparent,
+                            Name = "oneuse"
+                        }
+                        
                     };
-                    #endregion
 
+                    lbin1[1].Location = new Point(stavkaRegion.Location.X - lbin1[1].Width, 65);// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
+                    lbin1[2].Location = new Point(stavkaRegion.Location.X + stavkaRegion.Width, 65);// new Point((int)(stavkaRegion.Height * 0.06), (int)(stavkaRegion.Height * 0.1));
+                    PictureBox[] pc = new PictureBox[]
+{
+                        new PictureBox
+                        {
+                            Parent = stavkaPanel,
+                            BackgroundImage = Properties.Resources.chips,
+                            BackgroundImageLayout = ImageLayout.Zoom,
+                           // BorderStyle = BorderStyle.Fixed3D,
+                            Size = NewSize(200,200),
+                            Location = new Point(lbin1[1].Location.X + lbin1[1].Width, lbin1[1].Location.Y ),
+
+                        },
+                        new PictureBox
+                        {
+                            Parent = stavkaPanel,
+                            BackgroundImage = Properties.Resources.chips,
+                            BackgroundImageLayout = ImageLayout.Zoom,
+                            //BorderStyle = BorderStyle.Fixed3D,
+                            Size = NewSize(200,200),
+                            Location = new Point(lbin1[2].Location.X + lbin1[2].Width, lbin1[2].Location.Y),
+
+                        }
+};
+                    #endregion
                 }
                 else
                 {
-                    stavkaRegion.Visible = true;
-                    stMin = minSt; stMax = MaxSt;
-                    stDelta = 25;
-                    lbin.Text = Convert.ToString(minSt);
-                    lbin1.Text = Convert.ToString(minSt);
-            
+                    stavkaPanel.Visible = true;
+                    lbin.Text = Convert.ToString(workForm.steck.team[myTable++ % 3].stavka);
+                    lbin1[0].Text = lbin.Text; //Convert.ToString(minSt);
+                    lbin1[1].Text = Convert.ToString(workForm.steck.team[myTable++ % 3].stavka);
+                    lbin1[2].Text = Convert.ToString(workForm.steck.team[myTable++ % 3].stavka);
                 }
+                onStavka?.Invoke(Convert.ToInt32(lbin.Text), false);
 
                 pol.AnyEventHarakiri();
                 pol.onPolosaEnd += StavkaEndTime;
                 pol.polosa(56, NewPoint(1700, 1350), fsv, "Stavka");
             }
         }
+        //Очистка ставок всех команд (установка их в ноль)
+        public void Clear()
+        {
+            lbin1?.ToList().ForEach(x => x.Text = "0");
+        }
+        //Проверка изменения ставок по игровым столам
+        //myTable - номер стола моей команды
+        public bool StavChanges(int myTable)
+        {
+            Boolean result = false;
+            if (stavkaPanel != null)
+            {
+                //Если панель ставок скрыта, считаем, что изменение ставок было произведено
+                //result = !stavkaPanel.Visible;
+                //Проверим изменения ставок по всем игровым столам
+                for (int i = 0; i < 3; i++)
+                    result |= Convert.ToInt32(lbin1[i].Text) != workForm.steck.team[myTable++ % 3].stavka;
+            }
+            else
+                result = true;
+            return result;
+        }
         public void Plus()
         {
-            
             lbPlus.Location = new Point(lbPlus.Location.X + 2, lbPlus.Location.Y + 2);
             if (Convert.ToInt16(lbin.Text) < stMax)
             {
-                lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) + stDelta);
-                lbin1.Text = Convert.ToString(Convert.ToInt32(lbin1.Text) + stDelta);
+                //lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) + stDelta);
+                //lbin1[0].Text = lbin.Text; //Convert.ToString(Convert.ToInt32(lbin1.Text) + stDelta);
+                onStavka?.Invoke(Convert.ToInt32(lbin.Text) + stDelta, false);
             }
             lbPlus.Location = new Point(lbPlus.Location.X - 2, lbPlus.Location.Y - 2);
         }
-
         public void Minus()
         {
 
             lbMines.Location = new Point(lbMines.Location.X + 2, lbMines.Location.Y + 2);
             if (Convert.ToInt16(lbin.Text) > stMin)
             {
-                lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) - stDelta);
-                lbin1.Text = Convert.ToString(Convert.ToInt32(lbin1.Text) - stDelta);
+                //lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) - stDelta);
+                //lbin1[0].Text = lbin.Text; //Convert.ToString(Convert.ToInt32(lbin1.Text) - stDelta);
+                onStavka?.Invoke(Convert.ToInt32(lbin.Text) - stDelta, false);
             }
             lbMines.Location = new Point(lbMines.Location.X - 2, lbMines.Location.Y - 2);
+            onStavka?.Invoke(Convert.ToInt32(lbin.Text), false);
         }
         private void lbSpinBtn_MouseDown(object sender, EventArgs e)
         {
@@ -1782,29 +1879,27 @@ namespace _700IQ
         }
         private void LbPlus_Click(object sender, EventArgs e)//увеличение ставки
         {
-            if (Convert.ToInt16(lbin.Text) < stMax)
-            {
-                lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) + stDelta);
-                lbin1.Text = Convert.ToString(Convert.ToInt32(lbin1.Text) + stDelta);
-            }
+            Plus();
+            //if (Convert.ToInt16(lbin.Text) < stMax)
+            //{
+            //    lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) + stDelta);
+            //    lbin1.Text = lbin.Text; //Convert.ToString(Convert.ToInt32(lbin1.Text) + stDelta);
+            //}
         }
         private void LbMines_Click(object sender, EventArgs e)//уменьшение ставки
         {
-            if (Convert.ToInt16(lbin.Text) > stMin)
-            {
-                lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) - stDelta);
-                lbin1.Text = Convert.ToString(Convert.ToInt32(lbin1.Text) - stDelta);
-            }
+            Minus();
+            //if (Convert.ToInt16(lbin.Text) > stMin)
+            //{
+            //    lbin.Text = Convert.ToString(Convert.ToInt32(lbin.Text) - stDelta);
+            //    lbin1.Text = lbin.Text; //Convert.ToString(Convert.ToInt32(lbin1.Text) - stDelta);
+            //}
         }
         private void StavkaEndTime()
         {
             stDelta = 0;
-            // lbMines.Dispose();
-            // lbPlus.Dispose();
-            // lbText.Dispose();         
-            onStavka?.Invoke(Convert.ToInt32(lbin.Text));
-            stavkaRegion.Visible=false;
-            //  lbin.Dispose();
+            onStavka?.Invoke(Convert.ToInt32(lbin.Text), true);
+            stavkaPanel.Visible=false;
             workForm.Invalidate();
         }
     }

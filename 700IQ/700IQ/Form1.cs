@@ -963,7 +963,11 @@ namespace _700IQ
                     currStep = steck.step; //Вынести сюда
                     Debug.WriteLine("Step{0} - IConFinalised={1}",currStep, bIconFinalised);
                 }
-                StartStep = 0;
+                else if(currStep == 2)
+                {
+                    Step2_4();
+                }
+                    StartStep = 0;
             }
         }
 
@@ -1098,6 +1102,8 @@ namespace _700IQ
                 gotov.otvet = "gotov";
                 gotov.kluch = myTeam.kod; //kluch;
                 cn.SendUDP("zgg" + JsonConvert.SerializeObject(gotov));
+                //Очистим ставки команд
+                st.Clear();
                 if (StartStep == steck.step) pol.polosa(1, NewPoint(1600, 1350), this, "синхр");
             }
         }
@@ -1158,21 +1164,45 @@ namespace _700IQ
             {
                 RemoveTempControls();
                 tbl.TemaShow(steck, false);
-                int MaxStavka = Math.Min(steck.team[myTeam.table - 1].iQash-(12 - steck.iCon) * 25, 300);
-                st.stavka(25, MaxStavka, this,pol);
-                st.onStavka += doStavka;
+                Ruletka?.close();
+                Step2_4();
             }     
         }
-        public void doStavka(int st)//делегат сигнализирующий о сделанных ставках
+        void Step2_4()  //Выпавшая тема вопроса  и прием ставок
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    Step2_4();
+                });
+            }
+            else
+            {
+                int MaxStavka = Math.Min(steck.team[myTeam.table - 1].iQash - (12 - steck.iCon) * 25, 300);
+                if (st.onStavka == null)
+                    st.onStavka += doStavka;
+                if(st.StavChanges(myTeam.table - 1))
+                    st.stavka(25, MaxStavka, this, pol);
+                //foreach (Delegate d in this.onStop.GetInvocationList())
+                //{
+                //    this.onStop -= (stopRul)d;
+                //}
+                //st.onStavka += doStavka;
+            }
+        }
+        public void doStavka(int st, bool isFinal)//делегат сигнализирующий о сделанных ставках
         {
             SendData sd = new SendData();
             sd.uid = predUs.GameZone;
             sd.table = (byte)(myTeam.table - 1); //(byte)tableOfKom;
             sd.step = 2;
             sd.stavka = st;
-            sd.otvet = "stavka";
+            sd.otvet = isFinal ? "st_finish" : "stavka";
             sd.kluch = myTeam.kod; //kluch;
             cn.SendUDP("zgg" + JsonConvert.SerializeObject(sd));
+            if (isFinal)
+                cn.ClearLastCommand();
         }
         #endregion
         void Step2_finalise()
@@ -1187,7 +1217,7 @@ namespace _700IQ
             else
             {
                 Ruletka?.close();
-
+                pol.Finish();
                 this.Invalidate();
             }
         }
@@ -1206,8 +1236,8 @@ namespace _700IQ
             {
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
-               stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this,0);
-               stShow = null;
+                stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this,0);
+                stShow = null;
             }
         }
         void Step3_1()  //показ вопроса, запуск рулетки
@@ -1799,7 +1829,7 @@ namespace _700IQ
             if (st.stavkaRegion != null && st.stavkaRegion.Visible)//ставки + -
             {
                 if (e.KeyCode == Keys.Up) st.Plus();
-                if (e.KeyCode == Keys.Down) st.Minus();
+                //if (e.KeyCode == Keys.Down) st.Minus();
             }
         }
 

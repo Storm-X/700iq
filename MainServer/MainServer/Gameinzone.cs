@@ -44,7 +44,7 @@ namespace MainServer
         bool correct;       //правильность ответа
         bool endOfIqon;     //окончание айкона
         string tema;        //id темы или список id тем для построения запроса к БД 
-        int[] stavka = new int[3] { 0, 0, 0 };          //массив ставок команд      
+        int[] stavka = new int[3] { 25, 25, 25 };          //массив ставок команд      
         string[] otvet = new string[3];     //массив ответов команд
         bool[] ok = new bool[3];            //массив логических триггеров
         System.Windows.Forms.Timer tm = new System.Windows.Forms.Timer();   //таймер ожидания хода команды
@@ -75,7 +75,8 @@ namespace MainServer
         {
             #region задание начальных значений 
             endOfIqon = false;
-            Array.Clear(stavka, 0, stavka.Length);
+            stavka = stavka.Select(x => x = 25).ToArray();
+            //Array.Clear(stavka, 0, stavka.Length);
             Array.Clear(ok, 0, ok.Length);
             Array.Clear(clientAnswer, 0, clientAnswer.Length);
             //for (int i = 1; i < 3; i++) { stavka[i] = 0; ok[i] = false; }
@@ -146,24 +147,24 @@ namespace MainServer
             {
                 case 1:
                     gm.step = 1;
-                    //if (Takt == 2)
+                    //if (Takt == 3)
                         //nextTakt();
                     bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
                     break;
                 case 4:
-                    if (Takt == 2) return;
+                    if (Takt == 3) return;
                     bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
 
                     break;
                 case 5:
-                    if (Takt == 3) return;
+                    if (Takt == 4) return;
                     bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
                     break;
                 case 6:
-                    if (Takt == 4) return;
+                    if (Takt == 5) return;
                     // gm.step = 7;
                     bytes = Encoding.UTF8.GetBytes("oww" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
@@ -181,8 +182,8 @@ namespace MainServer
                 case 1:
                     if (gm.step < 2)
                     {
-                        if (otv == null)
-                            otv = "";
+                        //if (otv == null)
+                        //    otv = "";
                         ok[table] = otv.Equals("gotov", StringComparison.OrdinalIgnoreCase);
                         if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                         {
@@ -201,8 +202,19 @@ namespace MainServer
                 case 2:
                     if (gm.step == step)
                     {
-                        if(stavka[table] == 0) stavka[table] = stav;
-                        if (Takt == 1 && (Array.TrueForAll(stavka, value => value != 0) || deadLine <= DateTime.Now))
+                        //if(stavka[table] == 0) 
+                        gm.team[table].stavka = stav;
+                        //if (otv == null)
+                        //    otv = "";
+                        if (otv.Equals("stavka", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Array.Clear(ok, 0, ok.Length);
+                            deadLine = DateTime.Now.AddSeconds(30);
+                            //Send2All("ogg");
+                        }
+                        else
+                            ok[table] = otv.Equals("st_finish", StringComparison.OrdinalIgnoreCase);
+                        if (Takt == 1 && (Array.TrueForAll(ok, value => value) || deadLine <= DateTime.Now))
                             nextTakt();
                         else
                         {
@@ -214,7 +226,7 @@ namespace MainServer
                 case 3:
                     if (gm.step == step)
                     {
-                        if (Takt == 2 || deadLine <= DateTime.Now)
+                        if (Takt == 3 || deadLine <= DateTime.Now)
                         {
                             tmOtvet.Stop();
                             nextTakt();
@@ -291,17 +303,17 @@ namespace MainServer
             switch (step)
             {
                 case 4:
-                    if (Takt == 2) break;
-                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
-                    udp.Send(bytes, bytes.Length, point);
-                    break;
-                case 5:
                     if (Takt == 3) break;
                     bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
                     break;
-                case 6:
+                case 5:
                     if (Takt == 4) break;
+                    bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
+                    udp.Send(bytes, bytes.Length, point);
+                    break;
+                case 6:
+                    if (Takt == 5) break;
                     gm.step = 7;
                     bytes = Encoding.UTF8.GetBytes("ogg" + JsonConvert.SerializeObject(gm));
                     udp.Send(bytes, bytes.Length, point);
@@ -380,7 +392,7 @@ namespace MainServer
                     case 0:
                         //Array.Clear(ok, 0, ok.Length);
                         deadLine = DateTime.Now.AddSeconds(70);
-                        Takt=1;
+                        Takt = 1;
                         string strZapros;
                         SQLiteCommand cmdl;
                         int questsCount = 0;
@@ -413,11 +425,13 @@ namespace MainServer
                         } while (questsCount == 0 && gm.theme != 0);
                         // txb.Text += "ogg" + gm.step;
                         //tm.Start();
+                        //Установим размер начальных ставок в минимальное значение
+                        gm.team.ToList().ForEach(x => x.stavka = 25);
                         break;
                     #endregion
                     #region  1 такт - обработка полученных ставок, определение очереди, получение вопроса
                     case 1:
-                        //Array.Clear(ok, 0, ok.Length);
+                        Array.Clear(ok, 0, ok.Length);
                         //deadLine = DateTime.Now.AddSeconds(25);
                         gm.step = 3;
                         gm.Cell = rn.rnd();
@@ -433,16 +447,26 @@ namespace MainServer
                              for (int i = 0; i < 3; i++) ok[i] = false;
                              break;
                          }*/
-                        stavka = stavka.Select(value => (value == 0) ? 25 : value).ToArray();
-                        for (int i = 0; i < 3; i++)
+                        //stavka = stavka.Select(value => (value == 0) ? 25 : value).ToArray();
+
+                        gm.team.ToList().ForEach(x =>
+                        {
+                            x.stavka = x.stavka == 0 ? 25 : x.stavka;
+                            x.iQash -= x.stavka;
+                            x.answer = "";
+                            x.correct = false;
+                        });
+                        
+                        /*for (int i = 0; i < 3; i++)
                         {
                             //stavka[i] = (stavka[i] == 0) ? 25 : stavka[i];
                             // if (stavka[i] > gm.team[i].iQash) stavka[i] = gm.team[i].iQash;   ВАЖНО!!!
-                            gm.team[i].stavka = stavka[i];
+                            if(gm.team[i].stavka == 0)
+                                gm.team[i].stavka = 25;
                             gm.team[i].iQash -= gm.team[i].stavka;
                             gm.team[i].answer = "";
                             gm.team[i].correct = false;
-                        }
+                        }*/
 
                         int[] st = gm.team.Select(x => x.stavka).ToArray();  //{ gm.team[0].stavka, gm.team[1].stavka, gm.team[2].stavka };
                         byte[] bAnsOrder = rul.ResponsePriority(gm.Cell, st);
@@ -511,7 +535,7 @@ namespace MainServer
                             gm.media = reader.GetString(2);
                         }
                         #endregion
-                        Takt=2;
+                        Takt = 3;
                         //log();
                        // txb.Text += "ogg" + gm.step;
                         tmOtvet.Interval = 90000; //запускаем таймер с ожиданием ответа 1 команды
@@ -522,7 +546,7 @@ namespace MainServer
                     #endregion
                     #region 2 такт - обработка ответа первой команды
                 
-                    case 2://ответ первой команды
+                    case 3://ответ первой команды
 
 
                         if (gm.Cell == 0)
@@ -556,7 +580,7 @@ namespace MainServer
                                 tmOtvet.Start();
                                 gm.activeTable = currTeam[1].table; //gm.o2;
                             }
-                            Takt=3;
+                            Takt = 4;
                             //log();
                           //  txb.Text += "ogg" + gm.step;
 
@@ -566,7 +590,7 @@ namespace MainServer
                         break;
                     #endregion
                     #region 3 такт - обработка ответ второй команды (если дойдет дело)
-                    case 3://ответ второй команды 
+                    case 4://ответ второй команды 
 
                         gm.step = 6;
                         currTeam = gm.team.OrderBy(x => x.answerOrder).ToArray();
@@ -591,13 +615,13 @@ namespace MainServer
                             deadLine = DateTime.Now.AddSeconds(50);
                             tmOtvet.Start();
                         }
-                        Takt=4;
+                        Takt = 5;
                         //log();
                      //   txb.Text += "ogg" + gm.step;
                         break;
                     #endregion
                     #region 4 такт - обработка ответ третьей команды (если дойдет дело)
-                    case 4://ответ третьей команды
+                    case 5://ответ третьей команды
                         gm.step = 7;
                         currTeam = gm.team.OrderBy(x => x.answerOrder).ToArray();
                         currTeam[2].correct = correct;
@@ -627,7 +651,8 @@ namespace MainServer
                 endOfIqon = false;
                 //gm.step = 7;
                 log();
-                Array.Clear(stavka, 0, stavka.Length);
+                stavka = stavka.Select(x => x = 25).ToArray();
+                //Array.Clear(stavka, 0, stavka.Length);
                 Array.Clear(ok, 0, ok.Length);
                 deadLine = DateTime.Now.AddSeconds(150);
 
@@ -707,11 +732,6 @@ namespace MainServer
                         if (endpoint[i] is IPEndPoint)
                             udp.Send(bytes, bytes.Length, endpoint[i]);
                     }
-
-
-
-
-
                 }
             }
 
@@ -722,15 +742,17 @@ namespace MainServer
         public void RestartIqon()
         {
             tmOtvet.Stop();
-            Array.Clear(stavka, 0, stavka.Length);
+            stavka = stavka.Select(x => x = 25).ToArray();
+            //Array.Clear(stavka, 0, stavka.Length);
             Array.Clear(ok, 0, ok.Length);
             deadLine = DateTime.Now.AddSeconds(40);
-            if (Takt>=2 && Takt <= 4)
+            if (Takt >= 3 && Takt <= 5)
             {
-                for(int i=0;i<3;i++){
-                    gm.team[i].iQash += gm.team[i].stavka;
-                }
-               
+                gm.team.ToList().ForEach(x => x.iQash += x.stavka);   //x.stavka = 25;
+                //for (int i=0;i<3;i++){
+                //    gm.team[i].iQash += gm.team[i].stavka;
+                //    gm.team[i].stavka = 25;
+                //}
             }
             gm.step = 1;
             Send2All("rgg");

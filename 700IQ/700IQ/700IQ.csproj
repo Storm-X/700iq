@@ -242,6 +242,7 @@
   <ItemGroup>
     <Content Include="Resources\1.gif" />
     <Content Include="Resources\700iq.ico" />
+    <None Include="Resources\chips.png" />
     <Content Include="Resources\cup-1.png" />
     <Content Include="Resources\cup_2.png" />
     <Content Include="Resources\cup_3.png" />
@@ -260,6 +261,7 @@
     <None Include="Resources\SB_down.png" />
     <None Include="Resources\SB_up.png" />
     <None Include="Resources\SB_center.png" />
+    <Content Include="Resources\DownGray.png" />
     <Content Include="Resources\fail.mp3" />
     <None Include="Resources\igrStol.png" />
     <Content Include="Resources\RouletteBall.png" />
