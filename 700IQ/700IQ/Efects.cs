@@ -148,12 +148,13 @@ namespace _700IQ
             public  delegate void StopST();
             public event StopST onStop;
             private FrameDimension dimension;
-            private int frameCount;
+            private double frameCount;
             private Image img;
-            private int indexToPaint;
+            private double indexToPaint;
             private Timer timer = new Timer();
       
             PictureBox pc = new PictureBox();
+            Video video;
             Label lb, lbSt;
             int stavka;
             int komanda;
@@ -178,7 +179,7 @@ namespace _700IQ
             }
             public void stak(int st1, Point point, GeneralForm fsv, int komanda,int number)
             {
-                audio = LoadAudio();
+                //audio = LoadAudio();
                 this.komanda = komanda;
                 this.fsv = fsv;
                 workForm = fsv;
@@ -235,13 +236,39 @@ namespace _700IQ
 
                     }
                     if (komanda == 0) lbSt.Visible = false;
-                    img = Properties.Resources._12_50int2;
+
+                    try
+                    {
+                        video = new Video(Application.StartupPath + String.Format("\\Video\\st{0}.mp4", 25), false); //вместо st25 поставить st1
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Ошибка загрузки видео \n" + Marshal.GetLastWin32Error());
+                    }
+
+                    //size = video.Size;
+                    //this.Size = size;
+                    video.Owner = pc;
+                    pc.Size = (number == 0) ? NewSize(216, 500) : NewSize(216, 380);
+                    //double koeff = 1.33; 
+                    //size = new Size((int)(this.Height * koeff), this.Height);
+                    //this.Size = rc.Size;
+                    video.Size = pc.Size;
+                    //video.Ending += Video_Ending;
+                    pc.Visible = true;
+                    pc.BringToFront();
+                    pc.Refresh();
+                    frameCount = video.Duration;
+                    if (video != null)
+                        video.Play();
+
+                    /*img = Properties.Resources._12_50int2;
                     dimension = new FrameDimension(img.FrameDimensionsList[0]);
                     frameCount = img.GetFrameCount(dimension);
                     //arr = new Bitmap[frameCount];
                     int[] frame = new int[] { 12, 24, 36, 47, 58, 69, 80, 90, 100, 110, 120, 130 };
 
-                    frameCount = frame[st1 - 1];
+                    frameCount = frame[st1 - 1]; */
                     /*
                     for (int i = 0; i < frameCount; i++)
                     {
@@ -253,40 +280,39 @@ namespace _700IQ
                     stavka = st1;
                     timer.Interval = 15;
                     timer.Tick += new EventHandler(timer_Tick);
-                    audio.Play();
+                    //audio.Play();
                     timer.Start();
                 }
             }
             void timer_Tick(object sender, EventArgs e)
             {
-                indexToPaint++;
-                if (indexToPaint >= frameCount)
+                indexToPaint = video.CurrentPosition;
+                //if (indexToPaint >= frameCount)
+                if(indexToPaint >= frameCount)
                 {
                     timer.Stop();
-                    if (audio!=null)
+                    /*if (video!=null)
                     {
-                        audio.Stop();
-                        audio?.Dispose();
-
-                    }
-
+                        //video.Stop();
+                        //video.Dispose();
+                    }*/
                     onStop?.Invoke();
                 }
                 else
                 {
-                    if (audio.CurrentPosition >= audio.Duration)
-                    {
-                        audio.Stop();    
-                    }
+                    //if (audio.CurrentPosition >= audio.Duration)
+                    //{
+                    //    audio.Stop();    
+                    //}
               
-                    audio.Play();
-                    lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString();
-                    img.SelectActiveFrame(dimension, indexToPaint);
-                    pc.Image = new Bitmap(img);//arr[indexToPaint];
+                    //audio.Play();
+                    lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString();
+                    //img.SelectActiveFrame(dimension, indexToPaint);
+                    //pc.Image = new Bitmap(img);//arr[indexToPaint];
 
-                   if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
-                   if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
-                   if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
+                   if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
 
                     //if ((komanda > 5) && (fsv.predUs.team[this.number - 1].name == fsv.predUs.team[0].name)) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash - 25 * stavka + Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
 
@@ -298,6 +324,7 @@ namespace _700IQ
                 timer.Dispose();
                 lb.Dispose();
                 lbSt.Dispose();
+                //video.Dispose();
                 workForm.Invalidate();
             }
         }
@@ -337,7 +364,7 @@ namespace _700IQ
             }
 
             size_stack = NewSize(130, 0).Width;
-            distance = NewSize(400, 0).Width /2;
+            distance = NewSize(400, 0).Width /2; //400
 
             if (st4 == 0 && st3 != 0)
             {
