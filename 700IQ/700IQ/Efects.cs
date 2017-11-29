@@ -162,7 +162,11 @@ namespace _700IQ
             int number;
             ~stakan()
             {
-                
+                video.Dispose();
+                pc.Dispose();
+                lb.Dispose();
+                lbSt.Dispose();
+                Console.WriteLine("Class destructor...");
             }
             public Audio LoadAudio()
             {
@@ -249,7 +253,7 @@ namespace _700IQ
                     //size = video.Size;
                     //this.Size = size;
                     video.Owner = pc;
-                    pc.Size = (number == 0) ? NewSize(216, 500) : NewSize(216, 380);
+                    pc.Size = (number == 0) ? NewSize(150, 500) : NewSize(150, 380);
                     //double koeff = 1.33; 
                     //size = new Size((int)(this.Height * koeff), this.Height);
                     //this.Size = rc.Size;
@@ -291,6 +295,8 @@ namespace _700IQ
                 if(indexToPaint >= frameCount)
                 {
                     timer.Stop();
+                    video.Stop();
+                    video.CurrentPosition = video.Duration;
                     /*if (video!=null)
                     {
                         //video.Stop();
@@ -320,12 +326,20 @@ namespace _700IQ
             }
             public void del()
             {
-                pc.Dispose();
-                timer.Dispose();
-                lb.Dispose();
-                lbSt.Dispose();
-                //video.Dispose();
-                workForm.Invalidate();
+                if (workForm.InvokeRequired)
+                {
+                    workForm.BeginInvoke((MethodInvoker)delegate
+                    {
+                        del();
+                    });
+                }
+                else
+                {
+                    timer.Dispose();
+                    pc.Visible = lb.Visible = lbSt.Visible = false;
+                    workForm.Invalidate();
+                    Console.WriteLine("Deleting video...");
+                }
             }
         }
         public delegate void stShowFinish();
@@ -364,7 +378,7 @@ namespace _700IQ
             }
 
             size_stack = NewSize(130, 0).Width;
-            distance = NewSize(400, 0).Width /2; //400
+            distance = NewSize(400, 0).Width /2; 
 
             if (st4 == 0 && st3 != 0)
             {
