@@ -695,8 +695,8 @@ namespace MainServer
 
                             }
                         }
-                        WebBrowser webBrowser = new WebBrowser();
-                        webBrowser.Navigate("700iq.by/calc_rating");
+                        /*WebBrowser webBrowser = new WebBrowser();
+                        webBrowser.Navigate("700iq.by/calc_rating");*/
                     }
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     log();

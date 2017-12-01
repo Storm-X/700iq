@@ -1122,7 +1122,13 @@ namespace MainServer
                     }
                 }
             }
-            catch { };
+            catch (IOException eX)
+            {
+
+                if (eX.Source != null)
+                    Console.WriteLine("IOException source: {0}", eX.Source);
+                throw;
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

@@ -244,9 +244,9 @@ namespace _700IQ
 
 
             ////////////////////////////////////////////////////////////////////////////////////////////
-            //StavkiShow stShow = new StavkiShow();
-            //tbl = new Table(predUs, this);
-            //stShow.inputStavki(300, 300, 300, 0, this, 1);
+           // StavkiShow stShow = new StavkiShow();
+           // tbl = new Table(predUs, this);
+           // stShow.inputStavki(300, 300, 300, 0, this, 0);
             /////////////////////////////////////////////////////////////////////////////////////////
 
             #endregion

@@ -283,6 +283,16 @@ namespace _700IQ.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap RAMKA {
+            get {
+                object obj = ResourceManager.GetObject("RAMKA", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap rotor {
             get {
                 object obj = ResourceManager.GetObject("rotor", resourceCulture);
@@ -396,6 +406,26 @@ namespace _700IQ.Properties {
         internal static System.Drawing.Bitmap SpinEdit_color {
             get {
                 object obj = ResourceManager.GetObject("SpinEdit_color", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap stavkaBorder {
+            get {
+                object obj = ResourceManager.GetObject("stavkaBorder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap stavkaBorder_W {
+            get {
+                object obj = ResourceManager.GetObject("stavkaBorder_W", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

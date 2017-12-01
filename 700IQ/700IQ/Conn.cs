@@ -154,7 +154,7 @@ namespace _700IQ
         }
         void getkomback(string commamd) //получаем ответ от сервера и проверяем на корректность
         {
-            lock (locker)//новый вариант
+            /*lock (locker)//новый вариант
             {
                 switch (commamd?.Substring(0, 3))
                 {
@@ -181,9 +181,9 @@ namespace _700IQ
                         onNewKom(commamd);
                         break;
                 }
-            }
+            }*/
 
-            /*lock (locker)    Старый вариант тоже впринципе почти норм.
+           lock (locker)    //Старый вариант тоже впринципе почти норм.
             {
                 if (lastCommand != commamd)
                 {
@@ -195,7 +195,7 @@ namespace _700IQ
                     //else
                     tm.Start();
                 }
-            }*/
+            }
         }
         private void callback(Object source, ElapsedEventArgs e)   //обрабатываем срабатывание таймера повторно отправляем запрос
         {

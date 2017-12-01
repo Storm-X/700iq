@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Storm\AppData\Local\Temp\vs56F9.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\User\AppData\Local\Temp\vs3863.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Storm\AppData\Local\Temp\vs56F9.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\User\AppData\Local\Temp\vs3863.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\700iq.ico</ApplicationIcon>
@@ -264,9 +264,12 @@
     <Content Include="Resources\DownGray.png" />
     <Content Include="Resources\fail.mp3" />
     <None Include="Resources\igrStol.png" />
+    <None Include="Resources\RAMKA.png" />
     <Content Include="Resources\RouletteBall.png" />
     <Content Include="Resources\ShadowBall.png" />
     <Content Include="Resources\SpinEdit color.png" />
+    <None Include="Resources\stavkaBorder.png" />
+    <None Include="Resources\stavkaBorder W.png" />
     <Content Include="Resources\success.mp3" />
     <Content Include="Resources\ThumbBottom.png" />
     <Content Include="Resources\ThumbMiddle.png" />

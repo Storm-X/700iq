@@ -159,14 +159,15 @@ namespace _700IQ
             int stavka;
             int komanda;
             GeneralForm fsv;
+            PictureBox border;
             int number;
             ~stakan()
             {
-                video.Dispose();
-                pc.Dispose();
-                lb.Dispose();
-                lbSt.Dispose();
-                Console.WriteLine("Class destructor...");
+                //video.Dispose();
+              //pc.Dispose();   попытка доступа из другого потока
+              //lb.Dispose();
+              //lbSt.Dispose();
+               // Console.WriteLine("Class destructor...");
             }
             public Audio LoadAudio()
             {
@@ -181,42 +182,46 @@ namespace _700IQ
                 }
                 return null;
             }
-            public void stak(int st1, Point point, GeneralForm fsv, int komanda,int number)
+            public void stak(int st1, Point point, GeneralForm fsv,PictureBox border, int komanda,int number)
             {
                 //audio = LoadAudio();
                 this.komanda = komanda;
                 this.fsv = fsv;
+                this.border = border;
                 workForm = fsv;
                 if (workForm.InvokeRequired)
                 {
                     workForm.BeginInvoke((MethodInvoker)delegate
                     {
-                        stak(st1, point, fsv, komanda,number);
+                        stak(st1, point, fsv,border, komanda,number);
                     });
                 }
                 else
                 {
-                    pc.Size = (number == 0) ? NewSize(150, 500) : NewSize(150, 380);//было 500
+                   // pc.Size = (number == 0) ? NewSize(160, 500) : NewSize(160, 400);//было 500
                     pc.Location = point;
                     pc.BackColor = Color.Transparent;
                     pc.SizeMode = PictureBoxSizeMode.StretchImage;
-                    pc.Parent = workForm;
+                   // pc.BorderStyle = BorderStyle.Fixed3D;
+                    pc.Parent = border;
+                   // pc.Visible = false;
                     lb = new Label()
                     {
-                        Parent = workForm,
-                        Location = new Point(point.X - 20, point.Y + pc.Size.Height + 20),
+                        Parent = border,
+                        Location = new Point(point.X + 20, point.Y-60),
                         Size = NewSize(150, 50) + new Size(40,0),
                         Name = "oneuse",
-                        ForeColor = Color.White,
+                        ForeColor = Color.Gold,
                         BackColor = Color.Transparent,
                         Font = new Font("arial", 12),
                         TextAlign = ContentAlignment.TopCenter,
                     };
                     pc.BringToFront();
+                    lb.BringToFront();
                     lbSt = new Label() //метка размера ставки
                     {
-                        Parent = workForm,
-                        Location = new Point(point.X - 20, point.Y-40),
+                        Parent = border,
+                        Location = new Point(point.X +20, point.Y-30),
                         Size = NewSize(150, 50) + new Size(40, 0),
                         Name = "oneuse",
                         ForeColor = Color.Gold,
@@ -226,19 +231,21 @@ namespace _700IQ
                     };
                     if (komanda != 0 && komanda < 4)
                     {
-                        lb.Text = komanda + " команда";
+                        lb.Text = komanda + " стол";
                     }
                     if (komanda > 5)
                     {
                         lbSt.Visible = false;
-                        
-                        lb.Text = "Выигрыш команды "+ fsv.predUs.team[number - 1].name + " составил " + komanda + " айкэш";
+
+                        lb.Text = "Выигрыш команды:" + fsv.predUs.team[number - 1].name + " составил " + komanda + " айкэш";
                         this.number = number;
+                        lb.Location = NewRelPoint(0, 410);
                         lb.Size = new Size(700, 70);
-                        lb.Font = new Font("arial", 15);
+                        lb.Font = new Font("arial", 11);
                         if (fsv.predUs.team[this.number - 1].name == fsv.myTeam.name) this.fsv.iQash1.Text = this.fsv.steck.team[this.fsv.iQash1.number].iQash.ToString() + " IQ";
 
                     }
+                    //lb.BringToFront();
                     if (komanda == 0) lbSt.Visible = false;
 
                     try
@@ -253,7 +260,7 @@ namespace _700IQ
                     //size = video.Size;
                     //this.Size = size;
                     video.Owner = pc;
-                    pc.Size = (number == 0) ? NewSize(150, 500) : NewSize(150, 380);
+                    pc.Size = (number == 0) ? NewSize(252, 580) : NewSize(223, 322);
                     //double koeff = 1.33; 
                     //size = new Size((int)(this.Height * koeff), this.Height);
                     //this.Size = rc.Size;
@@ -295,7 +302,7 @@ namespace _700IQ
                 if(indexToPaint >= frameCount)
                 {
                     timer.Stop();
-                    video.Stop();
+                   // video.Stop();
                     video.CurrentPosition = video.Duration;
                     /*if (video!=null)
                     {
@@ -316,9 +323,9 @@ namespace _700IQ
                     //img.SelectActiveFrame(dimension, indexToPaint);
                     //pc.Image = new Bitmap(img);//arr[indexToPaint];
 
-                   if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
-                   if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
-                   if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
+                     if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                     if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
+                     if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
 
                     //if ((komanda > 5) && (fsv.predUs.team[this.number - 1].name == fsv.predUs.team[0].name)) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash - 25 * stavka + Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
 
@@ -336,7 +343,9 @@ namespace _700IQ
                 else
                 {
                     timer.Dispose();
-                    pc.Visible = lb.Visible = lbSt.Visible = false;
+                    pc.Visible = lb.Visible = lbSt.Visible =false;
+                    video.Stop();
+                    video.Dispose();
                     workForm.Invalidate();
                     Console.WriteLine("Deleting video...");
                 }
@@ -353,6 +362,7 @@ namespace _700IQ
         Point pn = new Point();
         private Timer timer = new Timer();
         bool itsStavka;
+        PictureBox  border;
         stakan st, st2, st3, st4;
         int distance;
         int size_stack;
@@ -377,21 +387,49 @@ namespace _700IQ
                 return;
             }
 
-            size_stack = NewSize(130, 0).Width;
-            distance = NewSize(400, 0).Width /2; 
-
+           // size_stack =  NewSize(240, 0).Width;//41
+           // distance = NewSize(400, 0).Width /2;
+           // pn = NewRelPoint(55, 43);//46,90
             if (st4 == 0 && st3 != 0)
             {
-                pn = NewPoint(825, 400);
+                
                 itsStavka = true;
+                size_stack = NewSize(252, 0).Width;
+                distance = NewSize(400, 0).Width / 2;
+                pn = NewRelPoint(17, 123);
+                border = new PictureBox
+                {
+                    Location = NewPoint(860, 310),
+                    Size = NewSize(800,800),
+                    Name = "oneuse",
+                    BackColor = Color.Transparent,
+                    Image = Properties.Resources.RAMKA,
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Parent = workForm,
+                };
             }
-            else  pn = NewPoint(1300, 770);
+            else
+            {
+                size_stack = NewSize(223, 0).Width;
+                distance = NewSize(400, 0).Width / 2;
+                pn = NewRelPoint(20, 70);
+                border = new PictureBox
+                {
+                    Location = NewPoint(1500, 790),
+                    Name = "oneuse",
+                    Size = NewSize(945, 450),
+                    BackColor = Color.Transparent,
+                    Image = Properties.Resources.RAMKA,
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Parent = workForm,
+                };
+            }
 
             st = new stakan();
             st.onStop += stavka2;
             int anons = stav1 + stav2 + stav3 + stav4;
             if (itsStavka) anons = 1;
-            st.stak(stav1/25,pn, workForm, anons,number);
+            st.stak(stav1/25,pn, workForm, border, anons,number);
         }
         void stavka2()
         {
@@ -408,11 +446,11 @@ namespace _700IQ
             {
 
                 anons = 2;
-                pn.X += distance;//50
+                //pn.X += distance;//50
             }
-            else pn.X += distance / 2;
+           // else pn.X += distance / 2;
 
-            st2.stak(stav2 / 25, pn, workForm, anons,number);
+            st2.stak(stav2 / 25, pn, workForm, border, anons,number);
         }
         void stavka3()
         {
@@ -428,10 +466,10 @@ namespace _700IQ
             if (itsStavka)
             {
                 anons = 3;
-                pn.X += distance;
+                //pn.X += distance;
             }
-            else pn.X += distance / 2;
-            st3.stak(stav3 / 25, pn, workForm, anons,number);
+            //else pn.X += distance / 2;
+            st3.stak(stav3 / 25, pn, workForm, border, anons,number);
         }
         void stavka4()
         {
@@ -443,9 +481,9 @@ namespace _700IQ
             st4 = new stakan();
             st4.onStop += endofStavka;
             pn.X += size_stack;
-            pn.X += distance / 2;
+           // pn.X += distance / 2;
 
-            st4.stak(stav4 / 25, pn, workForm, 0,number);
+            st4.stak(stav4 / 25, pn, workForm, border, 0,number);
         }
         void endofStavka()
         {
