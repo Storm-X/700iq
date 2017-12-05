@@ -92,7 +92,7 @@ namespace MainServer
         {
             this.roleName = roleName;
             label7.Text = "Вы вошли как " + roleName;
-            if (String.Compare(roleName, "Manager",true) == 0)
+            if (String.Compare(roleName, "Moderator",true) == 0)
             {
                 if(IsVisible(questEditor)) tabControl1.TabPages.Remove(questEditor);
             }else

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ namespace MainServer
         static public List<Role> roleList = new List<Role>();
         private bool flag = false;
         string roleName;
+        MySqlConnection mycon;
         public Form2()
         {
             InitializeComponent();
@@ -37,39 +40,53 @@ namespace MainServer
         }
 
         private void Form2_Load(object sender, EventArgs e)
-        { 
-            roleList.Add(new Role("Administrator", "admin700iq"));
-            roleList.Add(new Role("Manager", "manager700iq"));
-            foreach(Role role in roleList)
+        {
+            string myConnectionString = "Data Source=178.172.150.251; Port=27999; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
+            mycon = new MySqlConnection(myConnectionString);
+            mycon.Open();
+            MySqlCommand cm = new MySqlCommand("SELECT * FROM role", mycon);
+            MySqlDataReader rd = cm.ExecuteReader();
+            DataTable rol = new DataTable();
+            using (rd)
             {
-                comboBox1.Items.Add(role.Login());
+                if (rd.HasRows) rol.Load(rd);
             }
+            var stringArr = rol.AsEnumerable().Select(r => r.Field<string>("login")).ToArray();
+            comboBox1.DataSource = stringArr;
             this.Visible = true;
             this.Show();
         }
-
+        static string getSHAHash(string input)//хеш пароля
+        {
+            SHA256 md5Hasher = SHA256.Create();
+            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(input));
+            StringBuilder sBuilder = new StringBuilder();
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+            return sBuilder.ToString();
+        }
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach (Role role in roleList)
+            MySqlCommand cm = new MySqlCommand("SELECT * FROM role Where password = '" + getSHAHash(textBox1.Text) + "' and login = '" + comboBox1.SelectedItem.ToString() +"'", mycon);
+            MySqlDataReader rd = cm.ExecuteReader();
+            DataTable rol = new DataTable();
+            using (rd)
             {
-                if (String.Compare(comboBox1.Text, role.Login(),true) == 0 && String.Compare(textBox1.Text, role.Password()) == 0)
+                if (rd.HasRows)
                 {
                     flag = true;
-                    roleName = role.Login();
+                    roleName = comboBox1.SelectedItem.ToString();
                     form1.setRole(roleName);
-                    break;
                 }
-                                               
             }
-
             if (flag)
             {
-
                 form1.Show();
                 this.Hide();
             }
             else MessageBox.Show("Неверный пароль");
-
         }
     }
 }
