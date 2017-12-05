@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -52,9 +53,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(6, 128);
+            this.button1.Location = new System.Drawing.Point(6, 137);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(243, 43);
+            this.button1.Size = new System.Drawing.Size(243, 34);
             this.button1.TabIndex = 2;
             this.button1.Text = "АВТОРИЗАЦИЯ";
             this.button1.UseVisualStyleBackColor = true;
@@ -78,6 +79,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(279, 198);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form2";
             this.Text = "Авторизация";
             this.Load += new System.EventHandler(this.Form2_Load);
