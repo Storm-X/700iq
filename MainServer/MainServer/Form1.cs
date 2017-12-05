@@ -53,11 +53,13 @@ namespace MainServer
         private MediaServer mServer;
         private System.Timers.Timer tmr;
         private Object losker = new Object();
+        
         string fileName = "out.txt";
         FileStream aFile;
-        StreamWriter sw; 
-
+        StreamWriter sw;
+        public string roleName;
         Form f = new Form();
+        Form2 authForm;
         WebBrowser wb;
         IPEndPoint endpoint;
         UdpClient Udp = new UdpClient(2049);
@@ -66,11 +68,38 @@ namespace MainServer
         #endregion
         public Form1()
         {
+           // this.Role = Role;
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             Rn = new RND();
             aFile = new FileStream(fileName, FileMode.OpenOrCreate);
             sw = new StreamWriter(aFile);
+        }
+        public void setForm(Form2 form2)
+        {
+            authForm = form2;
+        }
+        public bool IsVisible(TabPage tabPage)
+        {
+            if (tabPage.Parent == null)
+                return false;
+            else if (tabPage.Parent.Contains(tabPage))
+                return true;
+            else
+                return false;
+        }
+        public void setRole(string roleName)
+        {
+            this.roleName = roleName;
+            label7.Text = "Вы вошли как " + roleName;
+            if (String.Compare(roleName, "Manager",true) == 0)
+            {
+                if(IsVisible(questEditor)) tabControl1.TabPages.Remove(questEditor);
+            }else
+            {
+                if (!IsVisible(questEditor)) tabControl1.TabPages.Insert(2,questEditor);
+            }
+
         }
 
         #region//кнопки
@@ -1394,7 +1423,6 @@ namespace MainServer
                     Dock = DockStyle.Fill,
                 };
                 wb.Navigate(Application.StartupPath + @"\maxup\index.html");
-            
 
         }
 
@@ -1481,6 +1509,25 @@ namespace MainServer
                 //if (ListKomand.Rows[e.RowIndex].Cells[10].Value.ToString() == "1")
                     ((DataGridView)sender).Rows[e.RowIndex].DefaultCellStyle.BackColor = ((e.RowIndex / 3) % 2) == 0 ? Color.GreenYellow : Color.SkyBlue;
             }
+        }
+
+
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            authForm.flush();
+            authForm.Show();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
         }
 
         //////////////////////////copy/////////////////////////////

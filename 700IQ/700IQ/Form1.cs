@@ -870,9 +870,10 @@ namespace _700IQ
                     break;
                 #region case owt - ожидание
                 case "oww":
-                    //steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
+                    steck = JsonConvert.DeserializeObject<Game>(komanda.Substring(3));
                     //Debug.WriteLine(komanda);
-                    //CheckSteck();
+                    if (!bIconFinalised)
+                        CheckSteck();
                     break;
                 #endregion
                 case "err":

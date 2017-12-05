@@ -93,6 +93,8 @@
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.button7 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Home.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ListKomand)).BeginInit();
@@ -187,6 +189,7 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "Интеллект-казино 700  IQ";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Anons
             // 
@@ -244,6 +247,7 @@
             this.tabControl1.Controls.Add(this.questEditor);
             this.tabControl1.Controls.Add(this.gameStatistics);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tabControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.tabControl1.ItemSize = new System.Drawing.Size(256, 28);
             this.tabControl1.Location = new System.Drawing.Point(167, 59);
             this.tabControl1.Name = "tabControl1";
@@ -798,12 +802,33 @@
             this.label3.Text = "Игровая зона          Номер iCon         Остановить тройку";
             this.label3.Visible = false;
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(198, 11);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(157, 23);
+            this.button7.TabIndex = 22;
+            this.button7.Text = "Сменить пользователя";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(17, 16);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(0, 13);
+            this.label7.TabIndex = 23;
+            this.label7.Click += new System.EventHandler(this.label7_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1508, 730);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.button7);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.gameStopBut);
@@ -897,6 +922,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Label label7;
     }
 }
 
