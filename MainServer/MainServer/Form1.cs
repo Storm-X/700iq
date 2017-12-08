@@ -105,7 +105,8 @@ namespace MainServer
         #region//кнопки
         private void DBLink_Click(object sender, EventArgs e)               //1 кнопка - связь с БД
         {
-            if (DBLink.BackColor != Color.GreenYellow)
+            //if (DBLink.BackColor != Color.GreenYellow)
+            if ((conn?.State != ConnectionState.Open) || (mycon?.State != ConnectionState.Open))
             {
                 string myConnectionString = "Data Source=178.172.150.251; Port=27999; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
                 //string myConnectionString = "Data Source=10.253.254.249;Port=3306; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI;Character Set=utf8;";
@@ -141,36 +142,33 @@ namespace MainServer
                     }
                     List<string> tour = new List<string>(tournaments.AsEnumerable().Select(r => r.Field<string>("Name")).ToArray());
                     comboBox3.DataSource = tour;
-
                     mServer = new MediaServer();
                     mServer.Start();
-
+                    if ((conn.State == ConnectionState.Open) && (mycon.State == ConnectionState.Open))
+                    {
+                        DBLink.BackColor = Color.GreenYellow;
+                        DBLink.Text = "Связь установлена";
+                        GameButton.Enabled = true;
+                        GameButton.PerformClick();
+                    }
                 }
                 catch (InvalidCastException j)
                 {
                     MessageBox.Show("Нет подключения к Базе данных" + j.Message);
-                }
-
-                if ((conn.State == ConnectionState.Open) && (mycon.State == ConnectionState.Open))
-                {
-                    DBLink.BackColor = Color.GreenYellow;
-                    DBLink.Text = "Связь установлена";
-                    GameButton.Enabled = true;
-                    GameButton.PerformClick();
-                }
-                else
-                {
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                    if (mycon.State == ConnectionState.Open) mycon.Close();
+                    if (conn.State == ConnectionState.Open)
+                        conn.Close();
+                    if (mycon.State == ConnectionState.Open)
+                        mycon.Close();
+                    return;
                 }
             }
-            else MessageBox.Show("СВязь с БД установлена");
+            else MessageBox.Show("Связь с базами данных уже установлена!");
         }
         private void Game_Click(object sender, EventArgs e)                 //2 кнопка - выбор игры
         {
             if (GameButton.BackColor != Color.GreenYellow)
             {
-                MySqlCommand cm = new MySqlCommand("SELECT tournaments.id, tournaments.name , city.name, number_game, date, place, time FROM tournaments INNER JOIN city ON tournaments.city=city.id", mycon);
+                MySqlCommand cm = new MySqlCommand("SELECT tournaments.id, tournaments.name, games.id as gameid, games.tour_id, games.game_name, CONCAT(city.name, ' - ', place) AS place, DATE, TIME_FORMAT(TIME, '%H:%i') AS startTime  FROM (tournaments INNER JOIN city ON tournaments.city=city.id) INNER JOIN games ON tournaments.id=games.tournament_id", mycon);
                 DataTable dat = new DataTable();
 
                 using (MySqlDataReader tur = cm.ExecuteReader())
@@ -199,22 +197,22 @@ namespace MainServer
         private void ListGames_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)//получение данных выбранной игры
         {
             //заниесение данных в класс DATA
-            data.city = ListGames.CurrentRow.Cells[2].Value.ToString();             //город
-            if (ListGames.CurrentRow.Cells[3].Value != DBNull.Value)
-                data.NumberGame = Convert.ToInt32(ListGames.CurrentRow.Cells[3].Value);//номер игры
-            data.idGame = Convert.ToInt32(ListGames.CurrentRow.Cells[0].Value);       //  id игры
-            data.NameGame = ListGames.CurrentRow.Cells[1].Value.ToString();         //название игры
-            data.Tur = tur;                                                         //тур
+            data.city = ListGames.CurrentRow.Cells["place"].Value.ToString();             //город
+            if (ListGames.CurrentRow.Cells["number_game"].Value != DBNull.Value)
+                data.NumberGame = Convert.ToInt32(ListGames.CurrentRow.Cells["number_game"].Value);//номер игры
+            data.idGame = Convert.ToInt32(ListGames.CurrentRow.Cells["gameId"].Value);       //  id игры
+            data.NameGame = ListGames.CurrentRow.Cells["name"].Value.ToString();         //название игры
+            data.Tur = ListGames.CurrentRow.Cells["gameName"].Value.ToString(); //tur;       //тур
             DateTime date_begin = new DateTime();
-            date_begin = Convert.ToDateTime(ListGames.CurrentRow.Cells[4].Value.ToString());
+            date_begin = Convert.ToDateTime(ListGames.CurrentRow.Cells["date"].Value.ToString());
             DateTime time_begin = new DateTime();
-            time_begin = Convert.ToDateTime(ListGames.CurrentRow.Cells[6].Value.ToString());
+            time_begin = Convert.ToDateTime(ListGames.CurrentRow.Cells["startTime"].Value.ToString());
             date_begin = date_begin.AddHours(time_begin.Hour);
             date_begin = date_begin.AddMinutes(time_begin.Minute);
             data.startTime = date_begin;//дата и время игры
 
-            infoGame.Text = data.NameGame + " г. " + ListGames.CurrentRow.Cells[2].Value + " " + ListGames.CurrentRow.Cells[3].Value;
-            adressGame = ListGames.CurrentRow.Cells[5].Value.ToString();
+            infoGame.Text = data.NameGame + " г." + ListGames.CurrentRow.Cells["place"].Value + " - " + data.Tur;
+            //adressGame = ListGames.CurrentRow.Cells[5].Value.ToString();
             rgData.Set();           //создание таблицы для регистрации команд
             dt = rgData.ddt();
             //проверка на прерываение игры

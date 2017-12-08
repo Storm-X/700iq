@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
@@ -51,12 +51,6 @@
             this.Home = new System.Windows.Forms.TabPage();
             this.ListKomand = new System.Windows.Forms.DataGridView();
             this.ListGames = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.number_game = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.place = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Control = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -95,6 +89,14 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button7 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.place = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.startTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gameName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.number_game = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gameId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.Home.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ListKomand)).BeginInit();
@@ -258,8 +260,8 @@
             // 
             // Home
             // 
-            this.Home.Controls.Add(this.ListKomand);
             this.Home.Controls.Add(this.ListGames);
+            this.Home.Controls.Add(this.ListKomand);
             this.Home.Location = new System.Drawing.Point(4, 32);
             this.Home.Name = "Home";
             this.Home.Padding = new System.Windows.Forms.Padding(3);
@@ -277,24 +279,24 @@
             this.ListKomand.BackgroundColor = System.Drawing.SystemColors.Menu;
             this.ListKomand.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.ListKomand.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(3);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ListKomand.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(3);
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ListKomand.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.ListKomand.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Orange;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ListKomand.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.Orange;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.ListKomand.DefaultCellStyle = dataGridViewCellStyle5;
             this.ListKomand.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListKomand.Location = new System.Drawing.Point(3, 3);
             this.ListKomand.Margin = new System.Windows.Forms.Padding(2);
@@ -326,32 +328,34 @@
             this.ListGames.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ListGames.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.RaisedHorizontal;
             this.ListGames.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(3);
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ListGames.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(3);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ListGames.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.ListGames.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ListGames.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
             this.name,
-            this.name1,
-            this.number_game,
             this.place,
-            this.date});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(7);
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ListGames.DefaultCellStyle = dataGridViewCellStyle4;
+            this.date,
+            this.startTime,
+            this.gameName,
+            this.number_game,
+            this.gameId});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(7);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.ListGames.DefaultCellStyle = dataGridViewCellStyle2;
             this.ListGames.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListGames.Location = new System.Drawing.Point(3, 3);
             this.ListGames.Margin = new System.Windows.Forms.Padding(0);
@@ -359,8 +363,8 @@
             this.ListGames.Name = "ListGames";
             this.ListGames.ReadOnly = true;
             this.ListGames.RowHeadersVisible = false;
-            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(5);
-            this.ListGames.RowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(5);
+            this.ListGames.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.ListGames.RowTemplate.DividerHeight = 3;
             this.ListGames.RowTemplate.Height = 24;
             this.ListGames.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -368,60 +372,6 @@
             this.ListGames.TabIndex = 11;
             this.ListGames.Visible = false;
             this.ListGames.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ListGames_CellMouseDoubleClick);
-            // 
-            // id
-            // 
-            this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.id.DataPropertyName = "id";
-            this.id.HeaderText = "№ п/п";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            this.id.Width = 76;
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.name.DataPropertyName = "name";
-            this.name.FillWeight = 200F;
-            this.name.HeaderText = "Сезон";
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            this.name.Width = 84;
-            // 
-            // name1
-            // 
-            this.name1.DataPropertyName = "name1";
-            this.name1.HeaderText = "Город";
-            this.name1.Name = "name1";
-            this.name1.ReadOnly = true;
-            // 
-            // number_game
-            // 
-            this.number_game.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.number_game.DataPropertyName = "number_game";
-            this.number_game.HeaderText = "№ игры";
-            this.number_game.Name = "number_game";
-            this.number_game.ReadOnly = true;
-            this.number_game.Width = 87;
-            // 
-            // place
-            // 
-            this.place.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.place.DataPropertyName = "place";
-            this.place.FillWeight = 150F;
-            this.place.HeaderText = "Место проведения игр";
-            this.place.Name = "place";
-            this.place.ReadOnly = true;
-            this.place.Width = 168;
-            // 
-            // date
-            // 
-            this.date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.date.DataPropertyName = "date";
-            this.date.HeaderText = "Дата и время";
-            this.date.Name = "date";
-            this.date.ReadOnly = true;
-            this.date.Width = 129;
             // 
             // Control
             // 
@@ -821,6 +771,82 @@
             this.label7.TabIndex = 23;
             this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
+            // id
+            // 
+            this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "№ п/п";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            this.id.Visible = false;
+            this.id.Width = 63;
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.name.DataPropertyName = "name";
+            this.name.FillWeight = 200F;
+            this.name.HeaderText = "Название турнира";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            this.name.Width = 162;
+            // 
+            // place
+            // 
+            this.place.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.place.DataPropertyName = "place";
+            this.place.FillWeight = 150F;
+            this.place.HeaderText = "Место проведения игр";
+            this.place.Name = "place";
+            this.place.ReadOnly = true;
+            // 
+            // date
+            // 
+            this.date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.date.DataPropertyName = "date";
+            this.date.HeaderText = "Дата";
+            this.date.Name = "date";
+            this.date.ReadOnly = true;
+            this.date.Width = 77;
+            // 
+            // startTime
+            // 
+            this.startTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.startTime.DataPropertyName = "startTime";
+            this.startTime.FillWeight = 87F;
+            this.startTime.HeaderText = "Время";
+            this.startTime.Name = "startTime";
+            this.startTime.ReadOnly = true;
+            this.startTime.Width = 86;
+            // 
+            // gameName
+            // 
+            this.gameName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.gameName.DataPropertyName = "game_name";
+            this.gameName.HeaderText = "Название тура";
+            this.gameName.Name = "gameName";
+            this.gameName.ReadOnly = true;
+            this.gameName.Width = 138;
+            // 
+            // number_game
+            // 
+            this.number_game.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.number_game.DataPropertyName = "tour_id";
+            this.number_game.HeaderText = "№ тура";
+            this.number_game.Name = "number_game";
+            this.number_game.ReadOnly = true;
+            this.number_game.Visible = false;
+            this.number_game.Width = 86;
+            // 
+            // gameId
+            // 
+            this.gameId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.gameId.DataPropertyName = "gameid";
+            this.gameId.HeaderText = "gameId";
+            this.gameId.Name = "gameId";
+            this.gameId.ReadOnly = true;
+            this.gameId.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -881,12 +907,6 @@
         private System.Windows.Forms.TabPage Control;
         private System.Windows.Forms.DataGridView ListGames;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn number_game;
-        private System.Windows.Forms.DataGridViewTextBoxColumn place;
-        private System.Windows.Forms.DataGridViewTextBoxColumn date;
         private System.Windows.Forms.DataGridView ListKomand;
         private System.Windows.Forms.TabPage questEditor;
         private System.Windows.Forms.DataGridView questEditorGrid;
@@ -924,6 +944,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn place;
+        private System.Windows.Forms.DataGridViewTextBoxColumn date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn startTime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn gameName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn number_game;
+        private System.Windows.Forms.DataGridViewTextBoxColumn gameId;
     }
 }
 
