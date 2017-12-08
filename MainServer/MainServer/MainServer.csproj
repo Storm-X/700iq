@@ -82,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="logList.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="Crypt.cs" />
     <Compile Include="Form1.cs">

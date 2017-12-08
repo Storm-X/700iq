@@ -14,6 +14,7 @@ using System.IO;
 using System.Security.Permissions;
 using System.Runtime.InteropServices;
 
+
 namespace MainServer
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -37,6 +38,7 @@ namespace MainServer
         Registration reg;
         int indexOfThemes;
         string[] text1;
+        logList[] tour;
         bool flag = false;
         public Data data = new Data();
         private string key = "Qade123asdasdasdqwewqeqw423412354232343253***????///";
@@ -133,15 +135,34 @@ namespace MainServer
                 try
                 {
                     mycon.Open();
-                    MySqlCommand cm = new MySqlCommand("SELECT name FROM tournaments", mycon);
+                    MySqlCommand cm = new MySqlCommand("SELECT CONCAT(tournaments.name, ' - ', games.game_name) AS Name, games.id as gameid  FROM (tournaments INNER JOIN city ON tournaments.city=city.id) INNER JOIN games ON tournaments.id=games.tournament_id", mycon);
                     MySqlDataReader rd = cm.ExecuteReader();
                     DataTable tournaments = new DataTable();
                     using (rd)  //если есть данные, то записываем в таблицу dat
                     {
                         if (rd.HasRows) tournaments.Load(rd);
                     }
-                    List<string> tour = new List<string>(tournaments.AsEnumerable().Select(r => r.Field<string>("Name")).ToArray());
-                    comboBox3.DataSource = tour;
+                    tour = new logList[tournaments.Rows.Count];
+                    for (int i=0; i<tournaments.Rows.Count; i++)
+                    {
+                        tour[i] = new logList();
+                        tour[i].name = tournaments.Rows[i][0].ToString();
+                        tour[i].gameid = tournaments.Rows[i][1].ToString();
+                    }
+
+                    //  tour.
+                    //   MultiColumnComboBox comdo = new MultiColumnComboBox();
+                    // comdo.Parent = this;
+                    // comdo.Table = tournaments;
+
+                    List<string> names = new List<string>();
+                    foreach(logList l in tour)
+                    {
+                        names.Add(l.name);
+
+                    }
+
+                    comboBox3.DataSource = names;
                     mServer = new MediaServer();
                     mServer.Start();
                     if ((conn.State == ConnectionState.Open) && (mycon.State == ConnectionState.Open))
@@ -1287,11 +1308,18 @@ namespace MainServer
         }
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
+            foreach (logList l in tour)
+            {
+                if (String.Compare(comboBox3.SelectedItem.ToString(), l.name) == 0)
+                {
+                    label9.Text = l.gameid;
+                }
 
+            }
             logsOftournaments.Clear();
             logsOfzones.Clear();
 
-            string logs = "select * from logs";
+            string logs = "select * from logs where gameid = '"+ Int32.Parse(label9.Text) + "'";
             MySqlCommand cm = new MySqlCommand(logs, mycon);
             MySqlDataReader rd = cm.ExecuteReader();
             DataTable dat = new DataTable();
@@ -1301,11 +1329,13 @@ namespace MainServer
             }
 
             var log = dat.AsEnumerable().Select(r => r.Field<string>("command")).ToArray();
+         
+
             List<string> gamezone = new List<string>();
             for (int i = 0; i < log.Length; i++)
             {
                 SendLog l = JsonConvert.DeserializeObject<SendLog>(log[i]);
-                if (String.Compare(comboBox3.SelectedItem.ToString(), l.dataLog.NameGame.ToString()) == 0) logsOftournaments.Add(l);
+                logsOftournaments.Add(l);
 
             }
             for (int i = 0; i < logsOftournaments.Count; i++)
@@ -1527,6 +1557,7 @@ namespace MainServer
         {
 
         }
+
 
         //////////////////////////copy/////////////////////////////
         private async void Zapros()//получениеи обработка  запросов от команд
