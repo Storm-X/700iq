@@ -13,6 +13,7 @@ using System.Linq;
 using System.IO;
 using System.Security.Permissions;
 using System.Runtime.InteropServices;
+using Microsoft.VisualBasic;
 
 
 namespace MainServer
@@ -28,6 +29,7 @@ namespace MainServer
        // private FlashContent Content;
         GameinZone gz;
         SQLiteCommand cm;
+        public Form mesForm;
         SQLiteDataReader rd;
         List<SendLog> logsOfteams = new List<SendLog>();
         List<SendLog> logsOftournaments = new List<SendLog>();
@@ -39,6 +41,7 @@ namespace MainServer
         int indexOfThemes;
         string[] text1;
         logList[] tour;
+        public TextBox comment;
         bool flag = false;
         public Data data = new Data();
         private string key = "Qade123asdasdasdqwewqeqw423412354232343253***????///";
@@ -1556,6 +1559,74 @@ namespace MainServer
         private void label7_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void добавитьТурToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // MessageBox.Show(Convert.ToString(ListGames[0, ListGames.CurrentRow.Index].Value));
+            mesForm = new Form()
+            {
+                Text = "Добавить тур",
+                Height = 100,
+            };
+            comment = new TextBox()
+            {
+                Dock = DockStyle.Top,
+            };
+            Button ok = new Button()
+            {
+                Dock = DockStyle.Right,
+                Text = "OK",
+                Height = 40,
+                Width = mesForm.Width / 2,
+                
+            };
+            ok.Click += Ok_Click;
+            Button cancel = new Button()
+            {
+                Height = 40,
+                Width = mesForm.Width/2,
+                Dock = DockStyle.Left,
+                Text = "Cancel",
+            };
+            cancel.Click += Cancel_Click;
+            Panel panel = new Panel()
+            {
+                Height = 40,
+                Dock = DockStyle.Bottom,
+            };
+            panel.Controls.Add(ok);
+            panel.Controls.Add(cancel);
+            mesForm.Controls.Add(panel);
+            mesForm.Controls.Add(comment);
+            mesForm.Show();
+
+
+        }
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            mesForm.Close();
+        }
+
+        private void Ok_Click(object sender, EventArgs e)
+        {
+            string sql = "Select Max(tour_id) FROM games WHERE tournament_id = '"+ListGames[0, ListGames.CurrentRow.Index].Value + "'";
+            MySqlCommand cmd = new MySqlCommand(sql, mycon);
+            cmd.ExecuteNonQuery();
+            DataTable dat = new DataTable();
+
+            using (MySqlDataReader tur = cmd.ExecuteReader())
+            {
+                dat.Load(tur);
+            }
+
+           
+            int game_num = Convert.ToInt32(dat.Rows[0][0]) + 1;
+            sql = " insert into games (tournament_id, tour_id, game_name) value (" + ListGames[0, ListGames.CurrentRow.Index].Value + ", " + game_num + ",'" + comment.Text + "')";
+            cmd = new MySqlCommand(sql, mycon);
+            cmd.ExecuteNonQuery();
+            mesForm.Close();
         }
 
 
