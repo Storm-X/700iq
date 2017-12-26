@@ -110,6 +110,8 @@ namespace MainServer
         #region//кнопки
         private void DBLink_Click(object sender, EventArgs e)               //1 кнопка - связь с БД
         {
+
+            
             //if (DBLink.BackColor != Color.GreenYellow)
             if ((conn?.State != ConnectionState.Open) || (mycon?.State != ConnectionState.Open))
             {
@@ -1198,6 +1200,7 @@ namespace MainServer
         {
             textBox5.Text = "";
             textBox6.Text = "";
+            textBox2.Text = "";
             label2.Text = "";
             tbMediaFile.Text = "";
             questEditorGrid.Enabled = true;
@@ -1207,15 +1210,62 @@ namespace MainServer
             if(e.KeyCode == Keys.Escape && tabControl1.SelectedTab.Name.Equals("questEditor"))
                 button3.PerformClick();
         }
+        public string ReadString(string txtQuery)
+        {
+            
+            using (SQLiteCommand cmd = new SQLiteCommand(txtQuery, conn))
+            {
+                object result = cmd.ExecuteScalar();
+                return (result == null ? "" : result.ToString());
+            }
+        }
 
         private void button4_Click(object sender, EventArgs e)
         {
             string saveRequest;
-            if (label2.Text == "") saveRequest = "insert or replace into quests (themeID,text,answer,media) values(" + indexOfThemes + ", '" + Crypt.Encrypt(textBox5.Text, key) + "', '" + Crypt.Encrypt(textBox6.Text, key) + "', '" + tbMediaFile.Text + "')";
-            else saveRequest = "insert or replace into quests (ID,themeID,text,answer,media) values(" + label2.Text + "," + indexOfThemes + ", '" + Crypt.Encrypt(textBox5.Text, key) + "', '" + Crypt.Encrypt(textBox6.Text, key) + "', '" + tbMediaFile.Text + "')";
-            cm = new SQLiteCommand(saveRequest, conn);
-            cm.ExecuteNonQuery();
-            reloadDB();
+            string saveMySQLRequest;
+            int lastId;
+            if (label2.Text == "")
+            {
+                saveRequest = "insert or replace into quests (themeID,text,answer,media) values(" + indexOfThemes + ", '" + Crypt.Encrypt(textBox5.Text, key) + "', '" + Crypt.Encrypt(textBox6.Text, key) + "', '" + tbMediaFile.Text + "')";
+                cm = new SQLiteCommand(saveRequest, conn);
+                cm.ExecuteNonQuery();
+                reloadDB();
+                lastId = Convert.ToInt32(ReadString("SELECT ID from quests ORDER BY ID DESC LIMIT 1"));
+                saveMySQLRequest = "insert into questOwner(quest_id,user_id) values('"+ lastId.ToString() +"','"+ textBox2.Text +"')";
+                MySqlCommand mycm = new MySqlCommand(saveMySQLRequest, mycon);
+                mycm.ExecuteNonQuery();
+
+
+
+                saveMySQLRequest = "SELECT user_id FROM compositions Where team_id = (SELECT team_id FROM compositions WHERE user_id = "+ textBox2.Text  +")";
+                mycm = new MySqlCommand(saveMySQLRequest, mycon);
+                MySqlDataReader  read = mycm.ExecuteReader();
+                DataTable mem = new DataTable();
+                using (read)
+                {
+                    if (read.HasRows) mem.Load(read);
+                }
+
+                var members = mem.AsEnumerable().Select(r => r.Field<int>("user_id")).ToArray();
+                foreach(int member in members)
+                {
+                 
+                    SQLiteCommand cml = new SQLiteCommand(String.Format("INSERT INTO i_see (user_id, quest_id) values ({0}, {1})", member, lastId), conn);
+                    cml.ExecuteNonQuery();
+                }
+                
+            
+
+            }
+            else
+            {
+                saveRequest = "insert or replace into quests (ID,themeID,text,answer,media) values(" + label2.Text + "," + indexOfThemes + ", '" + Crypt.Encrypt(textBox5.Text, key) + "', '" + Crypt.Encrypt(textBox6.Text, key) + "', '" + tbMediaFile.Text + "')";
+                cm = new SQLiteCommand(saveRequest, conn);
+                cm.ExecuteNonQuery();
+                reloadDB();
+            }
+            button3.PerformClick();
         }
         private void questEditorGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -1287,7 +1337,7 @@ namespace MainServer
             }
 
             questEditorGrid.DataSource = tableofQuestion;
-            button3.PerformClick();
+            
             /*questEditorGrid.Enabled = true;
             textBox5.Text = "";
             textBox6.Text = "";
@@ -1627,6 +1677,21 @@ namespace MainServer
             cmd = new MySqlCommand(sql, mycon);
             cmd.ExecuteNonQuery();
             mesForm.Close();
+        }
+
+        private void contextMenuStrip2_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(textBox2.Text, "[^0-9]"))
+            {
+                MessageBox.Show("Please enter only numbers.");
+                textBox2.Text = textBox2.Text.Remove(textBox2.Text.Length - 1);
+                
+            }
         }
 
 

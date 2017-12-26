@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Permissions;
 
 namespace MainServer
 {
@@ -373,6 +375,10 @@ namespace MainServer
                 tmOtvetAktiv = false;
             }
         }
+
+        [ComVisibleAttribute(true)]
+        [PermissionSetAttribute(SecurityAction.LinkDemand, Name = "FullTrust")]
+        [PermissionSetAttribute(SecurityAction.InheritanceDemand, Name = "FullTrust")]
         void nextTakt()
         {
             Game.Teames[] currTeam;
@@ -695,11 +701,15 @@ namespace MainServer
 
                             }
                         }
-                        /*WebBrowser webBrowser = new WebBrowser();
-                        webBrowser.Navigate("700iq.by/calc_rating");*/
+
                     }
-                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    
                     log();
+
+                    WebBrowser webBrowser = new WebBrowser();
+                    webBrowser.ScriptErrorsSuppressed = true;
+                    String requestString = String.Format("700iq.by/calc_game_stat?game_id={0}&zone_id={1}", data.idGame, data.GameZone);
+                    webBrowser.Navigate(requestString);
 
                     string logs = "select * from logs where gameid = " + data.idGame + " AND zone = " + data.GameZone;
                     MySqlCommand cm1 = new MySqlCommand(logs, mycon);

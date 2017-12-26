@@ -60,6 +60,8 @@ namespace MainServer
             this.gameName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.number_game = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gameId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.добавитьТурToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ListKomand = new System.Windows.Forms.DataGridView();
             this.Control = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
@@ -69,6 +71,8 @@ namespace MainServer
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.questEditor = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.tbMediaFile = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -100,18 +104,16 @@ namespace MainServer
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button7 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.добавитьТурToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.Home.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ListGames)).BeginInit();
+            this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ListKomand)).BeginInit();
             this.Control.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.questEditor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.questEditorGrid)).BeginInit();
             this.gameStatistics.SuspendLayout();
-            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // lot
@@ -406,6 +408,21 @@ namespace MainServer
             this.gameId.ReadOnly = true;
             this.gameId.Visible = false;
             // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.добавитьТурToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(148, 26);
+            this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
+            // 
+            // добавитьТурToolStripMenuItem
+            // 
+            this.добавитьТурToolStripMenuItem.Name = "добавитьТурToolStripMenuItem";
+            this.добавитьТурToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.добавитьТурToolStripMenuItem.Text = "Добавить тур";
+            this.добавитьТурToolStripMenuItem.Click += new System.EventHandler(this.добавитьТурToolStripMenuItem_Click);
+            // 
             // ListKomand
             // 
             this.ListKomand.AllowDrop = true;
@@ -542,6 +559,8 @@ namespace MainServer
             // 
             // questEditor
             // 
+            this.questEditor.Controls.Add(this.label8);
+            this.questEditor.Controls.Add(this.textBox2);
             this.questEditor.Controls.Add(this.tbMediaFile);
             this.questEditor.Controls.Add(this.button5);
             this.questEditor.Controls.Add(this.label2);
@@ -560,6 +579,23 @@ namespace MainServer
             this.questEditor.TabIndex = 2;
             this.questEditor.Text = "Редактор вопросов";
             this.questEditor.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(794, 458);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(112, 17);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "Ид владельца";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(775, 478);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(145, 23);
+            this.textBox2.TabIndex = 12;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // tbMediaFile
             // 
@@ -600,7 +636,7 @@ namespace MainServer
             // 
             this.button3.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button3.Location = new System.Drawing.Point(926, 457);
+            this.button3.Location = new System.Drawing.Point(926, 471);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(95, 30);
             this.button3.TabIndex = 6;
@@ -613,7 +649,7 @@ namespace MainServer
             this.textBox6.Location = new System.Drawing.Point(623, 429);
             this.textBox6.Multiline = true;
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(145, 58);
+            this.textBox6.Size = new System.Drawing.Size(145, 72);
             this.textBox6.TabIndex = 5;
             // 
             // textBox5
@@ -621,7 +657,7 @@ namespace MainServer
             this.textBox5.Location = new System.Drawing.Point(45, 429);
             this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(572, 58);
+            this.textBox5.Size = new System.Drawing.Size(572, 72);
             this.textBox5.TabIndex = 4;
             // 
             // textBox4
@@ -862,20 +898,6 @@ namespace MainServer
             this.label7.TabIndex = 23;
             this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
-            // contextMenuStrip2
-            // 
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.добавитьТурToolStripMenuItem});
-            this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(153, 48);
-            // 
-            // добавитьТурToolStripMenuItem
-            // 
-            this.добавитьТурToolStripMenuItem.Name = "добавитьТурToolStripMenuItem";
-            this.добавитьТурToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.добавитьТурToolStripMenuItem.Text = "Добавить тур";
-            this.добавитьТурToolStripMenuItem.Click += new System.EventHandler(this.добавитьТурToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -905,6 +927,7 @@ namespace MainServer
             this.tabControl1.ResumeLayout(false);
             this.Home.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ListGames)).EndInit();
+            this.contextMenuStrip2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ListKomand)).EndInit();
             this.Control.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
@@ -913,7 +936,6 @@ namespace MainServer
             ((System.ComponentModel.ISupportInitialize)(this.questEditorGrid)).EndInit();
             this.gameStatistics.ResumeLayout(false);
             this.gameStatistics.PerformLayout();
-            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -985,6 +1007,8 @@ namespace MainServer
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem добавитьТурToolStripMenuItem;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 
