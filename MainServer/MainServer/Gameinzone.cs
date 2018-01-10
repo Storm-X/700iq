@@ -592,7 +592,7 @@ namespace MainServer
                                                                         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
 
                         string zaprocVoprosa = "select quests.text, answer, IFNULL(media,'') " +
-                                               "from quests where id = 486"; //+ questID;
+                                               "from quests where id = "+ questID;
 
                         cml = new SQLiteCommand(zaprocVoprosa, conn);
                         SQLiteDataReader reader = cml.ExecuteReader();
@@ -602,7 +602,7 @@ namespace MainServer
                             gm.quest = Crypt.Decrypt(reader.GetString(0), key);
                             gm.rightAnswer = Crypt.Decrypt(reader.GetString(1), key);
                             if (!reader.IsDBNull(1)) answerQ = Crypt.Decrypt(reader.GetString(1), key);
-                            gm.idQuest = 486;//questID;//надо ли его посылать??
+                            gm.idQuest = questID;//надо ли его посылать??
                             gm.media = reader.GetString(2);
                         }
                         #endregion
