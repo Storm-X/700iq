@@ -94,7 +94,7 @@ namespace MainServer
             //gm.o2 = 2;
             //gm.o3 = 3;
             #endregion
-            deadLine = DateTime.Now.AddMinutes(2);
+            deadLine = DateTime.Now.AddSeconds(600);
             tm.Tick += Tm_Tick;
             tmOtvet.Tick += TmOtvet_Tick;
             //deadLinetmr.Tick += DeadLinetmr_Tick;
@@ -189,6 +189,7 @@ namespace MainServer
                         ok[table] = otv.Equals("gotov", StringComparison.OrdinalIgnoreCase);
                         if ((ok[0] & ok[1] & ok[2]) || deadLine <= DateTime.Now)
                         {
+                            ContinueGame();
                             nextTakt();
                             Array.Clear(ok, 0, ok.Length);
                         }
@@ -256,6 +257,15 @@ namespace MainServer
             if (data.team[numberTable].kod == kluch) return true;
             return false;
         }
+        public string ReadString(string txtQuery)
+        {
+
+            using (MySqlCommand cmd = new MySqlCommand(txtQuery, mycon))
+            {
+                object result = cmd.ExecuteScalar();
+                return (result == null ? "" : result.ToString());
+            }
+        }
         void log()                                          //сохранение данных - логирование
         {
             SendLog sLog = new SendLog();
@@ -270,11 +280,57 @@ namespace MainServer
 
             string sql = " insert into logs (gameid, zone, iqon_num, command) value (" + data.idGame + ", " + data.GameZone + ", " +
                 sLog.gmLog.iCon + ",'" + JsonConvert.SerializeObject(sLog) + "')";
+
             sql = sql.Replace("\\", "\\\\");
             //mycon.Open();
             MySqlCommand cmd = new MySqlCommand(sql, mycon);
-            cmd.ExecuteNonQuery();
-            //gm.quest = vopr;
+            cmd.ExecuteNonQuery(); 
+            try
+            {
+                //определение есать ли у вопроса владелец, если есть владелец то внести в таблицу Payment////////////////////////////////////
+                double WiQash = 0;
+                int ownerId = Convert.ToInt32(ReadString("SELECT user_id from questOwner WHERE quest_id = " + gm.idQuest + ""));
+                for (int i = 0; i < 3; i++)
+                {
+                    if (gm.team[i].correct)
+                    {
+                        switch (gm.team[i].answerOrder)
+                        {
+                            case 0:
+                                WiQash = 0; break;
+                            case 1:
+                                {
+                                    for (int j = 0; j < 3; j++)
+                                    {
+                                        if (gm.team[j].answerOrder == 0)
+                                        {
+                                            WiQash = Math.Round(gm.team[j].stavka * 0.03);
+                                        }
+                                    }
+                                }
+                                break;
+                            case 2:
+                                {
+                                    for (int j = 0; j < 3; j++)
+                                    {
+                                        if (gm.team[j].answerOrder == 0 || gm.team[j].answerOrder == 1)
+                                        {
+                                            WiQash += gm.team[j].stavka;
+                                        }
+                                    }
+                                    WiQash = Math.Round(WiQash * 0.04);
+                                }
+                                break;
+                        }
+                    }
+                }
+                if ((gm.team[0].correct == gm.team[1].correct == gm.team[2].correct == false) && (gm.Cell != 0)) WiQash = Math.Round((gm.team[0].stavka + gm.team[1].stavka + gm.team[2].stavka) * 0.05);
+                cmd = new MySqlCommand("insert into questPayment (gameid, zone, userid, questid, iqash) value(" + data.idGame + ", " + data.GameZone + "," + ownerId + "," + gm.idQuest + "," + WiQash + ")", mycon);
+                cmd.ExecuteNonQuery();
+                //конец записи в Payment //////////////////////////////////////////////////////////////////////////////////////////////
+            }
+            catch{ };
+
 
             var gmMembers = data.team.SelectMany(x => x.member.Where(c => c != null));  //отберем всех участников игровой тройки
             foreach (var tUser in gmMembers)                                            //и занесем в базу "засвеченный" вопрос
@@ -374,6 +430,15 @@ namespace MainServer
                 tmOtvet.Start();
                 tmOtvetAktiv = false;
             }
+        }
+
+        public string bin2Hex(string strBin)
+
+        {
+            byte[] ba = Encoding.Default.GetBytes(strBin);
+            var hexString = BitConverter.ToString(ba);
+            hexString = hexString.Replace("-", "");
+            return hexString;
         }
 
         [ComVisibleAttribute(true)]
@@ -506,28 +571,28 @@ namespace MainServer
                         //questID = (dtVopros.Rows.Count * rn.rnd()) / 37;//определяем случайно id вопроса из списка в таблице dtVopros
                         //questID = Convert.ToInt32(dtVopros.Rows[questID][0]);//questID - id случайного вопроса
                         questID = Convert.ToInt32(dtVopros.Rows[0][0]); //Id первого незасвеченного вопроса
-                                                                             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                             /*    string listOfQuestions = "select quests.text from quests";
-                                                                                 SQLiteCommand cm = new SQLiteCommand(listOfQuestions, conn);
-                                                                                 SQLiteDataReader rd = cm.ExecuteReader();
-                                                                                 DataTable dat = new DataTable();
-                                                                                 using (rd)  //если есть данные, то записываем в таблицу dat
-                                                                                 {
-                                                                                     if (rd.HasRows) dat.Load(rd);
-                                                                                 }
-                                                                                 var stringArr = dat.AsEnumerable().Select(r => r.Field<string>("text")).ToArray();
+                                                                        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                        /*    string listOfQuestions = "select quests.text from quests";
+                                                                            SQLiteCommand cm = new SQLiteCommand(listOfQuestions, conn);
+                                                                            SQLiteDataReader rd = cm.ExecuteReader();
+                                                                            DataTable dat = new DataTable();
+                                                                            using (rd)  //если есть данные, то записываем в таблицу dat
+                                                                            {
+                                                                                if (rd.HasRows) dat.Load(rd);
+                                                                            }
+                                                                            var stringArr = dat.AsEnumerable().Select(r => r.Field<string>("text")).ToArray();
 
-                                                                                 string key = "Qade123asdasdasdqwewqeqw423412354232343253***????///";
-                                                                                 string cryptMessage;
-                                                                                 for (int i = 0; i < stringArr.Length; i++)
-                                                                                 {
-                                                                                      cryptMessage = Crypt.Encrypt(stringArr[i], key);
-                                                                                      stringArr[i] = cryptMessage;
-                                                                                 }*/
-                                                                             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
+                                                                            string key = "Qade123asdasdasdqwewqeqw423412354232343253***????///";
+                                                                            string cryptMessage;
+                                                                            for (int i = 0; i < stringArr.Length; i++)
+                                                                            {
+                                                                                 cryptMessage = Crypt.Encrypt(stringArr[i], key);
+                                                                                 stringArr[i] = cryptMessage;
+                                                                            }*/
+                                                                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
 
                         string zaprocVoprosa = "select quests.text, answer, IFNULL(media,'') " +
-                                               "from quests where id =" + questID;
+                                               "from quests where id = 486"; //+ questID;
 
                         cml = new SQLiteCommand(zaprocVoprosa, conn);
                         SQLiteDataReader reader = cml.ExecuteReader();
@@ -537,7 +602,7 @@ namespace MainServer
                             gm.quest = Crypt.Decrypt(reader.GetString(0), key);
                             gm.rightAnswer = Crypt.Decrypt(reader.GetString(1), key);
                             if (!reader.IsDBNull(1)) answerQ = Crypt.Decrypt(reader.GetString(1), key);
-                            gm.idQuest = questID;//надо ли его посылать??
+                            gm.idQuest = 486;//questID;//надо ли его посылать??
                             gm.media = reader.GetString(2);
                         }
                         #endregion
@@ -660,7 +725,8 @@ namespace MainServer
                 stavka = stavka.Select(x => x = 25).ToArray();
                 //Array.Clear(stavka, 0, stavka.Length);
                 Array.Clear(ok, 0, ok.Length);
-                deadLine = DateTime.Now.AddSeconds(150);
+                
+                deadLine = DateTime.Now.AddSeconds(750);
 
                 gm.iCon++;
                 gm.step = 1;
@@ -668,7 +734,7 @@ namespace MainServer
 
                 System.Threading.Thread.Sleep(7000);
                 Send2All("ogg");
-
+                //stopGame();
                 if (gm.iCon > 12)
                 {
                     gm.Cell = rn.rnd();
@@ -708,9 +774,8 @@ namespace MainServer
 
                     WebBrowser webBrowser = new WebBrowser();
                     webBrowser.ScriptErrorsSuppressed = true;
-                    String requestString = String.Format("700iq.by/calc_game_stat?game_id={0}&zone_id={1}", data.idGame, data.GameZone);
+                    String requestString = String.Format("700iq.by/{0}/{1}", bin2Hex("calc_game_stat"), bin2Hex(String.Format("game_id={0}&zone_id={1}", data.idGame, data.GameZone)));
                     webBrowser.Navigate(requestString);
-
                     string logs = "select * from logs where gameid = " + data.idGame + " AND zone = " + data.GameZone;
                     MySqlCommand cm1 = new MySqlCommand(logs, mycon);
                     MySqlDataReader rd = cm1.ExecuteReader();

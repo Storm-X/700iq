@@ -1080,7 +1080,7 @@ namespace _700IQ
                 else
                 {
                     pol.onPolosaEnd += Step1_4;
-                    pol.polosa(56, NewPoint(1600, 1350), this, "Step1_3");
+                    pol.polosa(1667, NewPoint(1656, 1350), this, "Step1_3");//56
                 }
                 this.Invalidate();
             }

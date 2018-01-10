@@ -1232,14 +1232,8 @@ namespace MainServer
                 cm.ExecuteNonQuery();
                 reloadDB();
                 lastId = Convert.ToInt32(ReadString("SELECT ID from quests ORDER BY ID DESC LIMIT 1"));
-                saveMySQLRequest = "insert into questOwner(quest_id,user_id) values('"+ lastId.ToString() +"','"+ textBox2.Text +"')";
-                MySqlCommand mycm = new MySqlCommand(saveMySQLRequest, mycon);
-                mycm.ExecuteNonQuery();
-
-
-
                 saveMySQLRequest = "SELECT user_id FROM compositions Where team_id = (SELECT team_id FROM compositions WHERE user_id = "+ textBox2.Text  +")";
-                mycm = new MySqlCommand(saveMySQLRequest, mycon);
+                MySqlCommand mycm = new MySqlCommand(saveMySQLRequest, mycon);
                 MySqlDataReader  read = mycm.ExecuteReader();
                 DataTable mem = new DataTable();
                 using (read)
@@ -1254,9 +1248,6 @@ namespace MainServer
                     SQLiteCommand cml = new SQLiteCommand(String.Format("INSERT INTO i_see (user_id, quest_id) values ({0}, {1})", member, lastId), conn);
                     cml.ExecuteNonQuery();
                 }
-                
-            
-
             }
             else
             {
