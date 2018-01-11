@@ -1,0 +1,327 @@
+﻿<XtraSerializer version="1.0" application="View">
+  <property name="#LayoutVersion" />
+  <property name="Columns" iskey="true" value="1">
+    <property name="Item1" isnull="true" iskey="true">
+      <property name="ImageIndex">-1</property>
+      <property name="Visible">true</property>
+      <property name="ImageAlignment">Near</property>
+      <property name="ToolTip" />
+      <property name="VisibleIndex">-1</property>
+      <property name="Name">idColumn</property>
+      <property name="Caption">ИД турнира</property>
+      <property name="FieldName">id</property>
+      <property name="FieldNameSortGroup">name</property>
+      <property name="ColumnEditName" />
+    </property>
+  </property>
+  <property name="CardMinSize">@3,Width=266@3,Height=384</property>
+  <property name="OptionsView" isnull="true" iskey="true">
+    <property name="ShowCardCaption">false</property>
+    <property name="ViewMode">Carousel</property>
+  </property>
+  <property name="OptionsItemText" isnull="true" iskey="true">
+    <property name="AlignMode">AlignInGroups</property>
+    <property name="TextToControlDistance">5</property>
+  </property>
+  <property name="OptionsMultiRecordMode" isnull="true" iskey="true">
+    <property name="MultiColumnScrollBarOrientation">Default</property>
+    <property name="MultiRowScrollBarOrientation">Default</property>
+    <property name="StretchCardToViewWidth">false</property>
+    <property name="StretchCardToViewHeight">false</property>
+    <property name="MaxCardRows">0</property>
+    <property name="MaxCardColumns">0</property>
+  </property>
+  <property name="OptionsSingleRecordMode" isnull="true" iskey="true">
+    <property name="StretchCardToViewWidth">false</property>
+    <property name="StretchCardToViewHeight">false</property>
+    <property name="CardAlignment">Center</property>
+  </property>
+  <property name="OptionsCarouselMode" isnull="true" iskey="true">
+    <property name="StretchCardToViewWidth">false</property>
+    <property name="StretchCardToViewHeight">false</property>
+    <property name="InterpolationMode">Default</property>
+    <property name="CenterOffset">@1,X=0@1,Y=0</property>
+    <property name="FrameCount">250</property>
+    <property name="FrameDelay">10000</property>
+    <property name="CardCount">15</property>
+    <property name="RollAngle">3.14159274</property>
+    <property name="Radius">0</property>
+    <property name="PitchAngle">1.57079637</property>
+    <property name="BottomCardScale">0.2</property>
+    <property name="BottomCardFading">0</property>
+    <property name="BottomCardAlphaLevel">0</property>
+  </property>
+  <property name="OptionsCustomization" isnull="true" iskey="true">
+    <property name="AllowSort">true</property>
+    <property name="AllowFilter">true</property>
+    <property name="UseAdvancedRuntimeCustomization">false</property>
+    <property name="ShowGroupLayoutTreeView">true</property>
+    <property name="ShowGroupHiddenItems">true</property>
+    <property name="ShowResetShrinkButtons">true</property>
+    <property name="ShowGroupCardIndents">true</property>
+    <property name="ShowGroupCardCaptions">true</property>
+    <property name="ShowSaveLoadLayoutButtons">true</property>
+    <property name="ShowGroupView">true</property>
+    <property name="ShowGroupLayout">true</property>
+    <property name="ShowGroupCards">true</property>
+    <property name="ShowGroupFields">true</property>
+  </property>
+  <property name="OptionsHeaderPanel" isnull="true" iskey="true">
+    <property name="ShowSingleModeButton">true</property>
+    <property name="EnableSingleModeButton">true</property>
+    <property name="ShowRowModeButton">true</property>
+    <property name="EnableRowModeButton">true</property>
+    <property name="ShowColumnModeButton">true</property>
+    <property name="EnableColumnModeButton">true</property>
+    <property name="ShowMultiRowModeButton">true</property>
+    <property name="EnableMultiRowModeButton">true</property>
+    <property name="ShowMultiColumnModeButton">true</property>
+    <property name="EnableMultiColumnModeButton">true</property>
+    <property name="ShowCarouselModeButton">true</property>
+    <property name="EnableCarouselModeButton">true</property>
+    <property name="ShowPanButton">true</property>
+    <property name="EnablePanButton">true</property>
+    <property name="ShowCustomizeButton">true</property>
+    <property name="EnableCustomizeButton">true</property>
+  </property>
+  <property name="CardCaptionFormat" />
+  <property name="FieldCaptionFormat" />
+  <property name="CardHorzInterval">2</property>
+  <property name="CardVertInterval">2</property>
+  <property name="DetailAutoHeight">true</property>
+  <property name="ActiveFilterEnabled">true</property>
+  <property name="OptionsSelection" isnull="true" iskey="true">
+    <property name="MultiSelect">false</property>
+  </property>
+  <property name="ViewCaptionHeight">-1</property>
+  <property name="ViewCaption" />
+  <property name="BorderStyle">Default</property>
+  <property name="SynchronizeClones">true</property>
+  <property name="DetailTabHeaderLocation">Top</property>
+  <property name="Name">layoutView1</property>
+  <property name="DetailHeight">350</property>
+  <property name="Tag" isnull="true" />
+  <property name="Items" iskey="true" value="2">
+    <property name="Item1" isnull="true" iskey="true">
+      <property name="TypeName">LayoutViewCard</property>
+      <property name="Location">@1,X=0@1,Y=0</property>
+      <property name="Size">@3,Width=266@3,Height=384</property>
+      <property name="OptionsPrint" isnull="true" iskey="true">
+        <property name="AppearanceGroupCaption" isnull="true" iskey="true">
+          <property name="ForeColor" />
+          <property name="BorderColor" />
+          <property name="BackColor" />
+          <property name="BackColor2" />
+          <property name="Font">Tahoma, 8.25pt</property>
+          <property name="GradientMode">Horizontal</property>
+          <property name="FontSizeDelta">0</property>
+          <property name="FontStyleDelta">Regular</property>
+        </property>
+        <property name="AllowPrintGroupCaption">true</property>
+        <property name="TextToControlDistance">-1</property>
+        <property name="AllowPrint">true</property>
+        <property name="AppearanceItemCaption" isnull="true" iskey="true">
+          <property name="ForeColor" />
+          <property name="BorderColor" />
+          <property name="BackColor" />
+          <property name="BackColor2" />
+          <property name="Font">Tahoma, 8.25pt</property>
+          <property name="GradientMode">Horizontal</property>
+          <property name="FontSizeDelta">0</property>
+          <property name="FontStyleDelta">Regular</property>
+        </property>
+      </property>
+      <property name="ExpandButtonVisible">false</property>
+      <property name="ExpandOnDoubleClick">false</property>
+      <property name="AllowBorderColorBlending">false</property>
+      <property name="TabbedGroupParentName" />
+      <property name="GroupBordersVisible">false</property>
+      <property name="OptionsItemText" isnull="true" iskey="true">
+        <property name="TextToControlDistance">5</property>
+        <property name="TextAlignMode">UseParentOptions</property>
+      </property>
+      <property name="CaptionImageVisible">true</property>
+      <property name="CaptionImageLocation">Default</property>
+      <property name="CaptionImageIndex">-1</property>
+      <property name="AllowGlyphSkinning">Default</property>
+      <property name="OptionsTableLayoutGroup" isnull="true" iskey="true">
+        <property name="RowDefinitions" iskey="true" value="0" />
+        <property name="ColumnDefinitions" iskey="true" value="0" />
+      </property>
+      <property name="HeaderButtonsLocation">AfterText</property>
+      <property name="TextToControlDistance">0</property>
+      <property name="AppearanceTabPage" isnull="true" iskey="true">
+        <property name="Header" isnull="true" iskey="true">
+          <property name="ForeColor" />
+          <property name="BorderColor" />
+          <property name="BackColor" />
+          <property name="BackColor2" />
+          <property name="Font">Tahoma, 8.25pt</property>
+          <property name="GradientMode">Horizontal</property>
+          <property name="FontSizeDelta">0</property>
+          <property name="FontStyleDelta">Regular</property>
+        </property>
+        <property name="HeaderActive" isnull="true" iskey="true">
+          <property name="ForeColor" />
+          <property name="BorderColor" />
+          <property name="BackColor" />
+          <property name="BackColor2" />
+          <property name="Font">Tahoma, 8.25pt</property>
+          <property name="GradientMode">Horizontal</property>
+          <property name="FontSizeDelta">0</property>
+          <property name="FontStyleDelta">Regular</property>
+        </property>
+        <property name="HeaderDisabled" isnull="true" iskey="true">
+          <property name="ForeColor" />
+          <property name="BorderColor" />
+          <property name="BackColor" />
+          <property name="BackColor2" />
+          <property name="Font">Tahoma, 8.25pt</property>
+          <property name="GradientMode">Horizontal</property>
+          <property name="FontSizeDelta">0</property>
+          <property name="FontStyleDelta">Regular</property>
+        </property>
+        <property name="HeaderHotTracked" isnull="true" iskey="true">
+          <property name="ForeColor" />
+          <property name="BorderColor" />
+          <property name="BackColor" />
+          <property name="BackColor2" />
+          <property name="Font">Tahoma, 8.25pt</property>
+          <property name="GradientMode">Horizontal</property>
+          <property name="FontSizeDelta">0</property>
+          <property name="FontStyleDelta">Regular</property>
+        </property>
+        <property name="PageClient" isnull="true" iskey="true">
+          <property name="ForeColor" />
+          <property name="BorderColor" />
+          <property name="BackColor" />
+          <property name="BackColor2" />
+          <property name="Font">Tahoma, 8.25pt</property>
+          <property name="GradientMode">Horizontal</property>
+          <property name="FontSizeDelta">0</property>
+          <property name="FontStyleDelta">Regular</property>
+        </property>
+      </property>
+      <property name="AppearanceGroup" isnull="true" iskey="true">
+        <property name="ForeColor" />
+        <property name="BorderColor" />
+        <property name="BackColor" />
+        <property name="BackColor2" />
+        <property name="Font">Tahoma, 8.25pt</property>
+        <property name="GradientMode">Horizontal</property>
+        <property name="FontSizeDelta">0</property>
+        <property name="FontStyleDelta">Regular</property>
+      </property>
+      <property name="OptionsCustomization" isnull="true" iskey="true">
+        <property name="AllowDrag">Default</property>
+        <property name="AllowDrop">Default</property>
+      </property>
+      <property name="OptionsTableLayoutItem" isnull="true" iskey="true">
+        <property name="RowIndex">0</property>
+        <property name="RowSpan">1</property>
+        <property name="ColumnIndex">0</property>
+        <property name="ColumnSpan">1</property>
+      </property>
+      <property name="OptionsToolTip" isnull="true" iskey="true">
+        <property name="ToolTip" />
+        <property name="ToolTipTitle" />
+        <property name="ToolTipIconType">None</property>
+        <property name="ImmediateToolTip">false</property>
+        <property name="AllowHtmlString">Default</property>
+        <property name="IconToolTip" />
+        <property name="IconToolTipTitle" />
+        <property name="IconToolTipIconType">None</property>
+        <property name="EnableIconToolTip">true</property>
+        <property name="IconImmediateToolTip">false</property>
+        <property name="IconAllowHtmlString">Default</property>
+      </property>
+      <property name="Name">layoutViewTemplateCard</property>
+      <property name="AppearanceItemCaption" isnull="true" iskey="true">
+        <property name="ForeColor" />
+        <property name="BorderColor" />
+        <property name="BackColor" />
+        <property name="BackColor2" />
+        <property name="Font">Tahoma, 8.25pt</property>
+        <property name="GradientMode">Horizontal</property>
+        <property name="FontSizeDelta">0</property>
+        <property name="FontStyleDelta">Regular</property>
+      </property>
+      <property name="ParentName" />
+      <property name="Text">TemplateCard</property>
+      <property name="CustomizationFormText">TemplateCard</property>
+    </property>
+    <property name="Item2" isnull="true" iskey="true">
+      <property name="TypeName">LayoutViewField</property>
+      <property name="ColumnName">idColumn</property>
+      <property name="Text">ИД турнира:</property>
+      <property name="OptionsPrint" isnull="true" iskey="true">
+        <property name="TextToControlDistance">-1</property>
+        <property name="AllowPrint">true</property>
+        <property name="AppearanceItemCaption" isnull="true" iskey="true">
+          <property name="ForeColor" />
+          <property name="BorderColor" />
+          <property name="BackColor" />
+          <property name="BackColor2" />
+          <property name="Font">Tahoma, 8.25pt</property>
+          <property name="GradientMode">Horizontal</property>
+          <property name="FontSizeDelta">0</property>
+          <property name="FontStyleDelta">Regular</property>
+        </property>
+      </property>
+      <property name="ShowInCustomizationForm">true</property>
+      <property name="CustomizationFormText">ИД турнира</property>
+      <property name="ControlAlignment">TopLeft</property>
+      <property name="EditorPreferredWidth">10</property>
+      <property name="ControlName" isnull="true" />
+      <property name="Image" isnull="true" />
+      <property name="ImageIndex">-1</property>
+      <property name="ImageAlignment">MiddleLeft</property>
+      <property name="ImageToTextDistance">5</property>
+      <property name="AllowGlyphSkinning">Default</property>
+      <property name="OptionsCustomization" isnull="true" iskey="true">
+        <property name="AllowDrag">Default</property>
+        <property name="AllowDrop">Default</property>
+      </property>
+      <property name="OptionsTableLayoutItem" isnull="true" iskey="true">
+        <property name="RowIndex">0</property>
+        <property name="RowSpan">1</property>
+        <property name="ColumnIndex">0</property>
+        <property name="ColumnSpan">1</property>
+      </property>
+      <property name="OptionsToolTip" isnull="true" iskey="true">
+        <property name="ToolTip" />
+        <property name="ToolTipTitle" />
+        <property name="ToolTipIconType">None</property>
+        <property name="ImmediateToolTip">false</property>
+        <property name="AllowHtmlString">Default</property>
+        <property name="IconToolTip" />
+        <property name="IconToolTipTitle" />
+        <property name="IconToolTipIconType">None</property>
+        <property name="EnableIconToolTip">true</property>
+        <property name="IconImmediateToolTip">false</property>
+        <property name="IconAllowHtmlString">Default</property>
+      </property>
+      <property name="Name">layoutViewField_layoutViewColumn1</property>
+      <property name="AppearanceItemCaption" isnull="true" iskey="true">
+        <property name="ForeColor" />
+        <property name="BorderColor" />
+        <property name="BackColor" />
+        <property name="BackColor2" />
+        <property name="Font">Tahoma, 8.25pt</property>
+        <property name="GradientMode">Horizontal</property>
+        <property name="FontSizeDelta">0</property>
+        <property name="FontStyleDelta">Regular</property>
+      </property>
+      <property name="ParentName">Customization</property>
+      <property name="TextSize">@1,Width=0@2,Height=20</property>
+      <property name="Location">@1,X=0@1,Y=0</property>
+      <property name="Size">@3,Width=132@2,Height=38</property>
+    </property>
+  </property>
+  <property name="ActiveFilterString" />
+  <property name="FormatRules" iskey="true" value="0" />
+  <property name="SortInfo">~Xtra#Base64AAEAAAD/////AQAAAAAAAAAMAgAAAF1EZXZFeHByZXNzLlh0cmFHcmlkLnYxNy4yLCBWZXJzaW9uPTE3LjIuMy4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI4OGQxNzU0ZDcwMGU0OWEFAQAAADhEZXZFeHByZXNzLlh0cmFHcmlkLkNvbHVtbnMuR3JpZENvbHVtblNvcnRJbmZvQ29sbGVjdGlvbgQAAAAKZ3JvdXBDb3VudAVjbG9uZQ9jbG9uZUdyb3VwQ291bnQTQ29sbGVjdGlvbkJhc2UrbGlzdAADAAMIsgFTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW0RldkV4cHJlc3MuWHRyYUdyaWQuQ29sdW1ucy5HcmlkQ29sdW1uU29ydEluZm8sIERldkV4cHJlc3MuWHRyYUdyaWQudjE3LjIsIFZlcnNpb249MTcuMi4zLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjg4ZDE3NTRkNzAwZTQ5YV1dCBxTeXN0ZW0uQ29sbGVjdGlvbnMuQXJyYXlMaXN0AgAAAAAAAAAJAwAAAAAAAAAJBAAAAAQDAAAAsgFTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW0RldkV4cHJlc3MuWHRyYUdyaWQuQ29sdW1ucy5HcmlkQ29sdW1uU29ydEluZm8sIERldkV4cHJlc3MuWHRyYUdyaWQudjE3LjIsIFZlcnNpb249MTcuMi4zLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjg4ZDE3NTRkNzAwZTQ5YV1dAwAAAAZfaXRlbXMFX3NpemUIX3ZlcnNpb24EAAAwRGV2RXhwcmVzcy5YdHJhR3JpZC5Db2x1bW5zLkdyaWRDb2x1bW5Tb3J0SW5mb1tdAgAAAAgICQUAAAAAAAAAAAAAAAQEAAAAHFN5c3RlbS5Db2xsZWN0aW9ucy5BcnJheUxpc3QDAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgUAAAgICQYAAAABAAAABAAAAAcFAAAAAAEAAAAAAAAABC5EZXZFeHByZXNzLlh0cmFHcmlkLkNvbHVtbnMuR3JpZENvbHVtblNvcnRJbmZvAgAAABAGAAAABAAAAAkHAAAADQMMCAAAABlEZXZFeHByZXNzLlh0cmFHcmlkLnYxNy4yBQcAAAAuRGV2RXhwcmVzcy5YdHJhR3JpZC5Db2x1bW5zLkdyaWRDb2x1bW5Tb3J0SW5mbwIAAAAJU29ydE9yZGVyCkNvbHVtbk5hbWUAAQgIAAAAAQAAAAYJAAAACGlkQ29sdW1uCw==</property>
+  <property name="FormatConditions" iskey="true" value="0" />
+  <property name="FindFilterText" />
+  <property name="FindPanelVisible">false</property>
+</XtraSerializer>

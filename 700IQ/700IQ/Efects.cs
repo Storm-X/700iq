@@ -250,7 +250,12 @@ namespace _700IQ
 
                     try
                     {
-                        video = new Video(Application.StartupPath + String.Format("\\Video\\st{0}.mp4", 25), false); //вместо st25 поставить st1
+                        if (video != null)
+                        {
+                            video.Stop();
+                            video.Dispose();
+                        }
+                        video = new Video(Application.StartupPath + String.Format("\\Video\\Chips\\st{0}.mp4", st1), false); //вместо st25 поставить st1
                     }
                     catch
                     {
@@ -298,8 +303,16 @@ namespace _700IQ
             void timer_Tick(object sender, EventArgs e)
             {
                 indexToPaint = video.CurrentPosition;
+                lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString();
+                if (this.komanda - 1 == this.fsv.iQash1.number)
+                    this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                if (this.komanda - 1 == this.fsv.iQash2.number)
+                    this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
+                if (this.komanda - 1 == this.fsv.iQash3.number)
+                    this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
+
                 //if (indexToPaint >= frameCount)
-                if(indexToPaint >= frameCount)
+                if (indexToPaint >= frameCount)
                 {
                     timer.Stop();
                    // video.Stop();
@@ -311,25 +324,22 @@ namespace _700IQ
                     }*/
                     onStop?.Invoke();
                 }
-                else
-                {
+                //else
+                //{
                     //if (audio.CurrentPosition >= audio.Duration)
                     //{
                     //    audio.Stop();    
                     //}
               
                     //audio.Play();
-                    lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString();
+                    //lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString();
                     //img.SelectActiveFrame(dimension, indexToPaint);
                     //pc.Image = new Bitmap(img);//arr[indexToPaint];
 
-                     if (this.komanda-1 == this.fsv.iQash1.number) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
-                     if (this.komanda-1 == this.fsv.iQash2.number) this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
-                     if (this.komanda-1 == this.fsv.iQash3.number) this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
 
                     //if ((komanda > 5) && (fsv.predUs.team[this.number - 1].name == fsv.predUs.team[0].name)) this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash - 25 * stavka + Convert.ToInt16(stavka * 25 * (indexToPaint + 1) / frameCount / 25) * 25).ToString() + " IQ";
 
-                }
+                //}
             }
             public void del()
             {
@@ -344,8 +354,8 @@ namespace _700IQ
                 {
                     timer.Dispose();
                     pc.Visible = lb.Visible = lbSt.Visible =false;
-                    video.Stop();
-                    video.Dispose();
+                    //video.Stop();
+                    //video.Dispose();
                     workForm.Invalidate();
                     Console.WriteLine("Deleting video...");
                 }

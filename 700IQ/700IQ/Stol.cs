@@ -840,7 +840,7 @@ namespace _700IQ
         }
         private Image ResultOfCycle(string fileName) // async Task<Image> ResultOfCycle(string fileName)
         {
-            MediaReceiver mReceiver = new MediaReceiver(workForm.IP, 8080);
+            MediaReceiver mReceiver = new MediaReceiver(workForm.IP.Address, 8080);
             byte[] filecontent = new byte[0];
             mReceiver.GetMedia(fileName, ref filecontent);
             if (filecontent.Length == 0)

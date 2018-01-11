@@ -36,7 +36,7 @@ namespace _700IQ
         string quote = "\"";
         public Data predUs = new Data();
         Table tbl;
-        IPAddress server=null;
+        IPEndPoint server =null;
         bool startGame = true;
         bool cursorsPathValid = false;
 
@@ -57,7 +57,7 @@ namespace _700IQ
         private System.Timers.Timer MyTimer;
         private System.Windows.Forms.Timer gifTimer= new System.Windows.Forms.Timer();
         private static IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
-        public IPAddress IP = null;
+        public IPEndPoint IP = null;
         public string lg = "";
         public string ps = "";
         String[] arguments;
@@ -111,60 +111,67 @@ namespace _700IQ
         /// <summary>
         /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// </summary>
-        private IPAddress ServerSearch()
+        private IPEndPoint ServerSearch()
         {
-            IPAddress[] IPs = new IPAddress[20];
-            /*IPs[0] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server1", "127.0.0.1"));
-            IPs[1] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server2", "127.0.0.1"));
-            IPs[2] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server3", "127.0.0.1"));
-            IPs[3] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server4", "127.0.0.1"));
-            IPs[4] = IPAddress.Parse(fIni.IniReadValue("Settings", "Server5", "127.0.0.1"));*/
+            //IPAddress[] IPs = new IPAddress[20];
+            IEnumerable<KeyValuePair<string, string>> xxx =  fIni.GetIniSection("Settings");
             IP = null;
             string response = "";
             string datagram = "hi";
             int correct_server = 0;
 
+            foreach (var zzz in xxx)
+            {
                 try
                 {
-                    for (int i = 0; i < IPs.Count(); i++)
-                    {
-                        using (var tcpClient = new TcpClient())
-                        {
-                            IPs[i] = IPAddress.Parse(fIni.IniReadValue("Settings", string.Format("Server{0}", i + 1), "127.0.0.1"));
-                            if (tcpClient.ConnectAsync(IPs[i], 2050).Wait(200))
+                    //for (int i = 0; i < IPs.Count() && correct_server == 0; i++)
+                    //{
+                    //int iPort = 2050;
+                    //IPs[i] = IPAddress.Parse(fIni.IniReadValue("Settings", string.Format("Server{0}", i + 1), "127.0.0.1"));
+                    //while (iPort < 2059 && IP == null)
+                    //{
+                            using (var tcpClient = new TcpClient())
                             {
-                                using (var networkStream = tcpClient.GetStream())
+                                //iPort++;
+                                if (tcpClient.ConnectAsync(IPAddress.Parse(zzz.Value), 2050).Wait(100)) //IPs[i], iPort).Wait(200))
                                 {
-                                    byte[] result;
-                                    result = Encoding.UTF8.GetBytes(datagram);
-                                    networkStream.Write(result, 0, result.Length);
-
-                                    var buffer = new byte[4096];
-                                    var byteCount = networkStream.Read(buffer, 0, buffer.Length);
-                                    response = Encoding.UTF8.GetString(buffer, 0, byteCount);
-
-                                    if (response == "700iq")
+                                    using (var networkStream = tcpClient.GetStream())
                                     {
-                                        correct_server++;
-                                        if (IP == null) IP = ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address;
+                                        byte[] result;
+                                        result = Encoding.UTF8.GetBytes(datagram);
+                                        networkStream.Write(result, 0, result.Length);
+
+                                        var buffer = new byte[4096];
+                                        var byteCount = networkStream.Read(buffer, 0, buffer.Length);
+                                        response = Encoding.UTF8.GetString(buffer, 0, byteCount);
+
+                                        if (response == "700iq")
+                                        {
+                                            correct_server++;
+                                            //if (IP == null)
+                                            IP = (IPEndPoint)tcpClient.Client.RemoteEndPoint; //).Address;
+                                                                                              //networkStream.Close();
+                                                                                              //tcpClient.Close();
+                                                                                              //break;
+                                        }
                                         networkStream.Close();
-                                        tcpClient.Close();
-                                        break;
+                                        //09.01.2018
                                     }
-                                    networkStream.Close();
                                 }
+                                tcpClient.Close();
                             }
-                            tcpClient.Close();
-                        }
-                    }
+                            //}
+                            //}
                 }
                 catch (Exception ex)
-                { }
-    /*            finally
                 {
-                    tcpClient.Close();
-                }*/
-                if (IP == null) dataReceive("Error");
+                }
+                /*            finally
+                            {
+                                tcpClient.Close();
+                            }*/
+            }
+            if (IP == null) dataReceive("Error");
              //   if (IP != null) MessageBox.Show(IP.ToString());
                 return IP;
         }
@@ -244,9 +251,9 @@ namespace _700IQ
 
 
             ////////////////////////////////////////////////////////////////////////////////////////////
-           // StavkiShow stShow = new StavkiShow();
-           // tbl = new Table(predUs, this);
-           // stShow.inputStavki(300, 300, 300, 0, this, 0);
+            //StavkiShow stShow = new StavkiShow();
+            //tbl = new Table(predUs, this);
+            //stShow.inputStavki(250, 125, 25, 0, this, 0);
             /////////////////////////////////////////////////////////////////////////////////////////
 
             #endregion
@@ -288,7 +295,7 @@ namespace _700IQ
             try
             {
                 
-                MediaReceiver mReceiver = new MediaReceiver(this.IP, 8080);
+                MediaReceiver mReceiver = new MediaReceiver(this.IP.Address, 8080);
                 pol.AnyEventHarakiri();
                 pol.polosaUpdate(pcBox);
                 pcBox.Image=null;

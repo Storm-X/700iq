@@ -44,15 +44,16 @@ namespace MainServer
             string myConnectionString = "Data Source=178.172.150.251; Port=27999; Database=iqseven_test; UserId=700iqby; Password=uLCUrohCLoPUcedI; Character Set=utf8;";
             mycon = new MySqlConnection(myConnectionString);
             mycon.Open();
-            MySqlCommand cm = new MySqlCommand("SELECT * FROM role", mycon);
+            MySqlCommand cm = new MySqlCommand("SELECT login FROM role", mycon);
             MySqlDataReader rd = cm.ExecuteReader();
             DataTable rol = new DataTable();
             using (rd)
             {
                 if (rd.HasRows) rol.Load(rd);
             }
-            var stringArr = rol.AsEnumerable().Select(r => r.Field<string>("login")).ToArray();
-            comboBox1.DataSource = stringArr;
+            //var stringArr = rol.AsEnumerable().Select(r => r.Field<string>("login")).ToArray();
+            comboBox1.DataSource = rol; //stringArr;
+            comboBox1.DisplayMember = "login";
             this.Visible = true;
             this.Show();
         }
@@ -69,7 +70,7 @@ namespace MainServer
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            MySqlCommand cm = new MySqlCommand("SELECT * FROM role Where password = '" + getSHAHash(textBox1.Text) + "' and login = '" + comboBox1.SelectedItem.ToString() +"'", mycon);
+            MySqlCommand cm = new MySqlCommand("SELECT * FROM role Where password = '" + getSHAHash(textBox1.Text) + "' and login = '" + comboBox1.Text +"'", mycon);
             MySqlDataReader rd = cm.ExecuteReader();
             DataTable rol = new DataTable();
             using (rd)
@@ -77,7 +78,7 @@ namespace MainServer
                 if (rd.HasRows)
                 {
                     flag = true;
-                    roleName = comboBox1.SelectedItem.ToString();
+                    roleName = comboBox1.Text;
                     form1.setRole(roleName);
                 }
             }
@@ -90,6 +91,16 @@ namespace MainServer
         }
 
         private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+        }
+
+        private void comboBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                SendKeys.SendWait("{TAB}");
+        }
+
+        private void textBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
                 button1.PerformClick();

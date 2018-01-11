@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
@@ -29,7 +30,7 @@ namespace MainServer
             teams myTeam;
             DataTable dat;
             byte[] ServerResponseBytes;
-            tcpListner = new TcpListener(IPAddress.Any, 2050);
+            tcpListner = new TcpListener(IPAddress.Any, GetAvailablePort(2049));
             tcpListner.Start();
             while (iswook)//слушаем порт 2050 для приема желающих зарегистрироваться клиентов
             {
@@ -97,7 +98,7 @@ namespace MainServer
                                 DataTable requestTable = new DataTable();
                                 if (dat.Rows.Count > 0)
                                 {
-                                    string query = "SELECT * FROM (teams INNER JOIN requests ON teams.id=requests.team_id) WHERE teams.id='" + dat.Rows[0].ItemArray[3] + "' AND requests.tournament_id = '" + data.idGame + "' AND requests.state = '1'";
+                                    string query = "SELECT * FROM (teams INNER JOIN (requests INNER JOIN games ON games.tournament_id=requests.tournament_id) ON teams.id=requests.team_id) WHERE teams.id='" + dat.Rows[0].ItemArray[3] + "' AND games.id = '" + data.idGame + "' AND requests.state = '1'";
                                     cm = new MySqlCommand(query, mycon);
                                     rd = cm.ExecuteReader();
                                     requestTable.Load(rd);
@@ -147,18 +148,18 @@ namespace MainServer
                                         }
 
                                         DataRow datRow = ddt.NewRow();
-                                        datRow[0] = 0;                  //Игровая зона
-                                        datRow[1] = dat.Rows[0][3];     //id команды
-                                        datRow[2] = dat.Rows[0][2];     //имя  команды
-                                        datRow[3] = kluch;              //уникальный ключ
-                                        datRow[4] = dat.Rows[0][1];     //рейтинг команды    
-                                        datRow[5] = 700;                //Iqesh                                                             
+                                        datRow["Zone"] = 0;                 //Игровая зона
+                                        datRow["Id"] = dat.Rows[0]["id"];      //id команды
+                                        datRow["Name"] = dat.Rows[0]["name"];    //имя  команды
+                                        datRow["Key"] = kluch;              //уникальный ключ
+                                        datRow["Rating"] = dat.Rows[0]["rating"];  //рейтинг команды    
+                                        datRow["I-cash"] = 700;             //I-cash
                                         ddt.Rows.Add(datRow);
 
                                         data.team[0] = new teams();
                                         data.team[0].uid = Convert.ToInt32(dat.Rows[0][3]);
-                                        data.team[0].name = dat.Rows[0][2].ToString();
-                                        data.team[0].rating = Convert.ToInt32(dat.Rows[0][1]);
+                                        data.team[0].name = dat.Rows[0]["name"].ToString();
+                                        data.team[0].rating = Convert.ToInt32(dat.Rows[0]["rating"]);
                                         data.team[0].kod = kluch;
 
                                         int numbermember = 5;//количество игроков - 5 или меньше
@@ -166,11 +167,11 @@ namespace MainServer
                                         for (int i = 0; i < numbermember; i++)
                                         {
                                             data.team[0].member[i] = new teams.members();
-                                            data.team[0].member[i].N = dat.Rows[i][4].ToString();
-                                            data.team[0].member[i].F = dat.Rows[i][7].ToString();
-                                            data.team[0].member[i].rait = Convert.ToInt32(dat.Rows[i][6]);
-                                            data.team[0].member[i].id = Convert.ToInt32(dat.Rows[i][5]);
-                                            team.addMem(Convert.ToInt32(dat.Rows[i][3]), Convert.ToInt32(dat.Rows[i][5]), dat.Rows[i][4].ToString(), dat.Rows[i][7].ToString(), Convert.ToInt16(dat.Rows[i][6]), 25);
+                                            data.team[0].member[i].N = dat.Rows[i]["name1"].ToString();
+                                            data.team[0].member[i].F = dat.Rows[i]["surname"].ToString();
+                                            data.team[0].member[i].rait = Convert.ToInt32(dat.Rows[i]["rating1"]);
+                                            data.team[0].member[i].id = Convert.ToInt32(dat.Rows[i]["id1"]);
+                                            team.addMem(Convert.ToInt32(dat.Rows[i]["id"]), Convert.ToInt32(dat.Rows[i]["id1"]), dat.Rows[i]["name1"].ToString(), dat.Rows[i]["surname"].ToString(), Convert.ToInt16(dat.Rows[i]["rating1"]), 25);
                                         }
                                         onAddNewReg();       //обновление таблицы зарегистрированных команд    
                                         str = "regOk" + JsonConvert.SerializeObject(data);
@@ -212,8 +213,41 @@ namespace MainServer
                     MessageBox.Show(e.ToString());
                 }
             }
+            tcpListner.Stop();
         }
 
+        public static int GetAvailablePort(int startingPort)
+        {
+            var portArray = new List<int>();
+
+            var properties = IPGlobalProperties.GetIPGlobalProperties();
+
+            // Ignore active connections
+            var connections = properties.GetActiveTcpConnections();
+            portArray.AddRange(from n in connections
+                               where n.LocalEndPoint.Port >= startingPort
+                               select n.LocalEndPoint.Port);
+
+            // Ignore active tcp listners
+            var endPoints = properties.GetActiveTcpListeners();
+            portArray.AddRange(from n in endPoints
+                               where n.Port >= startingPort
+                               select n.Port);
+
+            // Ignore active udp listeners
+            endPoints = properties.GetActiveUdpListeners();
+            portArray.AddRange(from n in endPoints
+                               where n.Port >= startingPort
+                               select n.Port);
+
+            portArray.Sort();
+
+            for (var i = startingPort; i < UInt16.MaxValue; i++)
+                if (!portArray.Contains(i))
+                    return i;
+
+            return 0;
+        }
         string getSHAHash(string input)
         {
             // Create a new instance of the MD5CryptoServiceProvider object.

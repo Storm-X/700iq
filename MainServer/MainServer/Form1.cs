@@ -13,6 +13,13 @@ using System.Linq;
 using System.IO;
 using System.Security.Permissions;
 using System.Runtime.InteropServices;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraGrid.Views.Base;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using System.Text.RegularExpressions;
+using DevExpress.XtraGrid;
+using DevExpress.Utils.Menu;
+using DevExpress.XtraGrid.Columns;
 
 namespace MainServer
 {
@@ -53,7 +60,8 @@ namespace MainServer
         private MediaServer mServer;
         private System.Timers.Timer tmr;
         private Object losker = new Object();
-        
+
+        string layoutFileName = "Tournaments.xml";
         string fileName = "out.txt";
         FileStream aFile;
         StreamWriter sw;
@@ -99,7 +107,6 @@ namespace MainServer
             {
                 if (!IsVisible(questEditor)) tabControl1.TabPages.Insert(2,questEditor);
             }
-
         }
 
         #region//кнопки
@@ -168,18 +175,23 @@ namespace MainServer
         {
             if (GameButton.BackColor != Color.GreenYellow)
             {
-                MySqlCommand cm = new MySqlCommand("SELECT tournaments.id, tournaments.name, games.id as gameid, games.tour_id, games.game_name, CONCAT(city.name, ' - ', place) AS place, DATE, TIME_FORMAT(TIME, '%H:%i') AS startTime  FROM (tournaments INNER JOIN city ON tournaments.city=city.id) INNER JOIN games ON tournaments.id=games.tournament_id", mycon);
+                //CONCAT(city.name, ' - ', place) AS 
+                MySqlCommand cm = new MySqlCommand(@"SELECT tournaments.id, tournaments.name, games.id as gameid, games.tour_id, games.game_name, city.name as city,
+                                                    REPLACE(REPLACE(REPLACE(place,'<b>',''),'</b>',''),'<br>','') AS place, date, TIME_FORMAT(TIME, '%H:%i') AS startTime  
+                                                    FROM (tournaments INNER JOIN city ON tournaments.city=city.id) INNER JOIN games ON tournaments.id=games.tournament_id", mycon);
                 DataTable dat = new DataTable();
 
                 using (MySqlDataReader tur = cm.ExecuteReader())
                 {
                     dat.Load(tur);
                 }
-                ListGames.Visible = true;
-                ListGames.DataSource = dat;
-                ListGames.AllowUserToAddRows = false;
-                ListGames.Size = new Size(1090, 200);
-                ListGames.BringToFront();
+                ListGamesView.Visible = true;
+                ListGamesView.DataSource = dat;
+                ListGamesView.BringToFront();
+                //ListGames1.DataSource = dat;
+                //ListGames1.AllowUserToAddRows = false;
+                //ListGames.Size = new Size(1090, 200);
+                //ListGames1.BringToFront();
                 //ListGames.Location = new Point(250, 150); 
             }
             else
@@ -194,104 +206,199 @@ namespace MainServer
             }
             //ListKomand.Visible = false;
         }
-        private void ListGames_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)//получение данных выбранной игры
+
+        private void ListGamesGrid_DoubleClick(object sender, EventArgs e)
         {
-            //заниесение данных в класс DATA
-            data.city = ListGames.CurrentRow.Cells["place"].Value.ToString();             //город
-            if (ListGames.CurrentRow.Cells["number_game"].Value != DBNull.Value)
-                data.NumberGame = Convert.ToInt32(ListGames.CurrentRow.Cells["number_game"].Value);//номер игры
-            data.idGame = Convert.ToInt32(ListGames.CurrentRow.Cells["gameId"].Value);       //  id игры
-            data.NameGame = ListGames.CurrentRow.Cells["name"].Value.ToString();         //название игры
-            data.Tur = ListGames.CurrentRow.Cells["gameName"].Value.ToString(); //tur;       //тур
-            DateTime date_begin = new DateTime();
-            date_begin = Convert.ToDateTime(ListGames.CurrentRow.Cells["date"].Value.ToString());
-            DateTime time_begin = new DateTime();
-            time_begin = Convert.ToDateTime(ListGames.CurrentRow.Cells["startTime"].Value.ToString());
-            date_begin = date_begin.AddHours(time_begin.Hour);
-            date_begin = date_begin.AddMinutes(time_begin.Minute);
-            data.startTime = date_begin;//дата и время игры
-
-            infoGame.Text = data.NameGame + " г." + ListGames.CurrentRow.Cells["place"].Value + " - " + data.Tur;
-            //adressGame = ListGames.CurrentRow.Cells[5].Value.ToString();
-            rgData.Set();           //создание таблицы для регистрации команд
-            dt = rgData.ddt();
-            //проверка на прерываение игры
-            string sql = "SELECT id, zone, gameid, iqon_num, command FROM logs " +
-                        "WHERE gameid=" + data.idGame + " AND iqon_num=(SELECT iqon_num FROM logs t1 WHERE t1.zone=logs.zone AND t1.gameid=logs.gameid " +
-                        "ORDER BY iqon_num DESC LIMIT 1) ORDER BY zone";
-
-            MySqlCommand cm = new MySqlCommand(sql, mycon);
-            DataTable dat = new DataTable();
-
-            using (MySqlDataReader tour = cm.ExecuteReader())
+            GridView ListGames = sender as GridView;
+            GridHitInfo hi = ListGames.CalcHitInfo(ListGamesView.PointToClient(MousePosition));
+            if (hi.InRowCell && ((MouseEventArgs)e).Button == MouseButtons.Left)
             {
-                dat.Load(tour);
-            }
-            ListGames.Visible = false;
-            if (dat.Rows.Count > 0)
-            {
-                if (Convert.ToInt16(dat.Rows[0][3]) > 11)
-                {
-                    Vozobnovlenie = false;
-                    MessageBox.Show("Эта игра уже сыграна!");
-                    return;
-                }
-                DialogResult result = MessageBox.Show("Эта игра была прервана! Возобновить ее?", "", MessageBoxButtons.YesNo);
-                if (result != DialogResult.Yes)
-                    return;
-                Vozobnovlenie = true;
-                lot.Text = "Рассадка";
-                if (dat.Rows.Count != Convert.ToInt32(dat.Rows[dat.Rows.Count - 1][1])) //несовпадение кол-ва троек и кол-ва записей log
-                {
-                    MessageBox.Show("Данных для восстановления игры не хватает");
-                    return;
-                }
+                data.city = ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["city"]).ToString(); //город
+                //if (ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["number_game"]) != null)
+                //    data.NumberGame = Convert.ToInt32(ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["number_game"]));//номер игры
+                data.idGame = Convert.ToInt32(ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["gameid"]));       //  id игры
+                data.NameGame = ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["name"]).ToString();         //название игры
+                data.Tur = ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["game_name"]).ToString(); //tur;       //тур
+                DateTime date_begin = new DateTime();
+                date_begin = Convert.ToDateTime(ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["date"]));
+                DateTime time_begin = new DateTime();
+                time_begin = Convert.ToDateTime(ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["startTime"]));
+                date_begin = date_begin.AddHours(time_begin.Hour);
+                date_begin = date_begin.AddMinutes(time_begin.Minute);
+                data.startTime = date_begin;//дата и время игры
 
-                troika = dat.Rows.Count;
-                for (int i = 0; i < dat.Rows.Count; i++)    //перебираем все  тройки    //Нюхом чую, что здесь косяк вылезет, и сязан будет скорее всего с сортировкой или случайным удалением зоны
+                infoGame.Text = data.NameGame + " - г." + data.city + ", " + Regex.Replace(ListGames.GetRowCellValue(ListGames.FocusedRowHandle, ListGames.Columns["place"]).ToString(), "<.*?>", String.Empty) + " - " + data.Tur;
+                MessageBox.Show(infoGame.Text);
+                rgData.Set();           //создание таблицы для регистрации команд
+                dt = rgData.ddt();
+                //проверка на прерываение игры
+                string sql = "SELECT id, zone, gameid, iqon_num, command FROM logs " +
+                            "WHERE gameid=" + data.idGame + " AND iqon_num=(SELECT iqon_num FROM logs t1 WHERE t1.zone=logs.zone AND t1.gameid=logs.gameid " +
+                            "ORDER BY iqon_num DESC LIMIT 1) ORDER BY zone";
+
+                MySqlCommand cm = new MySqlCommand(sql, mycon);
+                DataTable dat = new DataTable();
+
+                using (MySqlDataReader tour = cm.ExecuteReader())
                 {
-                    if (Convert.ToInt32(dat.Rows[i][1]) == i + 1)//проверка сопадает ли игровая зона
+                    dat.Load(tour);
+                }
+                if (dat.Rows.Count > 0)
+                {
+                    if (Convert.ToInt16(dat.Rows[0][3]) > 11)
                     {
-                        SendLog log = new SendLog();    //структура для получения log данных
-                        string json = dat.Rows[i][4].ToString();
-                        log = JsonConvert.DeserializeObject<SendLog>(json);
-                        gz = new GameinZone(Rn, conn, mycon, Udp); //создаем экземпляр тройки
-                        gz.usersid = log.usersid;               //список пользователей тройки
-                        gz.setThemes(log.idTheme, log.Themes);  //список id тем и названий
-                        gz.data = log.dataLog;                  //класс data
-                        gz.gm = log.gmLog;                      //класс game
-                        gz.gm.iCon++;                           //Начинаем игру со следующего айкона
-                        for (int k = 0; k < 3; k++)      //для каждой команды тройки находим новый ключ сессии в таблице зарегистрировавшихся команд
+                        Vozobnovlenie = false;
+                        MessageBox.Show("Эта игра уже сыграна!");
+                        //GameButton.PerformClick();
+                        return;
+                    }
+                    DialogResult result = MessageBox.Show("Эта игра была прервана! Возобновить ее?", "", MessageBoxButtons.YesNo);
+                    if (result != DialogResult.Yes)
+                        return;
+                    Vozobnovlenie = true;
+                    lot.Text = "Рассадка";
+                    if (dat.Rows.Count != Convert.ToInt32(dat.Rows[dat.Rows.Count - 1][1])) //несовпадение кол-ва троек и кол-ва записей log
+                    {
+                        MessageBox.Show("Данных для восстановления игры не хватает");
+                        return;
+                    }
+
+                    troika = dat.Rows.Count;
+                    for (int i = 0; i < dat.Rows.Count; i++)    //перебираем все  тройки    //Нюхом чую, что здесь косяк вылезет, и сязан будет скорее всего с сортировкой или случайным удалением зоны
+                    {
+                        if (Convert.ToInt32(dat.Rows[i][1]) == i + 1)//проверка сопадает ли игровая зона
                         {
-                            dt.Rows.Add(new Object[] { log.dataLog.GameZone, log.dataLog.team[k].uid, log.dataLog.team[k].name, "", log.dataLog.team[k].rating, log.dataLog.team[k].iQash, log.dataLog.team[k].table, false });
+                            SendLog log = new SendLog();    //структура для получения log данных
+                            string json = dat.Rows[i][4].ToString();
+                            log = JsonConvert.DeserializeObject<SendLog>(json);
+                            gz = new GameinZone(Rn, conn, mycon, Udp); //создаем экземпляр тройки
+                            gz.usersid = log.usersid;               //список пользователей тройки
+                            gz.setThemes(log.idTheme, log.Themes);  //список id тем и названий
+                            gz.data = log.dataLog;                  //класс data
+                            gz.gm = log.gmLog;                      //класс game
+                            gz.gm.iCon++;                           //Начинаем игру со следующего айкона
+                            for (int k = 0; k < 3; k++)      //для каждой команды тройки находим новый ключ сессии в таблице зарегистрировавшихся команд
+                            {
+                                dt.Rows.Add(new Object[] { log.dataLog.GameZone, log.dataLog.team[k].uid, log.dataLog.team[k].name, "", log.dataLog.team[k].rating, log.dataLog.team[k].iQash, log.dataLog.team[k].table, false });
+                            }
+                            //                        ListKomand.DataSource = dt;
+                            //                        ListKomand.Columns[3].Visible = false;
+                            MassGameZone.Add(gz);
                         }
-                        //                        ListKomand.DataSource = dt;
-                        //                        ListKomand.Columns[3].Visible = false;
-                        MassGameZone.Add(gz);
+                        else
+                        {
+                            gz = new GameinZone(Rn, conn, mycon, Udp); //создаем экземпляр тройки
+                            MassGameZone.Add(gz);
+                        }
                     }
-                    else
-                    {
-                        gz = new GameinZone(Rn, conn, mycon, Udp); //создаем экземпляр тройки
-                        MassGameZone.Add(gz);
-                    }
+                    lot.Text = "Рассадка закончена";
                 }
-                lot.Text = "Рассадка закончена";
+                ListGamesView.Visible = false;
+                GameButton.Text = "Игра выбрана";
+                GameButton.BackColor = Color.GreenYellow;
+                ButtonReg.Enabled = true;
+                ButtonReg.PerformClick();
+                infoGame.Visible = true;
             }
-            GameButton.Text = "Игра выбрана";
-            GameButton.BackColor = Color.GreenYellow;
-            ButtonReg.Enabled = true;
-            ButtonReg.PerformClick();
-            infoGame.Visible = true;
         }
+
+        //private void ListGames_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)//получение данных выбранной игры
+        //{
+        //    //заниесение данных в класс DATA
+        //    data.city = ListGames1.CurrentRow.Cells["place"].Value.ToString();             //город
+        //    if (ListGames1.CurrentRow.Cells["number_game"].Value != DBNull.Value)
+        //        data.NumberGame = Convert.ToInt32(ListGames1.CurrentRow.Cells["number_game"].Value);//номер игры
+        //    data.idGame = Convert.ToInt32(ListGames1.CurrentRow.Cells["gameId"].Value);       //  id игры
+        //    data.NameGame = ListGames1.CurrentRow.Cells["name"].Value.ToString();         //название игры
+        //    data.Tur = ListGames1.CurrentRow.Cells["gameName"].Value.ToString(); //tur;       //тур
+        //    DateTime date_begin = new DateTime();
+        //    date_begin = Convert.ToDateTime(ListGames1.CurrentRow.Cells["date"].Value.ToString());
+        //    DateTime time_begin = new DateTime();
+        //    time_begin = Convert.ToDateTime(ListGames1.CurrentRow.Cells["startTime"].Value.ToString());
+        //    date_begin = date_begin.AddHours(time_begin.Hour);
+        //    date_begin = date_begin.AddMinutes(time_begin.Minute);
+        //    data.startTime = date_begin;//дата и время игры
+
+        //    infoGame.Text = data.NameGame + " г." + ListGames1.CurrentRow.Cells["place"].Value + " - " + data.Tur;
+        //    //adressGame = ListGames.CurrentRow.Cells[5].Value.ToString();
+        //    rgData.Set();           //создание таблицы для регистрации команд
+        //    dt = rgData.ddt();
+        //    //проверка на прерываение игры
+        //    string sql = "SELECT id, zone, gameid, iqon_num, command FROM logs " +
+        //                "WHERE gameid=" + data.idGame + " AND iqon_num=(SELECT iqon_num FROM logs t1 WHERE t1.zone=logs.zone AND t1.gameid=logs.gameid " +
+        //                "ORDER BY iqon_num DESC LIMIT 1) ORDER BY zone";
+
+        //    MySqlCommand cm = new MySqlCommand(sql, mycon);
+        //    DataTable dat = new DataTable();
+
+        //    using (MySqlDataReader tour = cm.ExecuteReader())
+        //    {
+        //        dat.Load(tour);
+        //    }
+        //    ListGames1.Visible = false;
+        //    if (dat.Rows.Count > 0)
+        //    {
+        //        if (Convert.ToInt16(dat.Rows[0][3]) > 11)
+        //        {
+        //            Vozobnovlenie = false;
+        //            MessageBox.Show("Эта игра уже сыграна!");
+        //            return;
+        //        }
+        //        DialogResult result = MessageBox.Show("Эта игра была прервана! Возобновить ее?", "", MessageBoxButtons.YesNo);
+        //        if (result != DialogResult.Yes)
+        //            return;
+        //        Vozobnovlenie = true;
+        //        lot.Text = "Рассадка";
+        //        if (dat.Rows.Count != Convert.ToInt32(dat.Rows[dat.Rows.Count - 1][1])) //несовпадение кол-ва троек и кол-ва записей log
+        //        {
+        //            MessageBox.Show("Данных для восстановления игры не хватает");
+        //            return;
+        //        }
+
+        //        troika = dat.Rows.Count;
+        //        for (int i = 0; i < dat.Rows.Count; i++)    //перебираем все  тройки    //Нюхом чую, что здесь косяк вылезет, и сязан будет скорее всего с сортировкой или случайным удалением зоны
+        //        {
+        //            if (Convert.ToInt32(dat.Rows[i][1]) == i + 1)//проверка сопадает ли игровая зона
+        //            {
+        //                SendLog log = new SendLog();    //структура для получения log данных
+        //                string json = dat.Rows[i][4].ToString();
+        //                log = JsonConvert.DeserializeObject<SendLog>(json);
+        //                gz = new GameinZone(Rn, conn, mycon, Udp); //создаем экземпляр тройки
+        //                gz.usersid = log.usersid;               //список пользователей тройки
+        //                gz.setThemes(log.idTheme, log.Themes);  //список id тем и названий
+        //                gz.data = log.dataLog;                  //класс data
+        //                gz.gm = log.gmLog;                      //класс game
+        //                gz.gm.iCon++;                           //Начинаем игру со следующего айкона
+        //                for (int k = 0; k < 3; k++)      //для каждой команды тройки находим новый ключ сессии в таблице зарегистрировавшихся команд
+        //                {
+        //                    dt.Rows.Add(new Object[] { log.dataLog.GameZone, log.dataLog.team[k].uid, log.dataLog.team[k].name, "", log.dataLog.team[k].rating, log.dataLog.team[k].iQash, log.dataLog.team[k].table, false });
+        //                }
+        //                //                        ListKomand.DataSource = dt;
+        //                //                        ListKomand.Columns[3].Visible = false;
+        //                MassGameZone.Add(gz);
+        //            }
+        //            else
+        //            {
+        //                gz = new GameinZone(Rn, conn, mycon, Udp); //создаем экземпляр тройки
+        //                MassGameZone.Add(gz);
+        //            }
+        //        }
+        //        lot.Text = "Рассадка закончена";
+        //    }
+        //    GameButton.Text = "Игра выбрана";
+        //    GameButton.BackColor = Color.GreenYellow;
+        //    ButtonReg.Enabled = true;
+        //    ButtonReg.PerformClick();
+        //    infoGame.Visible = true;
+        //}
+
         private void Registration_Click(object sender, EventArgs e)         //4 кнопка - начать регистрацию команд
         {
             if (ButtonReg.BackColor != Color.GreenYellow)
             {
                 ListKomand.Visible = true;
+                ListKomand.Focus();
 
-                //ListKomand.ReadOnly = true;
-                //rgData.Set();           //создание таблицы для регистрации команд
-                //dt = rgData.ddt();
                 rgData.canReg = true;
                 Zapros();
                 ListKomand.DataSource = dt;
@@ -309,7 +416,6 @@ namespace MainServer
                     lkCell.HeaderText = dt.Columns[lkCell.Name].Caption;
                     lkCell.ReadOnly = lkCell.Name == "I-cash" ? false : true;
                 }
-                //ListKomand.Columns["I-cash"].ReadOnly = false;
 
                 #region создание экземпляра КОМАНДА и ТЕМА
                 for (int i = 0; i < 3; i++)
@@ -326,9 +432,9 @@ namespace MainServer
                 }
                 #endregion
 
-                reg.Server(dt, data, rgData, MassGameZone);//включить прослушку порта
-                reg.onAddNewReg += refreshTable;//обновить таблицу зарегистрировавшихся команд после добваления новой 
-                butEndReg.Enabled = true;//активировать кнопку Конец регистрации
+                reg.Server(dt, data, rgData, MassGameZone); //включить прослушку порта
+                reg.onAddNewReg += refreshTable;            //обновить таблицу зарегистрировавшихся команд после добваления новой 
+                butEndReg.Enabled = true;                   //активировать кнопку Конец регистрации
             }
             else
             #region повтороная регистрация
@@ -1157,7 +1263,6 @@ namespace MainServer
                 throw;
             }
         }
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             reloadDB();
@@ -1183,7 +1288,6 @@ namespace MainServer
             if(e.KeyCode == Keys.Escape && tabControl1.SelectedTab.Name.Equals("questEditor"))
                 button3.PerformClick();
         }
-
         private void button4_Click(object sender, EventArgs e)
         {
             string saveRequest;
@@ -1408,8 +1512,11 @@ namespace MainServer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           
-                wb = new WebBrowser
+            ListGamesView.ForceInitialize();
+            // Restore the previously saved layout
+            ListGamesView.MainView.RestoreLayoutFromXml(layoutFileName);
+
+            wb = new WebBrowser
                 {
                     Parent = f,
                     //Size = new Size(f.Width, f.Height),
@@ -1421,7 +1528,6 @@ namespace MainServer
                     Dock = DockStyle.Fill,
                 };
                 wb.Navigate(Application.StartupPath + @"\maxup\index.html");
-
         }
 
         //========================================================================================
@@ -1509,8 +1615,6 @@ namespace MainServer
             }
         }
 
-
-
         private void button7_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -1518,15 +1622,109 @@ namespace MainServer
             authForm.Show();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            // Save the layout to an XML file
+            ListGamesView.MainView.SaveLayoutToXml(layoutFileName);
         }
 
-        private void label7_Click(object sender, EventArgs e)
+        private void gridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
-
+            GridView view = sender as GridView;
+            if (view == null)
+                return;
+            if (view.IsGroupRow(e.FocusedRowHandle))
+            {
+                bool expanded = view.GetRowExpanded(e.FocusedRowHandle);
+                view.SetRowExpanded(e.FocusedRowHandle, !expanded);
+            }
         }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            DBLink.PerformClick();
+        }
+
+        private void ListGamesGrid_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (e.MenuType == GridMenuType.Row && e.HitInfo.InDataRow)
+            {
+                e.Menu.Items.Add(new DXMenuItem("Добавить новый тур", customItemClick, DevExpress.Images.ImageResourceCache.Default.GetImage("images/actions/addfile_32x32.png"))); // Properties.Resources.addfile_32x32));
+            }
+        }
+
+        public static DialogResult InputBox(string title, string promptText, ref string value)
+        {
+            Form form = new Form();
+            Label label = new Label();
+            TextBox textBox = new TextBox();
+            Button buttonOk = new Button();
+            Button buttonCancel = new Button();
+
+            form.Text = title;
+            label.Text = promptText;
+            textBox.Text = value;
+
+            buttonOk.Text = "OK";
+            buttonCancel.Text = "Cancel";
+            buttonOk.DialogResult = DialogResult.OK;
+            buttonCancel.DialogResult = DialogResult.Cancel;
+
+            label.SetBounds(9, 20, 372, 13);
+            textBox.SetBounds(12, 36, 372, 20);
+            buttonOk.SetBounds(228, 72, 75, 23);
+            buttonCancel.SetBounds(309, 72, 75, 23);
+
+            label.AutoSize = true;
+            textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
+            buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+
+            form.ClientSize = new Size(396, 107);
+            form.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
+            form.ClientSize = new Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
+            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.MinimizeBox = false;
+            form.MaximizeBox = false;
+            form.AcceptButton = buttonOk;
+            form.CancelButton = buttonCancel;
+
+            DialogResult dialogResult = form.ShowDialog();
+            value = textBox.Text;
+            return dialogResult;
+        }
+        private void customItemClick(object sender, EventArgs e)
+        {
+            String commentText = "";
+
+            if (InputBox("Новый игровой тур", "Название нового тура:", ref commentText) == DialogResult.OK)
+            {
+                string sql = "Select Max(tour_id) FROM games WHERE tournament_id = '" + ListGamesGrid.GetRowCellValue(ListGamesGrid.FocusedRowHandle, ListGamesGrid.Columns["id"]) + "'";
+                MySqlCommand cmd = new MySqlCommand(sql, mycon);
+                cmd.ExecuteNonQuery();
+                DataTable dat = new DataTable();
+
+                using (MySqlDataReader tur = cmd.ExecuteReader())
+                {
+                    dat.Load(tur);
+                }
+
+                int game_num = Convert.ToInt32(dat.Rows[0][0]) + 1;
+                sql = " insert into games (tournament_id, tour_id, game_name) value (" + ListGamesGrid.GetRowCellValue(ListGamesGrid.FocusedRowHandle, ListGamesGrid.Columns["id"]) + ", " + game_num + ",'" + commentText + "')";
+                cmd = new MySqlCommand(sql, mycon);
+                cmd.ExecuteNonQuery();
+
+                GameButton.PerformClick();
+                //string text = "" +
+                //    ListGamesGrid.GetRowCellValue(ListGamesGrid.FocusedRowHandle, ListGamesGrid.FocusedColumn).ToString();
+                //menuInfo.View.GetRowCellValue(menuInfo.RowHandle, menuInfo.Column).ToString();
+                //Clipboard.SetText(text);
+                //MessageBox.Show(text);
+
+            }
+        }
+
 
         //////////////////////////copy/////////////////////////////
         private async void Zapros()//получениеи обработка  запросов от команд

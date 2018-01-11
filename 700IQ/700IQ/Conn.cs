@@ -38,14 +38,14 @@ namespace _700IQ
 
         #endregion
 
-        public Conn(IPAddress remoteIPAddress) //конструктор класса 
+        public Conn(IPEndPoint remoteIPAddress) //конструктор класса 
         {
             //IniFile fIni = new IniFile(Application.StartupPath + "\\settings.ini");
            // IPAddress remoteIPAddress = IPAddress.Parse(fIni.IniReadValue("Settings", "Server", "10.10.10.10"));
             //endPoint = new IPEndPoint(remoteIPAddress, 2050);           //адрес сервера   
 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            IPEndPoint ipEndPoint = new IPEndPoint(remoteIPAddress, 2049);
+            IPEndPoint ipEndPoint = new IPEndPoint(remoteIPAddress.Address, 2049);
             senderRemote = (EndPoint)ipEndPoint;
 
             //byte[] bytes = Encoding.UTF8.GetBytes("");                  //

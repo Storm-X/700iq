@@ -22,8 +22,8 @@ namespace _700IQ
 
         //UdpClient receivingUdpClient;
 
-        private  IPAddress remoteIPAddress;
-        public Connection(IPAddress remoteIPAddress)
+        private IPEndPoint remoteIPAddress;
+        public Connection(IPEndPoint remoteIPAddress)
         {
             this.remoteIPAddress = remoteIPAddress;
         }
@@ -39,7 +39,7 @@ namespace _700IQ
             {
                 try
                 {
-                    await tcpClient.ConnectAsync(remoteIPAddress, 2050);
+                    await tcpClient.ConnectAsync(remoteIPAddress.Address, remoteIPAddress.Port);
 
                     using (var networkStream = tcpClient.GetStream())
                     {

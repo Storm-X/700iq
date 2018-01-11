@@ -240,7 +240,7 @@ public class MediaReceiver
         TimeOutChecker.Stop();
         //Найдем первый пропущенный блок
         int i = Array.IndexOf(checkBlocks, false);
-        if (i >= 0)
+        if (i > -1) // >= 0
         {
             //И заново запросим его у медиа-сервера
             currStatus = string.Format("Блок #{0} отсутствует!", i);
