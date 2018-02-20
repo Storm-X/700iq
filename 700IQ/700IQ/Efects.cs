@@ -243,40 +243,38 @@ namespace _700IQ
                         lb.Size = new Size(700, 70);
                         lb.Font = new Font("arial", 11);
                         if (fsv.predUs.team[this.number - 1].name == fsv.myTeam.name) this.fsv.iQash1.Text = this.fsv.steck.team[this.fsv.iQash1.number].iQash.ToString() + " IQ";
-
                     }
                     //lb.BringToFront();
                     if (komanda == 0) lbSt.Visible = false;
 
                     try
                     {
-                        if (video != null)
+                        //if (video != null)
                         {
-                            video.Stop();
-                            video.Dispose();
+                            video?.Stop();
+                            video?.Dispose();
                         }
                         video = new Video(Application.StartupPath + String.Format("\\Video\\Chips\\st{0}.mp4", st1), false); //вместо st25 поставить st1
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Ошибка загрузки видео \n" + Marshal.GetLastWin32Error());
-                    }
-
-                    //size = video.Size;
-                    //this.Size = size;
-                    video.Owner = pc;
-                    pc.Size = (number == 0) ? NewSize(252, 580) : NewSize(223, 322);
-                    //double koeff = 1.33; 
-                    //size = new Size((int)(this.Height * koeff), this.Height);
-                    //this.Size = rc.Size;
-                    video.Size = pc.Size;
-                    //video.Ending += Video_Ending;
-                    pc.Visible = true;
-                    pc.BringToFront();
-                    pc.Refresh();
-                    frameCount = video.Duration;
-                    if (video != null)
+                                                                                                                             //size = video.Size;
+                                                                                                                             //this.Size = size;
+                        video.Owner = pc;
+                        pc.Size = (number == 0) ? NewSize(252, 580) : NewSize(223, 322);
+                        //double koeff = 1.33; 
+                        //size = new Size((int)(this.Height * koeff), this.Height);
+                        //this.Size = rc.Size;
+                        video.Size = pc.Size;
+                        //video.Ending += Video_Ending;
+                        pc.Visible = true;
+                        pc.BringToFront();
+                        pc.Refresh();
+                        frameCount = 0; //video?.Duration ?? 0;
+                        //if (video != null)
                         video.Play();
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show("Ошибка загрузки видео:" + Environment.NewLine + "st1 = " + st1 + Environment.NewLine + ex.StackTrace + Environment.NewLine + Marshal.GetLastWin32Error());
+                    }
 
                     /*img = Properties.Resources._12_50int2;
                     dimension = new FrameDimension(img.FrameDimensionsList[0]);
@@ -302,21 +300,22 @@ namespace _700IQ
             }
             void timer_Tick(object sender, EventArgs e)
             {
-                indexToPaint = video.CurrentPosition;
-                lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString();
+                indexToPaint = video?.CurrentPosition ?? 0;
+                lbSt.Text = (Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount == 0 ? 1 : frameCount / 25) * 25).ToString();
                 if (this.komanda - 1 == this.fsv.iQash1.number)
-                    this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
+                    this.fsv.iQash1.Text = (this.fsv.steck.team[this.fsv.iQash1.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount == 0 ? 1 : frameCount / 25) * 25).ToString() + " IQ";//(Convert.ToInt32(this.fsv.iQash1.Text.Substring(0, this.fsv.iQash1.Text.Length - 3)) - 25).ToString() + " IQ";
                 if (this.komanda - 1 == this.fsv.iQash2.number)
-                    this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
+                    this.fsv.iQash2.Text = (this.fsv.steck.team[this.fsv.iQash2.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount == 0 ? 1 : frameCount / 25) * 25).ToString() + " IQ";
                 if (this.komanda - 1 == this.fsv.iQash3.number)
-                    this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount / 25) * 25).ToString() + " IQ";
+                    this.fsv.iQash3.Text = (this.fsv.steck.team[this.fsv.iQash3.number].iQash + 25 * stavka - Convert.ToInt16(stavka * 25 * (indexToPaint) / frameCount == 0 ? 1 : frameCount / 25) * 25).ToString() + " IQ";
 
                 //if (indexToPaint >= frameCount)
                 if (indexToPaint >= frameCount)
                 {
                     timer.Stop();
                    // video.Stop();
-                    video.CurrentPosition = video.Duration;
+                   if(video != null)
+                        video.CurrentPosition = video.Duration;
                     /*if (video!=null)
                     {
                         //video.Stop();
@@ -437,7 +436,7 @@ namespace _700IQ
 
             st = new stakan();
             st.onStop += stavka2;
-            int anons = stav1 + stav2 + stav3 + stav4;
+            int anons = stav1 + stav2 + stav3; // + stav4;
             if (itsStavka) anons = 1;
             st.stak(stav1/25,pn, workForm, border, anons,number);
         }
@@ -483,7 +482,7 @@ namespace _700IQ
         }
         void stavka4()
         {
-            if (stav4 == 0)
+            if (stav4 < 2) // == 0
             {
                 endofStavka();
                 return;
@@ -689,32 +688,45 @@ namespace _700IQ
 
         public void Finish()
         {
-            tmBar.Enabled = false;
-            //prBar.Value = prBar.Maximum;
+            if (ff.InvokeRequired)
+            {
+                ff.BeginInvoke((MethodInvoker)delegate
+                {
+                    Finish();
+                });
+            }
+            else
+            {
+                tmBar.Enabled = false;
+                //prBar.Value = prBar.Maximum;
 
-            prBar.Value = 0;
-            pcBox.Visible = false;
-            ff.Visible = false;
-            workForm.Invalidate();
-            onPolosaEnd?.Invoke();
+                prBar.Value = 0;
+                pcBox.Visible = false;
+                ff.Visible = false;
+                workForm.Invalidate();
+                onPolosaEnd?.Invoke();
+            }
         }
         public void PcBox_MouseUp(object sender, MouseEventArgs e)//нажатие кнопки ОК
         {
-            tmBar.Enabled = false;
-            var reportProgress = new Action(() =>
-            {
+            /*tmBar.Enabled = false;
+            //var reportProgress = new Action(() =>
+            //{
                 pcBox.Location = new Point(pcBox.Location.X - 2, pcBox.Location.Y - 2);
                 //pcBox.Image = Properties.Resources.Неактивная;
                 Finish();
-            });
-            workForm.BeginInvoke(reportProgress);
+            //});
+            //workForm.BeginInvoke(reportProgress);*/
         }
         public void PcBox_MouseDown(object sender, MouseEventArgs e)//отображение нажатия кнопки
         {
             //pcBox.Image = Properties.Resources.Активная;
-            pcBox.Location = new Point(pcBox.Location.X + 2, pcBox.Location.Y + 2);
+            //pcBox.Location = new Point(pcBox.Location.X + 2, pcBox.Location.Y + 2);
+
+            tmBar.Enabled = false;
+            Finish();
         }
-        public void WorkForm_KeyUp(object sender, KeyEventArgs e)
+        /*public void WorkForm_KeyUp(object sender, KeyEventArgs e)
         {
             pcBox.Focus();
             if (e.KeyCode == Keys.Enter)
@@ -730,7 +742,7 @@ namespace _700IQ
                     workForm.Invalidate();
                     onPolosaEnd();
                 });
-                workForm.BeginInvoke(reportProgress);*/
+                workForm.BeginInvoke(reportProgress); //
             }
 
         }
@@ -743,7 +755,7 @@ namespace _700IQ
                 MessageBox.Show("aasdsadas");// pcBox.Image = Properties.Resources.Активная;
             }
 
-        }
+        }*/
 
     }
 
@@ -795,6 +807,10 @@ namespace _700IQ
             this.waitSecondOnEnd = waitSecondOnEnd;
 
             flag = false;
+
+            #region//описание свойств формы
+            DoubleBuffered = true;
+            #endregion
             //vi = 0.04f;
             //vi += 0.00004f + 0.00008f;
             //i = 0.157080f+0.07854f;      //6.28319 количество радиан в 360 градусах
@@ -802,7 +818,6 @@ namespace _700IQ
             //1 ячейка - 0.15708 радиана 1/2 ячейки = 0.07854
             //стартовая позиция 11,5 ячеек = 1.80642 радиана
             // удленнение пути на 1 ячейку равно корень из 2а(S+n*0.15708)
-
             //2*pi/37 - количество радиан в 1 ячейке
             // vi = (float)Math.Sqrt(0.00004f * (37 + (14 + cel) * 0.15708f));
             this.Location = rc.Location;
@@ -812,29 +827,25 @@ namespace _700IQ
             try
             {
                 video = new Video(Application.StartupPath + String.Format("\\Video\\{0}.mp4", cel + 1), false);
+                //size = video.Size;
+                //this.Size = size;
+                video.Owner = this;
+                this.Size = rc.Size;
+                double koeff = 1.33; // (double)Width / (double)Height;
+                size = new Size((int)(this.Height * koeff), this.Height);
+                //this.Size = rc.Size;
+                video.Size = size;
+                video.Ending += Video_Ending;
+                this.Visible = true;
+                this.BringToFront();
+                this.Refresh();
+                video.Play();
             }
             catch
             {
-                MessageBox.Show("Ошибка загрузки видео \n" + Marshal.GetLastWin32Error());
+                WaitBeforeStopRul();
+                //MessageBox.Show("Ошибка загрузки видео!\n" + Marshal.GetLastWin32Error());
             }
-
-                //size = video.Size;
-                //this.Size = size;
-            video.Owner = this;
-            this.Size = rc.Size;
-            double koeff = 1.33; // (double)Width / (double)Height;
-            size = new Size((int)(this.Height * koeff), this.Height);
-            //this.Size = rc.Size;
-            video.Size = size;
-            video.Ending += Video_Ending;
-            this.Visible = true;
-            this.BringToFront();
-            this.Refresh();
-            if (video != null) video.Play();
-
-            #region//описание свойств формы
-            DoubleBuffered = true;
-            #endregion
         }
 
         //точка перемещения
@@ -843,7 +854,7 @@ namespace _700IQ
         bool IsDragMode;
         protected override void OnMouseDown(MouseEventArgs mEvent)
         {
-            if (!video.Fullscreen)
+            if (!video?.Fullscreen ?? false)
             {
                 DownPoint = mEvent.Location;
                 IsDragMode = true;
@@ -871,20 +882,19 @@ namespace _700IQ
             base.OnMouseMove(mEvent);
         }
 
-        private void Video_Ending(object sender, EventArgs e)
+        private void WaitBeforeStopRul()
         {
             Task.Factory.StartNew(() =>
             {
-               //  if (InvokeRequired)
-                //{
-                  //  this.Invoke(new Action(() =>
-                    //{
-                        System.Threading.Thread.Sleep(waitSecondOnEnd * 1000);
-                        enabled = false;
-                        onStop?.Invoke(); 
-                    //}));
-                //}
+                System.Threading.Thread.Sleep(waitSecondOnEnd * 1000);
+                enabled = false;
+                onStop?.Invoke();
             });
+        }
+
+        private void Video_Ending(object sender, EventArgs e)
+        {
+            WaitBeforeStopRul();
         }
 
         const int WM_KEYDOWN = 0x100;
@@ -899,14 +909,15 @@ namespace _700IQ
         {
             //We have to change the clientsize to make room for borders
             //if not, the border is limited in how thick it is.
-            switch(m.Msg)
+            //bool IsFullscreen = video?.Fullscreen ?? false;
+            switch (m.Msg)
             {
                 case WM_LBUTTONDBLCLICK:  //WM_MOUSE_DOUBLE_CLICK
-                    if(!video.Fullscreen)
+                    if(!video?.Fullscreen ?? false)
                         video.Fullscreen = true;
                     break;
                 case WM_KEYUP:
-                    if (video.Fullscreen && (int)m.WParam == VK_ESCAPE)
+                    if (video?.Fullscreen ?? false && (int)m.WParam == VK_ESCAPE)
                         video.Fullscreen = false;
                     break;
                 case WM_MOUSEMOVE:
@@ -951,12 +962,8 @@ namespace _700IQ
             {
                 tm?.Stop();
                 this.Visible = false;
-                if (video != null)
-                {
-                    video.Stop();
-                    video.Dispose();
-                }
-                
+                video?.Stop();
+                video?.Dispose();
                 this.enabled = false;
             }
         }

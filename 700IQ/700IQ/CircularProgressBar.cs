@@ -225,7 +225,7 @@ namespace _700IQ
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e);
+            //base.OnPaint(e);
             /*
             this.begin = _Maximum - 5000 / interval;
             this.interval_cels = 1000 / interval;

@@ -13,6 +13,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using System.Threading.Tasks;
 
 namespace MainServer
 {
@@ -637,7 +638,7 @@ namespace MainServer
                             {
                                 ////Takt = -1;
                                 //gm.team[gm.o1 - 1].iQash += 4 * gm.team[gm.o1 - 1].stavka;
-                                currTeam[0].iQash += 4 * currTeam[0].stavka;
+                                currTeam[0].iQash += 3 * currTeam[0].stavka;
                                 //gm.iCon++;
                                 endOfIqon = true;
                                 //for (int i = 0; i < 3; i++) ok[i] = false;
@@ -726,14 +727,18 @@ namespace MainServer
                 //Array.Clear(stavka, 0, stavka.Length);
                 Array.Clear(ok, 0, ok.Length);
                 
-                deadLine = DateTime.Now.AddSeconds(750);
-
+                deadLine = DateTime.Now.AddSeconds(150);
+                gs.stopButton.PerformClick();
                 gm.iCon++;
                 gm.step = 1;
                 Takt = 0;
 
-                System.Threading.Thread.Sleep(7000);
-                Send2All("ogg");
+                Task.Factory.StartNew(() =>
+                {
+                    System.Threading.Thread.Sleep(7000);
+                    Send2All("ogg");
+                });
+                //System.Threading.Thread.Sleep(7000);
                 //stopGame();
                 if (gm.iCon > 12)
                 {

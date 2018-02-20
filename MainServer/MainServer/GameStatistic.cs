@@ -25,7 +25,7 @@ namespace MainServer
             Container = new Panel
             {
                 Parent = Form1.ActiveForm,
-                Size = new Size(400,40),
+                Size = new Size(400,45),
                 Location = new Point(x, y),
             };
 
@@ -42,14 +42,14 @@ namespace MainServer
                     Parent = Container,
                     Text = iqon,
                     Size = new Size(30, 30),
-                    Location = new Point(120,5),
+                    Location = new Point(100,5),
                 };
                 stopButton = new Button
                 {
                     Parent = Container,
                     Text = "Пауза",
-                    Size = new Size(70, 20),
-                    Location = new Point(205,5),
+                    Size = new Size(70, 40),
+                    Location = new Point(150,0),
                     Tag = zoneName
                 };
                 restartIcon = new Button
@@ -57,15 +57,15 @@ namespace MainServer
                     Parent = Container,
                     Text = "Рестарт айкона",
                     Size = new Size(70, 40),
-                    Location = new Point(280, 5),
+                    Location = new Point(225, 0),
                     Tag = zoneName
                 };
                 turboButton = new Button
                 {
                     Parent = Container,
                     Text = "Турбо!",
-                    Size = new Size(70, 20),
-                    Location = new Point(355, 5),
+                    Size = new Size(70, 40),
+                    Location = new Point(300, 0),
                     Tag = zoneName
                 };
 

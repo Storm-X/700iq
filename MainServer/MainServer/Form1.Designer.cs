@@ -66,6 +66,7 @@
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.questEditor = new System.Windows.Forms.TabPage();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.tbMediaFile = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -82,6 +83,7 @@
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.qeFileColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gameStatistics = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
             this.richTextBox4 = new System.Windows.Forms.RichTextBox();
             this.richTextBox3 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
@@ -579,6 +581,7 @@
             // 
             // questEditor
             // 
+            this.questEditor.Controls.Add(this.textBox2);
             this.questEditor.Controls.Add(this.tbMediaFile);
             this.questEditor.Controls.Add(this.button5);
             this.questEditor.Controls.Add(this.label2);
@@ -597,6 +600,13 @@
             this.questEditor.TabIndex = 2;
             this.questEditor.Text = "Редактор вопросов";
             this.questEditor.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(774, 464);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(145, 23);
+            this.textBox2.TabIndex = 11;
             // 
             // tbMediaFile
             // 
@@ -752,6 +762,7 @@
             // 
             // gameStatistics
             // 
+            this.gameStatistics.Controls.Add(this.label9);
             this.gameStatistics.Controls.Add(this.richTextBox4);
             this.gameStatistics.Controls.Add(this.richTextBox3);
             this.gameStatistics.Controls.Add(this.richTextBox2);
@@ -769,6 +780,14 @@
             this.gameStatistics.TabIndex = 3;
             this.gameStatistics.Text = "Игровая статистика";
             this.gameStatistics.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(195, 13);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(0, 17);
+            this.label9.TabIndex = 14;
             // 
             // richTextBox4
             // 
@@ -865,9 +884,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(1208, 91);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(289, 13);
+            this.label3.Size = new System.Drawing.Size(262, 13);
             this.label3.TabIndex = 21;
-            this.label3.Text = "Игровая зона          Номер iCon         Остановить тройку";
+            this.label3.Text = "Игровая зона    Номер iCon    Действия с тройкой";
             this.label3.Visible = false;
             // 
             // button7
@@ -998,6 +1017,8 @@
         private DevExpress.XtraGrid.Columns.GridColumn dateColumn;
         private DevExpress.XtraGrid.Columns.GridColumn startTimeColumn;
         private DevExpress.XtraGrid.Columns.GridColumn cityColumn;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label9;
     }
 }
 

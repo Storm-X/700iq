@@ -466,7 +466,7 @@ namespace _700IQ
             if (server == null)
                 server = ServerSearch();
             
-            if ((teamLst == null)&&(server!=null))
+            if (teamLst == null && server!=null)
             {
                 Connection connect = new Connection(server);
                 connect.onDataReceive += dataReceive;
@@ -1042,6 +1042,7 @@ namespace _700IQ
                     Step10();
                     return;
                 }
+                RemoveTempControls();
                 BackgroundImage = tbl.SetIQ(steck, myTeam.table-1);
                 string TextLabel;
                 TextLabel = (StartStep == steck.step) ? "Возобновление игры, синхронизация..." : "К " + steck.iCon + " айкону готов!";
@@ -1087,7 +1088,7 @@ namespace _700IQ
                 else
                 {
                     pol.onPolosaEnd += Step1_4;
-                    pol.polosa(1667, NewPoint(1656, 1350), this, "Step1_3");//56
+                    pol.polosa(56, NewPoint(1656, 1350), this, "Step1_3");//56 , 1667
                 }
                 this.Invalidate();
             }
@@ -1245,7 +1246,7 @@ namespace _700IQ
                 StavkiShow stShow = new StavkiShow();
                 stShow.onStShow += Step3_1;
                 stShow.inputStavki(steck.team[0].stavka, steck.team[1].stavka, steck.team[2].stavka, 0, this,0);
-                stShow = null;
+                //stShow = null;
             }
         }
         void Step3_1()  //показ вопроса, запуск рулетки
@@ -1446,7 +1447,8 @@ namespace _700IQ
                     StavkiShow stShow = new StavkiShow();
                     stShow.onStShow += Step9;//переход на окончание айкона
                     int stav = answTeam.ElementAt(0).stavka;
-                    stShow.inputStavki(stav, stav, stav, stav, this, answTeam.ElementAt(0).table);
+                    //stShow.inputStavki(stav, stav, stav, stav, this, answTeam.ElementAt(0).table);
+                    stShow.inputStavki(stav, stav, stav, 1, this, answTeam.ElementAt(0).table);
                     //stShow.Dispose();
                 }
             }
@@ -1617,6 +1619,27 @@ namespace _700IQ
                     cn.SendUDP("zgg" + JsonConvert.SerializeObject(sd));
                     //    Step1_3();
                     bIconFinalised = false;
+                    //if (StartStep == steck.step)
+                    string TextLabel = "Ожидание готовности игровых троек,\n синхронизация с сервером...";
+                    CustomLabel lbStart = new CustomLabel()
+                    {
+                        Name = "oneuse",
+                        Location = NewPoint(1650, 1150),
+                        Size = NewSize(950, 100),
+                        Text = TextLabel,
+                        SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality,
+                        InterpolationMode = InterpolationMode.HighQualityBicubic,
+                        BackColor = Color.Transparent,
+                        ForeColor = Color.White,
+                        Font = new Font("Calibri", NewFontSize(20), FontStyle.Bold),
+                        Parent = this,
+                        ShadowColor = Color.Black,
+                        ShadowOffset = new Point(3, 3),
+                    };
+
+                    pol.polosa(1, NewPoint(1600, 1350), this, "синхр");
+
+                    //Bitmap BackgroundImage = tbl.SetIQ(steck, myTeam.table - 1);
                 }
             }
         }
@@ -1823,18 +1846,18 @@ namespace _700IQ
 
             if (e.KeyCode == Keys.Enter)
             {
-                if (pol.ff != null &&pol.pcBox.Visible &&pol.ff.Visible && pol.Value > 0) { pol.Finish(); return; }//полоска
+                if (pol.ff != null && pol.pcBox.Visible && pol.ff.Visible && pol.Value > 0) { pol.Finish(); return; }//полоска
                 if (startGame)
                 {
                     Control rotor = this.Controls.Find("Rotor", true).FirstOrDefault();//медаль
-                    if (rotor != null && rotor.Focused) { onClickMedal(sender, e); return; }
+                    if (rotor?.Focused ?? false) { onClickMedal(sender, e); return; }
                     Control login = this.Controls.Find("login", true).FirstOrDefault();//логин
                     Control parol = this.Controls.Find("parol", true).FirstOrDefault();//пароль
-                    if (login != null && login.Focused) { parol.Focus(); return; }
-                    if (parol != null && parol.Focused) { Ini2(sender, e); return; }                  
+                    if (login?.Focused ?? false) { parol.Focus(); return; }
+                    if (parol?.Focused ?? false) { Ini2(sender, e); return; }                  
                 }
             }
-            if (st.stavkaRegion != null && st.stavkaRegion.Visible)//ставки + -
+            if (st.stavkaRegion?.Visible ?? false)//ставки + -
             {
                 if (e.KeyCode == Keys.Up) st.Plus();
                 //if (e.KeyCode == Keys.Down) st.Minus();
